@@ -36,6 +36,8 @@ jobs:
               uses: actions/checkout@v4
               with:
                   fetch-depth: 0
+            - name: List Files Before Unit Test
+              run: ls -l
             - name: Run Unit Tests
               run: |
                   ./unit_tests --verbose
