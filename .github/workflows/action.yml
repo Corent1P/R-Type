@@ -23,22 +23,11 @@ jobs:
               with:
                   fetch-depth: 0
             - name: Compilation with CMake
+            id: build
               run: |
                   cmake . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release && cmake --build .
-
-    run_unit_tests:
-        needs: [check_program_compilation]
-        runs-on: ubuntu-latest
-        container:
-            image: epitechcontent/epitest-docker:latest
-        steps:
-            - name: Checkout Code
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
-            - name: List Files Before Unit Test
-              run: ls -l
             - name: Run Unit Tests
+              if: steps.build.outcome == 'success'
               run: |
                   ./unit_tests --verbose
                   gcovr --exclude tests
