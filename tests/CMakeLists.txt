@@ -4,12 +4,12 @@ set(SRC_TESTS
 
 add_executable(unit_tests ${SRC_TESTS})
 
-target_link_libraries(unit_tests 
+target_link_libraries(unit_tests
     criterion
     gcov
 )
 
-target_compile_options(unit_tests PRIVATE 
+target_compile_options(unit_tests PRIVATE
     -std=c++20
     --coverage
 )

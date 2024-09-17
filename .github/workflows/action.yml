@@ -19,9 +19,25 @@ jobs:
             image: epitechcontent/epitest-docker:latest
         steps:
             - name: Checkout Code
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                   fetch-depth: 0
             - name: Compilation with CMake
               run: |
                   cmake . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release && cmake --build .
+
+    run_unit_tests:
+        needs: [check_program_compilation]
+        runs-on: ubuntu-latest
+        container:
+            image: epitechcontent/epitest-docker:latest
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+            - name: Run Unit Tests
+              run: |
+                  ./unit_tests --verbose
+                  gcovr --exclude tests
+                  gcovr --exclude tests --branches
