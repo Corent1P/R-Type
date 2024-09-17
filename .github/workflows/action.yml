@@ -1,0 +1,27 @@
+name: R-Type
+run-name: R-Type
+env:
+    MIRROR_URL: git@github.com:EpitechPromo2027/B-CPP-500-MLH-5-1-rtype-corentin.piquet.git
+
+on:
+    push:
+        branches-ignore:
+            - "ga-ignore**"
+    pull_request:
+        branches-ignore:
+            - "ga-ignore**"
+
+
+jobs:
+    check_program_compilation:
+        runs-on: ubuntu-latest
+        container:
+            image: epitechcontent/epitest-docker:latest
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
+            - name: Compilation with CMake
+              run: |
+                  cmake . -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release && cmake --build .
