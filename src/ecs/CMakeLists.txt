@@ -1,5 +1,7 @@
 set(SRC_CLIENT
-    ./Print.cpp
+    ./Coordinator.cpp
+    ./Entity.cpp
+    ./ASystem.cpp
 )
 
 add_library(ecs ${SRC_CLIENT})

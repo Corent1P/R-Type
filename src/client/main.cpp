@@ -7,10 +7,8 @@
 
 #include <iostream>
 #include <array>
-#include "../ecs/Ecs.hpp"
 
 int main(void)
 {
     std::cout << "Client" << std::endl;
-    Print::printEcs();
 }

@@ -7,10 +7,7 @@
 
 #include "Entity.hpp"
 
-Entity::Entity()
-{
-}
-
-Entity::~Entity()
+Entity::Entity(uint16_t id):
+    _id(id)
 {
 }

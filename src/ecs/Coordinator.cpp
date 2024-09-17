@@ -7,10 +7,22 @@
 
 #include "Coordinator.hpp"
 
-Coordinator::Coordinator()
+Coordinator::Coordinator():
+    _idEntities(0)
 {
 }
 
-Coordinator::~Coordinator()
-{
+void Coordinator::generateNewEntity() {
+    _entities.push_back(std::make_unique<Entity>(_idEntities++));
+}
+void Coordinator::generateNewSystem() {
+    _systems.push_back(std::make_unique<ASystem>());
+}
+
+std::vector<std::shared_ptr<Entity>> Coordinator::getEntities() {
+    return _entities;
+}
+
+std::vector<std::shared_ptr<ISystem>> Coordinator::getSystems() {
+    return _systems;
 }
