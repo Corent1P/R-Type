@@ -16,7 +16,7 @@ class ASystem: public ISystem {
         ~ASystem() = default;
         void effect();
         bool verifyRequiredComponent();
-        bool getType() const;
+        SystemType getType() const;
     protected:
         SystemType _type;
 };

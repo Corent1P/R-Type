@@ -21,7 +21,7 @@ bool ASystem::verifyRequiredComponent()
     return false;
 }
 
-bool ASystem::getType() const
+SystemType ASystem::getType() const
 {
 	return _type;
 }

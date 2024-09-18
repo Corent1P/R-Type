@@ -19,7 +19,7 @@ class ISystem {
         virtual ~ISystem() = default;
         virtual void effect() = 0;
         virtual bool verifyRequiredComponent() = 0;
-        virtual bool getType() const = 0;
+        virtual SystemType getType() const = 0;
 };
 
 std::ostream &operator<<(std::ostream &s, const ISystem &system);

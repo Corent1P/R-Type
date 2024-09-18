@@ -12,7 +12,7 @@ AComponent::AComponent():
 {
 }
 
-bool AComponent::getType() const
+ComponentType AComponent::getType() const
 {
 	return _type;
 }

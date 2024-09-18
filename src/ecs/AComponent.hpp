@@ -14,7 +14,7 @@ class AComponent: public IComponent {
     public:
         AComponent();
         ~AComponent() = default;
-        bool getType() const;
+        ComponentType getType() const;
     protected:
         ComponentType _type;
 };

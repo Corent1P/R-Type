@@ -17,7 +17,7 @@ enum ComponentType {
 class IComponent {
     public:
         virtual ~IComponent() = default;
-        virtual bool getType() const = 0;
+        virtual ComponentType getType() const = 0;
 };
 std::ostream &operator<<(std::ostream &s, const IComponent &component);
 
