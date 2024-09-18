@@ -8,11 +8,14 @@
 #ifndef ISYSTEM_HPP_
 #define ISYSTEM_HPP_
 
+#include "Include.hh"
+#include "ASystem.hpp"
+
 class ISystem {
     public:
-        virtual ~ISystem() = 0;
+        virtual ~ISystem() = default;
         virtual void effect() = 0;
-        virtual bool verifyRequierdComponent() = 0;
+        virtual bool verifyRequiredComponent() = 0;
 };
 
 #endif /* !ISYSTEM_HPP_ */

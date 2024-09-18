@@ -11,7 +11,14 @@ void ASystem::effect()
 {
 }
 
-bool ASystem::verifyRequierdComponent()
+bool ASystem::verifyRequiredComponent()
 {
     return false;
+}
+
+std::ostream &operator<<(std::ostream &s, const ASystem &system)
+{
+    (void) system;
+    s << "Basic System" << std::endl;
+    return s;
 }

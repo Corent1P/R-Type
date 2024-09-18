@@ -16,4 +16,6 @@ class AComponent: public IComponent {
         ~AComponent() = default;
 };
 
+std::ostream &operator<<(std::ostream &s, const IComponent &component);
+
 #endif /* !ACOMPONENT_HPP_ */

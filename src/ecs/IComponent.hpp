@@ -8,9 +8,11 @@
 #ifndef ICOMPONENT_HPP_
 #define ICOMPONENT_HPP_
 
+#include "Include.hh"
+
 class IComponent {
     public:
-        virtual ~IComponent() = 0;
+        virtual ~IComponent() = default;
 };
 
 #endif /* !ICOMPONENT_HPP_ */

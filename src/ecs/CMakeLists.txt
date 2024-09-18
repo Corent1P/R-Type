@@ -1,6 +1,7 @@
 set(SRC_CLIENT
     ./Coordinator.cpp
     ./Entity.cpp
+    ./AComponent.cpp
     ./ASystem.cpp
 )
 

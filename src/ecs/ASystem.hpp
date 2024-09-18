@@ -15,7 +15,8 @@ class ASystem: public ISystem {
         ASystem() = default;
         ~ASystem() = default;
         void effect();
-        bool verifyRequierdComponent();
+        bool verifyRequiredComponent();
 };
 
+std::ostream &operator<<(std::ostream &s, const ASystem &system);
 #endif /* !ASYSTEM_HPP_ */
