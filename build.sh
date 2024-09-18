@@ -9,9 +9,9 @@ if command_exists conan; then
 else
     echo "Conan is not installed. Installing..."
 
-    if command_exists pip; then
-        echo "pip found. Installing Conan using pip..."
-        pip install conan
+    if command_exists dnf; then
+        echo "dnf found. Installing Conan using dnf..."
+        sudo dnf install -y conan
     elif command_exists pip3; then
         echo "pip3 found. Installing Conan using pip3..."
         pip3 install conan
