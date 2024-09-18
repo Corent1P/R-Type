@@ -7,6 +7,11 @@
 
 #include "ASystem.hpp"
 
+ASystem::ASystem():
+    _type(SystemBasic)
+{
+}
+
 void ASystem::effect()
 {
 }
@@ -16,9 +21,7 @@ bool ASystem::verifyRequiredComponent()
     return false;
 }
 
-std::ostream &operator<<(std::ostream &s, const ASystem &system)
+bool ASystem::getType() const
 {
-    (void) system;
-    s << "Basic System" << std::endl;
-    return s;
+	return _type;
 }

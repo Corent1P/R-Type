@@ -10,9 +10,15 @@
 
 #include "Include.hh"
 
+enum ComponentType {
+    ComponentBasic
+};
+
 class IComponent {
     public:
         virtual ~IComponent() = default;
+        virtual bool getType() const = 0;
 };
+std::ostream &operator<<(std::ostream &s, const IComponent &component);
 
 #endif /* !ICOMPONENT_HPP_ */

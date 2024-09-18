@@ -7,9 +7,12 @@
 
 #include "AComponent.hpp"
 
-std::ostream &operator<<(std::ostream &s, const IComponent &component)
+AComponent::AComponent():
+    _type(ComponentBasic)
 {
-    (void) component;
-    s << "basic";
-    return s;
+}
+
+bool AComponent::getType() const
+{
+	return _type;
 }

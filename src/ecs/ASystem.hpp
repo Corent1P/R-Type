@@ -12,11 +12,13 @@
 
 class ASystem: public ISystem {
     public:
-        ASystem() = default;
+        ASystem();
         ~ASystem() = default;
         void effect();
         bool verifyRequiredComponent();
+        bool getType() const;
+    protected:
+        SystemType _type;
 };
 
-std::ostream &operator<<(std::ostream &s, const ASystem &system);
 #endif /* !ASYSTEM_HPP_ */

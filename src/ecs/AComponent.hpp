@@ -12,8 +12,11 @@
 
 class AComponent: public IComponent {
     public:
-        AComponent() = default;
+        AComponent();
         ~AComponent() = default;
+        bool getType() const;
+    protected:
+        ComponentType _type;
 };
 
 std::ostream &operator<<(std::ostream &s, const IComponent &component);

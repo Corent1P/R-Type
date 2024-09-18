@@ -36,8 +36,9 @@ std::ostream &operator<<(std::ostream &s, const Coordinator &coordinator)
 
     s << "Coordinator:\n";
     for (auto entity: entities)
-        s << *entity << std::endl;
+        s << "\t" << *entity;
+    s << std::endl;
     for (auto system: systems)
-        s << system << std::endl;
+        s << "\t" << *system;
     return s;
 }
