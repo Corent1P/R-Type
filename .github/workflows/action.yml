@@ -24,10 +24,7 @@ jobs:
                   fetch-depth: 0
             - name: Install dependencies
               id: package
-              run: |
-                  sudo apt-get install pipx
-                  pipx ensurepath
-                  pipx install conan
+              uses: conan-io/conan-action@v2
             - name: Compilation with CMake
               id: build
               if: steps.package.outcome == 'success'
