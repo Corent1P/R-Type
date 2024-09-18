@@ -29,6 +29,7 @@ jobs:
                   pipx install conan
                   pipx ensurepath
                   echo "$HOME/.local/bin" >> $GITHUB_PATH
+                  conan profile detect
             - name: Compilation with CMake
               id: build
               if: steps.package.outcome == 'success'
