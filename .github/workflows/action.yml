@@ -27,7 +27,7 @@ jobs:
               run: |
                   sudo apt-get update
                   sudo apt-get install python3-pip
-                  python3 -m pip install --user conan
+                  sudo python3 -m pip install --user conan
                   export PATH="$HOME/.local/bin:$PATH"
             - name: Compilation with CMake
               id: build
