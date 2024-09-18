@@ -11,3 +11,9 @@ target_compile_options(r-type_client PRIVATE
     -Werror
     -g
 )
+target_link_libraries(r-type_client PRIVATE
+    Boost::boost
+    sfml-system
+    sfml-window
+    sfml-graphics
+)
