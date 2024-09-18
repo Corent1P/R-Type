@@ -25,7 +25,7 @@ jobs:
             - name: Install dependencies
               id: package
               run: |
-                  sudo dnf install -y conan
+                  sudo apt-get install -y conan
             - name: Compilation with CMake
               id: build
               if: steps.package.outcome == 'success'
