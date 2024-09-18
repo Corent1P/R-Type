@@ -25,7 +25,9 @@ jobs:
             - name: Install dependencies
               id: package
               run: |
-                  sudo apt-get install -y conan
+                  sudo apt-get install pipx
+                  pipx ensurepath
+                  pipx install conan
             - name: Compilation with CMake
               id: build
               if: steps.package.outcome == 'success'
