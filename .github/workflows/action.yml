@@ -24,7 +24,7 @@ jobs:
                   fetch-depth: 0
             - name: Install dependencies
               id: package
-              run: pip install conan
+              run: sudo dnf install conan
             - name: Compilation with CMake
               id: build
               if: steps.package.outcome == 'success'
