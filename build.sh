@@ -11,10 +11,10 @@ else
 
     if command_exists pip; then
         echo "pip found. Installing Conan using pip..."
-        pip install --user conan
+        pip install conan
     elif command_exists pip3; then
         echo "pip3 found. Installing Conan using pip3..."
-        pip3 install --user conan
+        pip3 install conan
     else
         echo "pip is not installed. Please install pip or install Conan manually."
         exit 1
