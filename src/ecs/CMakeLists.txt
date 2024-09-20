@@ -5,6 +5,8 @@ set(SRC_CLIENT
     ./AComponent.cpp
     ./ISystem.cpp
     ./ASystem.cpp
+    ./Components/PositionComponent.cpp
+    ./Components/HealthComponent.cpp
 )
 
 add_library(ecs ${SRC_CLIENT})

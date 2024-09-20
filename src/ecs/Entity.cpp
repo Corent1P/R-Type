@@ -22,15 +22,15 @@ uint16_t Entity::getId(void) const
 	return _id;
 }
 
-std::ostream &operator<<(std::ostream &s, const Entity &entity)
-{
-	std::vector<std::shared_ptr<IComponent>> components = entity.getComponents();
+// std::ostream &operator<<(std::ostream &s, const Entity &entity)
+// {
+// 	std::vector<std::shared_ptr<IComponent>> components = entity.getComponents();
 
-    s << "Entity[" << entity.getId() << "]:\n";
+//     s << "Entity[" << entity.getId() << "]:\n";
 
-    for (auto component: components) {
-        s << "\t\t" << *component << std::endl;
-    }
+//     for (auto component: components) {
+//         s << "\t\t" << *component << std::endl;
+//     }
 
-    return s;
-}
+//     return s;
+// }

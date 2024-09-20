@@ -11,7 +11,9 @@
 #include "Include.hh"
 
 enum ComponentType {
-    ComponentBasic
+    ComponentBasic = 0,
+    ComponentPosition = 1,
+    ComponentHealth = 2,
 };
 
 class IComponent {
@@ -19,6 +21,6 @@ class IComponent {
         virtual ~IComponent() = default;
         virtual ComponentType getType() const = 0;
 };
-std::ostream &operator<<(std::ostream &s, const IComponent &component);
+// std::ostream &operator<<(std::ostream &s, const IComponent &component);
 
 #endif /* !ICOMPONENT_HPP_ */

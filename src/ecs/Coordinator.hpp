@@ -15,7 +15,7 @@ class Coordinator {
     public:
         Coordinator();
         ~Coordinator() = default;
-        void generateNewEntity();
+        std::shared_ptr<Entity> generateNewEntity();
         void generateNewSystem();
         std::vector<std::shared_ptr<Entity>> getEntities() const;
         std::vector<std::shared_ptr<ISystem>> getSystems() const;
@@ -25,6 +25,6 @@ class Coordinator {
         std::vector<std::shared_ptr<Entity>> _entities;
         std::vector<std::shared_ptr<ISystem>> _systems;
 };
-std::ostream &operator<<(std::ostream &s, const Coordinator &coordinator);
+// std::ostream &operator<<(std::ostream &s, const Coordinator &coordinator);
 
 #endif /* !COORDINATOR_HPP_ */

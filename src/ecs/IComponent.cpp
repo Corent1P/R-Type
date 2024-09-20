@@ -7,17 +7,20 @@
 
 #include "IComponent.hpp"
 
-std::ostream &operator<<(std::ostream &s, const IComponent &component)
-{
-    s << "Component: ";
+// std::ostream &operator<<(std::ostream &s, const IComponent &component)
+// {
+//     s << "Component: ";
 
-    switch (component.getType()) {
-        case ComponentBasic:
-            s << "basic";
-            break;
-        default:
-            s << "unknown";
-            break;
-    }
-    return s;
-}
+//     switch (component.getType()) {
+//         case ComponentBasic:
+//             s << "basic";
+//             break;
+//         case ComponentPosition:
+//             s << "position";
+//             break;
+//         default:
+//             s << "unknown";
+//             break;
+//     }
+//     return s;
+// }

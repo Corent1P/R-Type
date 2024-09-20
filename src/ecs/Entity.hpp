@@ -27,8 +27,9 @@ class Entity {
         template <typename T>
         std::shared_ptr<T> getComponent() const {
             for (const auto& component : _components) {
-                if (typeid(component.get()) == typeid(T)) {
-                    return std::dynamic_pointer_cast<T>(component);
+                std::shared_ptr<T> castedComponent = std::dynamic_pointer_cast<T>(component);
+                if (castedComponent) {
+                    return castedComponent;
                 }
             }
             return nullptr;
@@ -39,6 +40,6 @@ class Entity {
         uint16_t _id;
 };
 
-std::ostream &operator<<(std::ostream &s, const Entity &entity);
+// std::ostream &operator<<(std::ostream &s, const Entity &entity);
 
 #endif /* !ENTITY_HPP_ */
