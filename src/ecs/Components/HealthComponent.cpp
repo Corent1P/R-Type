@@ -7,10 +7,9 @@
 
 #include "HealthComponent.hpp"
 
-HealthComponent::HealthComponent(int health)
+HealthComponent::HealthComponent(int health):
+    _type(ComponentHealth), _health(health)
 {
-    setType();
-    setHealth(health);
 }
 
 HealthComponent::~HealthComponent()
@@ -19,19 +18,21 @@ HealthComponent::~HealthComponent()
 
 void HealthComponent::setHealth(int health)
 {
-    this->_heath = health;
+    this->_health = health;
 }
 
-int HealthComponent::getHealth()
+int HealthComponent::getHealth() const
 {
-    return(this->_heath);
-}
-
-void HealthComponent::setType() {
-    this->_type = ComponentHealth;
+    return (this->_health);
 }
 
 ComponentType HealthComponent::getType() const
 {
-    return(_type);
+    return (_type);
+}
+
+std::string HealthComponent::getOutput() const
+{
+    std::string output("Health Component (health: " + std::to_string(this->_health)  + ")");
+    return (output);
 }

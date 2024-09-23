@@ -2,7 +2,6 @@ set(SRC_CLIENT
     ./Coordinator.cpp
     ./Entity.cpp
     ./IComponent.cpp
-    ./AComponent.cpp
     ./ISystem.cpp
     ./ASystem.cpp
     ./Components/PositionComponent.cpp

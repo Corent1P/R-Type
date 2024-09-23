@@ -25,6 +25,6 @@ class Coordinator {
         std::vector<std::shared_ptr<Entity>> _entities;
         std::vector<std::shared_ptr<ISystem>> _systems;
 };
-// std::ostream &operator<<(std::ostream &s, const Coordinator &coordinator);
+std::ostream &operator<<(std::ostream &s, const Coordinator &coordinator);
 
 #endif /* !COORDINATOR_HPP_ */

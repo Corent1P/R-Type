@@ -32,16 +32,16 @@ std::vector<std::shared_ptr<ISystem>> Coordinator::getSystems() const
     return _systems;
 }
 
-// std::ostream &operator<<(std::ostream &s, const Coordinator &coordinator)
-// {
-// 	std::vector<std::shared_ptr<Entity>> entities = coordinator.getEntities();
-// 	std::vector<std::shared_ptr<ISystem>> systems = coordinator.getSystems();
+std::ostream &operator<<(std::ostream &s, const Coordinator &coordinator)
+{
+	std::vector<std::shared_ptr<Entity>> entities = coordinator.getEntities();
+	std::vector<std::shared_ptr<ISystem>> systems = coordinator.getSystems();
 
-//     s << "Coordinator:\n";
-//     for (auto entity: entities)
-//         s << "\t" << *entity;
-//     s << std::endl;
-//     for (auto system: systems)
-//         s << "\t" << *system;
-//     return s;
-// }
+    s << "Coordinator:\n";
+    for (auto entity: entities)
+        s << "\t" << *entity;
+    s << std::endl;
+    for (auto system: systems)
+        s << "\t" << *system;
+    return s;
+}

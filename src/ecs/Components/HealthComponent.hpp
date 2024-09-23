@@ -15,13 +15,13 @@ class HealthComponent: public IComponent {
         HealthComponent(int health);
         ~HealthComponent();
         void setHealth(int health);
-        int getHealth();
-        void setType();
+        int getHealth() const;
         ComponentType getType() const;
+        std::string getOutput() const;
     protected:
         ComponentType _type;
     private:
-        int _heath;
+        int _health;
 };
 
 #endif /* !HEALTHCOMPONENT_HPP_ */

@@ -14,10 +14,12 @@ class PositionComponent: public IComponent {
         PositionComponent(int x, int y);
         ~PositionComponent();
         void setPositions(int x, int y);
-        int getPositionX();
-        int getPositionY();
-        void setType();
+        void setX(int x);
+        void setY(int y);
+        int getPositionX() const;
+        int getPositionY() const;
         ComponentType getType() const;
+        std::string getOutput() const;
     protected:
         ComponentType _type;
     private:

@@ -40,6 +40,6 @@ class Entity {
         uint16_t _id;
 };
 
-// std::ostream &operator<<(std::ostream &s, const Entity &entity);
+std::ostream &operator<<(std::ostream &s, const Entity &entity);
 
 #endif /* !ENTITY_HPP_ */

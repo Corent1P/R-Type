@@ -20,7 +20,8 @@ class IComponent {
     public:
         virtual ~IComponent() = default;
         virtual ComponentType getType() const = 0;
+        virtual std::string getOutput() const = 0;
 };
-// std::ostream &operator<<(std::ostream &s, const IComponent &component);
+std::ostream &operator<<(std::ostream &s, const IComponent &component);
 
 #endif /* !ICOMPONENT_HPP_ */
