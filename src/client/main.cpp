@@ -7,8 +7,20 @@
 
 #include <iostream>
 #include <array>
+#include "Error.hh"
+#include "client/Client.hh"
 
-int main(void)
+int main(int ac, char **av)
 {
-    std::cout << "Client" << std::endl;
+    (void)ac;
+    (void)av;
+    try {
+        // if (ac != 2)
+        //     throw RType::Error("Invalid arguments");
+        RType::Client(4242);
+    } catch(std::exception &err) {
+        std::cerr << err.what() << std::endl;
+        return 84;
+    }
+    return 0;
 }

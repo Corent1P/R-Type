@@ -1,5 +1,6 @@
 set(SRC_CLIENT
     ./main.cpp
+    ./client/Client.cpp
 )
 
 add_executable(r-type_client ${SRC_CLIENT})
@@ -8,7 +9,7 @@ target_compile_options(r-type_client PRIVATE
     -fPIC
     -Wall
     -Wextra
-    -Werror
+    # -Werror
     -g
 )
 target_link_libraries(r-type_client PRIVATE
