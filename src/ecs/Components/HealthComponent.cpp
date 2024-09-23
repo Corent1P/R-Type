@@ -5,7 +5,7 @@
 ** Health component
 */
 
-#include "HealthComponent.hpp"
+#include "HealthComponent.hh"
 
 RType::HealthComponent::HealthComponent(int health):
     _health(health)

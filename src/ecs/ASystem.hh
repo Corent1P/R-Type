@@ -8,7 +8,7 @@
 #ifndef ASYSTEM_HPP_
 #define ASYSTEM_HPP_
 
-#include "ISystem.hpp"
+#include "ISystem.hh"
 namespace RType {
     class ASystem: public ISystem {
         public:

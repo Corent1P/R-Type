@@ -5,7 +5,7 @@
 ** Component related to the entity position 
 */
 
-#include "PositionComponent.hpp"
+#include "PositionComponent.hh"
 #include <iostream>
 
 RType::PositionComponent::PositionComponent(int x, int y):

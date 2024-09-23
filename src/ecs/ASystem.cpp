@@ -5,7 +5,7 @@
 ** ASystem
 */
 
-#include "ASystem.hpp"
+#include "ASystem.hh"
 
 RType::ASystem::ASystem():
     _type(SystemBasic)

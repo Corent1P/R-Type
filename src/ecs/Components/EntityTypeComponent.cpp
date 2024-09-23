@@ -5,7 +5,7 @@
 ** EntityTypeComponent
 */
 
-#include "EntityTypeComponent.hpp"
+#include "EntityTypeComponent.hh"
 
 RType::EntityTypeComponent::EntityTypeComponent(EntityType entityType):
     _entityType(entityType)

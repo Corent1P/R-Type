@@ -8,7 +8,7 @@
 #ifndef ENTITY_HPP_
 #define ENTITY_HPP_
 
-#include "IComponent.hpp"
+#include "IComponent.hh"
 
 namespace RType {
 

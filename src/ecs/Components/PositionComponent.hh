@@ -7,7 +7,7 @@
 
 #ifndef POSITIONCOMPONENT_HPP_
 #define POSITIONCOMPONENT_HPP_
-#include "../IComponent.hpp"
+#include "../IComponent.hh"
 namespace RType {
 
     class PositionComponent: public RType::IComponent {

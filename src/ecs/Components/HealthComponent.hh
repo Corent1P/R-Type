@@ -8,7 +8,7 @@
 #ifndef HEALTHCOMPONENT_HPP_
 #define HEALTHCOMPONENT_HPP_
 
-#include "../IComponent.hpp"
+#include "../IComponent.hh"
 namespace RType {
 
     class HealthComponent: public RType::IComponent {

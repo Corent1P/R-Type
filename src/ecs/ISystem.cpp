@@ -5,7 +5,7 @@
 ** ISystem
 */
 
-#include "ISystem.hpp"
+#include "ISystem.hh"
 
 std::ostream &operator<<(std::ostream &s, const RType::ISystem &system)
 {

@@ -8,10 +8,10 @@
 #include <iostream>
 #include <array>
 
-#include "../ecs/Coordinator.hpp"
-#include "../ecs/Components/PositionComponent.hpp"
-#include "../ecs/Components/HealthComponent.hpp"
-#include "../ecs/Components/EntityTypeComponent.hpp"
+#include "../ecs/Coordinator.hh"
+#include "../ecs/Components/PositionComponent.hh"
+#include "../ecs/Components/HealthComponent.hh"
+#include "../ecs/Components/EntityTypeComponent.hh"
 
 int main(void)
 {

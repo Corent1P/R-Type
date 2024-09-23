@@ -5,7 +5,7 @@
 ** IComponent
 */
 
-#include "IComponent.hpp"
+#include "IComponent.hh"
 
 std::ostream &operator<<(std::ostream &s, const RType::IComponent &component)
 {

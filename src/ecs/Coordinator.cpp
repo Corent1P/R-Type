@@ -5,7 +5,7 @@
 ** ECS Coordinator for Components & systems
 */
 
-#include "Coordinator.hpp"
+#include "Coordinator.hh"
 
 RType::Coordinator::Coordinator():
     _idEntities(0)

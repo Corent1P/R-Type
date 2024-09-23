@@ -7,7 +7,7 @@
 
 #ifndef TYPECOMPONENT_HPP_
 #define TYPECOMPONENT_HPP_
-#include "../IComponent.hpp"
+#include "../IComponent.hh"
 namespace RType {
     enum EntityType {
         PLAYER,

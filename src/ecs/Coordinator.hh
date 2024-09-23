@@ -8,7 +8,7 @@
 #ifndef COORDINATOR_HPP_
 #define COORDINATOR_HPP_
 
-#include "ASystem.hpp"
+#include "ASystem.hh"
 #include "Entity.hpp"
 namespace RType {
 
