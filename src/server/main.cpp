@@ -13,7 +13,7 @@ int main(void)
 {
     try {
         boost::asio::io_context ioContext;
-        RType::Server(ioContext, 4242);
+        RType::Server server(ioContext, 4242);
         ioContext.run();
     } catch(std::exception &err) {
         std::cerr << "Error in server execution " << err.what() << std::endl;
