@@ -7,16 +7,16 @@
 
 #include "IComponent.hpp"
 
-std::ostream &operator<<(std::ostream &s, const IComponent &component)
+std::ostream &operator<<(std::ostream &s, const RType::IComponent &component)
 {
     switch (component.getType()) {
-        case ComponentBasic:
+        case RType::ComponentBasic:
             s << "Basic Component";
             break;
-        case ComponentPosition:
+        case RType::ComponentPosition:
             s << component.getOutput();
             break;
-        case ComponentHealth:
+        case RType::ComponentHealth:
             s << component.getOutput();
             break;
         default:

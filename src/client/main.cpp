@@ -14,15 +14,15 @@
 
 int main(void)
 {
-    Coordinator coord;
-    std::shared_ptr<Entity> ent = coord.generateNewEntity();
-    std::shared_ptr<Entity> ent2 = coord.generateNewEntity();
+    RType::Coordinator coord;
+    std::shared_ptr<RType::Entity> ent = coord.generateNewEntity();
+    std::shared_ptr<RType::Entity> ent2 = coord.generateNewEntity();
     
-    ent->pushComponent(std::make_shared<PositionComponent>(10, 10));
-    ent->pushComponent(std::make_shared<HealthComponent>(25));
+    ent->pushComponent(std::make_shared<RType::PositionComponent>(10, 10));
+    ent->pushComponent(std::make_shared<RType::HealthComponent>(25));
 
-    ent2->pushComponent(std::make_shared<PositionComponent>(15, 7));
-    ent2->pushComponent(std::make_shared<HealthComponent>(54));
+    ent2->pushComponent(std::make_shared<RType::PositionComponent>(15, 7));
+    ent2->pushComponent(std::make_shared<RType::HealthComponent>(54));
 
     std::cout << coord << std::endl;
 }

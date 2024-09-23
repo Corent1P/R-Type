@@ -7,12 +7,12 @@
 
 #include "ISystem.hpp"
 
-std::ostream &operator<<(std::ostream &s, const ISystem &system)
+std::ostream &operator<<(std::ostream &s, const RType::ISystem &system)
 {
     s << "System: ";
 
     switch (system.getType()) {
-        case SystemBasic:
+        case RType::SystemBasic:
             s << "basic";
             break;
         default:

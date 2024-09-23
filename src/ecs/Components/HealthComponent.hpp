@@ -9,19 +9,21 @@
 #define HEALTHCOMPONENT_HPP_
 
 #include "../IComponent.hpp"
+namespace RType {
 
-class HealthComponent: public IComponent {
-    public:
-        HealthComponent(int health);
-        ~HealthComponent();
-        void setHealth(int health);
-        int getHealth() const;
-        ComponentType getType() const;
-        std::string getOutput() const;
-    protected:
-        ComponentType _type;
-    private:
-        int _health;
-};
+    class HealthComponent: public RType::IComponent {
+        public:
+            HealthComponent(int health);
+            ~HealthComponent();
+            void setHealth(int health);
+            int getHealth() const;
+            ComponentType getType() const;
+            std::string getOutput() const;
+        protected:
+            ComponentType _type;
+        private:
+            int _health;
+    };
+}
 
 #endif /* !HEALTHCOMPONENT_HPP_ */

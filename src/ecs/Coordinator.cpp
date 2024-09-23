@@ -7,35 +7,35 @@
 
 #include "Coordinator.hpp"
 
-Coordinator::Coordinator():
+RType::Coordinator::Coordinator():
     _idEntities(0)
 {
 }
 
-std::shared_ptr<Entity> Coordinator::generateNewEntity() {
+std::shared_ptr<RType::Entity> RType::Coordinator::generateNewEntity() {
     std::shared_ptr<Entity> newEntity = std::make_unique<Entity>(_idEntities++);
     _entities.push_back(newEntity);
     return (newEntity);
 }
 
-void Coordinator::generateNewSystem() {
+void RType::Coordinator::generateNewSystem() {
     _systems.push_back(std::make_unique<ASystem>());
 }
 
-std::vector<std::shared_ptr<Entity>> Coordinator::getEntities() const
+std::vector<std::shared_ptr<RType::Entity>> RType::Coordinator::getEntities() const
 {
     return _entities;
 }
 
-std::vector<std::shared_ptr<ISystem>> Coordinator::getSystems() const
+std::vector<std::shared_ptr<RType::ISystem>> RType::Coordinator::getSystems() const
 {
     return _systems;
 }
 
-std::ostream &operator<<(std::ostream &s, const Coordinator &coordinator)
+std::ostream &operator<<(std::ostream &s, const RType::Coordinator &coordinator)
 {
-	std::vector<std::shared_ptr<Entity>> entities = coordinator.getEntities();
-	std::vector<std::shared_ptr<ISystem>> systems = coordinator.getSystems();
+	std::vector<std::shared_ptr<RType::Entity>> entities = coordinator.getEntities();
+	std::vector<std::shared_ptr<RType::ISystem>> systems = coordinator.getSystems();
 
     s << "Coordinator:\n";
     for (auto entity: entities)

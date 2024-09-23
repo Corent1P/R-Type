@@ -9,16 +9,16 @@
 #define ASYSTEM_HPP_
 
 #include "ISystem.hpp"
-
-class ASystem: public ISystem {
-    public:
-        ASystem();
-        ~ASystem() = default;
-        void effect();
-        bool verifyRequiredComponent();
-        SystemType getType() const;
-    protected:
-        SystemType _type;
-};
-
+namespace RType {
+    class ASystem: public ISystem {
+        public:
+            ASystem();
+            ~ASystem() = default;
+            void effect();
+            bool verifyRequiredComponent();
+            SystemType getType() const;
+        protected:
+            SystemType _type;
+    };
+}
 #endif /* !ASYSTEM_HPP_ */

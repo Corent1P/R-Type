@@ -7,24 +7,24 @@
 
 #include "Entity.hpp"
 
-Entity::Entity(uint16_t id):
+RType::Entity::Entity(uint16_t id):
     _id(id)
 {
 }
 
-std::vector<std::shared_ptr<IComponent>> Entity::getComponents(void) const
+std::vector<std::shared_ptr<RType::IComponent>> RType::Entity::getComponents(void) const
 {
 	return _components;
 }
 
-uint16_t Entity::getId(void) const
+uint16_t RType::Entity::getId(void) const
 {
 	return _id;
 }
 
-std::ostream &operator<<(std::ostream &s, const Entity &entity)
+std::ostream &operator<<(std::ostream &s, const RType::Entity &entity)
 {
-	std::vector<std::shared_ptr<IComponent>> components = entity.getComponents();
+	std::vector<std::shared_ptr<RType::IComponent>> components = entity.getComponents();
 
     s << "Entity[" << entity.getId() << "]:\n";
 

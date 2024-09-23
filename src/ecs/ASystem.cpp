@@ -7,21 +7,21 @@
 
 #include "ASystem.hpp"
 
-ASystem::ASystem():
+RType::ASystem::ASystem():
     _type(SystemBasic)
 {
 }
 
-void ASystem::effect()
+void RType::ASystem::effect()
 {
 }
 
-bool ASystem::verifyRequiredComponent()
+bool RType::ASystem::verifyRequiredComponent()
 {
     return false;
 }
 
-SystemType ASystem::getType() const
+RType::SystemType RType::ASystem::getType() const
 {
 	return _type;
 }

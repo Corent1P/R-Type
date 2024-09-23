@@ -9,19 +9,21 @@
 #define ISYSTEM_HPP_
 
 #include "Include.hh"
+namespace RType {
 
-enum SystemType {
-    SystemBasic
-};
+    enum SystemType {
+        SystemBasic
+    };
 
-class ISystem {
-    public:
-        virtual ~ISystem() = default;
-        virtual void effect() = 0;
-        virtual bool verifyRequiredComponent() = 0;
-        virtual SystemType getType() const = 0;
-};
+    class ISystem {
+        public:
+            virtual ~ISystem() = default;
+            virtual void effect() = 0;
+            virtual bool verifyRequiredComponent() = 0;
+            virtual SystemType getType() const = 0;
+    };
 
-std::ostream &operator<<(std::ostream &s, const ISystem &system);
+}
+std::ostream &operator<<(std::ostream &s, const RType::ISystem &system);
 
 #endif /* !ISYSTEM_HPP_ */
