@@ -19,6 +19,5 @@ std::ostream &operator<<(std::ostream &s, const RType::ISystem &system)
             s << "unknown";
             break;
     }
-    s << std::endl;
     return s;
 }

@@ -4,11 +4,18 @@ set(SRC_CLIENT
     ./IComponent.cpp
     ./ISystem.cpp
     ./ASystem.cpp
-    ./Components/PositionComponent.cpp
-    ./Components/HealthComponent.cpp
 )
 
-add_library(ecs ${SRC_CLIENT})
+set(SRC_COMPONENTS
+    ./Components/PositionComponent.cpp
+    ./Components/HealthComponent.cpp
+    ./Components/EntityTypeComponent.cpp
+)
+
+set(SRC_SYSTEMS
+)
+
+add_library(ecs ${SRC_CLIENT} ${SRC_COMPONENTS} ${SRC_SYSTEMS})
 
 target_compile_options(ecs PRIVATE 
     -fPIC

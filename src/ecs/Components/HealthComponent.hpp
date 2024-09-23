@@ -17,10 +17,7 @@ namespace RType {
             ~HealthComponent();
             void setHealth(int health);
             int getHealth() const;
-            ComponentType getType() const;
             std::string getOutput() const;
-        protected:
-            ComponentType _type;
         private:
             int _health;
     };

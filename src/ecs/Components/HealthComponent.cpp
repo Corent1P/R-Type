@@ -8,7 +8,7 @@
 #include "HealthComponent.hpp"
 
 RType::HealthComponent::HealthComponent(int health):
-    _type(ComponentHealth), _health(health)
+    _health(health)
 {
 }
 
@@ -18,21 +18,16 @@ RType::HealthComponent::~HealthComponent()
 
 void RType::HealthComponent::setHealth(int health)
 {
-    this->_health = health;
+    _health = health;
 }
 
 int RType::HealthComponent::getHealth() const
 {
-    return (this->_health);
-}
-
-RType::ComponentType RType::HealthComponent::getType() const
-{
-    return (_type);
+    return (_health);
 }
 
 std::string RType::HealthComponent::getOutput() const
 {
-    std::string output("Health Component (health: " + std::to_string(this->_health)  + ")");
+    std::string output("Health Component (health: " + std::to_string(_health)  + ")");
     return (output);
 }

@@ -19,10 +19,7 @@ namespace RType {
             void setY(int y);
             int getPositionX() const;
             int getPositionY() const;
-            ComponentType getType() const;
             std::string getOutput() const;
-        protected:
-            ComponentType _type;
         private:
             int _x;
             int _y;

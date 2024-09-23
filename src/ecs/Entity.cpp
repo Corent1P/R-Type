@@ -26,7 +26,7 @@ std::ostream &operator<<(std::ostream &s, const RType::Entity &entity)
 {
 	std::vector<std::shared_ptr<RType::IComponent>> components = entity.getComponents();
 
-    s << "Entity[" << entity.getId() << "]:\n";
+    s << "Entity[" << entity.getId() << "]:" << std::endl;
 
     for (auto component: components) {
         s << "\t\t" << *component << std::endl;
