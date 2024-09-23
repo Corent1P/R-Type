@@ -13,7 +13,7 @@ target_link_libraries(unit_tests PRIVATE
     sfml-graphics
 )
 
-target_compile_options(unit_tests PRIVATE 
+target_compile_options(unit_tests PRIVATE
     -std=c++20
     --coverage
 )
