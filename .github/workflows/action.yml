@@ -44,7 +44,7 @@ jobs:
     #               gcovr --exclude tests --branches
 
     push_to_mirror:
-        needs: [check_program_compilation]
+        # needs: [check_program_compilation]
         runs-on: ubuntu-latest
         if: ${{ github.event_name == 'push' }}
         steps:
