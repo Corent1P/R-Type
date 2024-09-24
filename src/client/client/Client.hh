@@ -10,6 +10,7 @@
 #include <iostream>
 #include <boost/asio.hpp>
 #include <boost/bind/bind.hpp>
+#include "../Error.hh"
 
 using boost::asio::ip::udp;
 

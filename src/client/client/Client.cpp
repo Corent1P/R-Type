@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2024
+** R-Type
+** File description:
+** Client
+*/
+
 #include "Client.hh"
 
 RType::Client::Client(boost::asio::io_context &ioContext, const std::string &host, const std::string &port):

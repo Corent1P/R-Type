@@ -1,6 +1,7 @@
 set(SRC_SERVER
     ./main.cpp
     ./server/Server.cpp
+    ./client/Client.cpp
 )
 
 add_executable(r-type_server ${SRC_SERVER})

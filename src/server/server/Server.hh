@@ -7,13 +7,8 @@
 
 #pragma once
 
-#include <array>
-#include <ctime>
-#include <functional>
-#include <iostream>
-#include <memory>
-#include <string>
-#include <boost/asio.hpp>
+#include "../includes.hh"
+#include "../client/Client.hh"
 
 #define MAX_SIZE 1024
 
@@ -28,11 +23,15 @@ namespace RType {
         private:
             void startReceive(void);
             void handleReceive(const boost::system::error_code& error, std::size_t byteTransferred);
-            void handleSend(std::shared_ptr<std::string> message, const boost::system::error_code &error, std::size_t byteTransferred);
+            void handleSend(std::string message, const boost::system::error_code &error, std::size_t byteTransferred);
             std::string makeDaytimeString(void);
+            std::shared_ptr<Client> createClient(void);
+            std::shared_ptr<Client> getConnectedClient(void);
+            bool removeClient(void);
 
             udp::socket _socket;
             udp::endpoint _remoteEndpoint;
             std::array<char, MAX_SIZE> _recvBuffer;
+            std::vector<std::shared_ptr<Client>> _clients;
     };
 }
