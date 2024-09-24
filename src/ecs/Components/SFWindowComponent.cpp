@@ -8,7 +8,8 @@
 #include "SFWindowComponent.hh"
 
 RType::SFWindowComponent::SFWindowComponent(int screenWidth, int screenHeight):
-    _window(std::make_shared<sf::RenderWindow>(sf::VideoMode(screenWidth, screenHeight), "SFML window"))
+    _window(std::make_shared<sf::RenderWindow>(sf::VideoMode(screenWidth, screenHeight), "SFML window")),
+    _isOpen(true)
 {
 }
 
@@ -28,3 +29,13 @@ std::string RType::SFWindowComponent::getOutput() const
     return (output);
 }
 
+
+void RType::SFWindowComponent::setisOpen(bool isOpen)
+{
+    _isOpen = isOpen;
+}
+
+bool RType::SFWindowComponent::getIsOpen()
+{
+    return _isOpen;
+}

@@ -8,6 +8,7 @@
 #include "HandleEventSystem.hpp"
 #include ".././Components/SFWindowComponent.hh"
 #include ".././Components/EventComponent.hh"
+// #include "SFML/Graphics"
 
 HandleEventSystem::HandleEventSystem()
 {
@@ -25,12 +26,14 @@ void HandleEventSystem::effect(std::vector<std::shared_ptr<RType::Entity>> entit
             continue;
         } else {
             sf::Event evt;
-            while (e->getComponent<RType::SFWindowComponent>()->getWindow()->pollEvent(evt))
+            while (GET_WINDOW->pollEvent(evt))
             {
-                if (evt.type == sf::Event::Closed)
-                    e->getComponent<RType::SFWindowComponent>()->getWindow()->close();
-                e->getComponent<RType::SFWindowComponent>()->getWindow()->clear();
-                e->getComponent<RType::SFWindowComponent>()->getWindow()->display();
+                if (evt.type == sf::Event::Closed) {
+                    GET_WINDOW->close();
+                    GET_WINDOW_SET_ISOPEN->setisOpen(false);
+                }
+                GET_WINDOW->clear();
+                GET_WINDOW->display();
             }
         }
     }
