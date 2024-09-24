@@ -21,7 +21,8 @@ namespace RType {
     class ISystem {
         public:
             virtual ~ISystem() = default;
-            virtual void effect(std::vector<std::shared_ptr<RType::Entity>> entities) = 0;
+            virtual void effects(std::vector<std::shared_ptr<RType::Entity>> entities) = 0;
+            virtual void effect(std::shared_ptr<RType::Entity> entity) = 0;
             virtual bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity) = 0;
             virtual SystemType getType() const = 0;
     };

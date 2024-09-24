@@ -7,23 +7,21 @@
 
 #ifndef HANDLEEVENTSYTEM_HPP_
 #define HANDLEEVENTSYTEM_HPP_
-#include "../ISystem.hh"
+#include "../ASystem.hh"
 
-#define GET_WINDOW e->getComponent<RType::SFWindowComponent>()->getWindow()
-#define GET_WINDOW_SET_ISOPEN e->getComponent<RType::SFWindowComponent>()
+#define GET_WINDOW entity->getComponent<RType::SFWindowComponent>()->getWindow()
+#define GET_WINDOW_SET_ISOPEN entity->getComponent<RType::SFWindowComponent>()
 
-class HandleEventSystem: public  RType::ISystem {
+class HandleEventSystem: public  RType::ASystem {
     public:
         HandleEventSystem();
         ~HandleEventSystem();
-        void effect(std::vector<std::shared_ptr<RType::Entity>> entities);
+        void effect(std::shared_ptr<RType::Entity> entity);
         bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
         RType::SystemType getType() const;
-        //std::string getOutput() const;
     protected:
     private:
         RType::SystemType _type;
-        std::vector<std::shared_ptr<RType::Entity>> _entities;
 };
 
 #endif /* !HANDLEEVENTSYTEM_HPP_ */

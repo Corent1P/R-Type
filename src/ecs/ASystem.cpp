@@ -12,14 +12,22 @@ RType::ASystem::ASystem():
 {
 }
 
-void RType::ASystem::effect(std::vector<std::shared_ptr<RType::Entity>> entities)
+void RType::ASystem::effects(std::vector<std::shared_ptr<RType::Entity>> entities)
 {
-    std::cout << entities.at(1) << std::endl;
+    for (const auto &e: entities) {
+        if (verifyRequiredComponent(e))
+            effect(e);
+    }
+}
+
+void RType::ASystem::effect(std::shared_ptr<RType::Entity> entity)
+{
+    (void) entity;
 }
 
 bool RType::ASystem::verifyRequiredComponent(std::shared_ptr<RType::Entity> entity)
 {
-    std::cout<< entity<< std::endl;
+    (void) entity;
     return false;
 }
 

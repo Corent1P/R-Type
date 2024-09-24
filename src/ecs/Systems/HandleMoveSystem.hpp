@@ -8,13 +8,13 @@
 #ifndef HANDLEMOVESYSTEM_HPP_
 #define HANDLEMOVESYSTEM_HPP_
 
-#include "../ISystem.hh"
+#include "../ASystem.hh"
 
-class HandleMoveSystem: public  RType::ISystem {
+class HandleMoveSystem: public  RType::ASystem {
     public:
         HandleMoveSystem();
         ~HandleMoveSystem();
-        void effect(std::vector<std::shared_ptr<RType::Entity>> entities);
+        void effect(std::shared_ptr<RType::Entity> entity);
         bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
         RType::SystemType getType() const;
     protected:

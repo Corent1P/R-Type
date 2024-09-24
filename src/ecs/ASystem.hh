@@ -14,7 +14,9 @@ namespace RType {
         public:
             ASystem();
             ~ASystem() = default;
-            void effect(std::vector<std::shared_ptr<RType::Entity>> entities);
+            void effects(std::vector<std::shared_ptr<RType::Entity>> entities);
+            void effect(std::shared_ptr<RType::Entity> entity);
+
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
             SystemType getType() const;
         protected:

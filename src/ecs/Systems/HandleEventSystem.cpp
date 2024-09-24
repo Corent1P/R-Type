@@ -12,29 +12,22 @@
 
 HandleEventSystem::HandleEventSystem()
 {
-    _type= RType::SystemHandleEvent;
+    _type = RType::SystemHandleEvent;
 }
 
 HandleEventSystem::~HandleEventSystem()
 {
 }
 
-void HandleEventSystem::effect(std::vector<std::shared_ptr<RType::Entity>> entities)
+void HandleEventSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
-    for (const auto &e: entities) {
-        if (!verifyRequiredComponent(e)) {
-            continue;
-        } else {
-            sf::Event evt;
-            while (GET_WINDOW->pollEvent(evt))
-            {
-                if (evt.type == sf::Event::Closed) {
-                    GET_WINDOW->close();
-                }
-                GET_WINDOW->clear();
-                GET_WINDOW->display();
-            }
+    sf::Event evt;
+    while (GET_WINDOW->pollEvent(evt)) {
+        if (evt.type == sf::Event::Closed) {
+            GET_WINDOW->close();
         }
+        GET_WINDOW->clear();
+        GET_WINDOW->display();
     }
 }
 

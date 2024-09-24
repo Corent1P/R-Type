@@ -15,7 +15,7 @@ HandleMoveSystem::~HandleMoveSystem()
 {
 }
 
-void HandleMoveSystem::effect(std::vector<std::shared_ptr<RType::Entity>> entities)
+void HandleMoveSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
 }
 

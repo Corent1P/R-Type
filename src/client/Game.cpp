@@ -28,7 +28,7 @@ void RType::Game::gameLoop()
 {
     while (!_stopLoop) {
         for (auto sys: _coord.getSystems()) {
-            sys->effect(_coord.getEntities());
+            sys->effects(_coord.getEntities());
         }
         for (auto entity : _coord.getEntities()) {
             if (entity->getComponent<RType::SFWindowComponent>() != nullptr) {
