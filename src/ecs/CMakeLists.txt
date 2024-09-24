@@ -3,6 +3,7 @@ set(SRC_CLIENT
     ./Entity.cpp
     ./ISystem.cpp
     ./ASystem.cpp
+    ./Error.cpp
 )
 
 set(SRC_COMPONENTS
@@ -11,7 +12,7 @@ set(SRC_COMPONENTS
     ./Components/EntityTypeComponent.cpp
     ./Components/SFWindowComponent.cpp
     ./Components/EventComponent.cpp
-
+    ./Components/TextureComponent.cpp
 )
 
 set(SRC_SYSTEMS

@@ -1,5 +1,7 @@
 set(SRC_CLIENT
     ./main.cpp
+    ./Game.cpp
+    ./Error.cpp
 )
 
 add_executable(r-type_client ${SRC_CLIENT})

@@ -31,6 +31,9 @@ std::string RType::EntityTypeComponent::getOutput() const
     std::string entityType("");
     switch (_entityType)
         {
+        case WINDOW:
+            entityType = "window";
+            break;
         case PLAYER:
             entityType = "player";
             break;

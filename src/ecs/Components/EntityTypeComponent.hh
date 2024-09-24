@@ -11,6 +11,7 @@
 namespace RType {
     enum EntityType {
         OTHER,
+        WINDOW,
         PLAYER,
         MOB,
         BOSS,

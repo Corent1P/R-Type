@@ -10,3 +10,4 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include "Error.hh"
