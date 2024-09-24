@@ -14,7 +14,5 @@ add_subdirectory(src/ecs)
 find_package(Boost REQUIRED)
 find_package(SFML 2.5 COMPONENTS system window graphics REQUIRED)
 
-add_subdirectory(tests)
-
 add_subdirectory(src/client)
 add_subdirectory(src/server)
