@@ -25,11 +25,11 @@ RType::Coordinator RType::Game::getCoordinator() const
 
 void RType::Game::gameLoop()
 {
-    while (true) {
+    while (1) {
         for (auto sys: _coord.getSystems()) {
             sys->effect(_coord.getEntities());
         }
-    }    
+    }
 }
 
 void RType::Game::createPlayer()
@@ -71,7 +71,7 @@ void RType::Game::createBoss()
 
 void RType::Game::createGameSystem()
 {
-    _coord.generateNewSystem(std::shared_ptr<HandleEventSystem>());
+    _coord.generateNewSystem(std::make_shared<HandleEventSystem>());
 }
 
 std::ostream &operator<<(std::ostream &s, const RType::Game &game)
