@@ -9,6 +9,8 @@
 #define ISYSTEM_HPP_
 
 #include "Include.hh"
+#include "Entity.hpp"
+
 namespace RType {
 
     enum SystemType {
@@ -18,8 +20,8 @@ namespace RType {
     class ISystem {
         public:
             virtual ~ISystem() = default;
-            virtual void effect() = 0;
-            virtual bool verifyRequiredComponent() = 0;
+            virtual void effect(std::shared_ptr<Entity> entities) = 0;
+            virtual bool verifyRequiredComponent(Entity entity) = 0;
             virtual SystemType getType() const = 0;
     };
 

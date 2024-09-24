@@ -15,6 +15,7 @@
 
 int main(void)
 {
+    std::cout << "chien" << std::endl;
     RType::Coordinator coord;
     std::shared_ptr<RType::Entity> ent = coord.generateNewEntity();
     std::shared_ptr<RType::Entity> ent2 = coord.generateNewEntity();
