@@ -60,3 +60,4 @@ build/
 
 path/
 .vscode
+vgcore*

@@ -7,22 +7,13 @@
 
 #include "EventComponent.hh"
 
-EventComponent::EventComponent()
-{
-    setEvent();
-}
-
-EventComponent::~EventComponent()
-{
-}
-
-void EventComponent::setEvent()
-{
-    sf::Event e;
-    e = _event;
-}
-
-sf::Event EventComponent::getEvent() const
+sf::Event RType::EventComponent::getEvent() const
 {
     return (_event);
+}
+
+std::string RType::EventComponent::getOutput() const
+{
+    std::string output("Event Component");
+    return (output);
 }

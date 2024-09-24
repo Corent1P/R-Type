@@ -9,6 +9,9 @@ set(SRC_COMPONENTS
     ./Components/PositionComponent.cpp
     ./Components/HealthComponent.cpp
     ./Components/EntityTypeComponent.cpp
+    ./Components/SFWindowComponent.cpp
+    ./Components/EventComponent.cpp
+
 )
 
 set(SRC_SYSTEMS

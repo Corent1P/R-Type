@@ -9,17 +9,21 @@
 #define SFWINDOWCOMPONENT_HH_
 #include <SFML/Graphics.hpp>
 #include "../Include.hh"
+#include "../IComponent.hh"
 
-class SFWindowComponent {
-    public:
-        SFWindowComponent(int screenWidth, int screenHeight);
-        ~SFWindowComponent();
-        void setRenderWindow(int screenWidth, int screenHeight);
-        sf::RenderWindow getWindow() const;
-    protected:
-    private:
-        std::shared_ptr<sf::RenderWindow> _window;
+namespace RType {
 
-};
+    class SFWindowComponent: public RType::IComponent {
+        public:
+            SFWindowComponent(int screenWidth, int screenHeight);
+            ~SFWindowComponent();
+            std::shared_ptr<sf::RenderWindow> getWindow() const;
+            std::string getOutput() const;
+        protected:
+        private:
+            std::shared_ptr<sf::RenderWindow> _window;
+
+    };
+}
 
 #endif /* !SFWINDOWCOMPONENT_HH_ */

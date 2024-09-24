@@ -8,16 +8,19 @@
 #ifndef EVENTCOMPONENT_HH_
 #define EVENTCOMPONENT_HH_
 #include <SFML/Graphics.hpp>
+#include "../IComponent.hh"
 
-class EventComponent {
-    public:
-        EventComponent();
-        ~EventComponent();
-        void setEvent();
-        sf::Event getEvent() const;
-    protected:
-    private:
-        sf::Event _event;
-};
+namespace RType {
 
+    class EventComponent: public RType::IComponent {
+        public:
+            EventComponent() = default;
+            ~EventComponent() = default;
+            sf::Event getEvent() const;
+            std::string getOutput() const;
+        protected:
+        private:
+            sf::Event _event;
+    };
+}
 #endif /* !EVENTCOMPONENT_HH_ */
