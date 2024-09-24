@@ -1,22 +1,32 @@
 #include "Client.hh"
 
-RType::Client::Client(int port)
+RType::Client::Client(boost::asio::io_context &ioContext, const std::string &host, const std::string &port):
+    _ioContext(ioContext), _socket(ioContext, udp::endpoint(udp::v4(), 0))
 {
     try {
         udp::resolver resolver(_ioContext);
-        udp::endpoint _receiverEndpoint = *resolver.resolve(udp::v4(), std::to_string(port), "daytime").begin();
-
-        udp::socket socket(_ioContext);
-        socket.open(udp::v4());
-        socket.send_to(boost::asio::buffer(std::string("Hello from client")), _receiverEndpoint);
-
-        std::string receiveBuffer;
-        udp::endpoint senderEndpoint;
-        size_t len = socket.receive_from(
-            boost::asio::buffer(receiveBuffer), senderEndpoint);
-
-        std::cout << receiveBuffer << std::endl;
+		udp::resolver::query query(udp::v4(), host, port);
+		udp::resolver::iterator iter = resolver.resolve(query);
+		_endpoint = *iter;
     } catch(std::exception &err) {
         throw err;
     }
+}
+
+RType::Client::~Client()
+{
+    _socket.close();
+}
+
+void RType::Client::send(const std::string &message)
+{
+    _socket.send_to(boost::asio::buffer(message, message.size()), _endpoint);
+}
+
+std::string RType::Client::receive(void)
+{
+    std::array<char, 128> recvBuf;
+    udp::endpoint senderEndpoint;
+    size_t len = _socket.receive_from(boost::asio::buffer(recvBuf), senderEndpoint);
+    return std::string(recvBuf.data(), len);
 }

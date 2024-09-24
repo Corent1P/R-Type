@@ -16,11 +16,14 @@ using boost::asio::ip::udp;
 namespace RType {
     class Client {
         public:
-            Client(int ip);
-            ~Client() = default;
+            Client(boost::asio::io_context &ioContext, const std::string &host, const std::string &port);
+            ~Client();
+            void send(const std::string &message);
+            std::string receive(void);
 
         private:
-            boost::asio::io_context _ioContext;
-            udp::endpoint _receiverEndpoint;
+            boost::asio::io_context &_ioContext;
+            udp::endpoint _endpoint;
+            udp::socket _socket;
     };
 }

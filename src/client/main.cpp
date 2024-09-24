@@ -9,15 +9,24 @@
 #include <array>
 #include "Error.hh"
 #include "client/Client.hh"
+#include <unistd.h> //! to remove
 
 int main(int ac, char **av)
 {
     (void)ac;
     (void)av;
     try {
-        // if (ac != 2)
-        //     throw RType::Error("Invalid arguments");
-        RType::Client(4242);
+        boost::asio::io_context ioContext;
+        RType::Client client(ioContext, "localhost", "4242");
+        //! to remove {
+        client.send("Hello world");
+        std::string msg = client.receive();
+        std::cout << "Message from server " << msg << std::endl;
+        sleep(5);
+        client.send("Hello world 2");
+        std::string msg2 = client.receive();
+        std::cout << "Message from server " << msg2 << std::endl;
+        //! }
     } catch(std::exception &err) {
         std::cerr << err.what() << std::endl;
         return 84;
