@@ -10,6 +10,7 @@
 #include "../IComponent.hh"
 namespace RType {
     enum EntityType {
+        OTHER,
         PLAYER,
         MOB,
         BOSS,

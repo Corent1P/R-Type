@@ -29,7 +29,7 @@ std::ostream &operator<<(std::ostream &s, const RType::Entity &entity)
     s << "Entity[" << entity.getId() << "]:" << std::endl;
 
     for (auto component: components) {
-        s << "\t\t" << *component << std::endl;
+        s << "\t\t" << component->getOutput() << std::endl;
     }
 
     return s;

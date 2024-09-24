@@ -9,6 +9,7 @@
 #define ICOMPONENT_HPP_
 
 #include "Include.hh"
+
 namespace RType {
     class IComponent {
         public:
@@ -16,6 +17,5 @@ namespace RType {
             virtual std::string getOutput() const = 0;
     };
 }
-std::ostream &operator<<(std::ostream &s, const RType::IComponent &component);
 
 #endif /* !ICOMPONENT_HPP_ */

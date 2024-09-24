@@ -44,6 +44,7 @@ std::string RType::EntityTypeComponent::getOutput() const
             entityType = "button";
             break;
         default:
+            entityType = "unknown";
             break;
         }
     std::string output("Entity Type Component (entity type: " + entityType + ")");
