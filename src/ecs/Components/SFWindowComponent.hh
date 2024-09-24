@@ -19,12 +19,10 @@ namespace RType {
             ~SFWindowComponent();
             std::shared_ptr<sf::RenderWindow> getWindow() const;
             std::string getOutput() const;
-            void setisOpen(bool isOpen);
             bool getIsOpen();
         protected:
         private:
             std::shared_ptr<sf::RenderWindow> _window;
-            bool _isOpen;
 
     };
 }

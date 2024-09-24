@@ -30,7 +30,6 @@ void HandleEventSystem::effect(std::vector<std::shared_ptr<RType::Entity>> entit
             {
                 if (evt.type == sf::Event::Closed) {
                     GET_WINDOW->close();
-                    GET_WINDOW_SET_ISOPEN->setisOpen(false);
                 }
                 GET_WINDOW->clear();
                 GET_WINDOW->display();
