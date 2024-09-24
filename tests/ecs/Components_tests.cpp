@@ -10,6 +10,9 @@
 #include "../../src/ecs/Components/PositionComponent.hh"
 #include "../../src/ecs/Components/HealthComponent.hh"
 #include "../../src/ecs/Components/EntityTypeComponent.hh"
+#include "../../src/ecs/Components/SFWindowComponent.hh"
+#include "../../src/ecs/Components/EventComponent.hh"
+#include "../../src/ecs/Components/TextureComponent.hh"
 
 Test(main, TestPositionComponent) {
     RType::PositionComponent position(1, 2);
@@ -68,8 +71,37 @@ Test(main, TestEntityTypeComponent) {
     expected = "Entity Type Component (entity type: button)";
     cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
     
+    entityType.setEntityType(RType::WINDOW);
+    output = entityType.getOutput();
+    expected = "Entity Type Component (entity type: window)";
+    cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
+
     entityType.setEntityType(RType::OTHER);
     output = entityType.getOutput();
     expected = "Entity Type Component (entity type: unknown)";
     cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
 }
+
+// Test(main, TestEventComponent) {
+//     RType::EventComponent health(25);
+//     cr_assert_eq(health.getHealth(), 25, "Expected: %d, Got: %d", health.getHealth(), 25);
+//     health.setHealth(12);
+//     cr_assert_eq(health.getHealth(), 12, "Expected: %d, Got: %d", health.getHealth(), 12);
+
+//     std::string output = health.getOutput();
+//     std::string expected = "Health Component (health: 12)";
+
+//     cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
+// }
+
+// Test(main, TestTexture) {
+//     RType::HealthComponent health(25);
+//     cr_assert_eq(health.getHealth(), 25, "Expected: %d, Got: %d", health.getHealth(), 25);
+//     health.setHealth(12);
+//     cr_assert_eq(health.getHealth(), 12, "Expected: %d, Got: %d", health.getHealth(), 12);
+
+//     std::string output = health.getOutput();
+//     std::string expected = "Health Component (health: 12)";
+
+//     cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
+// }
