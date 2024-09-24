@@ -12,6 +12,7 @@ RType::Game::Game()
     createPlayer();
     createWindow();
     createGameSystem();
+    _stopLoop = false;
 }
 
 RType::Game::~Game()
@@ -25,9 +26,16 @@ RType::Coordinator RType::Game::getCoordinator() const
 
 void RType::Game::gameLoop()
 {
-    while (1) {
+    while (!_stopLoop) {
         for (auto sys: _coord.getSystems()) {
             sys->effect(_coord.getEntities());
+        }
+        for (auto entity : _coord.getEntities()) {
+            if (entity->getComponent<RType::SFWindowComponent>() != nullptr) {
+                if (entity->getComponent<RType::SFWindowComponent>()->getIsOpen() == false) {
+                    _stopLoop = true;
+                }
+            }
         }
     }
 }

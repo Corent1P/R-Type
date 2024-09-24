@@ -9,6 +9,9 @@
 #define HANDLEEVENTSYTEM_HPP_
 #include "../ISystem.hh"
 
+#define GET_WINDOW e->getComponent<RType::SFWindowComponent>()->getWindow()
+#define GET_WINDOW_SET_ISOPEN e->getComponent<RType::SFWindowComponent>()
+
 class HandleEventSystem: public  RType::ISystem {
     public:
         HandleEventSystem();

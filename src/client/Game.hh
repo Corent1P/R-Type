@@ -30,6 +30,7 @@ namespace RType {
             void createWindow();
             void createGameSystem();
             RType::Coordinator _coord;
+            bool _stopLoop;
     };
 }
 
