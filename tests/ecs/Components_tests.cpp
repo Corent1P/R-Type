@@ -82,26 +82,28 @@ Test(main, TestEntityTypeComponent) {
     cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
 }
 
-// Test(main, TestEventComponent) {
-//     RType::EventComponent health(25);
-//     cr_assert_eq(health.getHealth(), 25, "Expected: %d, Got: %d", health.getHealth(), 25);
-//     health.setHealth(12);
-//     cr_assert_eq(health.getHealth(), 12, "Expected: %d, Got: %d", health.getHealth(), 12);
+Test(main, TestEventComponent) {
+    RType::EventComponent event;
+    cr_assert_neq(event.getEvent().type, sf::Event::Closed, "Expected: getEvent type, Got: sf::Event::Closed", event.getEvent().type, sf::Event::Closed);
 
-//     std::string output = health.getOutput();
-//     std::string expected = "Health Component (health: 12)";
+    std::string output = event.getOutput();
+    std::string expected = "Event Component";
 
-//     cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
-// }
+    cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
+}
 
-// Test(main, TestTexture) {
-//     RType::HealthComponent health(25);
-//     cr_assert_eq(health.getHealth(), 25, "Expected: %d, Got: %d", health.getHealth(), 25);
-//     health.setHealth(12);
-//     cr_assert_eq(health.getHealth(), 12, "Expected: %d, Got: %d", health.getHealth(), 12);
+Test(main, TestTexture) {
+    RType::TextureComponent texture("./ressources/player.png");
+    cr_assert_eq(texture.getPath(), "./ressources/player.png", "Expected: %s, Got: %s", texture.getPath(), "./ressources/player.png");
+    cr_assert_throw(texture.setTexture("./ressources/notExist.png"), RType::Error);
+    std::string output = texture.getOutput();
+    std::string expected = "Texture Component (path: ./ressources/player.png, width: 820, height: 440)";
 
-//     std::string output = health.getOutput();
-//     std::string expected = "Health Component (health: 12)";
+    cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
 
-//     cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
-// }
+    cr_assert_eq(texture.getTexture().getSize().x, 820, "Expected: %s, Got: %s", texture.getTexture().getSize().x, 820);
+
+    texture.setTexture("./ressources/monster.png");
+    cr_assert_eq(texture.getPath(), "./ressources/monster.png", "Expected: %s, Got: %s", texture.getPath(), "./ressources/monster.png");
+
+}

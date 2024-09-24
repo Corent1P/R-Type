@@ -14,7 +14,7 @@ int main(void)
 {
     try {
         RType::Game game;
-        // std::cout << game << std::endl;
+        std::cout << game << std::endl;
         game.gameLoop();
     }  catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;

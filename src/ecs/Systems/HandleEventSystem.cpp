@@ -22,7 +22,7 @@ void HandleEventSystem::effect(std::vector<std::shared_ptr<RType::Entity>> entit
 {
     for (const auto &e: entities) {
         if (!verifyRequiredComponent(e)) {
-            std::cout << "nothing to do around here" << std::endl;
+            continue;
         } else {
             sf::Event evt;
             while (e->getComponent<RType::SFWindowComponent>()->getWindow()->pollEvent(evt))
