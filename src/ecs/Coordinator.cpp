@@ -18,8 +18,8 @@ std::shared_ptr<RType::Entity> RType::Coordinator::generateNewEntity() {
     return (newEntity);
 }
 
-void RType::Coordinator::generateNewSystem() {
-    _systems.push_back(std::make_unique<ASystem>());
+void RType::Coordinator::generateNewSystem(std::shared_ptr<ISystem> sys) {
+    _systems.push_back(sys);
 }
 
 std::vector<std::shared_ptr<RType::Entity>> RType::Coordinator::getEntities() const

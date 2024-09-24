@@ -17,7 +17,7 @@ namespace RType {
             Coordinator();
             ~Coordinator() = default;
             std::shared_ptr<Entity> generateNewEntity();
-            void generateNewSystem();
+            void generateNewSystem(std::shared_ptr<ISystem> sys);
             std::vector<std::shared_ptr<Entity>> getEntities() const;
             std::vector<std::shared_ptr<ISystem>> getSystems() const;
 

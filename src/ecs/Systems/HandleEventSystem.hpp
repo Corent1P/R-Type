@@ -7,17 +7,20 @@
 
 #ifndef HANDLEEVENTSYTEM_HPP_
 #define HANDLEEVENTSYTEM_HPP_
-#include "ISystem.hh"
+#include "../ISystem.hh"
 
-class HandleEventSytem {
+class HandleEventSystem: public  RType::ISystem {
     public:
-        HandleEventSytem();
-        ~HandleEventSytem();
-        void effect(std::shared_ptr<Entity> entities);
-        bool verifyRequiredComponent(Entity entity);
-        SystemType getType() const;
+        HandleEventSystem();
+        ~HandleEventSystem();
+        void effect(std::vector<std::shared_ptr<RType::Entity>> entities);
+        bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
+        RType::SystemType getType() const;
+        //std::string getOutput() const;
     protected:
     private:
+        RType::SystemType _type;
+        std::vector<std::shared_ptr<RType::Entity>> _entities;
 };
 
 #endif /* !HANDLEEVENTSYTEM_HPP_ */

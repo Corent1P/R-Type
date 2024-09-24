@@ -14,6 +14,7 @@
 #include "../ecs/Components/SFWindowComponent.hh"
 #include "../ecs/Components/EventComponent.hh"
 #include "../ecs/Components/TextureComponent.hh"
+#include "../ecs/Systems/HandleEventSystem.hpp"
 
 namespace RType {
     class Game {
@@ -27,7 +28,7 @@ namespace RType {
             void createMob();
             void createBoss();
             void createWindow();
-
+            void createGameSystem();
             RType::Coordinator _coord;
     };
 }

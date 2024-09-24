@@ -15,16 +15,16 @@ HandleMoveSystem::~HandleMoveSystem()
 {
 }
 
-void HandleMoveSystem::effect(std::shared_ptr<Entity> entities)
+void HandleMoveSystem::effect(std::vector<std::shared_ptr<RType::Entity>> entities)
 {
 }
 
-bool HandleMoveSystem::verifyRequiredComponent(Entity entity)
+bool HandleMoveSystem::verifyRequiredComponent(std::shared_ptr<RType::Entity> entity)
 {
 
 }
 
-SystemType HandleMoveSystem::getType() const
+RType::SystemType HandleMoveSystem::getType() const
 {
-
+    return _type;
 }

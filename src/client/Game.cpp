@@ -11,6 +11,7 @@ RType::Game::Game()
 {
     createPlayer();
     createWindow();
+    createGameSystem();
 }
 
 RType::Game::~Game()
@@ -25,7 +26,9 @@ RType::Coordinator RType::Game::getCoordinator() const
 void RType::Game::gameLoop()
 {
     while (true) {
-        
+        for (auto sys: _coord.getSystems()) {
+            sys->effect(_coord.getEntities());
+        }
     }    
 }
 
@@ -64,6 +67,11 @@ void RType::Game::createBoss()
     player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::BOSS));
     player->pushComponent(std::make_shared<RType::PositionComponent>(2000, 545));
     player->pushComponent(std::make_shared<RType::HealthComponent>(250));
+}
+
+void RType::Game::createGameSystem()
+{
+    _coord.generateNewSystem(std::shared_ptr<HandleEventSystem>());
 }
 
 std::ostream &operator<<(std::ostream &s, const RType::Game &game)

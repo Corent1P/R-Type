@@ -15,6 +15,9 @@ std::ostream &operator<<(std::ostream &s, const RType::ISystem &system)
         case RType::SystemBasic:
             s << "basic";
             break;
+        case RType::SystemHandleEvent:
+            s << "handle event System";
+            break;
         default:
             s << "unknown";
             break;

@@ -322,30 +322,6 @@ Entity.cpp.s:
 	cd /Users/jobantzhaffen/Documents/GitHub/R-Type && $(MAKE) $(MAKESILENT) -f src/ecs/CMakeFiles/ecs.dir/build.make src/ecs/CMakeFiles/ecs.dir/Entity.cpp.s
 .PHONY : Entity.cpp.s
 
-IComponent.o: IComponent.cpp.o
-.PHONY : IComponent.o
-
-# target to build an object file
-IComponent.cpp.o:
-	cd /Users/jobantzhaffen/Documents/GitHub/R-Type && $(MAKE) $(MAKESILENT) -f src/ecs/CMakeFiles/ecs.dir/build.make src/ecs/CMakeFiles/ecs.dir/IComponent.cpp.o
-.PHONY : IComponent.cpp.o
-
-IComponent.i: IComponent.cpp.i
-.PHONY : IComponent.i
-
-# target to preprocess a source file
-IComponent.cpp.i:
-	cd /Users/jobantzhaffen/Documents/GitHub/R-Type && $(MAKE) $(MAKESILENT) -f src/ecs/CMakeFiles/ecs.dir/build.make src/ecs/CMakeFiles/ecs.dir/IComponent.cpp.i
-.PHONY : IComponent.cpp.i
-
-IComponent.s: IComponent.cpp.s
-.PHONY : IComponent.s
-
-# target to generate assembly for a file
-IComponent.cpp.s:
-	cd /Users/jobantzhaffen/Documents/GitHub/R-Type && $(MAKE) $(MAKESILENT) -f src/ecs/CMakeFiles/ecs.dir/build.make src/ecs/CMakeFiles/ecs.dir/IComponent.cpp.s
-.PHONY : IComponent.cpp.s
-
 ISystem.o: ISystem.cpp.o
 .PHONY : ISystem.o
 
@@ -403,9 +379,6 @@ help:
 	@echo "... Entity.o"
 	@echo "... Entity.i"
 	@echo "... Entity.s"
-	@echo "... IComponent.o"
-	@echo "... IComponent.i"
-	@echo "... IComponent.s"
 	@echo "... ISystem.o"
 	@echo "... ISystem.i"
 	@echo "... ISystem.s"
