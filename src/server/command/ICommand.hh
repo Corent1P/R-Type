@@ -21,6 +21,8 @@ namespace RType {
         public:
             virtual ~ICommand() = default;
 
+            virtual CommandType getType(void) const = 0;
+            virtual std::string getData(void) const = 0;
             virtual void execute(udp::socket &socket, std::shared_ptr<Client> client) = 0;
     };
 }
