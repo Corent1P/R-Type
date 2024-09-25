@@ -21,9 +21,10 @@ HandleEventSystem::~HandleEventSystem()
 
 void HandleEventSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
+    std::cout << entity->getComponent<RType::EventComponent>()->getOutput() << std::endl;
     sf::Event evt;
-    while (GET_WINDOW->pollEvent(evt)) {
-        if (evt.type == sf::Event::Closed) {
+    while (GET_WINDOW->pollEvent(entity->getComponent<RType::EventComponent>()->getEvent())) {
+        if (entity->getComponent<RType::EventComponent>()->getEvent().type == sf::Event::Closed) {
             GET_WINDOW->close();
         }
         GET_WINDOW->clear();
@@ -38,9 +39,4 @@ bool HandleEventSystem::verifyRequiredComponent(std::shared_ptr<RType::Entity> e
         return false;
     }
     return (true);
-}
-
-RType::SystemType HandleEventSystem::getType() const
-{
-    return _type;
 }
