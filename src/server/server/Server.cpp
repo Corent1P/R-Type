@@ -36,18 +36,28 @@ void RType::Server::handleReceive(const boost::system::error_code &error, std::s
         std::cout << "There was an error during receival" << std::endl;
         return;
     }
-    std::cout << "Message received = " << std::string(_recvBuffer.data(), bytesTransferred) << std::endl;
+    std::string command(_recvBuffer.data(), bytesTransferred);
+    std::cout << "Message received = " << command << std::endl;
     std::shared_ptr<Client> connectedClient = getConnectedClient();
     if (!connectedClient)
         connectedClient = createClient();
 
-    // TODO: implement the logic with the client and the message
-    std::string message = makeDaytimeString();
-    _socket.async_send_to(boost::asio::buffer(message), _remoteEndpoint,
-        [this, message](const boost::system::error_code &error, std::size_t bytes_transferred) {
-            this->handleSend(message, error, bytes_transferred);
+    // ! TO REORGANISE {
+    std::shared_ptr<ICommand> com = _commandFactory.createCommand(command);
+    std::string response;
+    if (!com)
+        response = "Unvalid Command\n";
+    else {
+        com->execute(connectedClient);
+
+        response = makeDaytimeString();
+    }
+    _socket.async_send_to(boost::asio::buffer(response), _remoteEndpoint,
+        [this, response](const boost::system::error_code &error, std::size_t bytes_transferred) {
+            this->handleSend(response, error, bytes_transferred);
         }
     );
+    // ! }
     startReceive();
 }
 

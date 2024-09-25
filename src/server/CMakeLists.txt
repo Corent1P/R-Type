@@ -1,7 +1,13 @@
 set(SRC_SERVER
     ./main.cpp
+    ./Error.cpp
     ./server/Server.cpp
     ./client/Client.cpp
+    ./command/ACommand.cpp
+    ./command/factory/CommandFactory.cpp
+    ./command/commands/MoveCommand.cpp
+    ./command/commands/ShootCommand.cpp
+    ./command/commands/StartCommand.cpp
 )
 
 add_executable(r-type_server ${SRC_SERVER})

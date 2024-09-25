@@ -9,6 +9,7 @@
 
 #include "../includes.hh"
 #include "../client/Client.hh"
+#include "../command/factory/CommandFactory.hh"
 
 #define MAX_SIZE 1024
 
@@ -33,5 +34,6 @@ namespace RType {
             udp::endpoint _remoteEndpoint;
             std::array<char, MAX_SIZE> _recvBuffer;
             std::vector<std::shared_ptr<Client>> _clients;
+            CommandFactory _commandFactory;
     };
 }
