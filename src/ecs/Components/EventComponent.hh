@@ -16,7 +16,7 @@ namespace RType {
         public:
             EventComponent() = default;
             ~EventComponent() = default;
-            const sf::Event &getEvent() const;
+            sf::Event &getEvent();
             std::string getOutput() const;
         protected:
         private:

@@ -7,7 +7,7 @@
 
 #include "EventComponent.hh"
 
-const sf::Event &RType::EventComponent::getEvent() const
+sf::Event& RType::EventComponent::getEvent()
 {
     return (_event);
 }

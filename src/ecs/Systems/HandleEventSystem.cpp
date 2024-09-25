@@ -21,8 +21,6 @@ HandleEventSystem::~HandleEventSystem()
 
 void HandleEventSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
-    std::cout << entity->getComponent<RType::EventComponent>()->getOutput() << std::endl;
-    sf::Event evt;
     while (GET_WINDOW->pollEvent(entity->getComponent<RType::EventComponent>()->getEvent())) {
         if (entity->getComponent<RType::EventComponent>()->getEvent().type == sf::Event::Closed) {
             GET_WINDOW->close();
