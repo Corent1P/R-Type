@@ -13,7 +13,9 @@ SRC_ECS	=	src/ecs/Components/PositionComponent.cpp\
 			src/ecs/Components/EventComponent.cpp\
 			src/ecs/Components/SFWindowComponent.cpp\
 			src/ecs/Components/TextureComponent.cpp\
+			src/ecs/Components/SpriteComponent.cpp\
 			src/ecs/Systems/HandleEventSystem.cpp\
+    		src/ecs/Systems/HandleDrawSystem.cpp\
 			src/ecs/Coordinator.cpp\
 			src/ecs/Entity.cpp\
 			src/ecs/ISystem.cpp\

@@ -101,7 +101,7 @@ Test(main, TestTexture) {
 
     cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
 
-    cr_assert_eq(texture.getTexture().getSize().x, 820, "Expected: %s, Got: %s", texture.getTexture().getSize().x, 820);
+    cr_assert_eq(texture.getTexture()->getSize().x, 820, "Expected: %s, Got: %s", texture.getTexture()->getSize().x, 820);
 
     texture.setTexture("./ressources/monster.png");
     cr_assert_eq(texture.getPath(), "./ressources/monster.png", "Expected: %s, Got: %s", texture.getPath(), "./ressources/monster.png");
