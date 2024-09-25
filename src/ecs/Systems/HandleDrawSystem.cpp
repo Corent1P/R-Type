@@ -25,15 +25,16 @@ void RType::HandleDrawSystem::effects(std::vector<std::shared_ptr<RType::Entity>
 {
     
     for (const auto &w: entities) {
-        GET_WINDOW_FOR_DRAW->clear();
         if (GET_WINDOW_FOR_DRAW != nullptr) {
+            GET_WINDOW_FOR_DRAW->clear();
             for (const auto &e: entities) {
                 if (verifyRequiredComponent(e)) {
                     GET_WINDOW_FOR_DRAW->draw(e->getComponent<RType::SpriteComponent>()->getSprite());
                 }
             }
+            GET_WINDOW_FOR_DRAW->display();
+            return;
         }
-        GET_WINDOW_FOR_DRAW->display();
     }
 }
 
