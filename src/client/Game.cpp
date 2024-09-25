@@ -45,10 +45,10 @@ void RType::Game::createPlayer()
     std::shared_ptr<RType::Entity> player = _coord.generateNewEntity();
 
     player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::PLAYER));
-    player->pushComponent(std::make_shared<RType::PositionComponent>(10, 10));
+    std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(10, 10));
     player->pushComponent(std::make_shared<RType::HealthComponent>(25));
     std::shared_ptr<RType::TextureComponent> texture = player->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/player.png"));
-    player->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), sf::Vector2f ({10, 10})));
+    player->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions()));
 }
 
 void RType::Game::createWindow()

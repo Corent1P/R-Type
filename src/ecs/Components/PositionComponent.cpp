@@ -43,6 +43,11 @@ int RType::PositionComponent::getPositionY() const
     return (_y);
 }
 
+sf::Vector2f RType::PositionComponent::getPositions() const
+{
+	return sf::Vector2f (_x, _y);
+}
+
 std::string RType::PositionComponent::getOutput() const
 {
     std::string output("Position Component (x: " + std::to_string(_x) + ", y: " + std::to_string(_y) + ")");

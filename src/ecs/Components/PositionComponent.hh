@@ -8,6 +8,8 @@
 #ifndef POSITIONCOMPONENT_HPP_
 #define POSITIONCOMPONENT_HPP_
 #include "../IComponent.hh"
+#include <SFML/Graphics.hpp>
+
 namespace RType {
 
     class PositionComponent: public RType::IComponent {
@@ -19,6 +21,8 @@ namespace RType {
             void setY(int y);
             int getPositionX() const;
             int getPositionY() const;
+            sf::Vector2f getPositions() const;
+
             std::string getOutput() const;
         private:
             int _x;
