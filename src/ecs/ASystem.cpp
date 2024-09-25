@@ -7,8 +7,8 @@
 
 #include "ASystem.hh"
 
-RType::ASystem::ASystem():
-    _type(SystemBasic)
+RType::ASystem::ASystem(SystemType type):
+    _type(type)
 {
 }
 

@@ -8,6 +8,9 @@
 #ifndef HANDLEDRAWSYSTEM_HPP_
 #define HANDLEDRAWSYSTEM_HPP_
 #include "../ASystem.hh"
+#include ".././Components/SFWindowComponent.hh"
+#include ".././Components/SpriteComponent.hh"
+#include ".././Components/PositionComponent.hh"
 
 #define GET_WINDOW_FOR_DRAW w->getComponent<RType::SFWindowComponent>()
 namespace RType {
@@ -20,7 +23,6 @@ namespace RType {
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
         protected:
         private:
-            RType::SystemType _type;
             std::vector<std::shared_ptr<RType::Entity>> _entities;
     };
 }

@@ -6,13 +6,10 @@
 */
 
 #include "HandleDrawSystem.hpp"
-#include ".././Components/SFWindowComponent.hh"
-#include ".././Components/SpriteComponent.hh"
-#include ".././Components/PositionComponent.hh"
 
-RType::HandleDrawSystem::HandleDrawSystem()
+RType::HandleDrawSystem::HandleDrawSystem():
+    ASystem(DRAW)
 {
-    _type= RType::SystemHandleEvent;
 }
 
 RType::HandleDrawSystem::~HandleDrawSystem()

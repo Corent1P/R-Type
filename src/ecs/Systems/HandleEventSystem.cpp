@@ -6,19 +6,17 @@
 */
 
 #include "HandleEventSystem.hpp"
-#include ".././Components/SFWindowComponent.hh"
-#include ".././Components/EventComponent.hh"
 
-HandleEventSystem::HandleEventSystem()
-{
-    _type = RType::SystemHandleEvent;
-}
-
-HandleEventSystem::~HandleEventSystem()
+RType::HandleEventSystem::HandleEventSystem():
+    ASystem(EVENT)
 {
 }
 
-void HandleEventSystem::effect(std::shared_ptr<RType::Entity> entity)
+RType::HandleEventSystem::~HandleEventSystem()
+{
+}
+
+void RType::HandleEventSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
     while (GET_WINDOW->pollEvent(entity->getComponent<RType::EventComponent>()->getEvent())) {
         if (entity->getComponent<RType::EventComponent>()->getEvent().type == sf::Event::Closed) {
@@ -27,7 +25,7 @@ void HandleEventSystem::effect(std::shared_ptr<RType::Entity> entity)
     }
 }
 
-bool HandleEventSystem::verifyRequiredComponent(std::shared_ptr<RType::Entity> entity)
+bool RType::HandleEventSystem::verifyRequiredComponent(std::shared_ptr<RType::Entity> entity)
 {
     if (entity->getComponent<RType::SFWindowComponent>() == nullptr
     ||entity->getComponent<RType::EventComponent>() == nullptr) {

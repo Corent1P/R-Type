@@ -12,14 +12,17 @@ std::ostream &operator<<(std::ostream &s, const RType::ISystem &system)
     s << "System: ";
 
     switch (system.getType()) {
-        case RType::SystemBasic:
-            s << "basic";
+        case RType::BASIC:
+            s << "Basic system";
             break;
-        case RType::SystemHandleEvent:
-            s << "handle event System";
+        case RType::EVENT:
+            s << "Event system";
+            break;
+        case RType::DRAW:
+            s << "Draw system";
             break;
         default:
-            s << "unknown";
+            s << "Unknown system";
             break;
     }
     return s;

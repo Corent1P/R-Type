@@ -11,11 +11,14 @@
 #include "Include.hh"
 #include "Entity.hpp"
 
+#define GET_WINDOW entity->getComponent<RType::SFWindowComponent>()->getWindow()
+
 namespace RType {
 
     enum SystemType {
-        SystemBasic,
-        SystemHandleEvent,
+        BASIC,
+        EVENT,
+        DRAW
     };
 
     class ISystem {

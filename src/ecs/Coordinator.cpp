@@ -41,6 +41,6 @@ std::ostream &operator<<(std::ostream &s, const RType::Coordinator &coordinator)
     for (auto entity: entities)
         s << "\t" << *entity;
     for (auto system: systems)
-        s << "\t" << *system;
+        s << "\t" << *system << std::endl;
     return s;
 }
