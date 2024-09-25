@@ -14,6 +14,8 @@
 #include "../ecs/Components/SFWindowComponent.hh"
 #include "../ecs/Components/EventComponent.hh"
 #include "../ecs/Components/TextureComponent.hh"
+#include "../ecs/Components/SpriteComponent.hh"
+
 #include "../ecs/Systems/HandleEventSystem.hpp"
 
 namespace RType {

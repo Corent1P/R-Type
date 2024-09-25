@@ -13,6 +13,7 @@ set(SRC_COMPONENTS
     ./Components/SFWindowComponent.cpp
     ./Components/EventComponent.cpp
     ./Components/TextureComponent.cpp
+    ./Components/SpriteComponent.cpp
 )
 
 set(SRC_SYSTEMS
