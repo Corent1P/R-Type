@@ -9,7 +9,6 @@
 #include ".././Components/SFWindowComponent.hh"
 #include ".././Components/SpriteComponent.hh"
 #include ".././Components/PositionComponent.hh"
-// #include "SFML/Graphics"
 
 RType::HandleDrawSystem::HandleDrawSystem()
 {
@@ -26,13 +25,13 @@ void RType::HandleDrawSystem::effects(std::vector<std::shared_ptr<RType::Entity>
     
     for (const auto &w: entities) {
         if (GET_WINDOW_FOR_DRAW != nullptr) {
-            GET_WINDOW_FOR_DRAW->clear();
+            GET_WINDOW_FOR_DRAW->getWindow()->clear();
             for (const auto &e: entities) {
                 if (verifyRequiredComponent(e)) {
-                    GET_WINDOW_FOR_DRAW->draw(e->getComponent<RType::SpriteComponent>()->getSprite());
+                    GET_WINDOW_FOR_DRAW->getWindow()->draw(e->getComponent<RType::SpriteComponent>()->getSprite());
                 }
             }
-            GET_WINDOW_FOR_DRAW->display();
+            GET_WINDOW_FOR_DRAW->getWindow()->display();
             return;
         }
     }

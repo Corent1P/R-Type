@@ -16,15 +16,15 @@ namespace RType {
     class TextureComponent: public RType::IComponent {
         public:
             TextureComponent(std::string path);
-            ~TextureComponent();
+            ~TextureComponent() = default;
 
             void setTexture(std::string path);
-            sf::Texture getTexture() const;
+            std::shared_ptr<sf::Texture> getTexture() const;
             std::string getPath() const;
             std::string getOutput() const;
         private:
+            std::shared_ptr<sf::Texture> _texture;
             std::string _path;
-            sf::Texture _texture;
 
     };
 }

@@ -17,6 +17,7 @@
 #include "../ecs/Components/SpriteComponent.hh"
 
 #include "../ecs/Systems/HandleEventSystem.hpp"
+#include "../ecs/Systems/HandleDrawSystem.hpp"
 
 namespace RType {
     class Game {

@@ -13,16 +13,15 @@
 
 namespace RType {
 
-    class SpriteComponent: public RType::IComponent, public sf::Drawable {
+    class SpriteComponent: public RType::IComponent {
         public:
-            SpriteComponent(sf::Texture texture, sf::Vector2f pos);
-            SpriteComponent(sf::Texture texture, sf::Vector2f pos, sf::Vector2f scale);
+            SpriteComponent(std::shared_ptr<sf::Texture> texture, sf::Vector2f pos);
+            SpriteComponent(std::shared_ptr<sf::Texture> texture, sf::Vector2f pos, sf::Vector2f scale);
             ~SpriteComponent() = default;
 
-            void setSprite(sf::Texture texture, sf::Vector2f pos);
-            void setSprite(sf::Texture texture, sf::Vector2f pos, sf::Vector2f scale);
+            void setSprite(std::shared_ptr<sf::Texture> texture, sf::Vector2f pos);
+            void setSprite(std::shared_ptr<sf::Texture> texture, sf::Vector2f pos, sf::Vector2f scale);
             sf::Sprite getSprite() const;
-            void draw(sf::RenderTarget& target, sf::RenderStates states) const;
             std::string getOutput() const;
         private:
             sf::Sprite _sprite;

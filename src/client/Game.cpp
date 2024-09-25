@@ -9,8 +9,8 @@
 
 RType::Game::Game()
 {
-    createPlayer();
     createWindow();
+    createPlayer();
     createGameSystem();
     _stopLoop = false;
 }
@@ -31,10 +31,8 @@ void RType::Game::gameLoop()
             sys->effects(_coord.getEntities());
         }
         for (auto entity : _coord.getEntities()) {
-            if (entity->getComponent<RType::SFWindowComponent>() != nullptr) {
-                if (entity->getComponent<RType::SFWindowComponent>()->getIsOpen() == false) {
-                    _stopLoop = true;
-                }
+            if (entity->getComponent<RType::SFWindowComponent>() && !entity->getComponent<RType::SFWindowComponent>()->getIsOpen()) {
+                _stopLoop = true;
             }
         }
     }
@@ -47,7 +45,7 @@ void RType::Game::createPlayer()
     player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::PLAYER));
     std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(10, 10));
     player->pushComponent(std::make_shared<RType::HealthComponent>(25));
-    std::shared_ptr<RType::TextureComponent> texture = player->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/player.png"));
+    std::shared_ptr<RType::TextureComponent> texture = player->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/player2.png"));
     player->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions()));
 }
 
@@ -81,6 +79,7 @@ void RType::Game::createBoss()
 void RType::Game::createGameSystem()
 {
     _coord.generateNewSystem(std::make_shared<HandleEventSystem>());
+    _coord.generateNewSystem(std::make_shared<HandleDrawSystem>());
 }
 
 std::ostream &operator<<(std::ostream &s, const RType::Game &game)

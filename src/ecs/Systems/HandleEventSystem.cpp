@@ -8,7 +8,6 @@
 #include "HandleEventSystem.hpp"
 #include ".././Components/SFWindowComponent.hh"
 #include ".././Components/EventComponent.hh"
-// #include "SFML/Graphics"
 
 HandleEventSystem::HandleEventSystem()
 {
@@ -25,8 +24,6 @@ void HandleEventSystem::effect(std::shared_ptr<RType::Entity> entity)
         if (entity->getComponent<RType::EventComponent>()->getEvent().type == sf::Event::Closed) {
             GET_WINDOW->close();
         }
-        GET_WINDOW->clear();
-        GET_WINDOW->display();
     }
 }
 

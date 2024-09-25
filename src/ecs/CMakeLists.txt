@@ -18,7 +18,7 @@ set(SRC_COMPONENTS
 
 set(SRC_SYSTEMS
     ./Systems/HandleEventSystem.cpp
-    ./Systems/handleDrawSystem.cpp
+    ./Systems/HandleDrawSystem.cpp
 )
 
 add_library(ecs ${SRC_CLIENT} ${SRC_COMPONENTS} ${SRC_SYSTEMS})

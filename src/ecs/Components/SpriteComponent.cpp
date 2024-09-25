@@ -7,25 +7,27 @@
 
 #include "SpriteComponent.hh"
 
-RType::SpriteComponent::SpriteComponent(sf::Texture texture, sf::Vector2f pos)
+RType::SpriteComponent::SpriteComponent(std::shared_ptr<sf::Texture> texture, sf::Vector2f pos)
 {
     setSprite(texture, pos);
 }
 
-RType::SpriteComponent::SpriteComponent(sf::Texture texture, sf::Vector2f pos, sf::Vector2f scale)
+RType::SpriteComponent::SpriteComponent(std::shared_ptr<sf::Texture> texture, sf::Vector2f pos, sf::Vector2f scale)
 {
     setSprite(texture, pos, scale);
 }
 
-void RType::SpriteComponent::setSprite(sf::Texture texture, sf::Vector2f pos)
+void RType::SpriteComponent::setSprite(std::shared_ptr<sf::Texture> texture, sf::Vector2f pos)
 {
-    _sprite.setTexture(texture);
+    std::cout << "texture x: " << texture->getSize().x << std::endl;
+    _sprite.setTexture(*(texture));
     _sprite.setPosition(pos);
+    _sprite.setScale(sf::Vector2f (2, 2));
 }
 
-void RType::SpriteComponent::setSprite(sf::Texture texture, sf::Vector2f pos, sf::Vector2f scale)
+void RType::SpriteComponent::setSprite(std::shared_ptr<sf::Texture> texture, sf::Vector2f pos, sf::Vector2f scale)
 {
-    _sprite.setTexture(texture);
+    _sprite.setTexture(*(texture));
     _sprite.setPosition(pos);
     _sprite.setScale(scale);
 }
@@ -33,11 +35,6 @@ void RType::SpriteComponent::setSprite(sf::Texture texture, sf::Vector2f pos, sf
 sf::Sprite RType::SpriteComponent::getSprite() const
 {
 	return _sprite;
-}
-
-void RType::SpriteComponent::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-    target.draw(_sprite, states);
 }
 
 std::string RType::SpriteComponent::getOutput() const

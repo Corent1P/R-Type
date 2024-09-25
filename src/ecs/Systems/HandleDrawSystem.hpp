@@ -7,11 +7,11 @@
 
 #ifndef HANDLEDRAWSYSTEM_HPP_
 #define HANDLEDRAWSYSTEM_HPP_
-#include "../ISystem.hh"
+#include "../ASystem.hh"
 
-#define GET_WINDOW_FOR_DRAW w->getComponent<RType::SFWindowComponent>()->getWindow()
+#define GET_WINDOW_FOR_DRAW w->getComponent<RType::SFWindowComponent>()
 namespace RType {
-    class HandleDrawSystem: public ISystem {
+    class HandleDrawSystem: public ASystem {
         public:
             HandleDrawSystem();
             ~HandleDrawSystem();
