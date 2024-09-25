@@ -9,9 +9,8 @@
 
 std::string RType::Server::makeDaytimeString(void)
 {
-    using namespace std; // For time_t, time and ctime;
-    time_t now = time(0);
-    return ctime(&now);
+    std::time_t now = std::time(0);
+    return std::ctime(&now);
 }
 
 RType::Server::Server(boost::asio::io_context &ioContext, int port):
@@ -48,15 +47,10 @@ void RType::Server::handleReceive(const boost::system::error_code &error, std::s
     if (!com)
         response = "Unvalid Command\n";
     else {
-        com->execute(connectedClient);
-
+        com->execute(_socket, connectedClient);
         response = makeDaytimeString();
     }
-    _socket.async_send_to(boost::asio::buffer(response), _remoteEndpoint,
-        [this, response](const boost::system::error_code &error, std::size_t bytes_transferred) {
-            this->handleSend(response, error, bytes_transferred);
-        }
-    );
+    connectedClient->sendMessage(_socket, response);
     // ! }
     startReceive();
 }
@@ -72,7 +66,7 @@ void RType::Server::handleSend(std::string, const boost::system::error_code &err
 
 std::shared_ptr<RType::Client> RType::Server::createClient(void)
 {
-    std::shared_ptr<Client> newClient(new Client(_remoteEndpoint.port(), _remoteEndpoint.address()));
+    std::shared_ptr<Client> newClient(new Client(_remoteEndpoint));
     _clients.push_back(newClient);
     return newClient;
 }

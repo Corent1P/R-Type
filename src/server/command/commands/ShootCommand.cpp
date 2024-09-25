@@ -13,7 +13,8 @@ RType::ShootCommand::ShootCommand(std::string data):
     std::cout << "shoot command created" << std::endl;
 }
 
-void RType::ShootCommand::execute(std::shared_ptr<Client> client)
+void RType::ShootCommand::execute(udp::socket &socket, std::shared_ptr<Client> client)
 {
+    client->sendMessage(socket, "Shoot command");
     std::cout << "execution of shoot command" << std::endl;
 }

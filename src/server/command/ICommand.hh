@@ -21,6 +21,6 @@ namespace RType {
         public:
             virtual ~ICommand() = default;
 
-            virtual void execute(std::shared_ptr<Client> client) = 0;
+            virtual void execute(udp::socket &socket, std::shared_ptr<Client> client) = 0;
     };
 }

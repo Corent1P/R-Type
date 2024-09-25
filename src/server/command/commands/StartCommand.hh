@@ -13,6 +13,6 @@ namespace RType {
         public:
             StartCommand(std::string data);
 
-            void execute(std::shared_ptr<Client> client);
+            void execute(udp::socket &socket, std::shared_ptr<Client> client);
     };
 }

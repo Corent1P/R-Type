@@ -13,8 +13,6 @@
 
 #define MAX_SIZE 1024
 
-using boost::asio::ip::udp;
-
 namespace RType {
     class Server {
         public:

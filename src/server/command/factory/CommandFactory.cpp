@@ -35,7 +35,7 @@ RType::CommandType RType::CommandFactory::getCommandType(const std::string &comm
 	std::string commandLabel = command.substr(0, command.find(' '));
 
     std::vector<std::string> commandLabels = {"Move", "Shoot", "Start"};
-    for (int i = 0; i < commandLabels.size(); i++)
+    for (std::size_t i = 0; i < commandLabels.size(); i++)
         if (commandLabels[i] == commandLabel)
             return (CommandType(i));
     return OTHER;
@@ -43,8 +43,9 @@ RType::CommandType RType::CommandFactory::getCommandType(const std::string &comm
 
 std::string RType::CommandFactory::getCommandData(const std::string &command)
 {
-    int positionBegin = command.find(' ');
-    if (positionBegin == command.npos)
+    std::size_t positionBegin = command.find(' ');
+    if (positionBegin == command.npos) {
         throw Error("Invalid command, no data");
+    }
 	return command.substr(positionBegin + 1);
 }

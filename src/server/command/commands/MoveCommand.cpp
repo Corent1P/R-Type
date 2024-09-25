@@ -13,7 +13,8 @@ RType::MoveCommand::MoveCommand(std::string data):
     std::cout << "Move command created" << std::endl;
 }
 
-void RType::MoveCommand::execute(std::shared_ptr<Client> client)
+void RType::MoveCommand::execute(udp::socket &socket, std::shared_ptr<Client> client)
 {
+    client->sendMessage(socket, "Move command\n");
     std::cout << "execution of move command" << std::endl;
 }
