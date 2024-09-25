@@ -8,7 +8,17 @@
 #include <iostream>
 #include <array>
 
+#include "Game.hh"
+
 int main(void)
 {
-    std::cout << "Client" << std::endl;
+    try {
+        RType::Game game;
+        std::cout << game;
+        game.gameLoop();
+    }  catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
+    }
+    return 0;
 }
