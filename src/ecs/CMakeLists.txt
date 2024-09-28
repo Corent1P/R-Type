@@ -14,11 +14,15 @@ set(SRC_COMPONENTS
     ./Components/EventComponent.cpp
     ./Components/TextureComponent.cpp
     ./Components/SpriteComponent.cpp
+    ./Components/DirectionComponent.cpp
+    ./Components/ClockComponent.cpp
 )
 
 set(SRC_SYSTEMS
     ./Systems/HandleEventSystem.cpp
     ./Systems/HandleDrawSystem.cpp
+    ./Systems/HandleMoveSystem.cpp
+    ./Systems/HandleAnimationSystem.cpp
 )
 
 add_library(ecs ${SRC_CLIENT} ${SRC_COMPONENTS} ${SRC_SYSTEMS})

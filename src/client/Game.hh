@@ -15,9 +15,13 @@
 #include "../ecs/Components/EventComponent.hh"
 #include "../ecs/Components/TextureComponent.hh"
 #include "../ecs/Components/SpriteComponent.hh"
+#include "../ecs//Components/DirectionComponent.hh"
+#include "../ecs//Components/ClockComponent.hh"
 
 #include "../ecs/Systems/HandleEventSystem.hpp"
 #include "../ecs/Systems/HandleDrawSystem.hpp"
+#include "../ecs/Systems/HandleMoveSystem.hpp"
+#include "../ecs/Systems/HandleAnimationSystem.hpp"
 
 namespace RType {
     class Game {

@@ -21,6 +21,12 @@ std::ostream &operator<<(std::ostream &s, const RType::ISystem &system)
         case RType::DRAW:
             s << "Draw system";
             break;
+        case RType::MOVE:
+            s << "Movement system";
+            break;
+        case RType::ANIMATION:
+            s << "Animation system";
+            break;
         default:
             s << "Unknown system";
             break;

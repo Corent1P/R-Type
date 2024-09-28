@@ -18,7 +18,9 @@ namespace RType {
     enum SystemType {
         BASIC,
         EVENT,
-        DRAW
+        DRAW,
+        MOVE,
+        ANIMATION,
     };
 
     class ISystem {
