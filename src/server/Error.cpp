@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2024
-** rType
+** R-Type
 ** File description:
 ** Error
 */

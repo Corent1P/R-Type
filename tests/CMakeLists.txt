@@ -12,9 +12,17 @@ set(SRC_ECS_TESTS
 
 set(SRC_SERVER_TESTS
     ./server/Server_tests.cpp
-)
+    ./server/Command_tests.cpp
 
-add_executable(unit_tests ${SRC_CLIENTS_TESTS} ${SRC_ECS_TESTS} ${SRC_SERVER_TESTS})
+    ../../src/server/Error.cpp
+    ../../src/server/server/Server.cpp
+    ../../src/server/client/Client.cpp
+    ../../src/server/command/ACommand.cpp
+    ../../src/server/command/commands/MoveCommand.cpp
+    ../../src/server/command/commands/ShootCommand.cpp
+    ../../src/server/command/commands/StartCommand.cpp
+    ../../src/server/command/factory/CommandFactory.cpp
+)
 
 target_link_libraries(unit_tests PRIVATE
     criterion
