@@ -38,15 +38,9 @@ int main(int ac, char **av)
         if (!errorHandling(ac, av))
             return printHelp(84);
         boost::asio::io_context ioContext;
-        RType::Client client(ioContext, av[1], av[2]);
-        RType::Game game;
+        RType::Game game(ioContext, av[1], av[2]);
         std::cout << game;
         game.gameLoop();
-        // !to remove {
-        client.send("Hello world");
-        std::string msg = client.receive();
-        std::cout << msg << std::endl;
-        // !}
     }  catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return 84;

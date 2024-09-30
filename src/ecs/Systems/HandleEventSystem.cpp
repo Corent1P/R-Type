@@ -8,13 +8,19 @@
 #include "HandleEventSystem.hpp"
 
 RType::HandleEventSystem::HandleEventSystem():
-    ASystem(EVENT)
+    ASystem(EVENT), _client(nullptr)
+{
+}
+
+RType::HandleEventSystem::HandleEventSystem(std::shared_ptr<RType::Client> client):
+    ASystem(EVENT), _client(client)
 {
 }
 
 RType::HandleEventSystem::~HandleEventSystem()
 {
 }
+
 void RType::HandleEventSystem::effects(std::vector<std::shared_ptr<RType::Entity>> entities) {
     for (const auto &e: entities) {
         if (verifyRequiredComponent(e)) {
@@ -30,21 +36,25 @@ void RType::HandleEventSystem::effects(std::vector<std::shared_ptr<RType::Entity
                     ) {
                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
                             player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, true);
+                            _client->send("Move Left");
                         } else {
                             player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, false);
                         }
                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+                            _client->send("Move Right");
                             player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, true);
                         } else {
                             player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, false);
                         }
                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
                             player->getComponent<RType::DirectionComponent>()->setDirections(UP, true);
+                            _client->send("Move Up");
                         } else {
                             player->getComponent<RType::DirectionComponent>()->setDirections(UP, false);
                         }
                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
                             player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, true);
+                            _client->send("Move Down");
                         } else {
                             player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, false);
                         }

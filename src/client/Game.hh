@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "./communication/Client.hh"
+
 #include "../ecs/Coordinator.hh"
 #include "../ecs/Components/PositionComponent.hh"
 #include "../ecs/Components/HealthComponent.hh"
@@ -26,7 +28,7 @@
 namespace RType {
     class Game {
         public:
-            Game();
+            Game(boost::asio::io_context &ioContext, const std::string &host, const std::string &port);
             ~Game();
             void gameLoop();
             Coordinator getCoordinator() const;
@@ -37,6 +39,7 @@ namespace RType {
             void createWindow();
             void createGameSystem();
             RType::Coordinator _coord;
+            std::shared_ptr<RType::Client> _client;
             bool _stopLoop;
     };
 }

@@ -7,13 +7,15 @@
 
 #include "Game.hh"
 
-RType::Game::Game()
+RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, const std::string &port)
 {
+    _client = std::make_shared<RType::Client> (ioContext, host, port);
     createWindow();
     createPlayer();
     createMob();
     createGameSystem();
     _stopLoop = false;
+    _client->send("Hello world");
 }
 
 RType::Game::~Game()
@@ -100,7 +102,7 @@ void RType::Game::createBoss()
 
 void RType::Game::createGameSystem()
 {
-    _coord.generateNewSystem(std::make_shared<HandleEventSystem>());
+    _coord.generateNewSystem(std::make_shared<HandleEventSystem>(_client));
     _coord.generateNewSystem(std::make_shared<HandleDrawSystem>());
     _coord.generateNewSystem(std::make_shared<HandleMoveSystem>());
     _coord.generateNewSystem(std::make_shared<HandleAnimationSystem>());
