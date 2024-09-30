@@ -1,5 +1,6 @@
 set(SRC_ENCODER
     ./Encoder.cpp
+    ./Decoder.cpp
 )
 
 add_library(protocolHandler ${SRC_ENCODER})
