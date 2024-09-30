@@ -16,6 +16,7 @@ set(SRC_COMPONENTS
     ./Components/SpriteComponent.cpp
     ./Components/DirectionComponent.cpp
     ./Components/ClockComponent.cpp
+    ./Components/ActionComponent.cpp
 )
 
 set(SRC_SYSTEMS

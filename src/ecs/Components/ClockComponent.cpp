@@ -7,10 +7,18 @@
 
 #include "ClockComponent.hh"
 
+RType::ClockComponent::ClockComponent() {
+    sf::Clock animation;
+    sf::Clock shooting;
+    sf::Clock chargedShot;
+    _clock.push_back(animation);
+    _clock.push_back(shooting);
+    _clock.push_back(chargedShot);
+}
 
-sf::Clock  &RType::ClockComponent::getClock()
+sf::Clock  &RType::ClockComponent::getClock(ClockType type)
 {
-    return(_clock);
+    return(_clock.at(type));
 }
 
 std::string RType::ClockComponent::getOutput() const

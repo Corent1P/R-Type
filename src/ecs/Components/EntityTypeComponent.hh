@@ -15,7 +15,20 @@ namespace RType {
         PLAYER,
         MOB,
         BOSS,
-        BUTTON
+        BUTTON,
+        WEAPON,
+        POWER_UP,
+    };
+
+    enum WeaponType {
+        LVL_1,
+        LVL_2,
+        LVL_3,
+    };
+
+    enum PowerUpType {
+        NOPOWERUP,
+        SHIELD,
     };
 
     class EntityTypeComponent: public RType::IComponent {
@@ -24,9 +37,15 @@ namespace RType {
             ~EntityTypeComponent();
             void setEntityType(EntityType entityType);
             EntityType getEntityType() const;
+            void setWeaponType(WeaponType weaponType);
+            WeaponType getWeaponType() const;
+            void setPowerUpType(PowerUpType powerUpType);
+            PowerUpType getPowerUpType() const;
             std::string getOutput() const;
         private:
             EntityType _entityType;
+            WeaponType _weaponType;
+            PowerUpType _powerUpType;
     };
 }
 #endif /* !TYPECOMPONENT_HPP_ */
