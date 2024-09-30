@@ -17,14 +17,16 @@ namespace RType {
         public:
             SpriteComponent(std::shared_ptr<sf::Texture> texture, sf::Vector2f pos);
             SpriteComponent(std::shared_ptr<sf::Texture> texture, sf::Vector2f pos, sf::Vector2f scale);
+            SpriteComponent(std::shared_ptr<sf::Texture> texture, sf::Vector2f pos, sf::Vector2f scale, sf::IntRect rect);
             ~SpriteComponent() = default;
 
             void setSprite(std::shared_ptr<sf::Texture> texture, sf::Vector2f pos);
             void setSprite(std::shared_ptr<sf::Texture> texture, sf::Vector2f pos, sf::Vector2f scale);
-            sf::Sprite getSprite() const;
+            void setSprite(std::shared_ptr<sf::Texture> texture, sf::Vector2f pos, sf::Vector2f scale, sf::IntRect rect);
+            std::shared_ptr<sf::Sprite> getSprite() const;
             std::string getOutput() const;
         private:
-            sf::Sprite _sprite;
+            std::shared_ptr<sf::Sprite> _sprite;
 
     };
 }

@@ -19,6 +19,7 @@ namespace RType {
     * @brief Enum to define the type of the packet
     */
     enum PacketType {
+        ERROR = -1,
         CONNEXION = 0,
         DISCONNEXION = 1,
         NEW_ENTITY = 2,
