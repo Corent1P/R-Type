@@ -22,16 +22,15 @@ namespace RType {
     */
     class Decoder {
     public:
-
         /**
         * @brief Decode the connexion packet
+        * INFO: please use this method to decode any packet
         *
         * @param packet Packet received
         *
         * @return return the command info composed of two parts : the type of the command and the arguments of the command
         */
         static COMMAND_INFO getCommandInfo(U_STRING &packet);
-    private:
 
         /**
         * @brief Decode the header of the packet to get the type of packet received

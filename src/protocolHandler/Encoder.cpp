@@ -11,7 +11,7 @@ namespace RType {
     U_STRING Encoder::header(std::uint16_t size, unsigned char type)
     {
         std::uint16_t header = (size << 6) | type;
-        std::basic_string<unsigned char> encodedHeader;
+        U_STRING encodedHeader;
 
         encodedHeader += header >> 8;
         encodedHeader += header & 0xff;
