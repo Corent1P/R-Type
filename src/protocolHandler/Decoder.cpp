@@ -43,15 +43,17 @@ namespace RType {
 
     std::size_t Decoder::getSize(U_STRING &packet)
     {
-        return (packet[0] << 8) + (packet[1] & 0xC0);
+        return ((packet[0] << 8) | (packet[1] & 0xC0)) >> 6;
     }
 
     COMMAND_ARGS Decoder::newEntity(U_STRING &packet)
     {
-        COMMAND_ARGS args(2);
+        COMMAND_ARGS args(4);
 
         args[0] = packet[2];
         args[1] = packet[3];
+        args[2] = (packet[4] << 8) + packet[5];
+        args[3] = (packet[6] << 8) + packet[7];
         return args;
     }
 
@@ -65,11 +67,12 @@ namespace RType {
 
     COMMAND_ARGS Decoder::moveEntity(U_STRING &packet)
     {
-        COMMAND_ARGS args(3);
+        COMMAND_ARGS args(4);
 
         args[0] = packet[2];
         args[1] = (packet[3] << 8) + packet[4];
         args[2] = (packet[5] << 8) + packet[6];
+        args[3] = packet[7];
         return args;
     }
 
@@ -83,32 +86,34 @@ namespace RType {
 
     COMMAND_ARGS Decoder::infoEntity(U_STRING &packet)
     {
-        COMMAND_ARGS args(5);
+        COMMAND_ARGS args(6);
 
         args[0] = packet[2];
-        args[1] = (packet[3] << 8) + packet[4];
-        args[2] = (packet[5] << 8) + packet[6];
-        args[3] = packet[7];
+        args[1] = packet[3];
+        args[2] = (packet[4] << 8) | packet[5];
+        args[3] = (packet[6] << 8) | packet[7];
         args[4] = packet[8];
+        args[5] = packet[9];
         return args;
     }
 
     COMMAND_ARGS Decoder::movePlayer(U_STRING &packet)
     {
-        COMMAND_ARGS args(3);
+        COMMAND_ARGS args(2);
 
-        args[0] = packet[2];
-        args[1] = packet[3];
-        args[2] = packet[4];
+        args[0] = (packet[2] << 8) | packet[3];
+        args[1] = (packet[4] << 8) | packet[5];
         return args;
     }
 
     COMMAND_ARGS Decoder::actionPlayer(U_STRING &packet)
     {
-        COMMAND_ARGS args(2);
+        COMMAND_ARGS args(4);
 
-        args[0] = packet[2];
-        args[1] = packet[3];
+        args[0] = (packet[2] >> 3) & 1;
+        args[1] = (packet[2] >> 2) & 1;
+        args[2] = (packet[2] >> 1) & 1;
+        args[3] = packet[2] & 1;
         return args;
     }
 }
