@@ -36,6 +36,7 @@ jobs:
               run: |
                   conan profile detect
                   ./build.sh
+                  make unit_tests
             - name: Run Unit Tests Client
               if: steps.build.outcome == 'success'
               run: |
