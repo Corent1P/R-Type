@@ -34,14 +34,18 @@
 r-type_client
 r-type_server
 unit_tests
+unit_tests_client
+unit_tests_server
+unit_tests_ecs
 
 # CMake
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles
 CMakeScripts
-Testing
 Makefile
+!./Makefile
+Testing
 cmake_install.cmake
 install_manifest.txt
 compile_commands.json
@@ -52,4 +56,10 @@ CMakeUserPresets.json
 # Conan
 build/
 
+# Criterion
+*.gcda
+*.gcno
+
+path/
 .vscode
+vgcore*
