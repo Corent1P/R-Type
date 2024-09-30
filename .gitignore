@@ -37,6 +37,7 @@ unit_tests
 unit_tests_client
 unit_tests_server
 unit_tests_ecs
+unit_tests_protocolHandler
 
 # CMake
 CMakeLists.txt.user
