@@ -28,39 +28,27 @@ void RType::HandleEventSystem::effects(std::vector<std::shared_ptr<RType::Entity
                     && player->getComponent<RType::DirectionComponent>() != nullptr
                     && player->getComponent<RType::SpriteComponent>() != nullptr
                     ) {
-                        if (sf::Event::KeyPressed) {
-                            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-                                player->getComponent<RType::DirectionComponent>()->setDirection(LEFT);
-                                player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, true);
-                                std::cout << "moved left" << std::endl;
-                            } else {
-                                player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, false);
-                            }
-                            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-                                player->getComponent<RType::DirectionComponent>()->setDirection(RIGHT);
-                                player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, true);
-                                std::cout << "moved right" << std::endl;
-                            } else {
-                                player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, false);
-                            }
-                            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-                                player->getComponent<RType::DirectionComponent>()->setDirection(UP);
-                                player->getComponent<RType::DirectionComponent>()->setDirections(UP, true);
-                                std::cout << "moved up" << std::endl;
-                            } else {
-                                player->getComponent<RType::DirectionComponent>()->setDirections(UP, false);
-                            }
-                            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-                                player->getComponent<RType::DirectionComponent>()->setDirection(DOWN);
-                                player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, true);
-                                std::cout << "moved down" << std::endl;
-                            } else {
-                                player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, false);
-                            }
+                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+                            player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, true);
                         } else {
-                            player->getComponent<RType::DirectionComponent>()->setDirections(NOMOVE, true);
-                            std::cout << "no move" << std::endl;
+                            player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, false);
                         }
+                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+                            player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, true);
+                        } else {
+                            player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, false);
+                        }
+                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+                            player->getComponent<RType::DirectionComponent>()->setDirections(UP, true);
+                        } else {
+                            player->getComponent<RType::DirectionComponent>()->setDirections(UP, false);
+                        }
+                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+                            player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, true);
+                        } else {
+                            player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, false);
+                        }
+            
 
                         if (sf::Joystick::isConnected(0))
                         {
@@ -72,25 +60,21 @@ void RType::HandleEventSystem::effects(std::vector<std::shared_ptr<RType::Entity
                                         << e->getComponent<RType::EventComponent>()->getEvent().joystickButton.joystickId << std::endl;
                             }
                            if (y > 10.0) {
-                                player->getComponent<RType::DirectionComponent>()->setDirection(DOWN);
                                 player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, true);
                            } else {
                                 player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, false);
                            }
                            if (y < -10.0) {
-                                player->getComponent<RType::DirectionComponent>()->setDirection(UP);
                                 player->getComponent<RType::DirectionComponent>()->setDirections(UP, true);
                            } else {
                                 player->getComponent<RType::DirectionComponent>()->setDirections(UP, false);
                            }
                            if (x < -10.0) {
-                                player->getComponent<RType::DirectionComponent>()->setDirection(LEFT);
                                 player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, true);
                            } else {
                                 player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, false);
                            }
                            if (x > 10.0) {
-                                player->getComponent<RType::DirectionComponent>()->setDirection(RIGHT);
                                 player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, true);
                            } else {
                                 player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, false);
