@@ -9,11 +9,10 @@
 
 #include <iostream>
 
-namespace RType
-{
-    class Error: public std::exception {
+namespace RType {
+    class ClientError: public std::exception {
         public:
-            Error(std::string error);
+            ClientError(std::string error);
             const char *what() const noexcept override;
 
         private:
