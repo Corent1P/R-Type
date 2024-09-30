@@ -7,7 +7,7 @@
 
 SRC_CLIENT	=	src/client/Game.cpp\
 
-SRC_ECS	=	src/ecs/Components/PositionComponent.cpp\
+SRC_ECS	=		src/ecs/Components/PositionComponent.cpp\
 			src/ecs/Components/HealthComponent.cpp\
 			src/ecs/Components/EntityTypeComponent.cpp\
 			src/ecs/Components/EventComponent.cpp\
@@ -17,9 +17,9 @@ SRC_ECS	=	src/ecs/Components/PositionComponent.cpp\
 			src/ecs/Components/DirectionComponent.cpp\
 			src/ecs/Components/ClockComponent.cpp\
 			src/ecs/Systems/HandleEventSystem.cpp\
-    		src/ecs/Systems/HandleDrawSystem.cpp\
-    		src/ecs/Systems/HandleAnimationSystem.cpp\
-    		src/ecs/Systems/HandleMoveSystem.cpp\
+			src/ecs/Systems/HandleDrawSystem.cpp\
+			src/ecs/Systems/HandleAnimationSystem.cpp\
+			src/ecs/Systems/HandleMoveSystem.cpp\
 			src/ecs/Coordinator.cpp\
 			src/ecs/Entity.cpp\
 			src/ecs/ISystem.cpp\
@@ -27,15 +27,16 @@ SRC_ECS	=	src/ecs/Components/PositionComponent.cpp\
 			src/ecs/Error.cpp
 
 SRC_PROTOCOLHANDLER	=	./src/protocolHandler/Encoder.cpp\
+						./src/protocolHandler/Decoder.cpp
 
 UNIT_TEST_CLIENT_FILE	=	tests/client/Client_tests.cpp
-
 
 UNIT_TEST_ESC_FILE	=	tests/ecs/Components_tests.cpp\
 						tests/ecs/Entities_tests.cpp\
 						tests/ecs/Coordinator_tests.cpp
 
 UNIT_TEST_PROTOCOLHANDLER_FILE	=	./tests/protocolHandler/encoder_test.cpp\
+									./tests/protocolHandler/decoder_test.cpp
 
 UNIT_TEST_SERVER_FILE	=	tests/server/Server_tests.cpp
 
