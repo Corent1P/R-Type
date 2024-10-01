@@ -60,7 +60,7 @@ void RType::Server::handleReceive(const boost::system::error_code &error, std::s
         connectedClient->setPosition(position);
         sendToAllClient(Encoder::moveEntity(connectedClient->getId(), position.first, position.second, 0));
     } else if (receivInfo.first == DISCONNEXION) {
-        std::cout << "disconnect this noob" << std::endl;
+        removeClient();
     }
     // std::shared_ptr<ICommand> com = _commandFactory.createCommand(command);
     // std::string response;
@@ -91,7 +91,7 @@ std::shared_ptr<RType::Client> RType::Server::createClient(void)
     _clients.push_back(newClient);
     sendToAllClient(Encoder::newEntity(2, newId, 10, 10)); //TODO: change this (when including the ecs in the server)
     for (auto client: _clients)
-        if (client->getId() != newClient->getId())
+        if (client != newClient)
             newClient->sendMessage(_socket, Encoder::newEntity(2, client->getId(), client->getPosition().first, client->getPosition().second));
     return newClient;
 }
@@ -119,7 +119,9 @@ std::size_t RType::Server::getMaxClientId(void)
 bool RType::Server::removeClient(void)
 {
     for (auto it = _clients.begin(); it != _clients.end(); it++) {
-        if ((*it)->getAddress() == _remoteEndpoint.address() || (*it)->getPortNumber() == _remoteEndpoint.port()) {
+        if (*it == getConnectedClient()) {
+            std::cout << "remove client with id: " << (*it)->getId() << std::endl;
+            sendToAllClient(Encoder::deleteEntity((*it)->getId()));
             _clients.erase(it);
             return true;
         }

@@ -35,6 +35,8 @@ namespace RType {
             void sendMessage(udp::socket &socket, const std::string &message); //deprecated
             void sendMessage(udp::socket &socket, const std::basic_string<unsigned char> &message);
 
+            bool operator==(const Client &other) const;
+
         private:
             udp::endpoint _endpoint;
             boost::asio::ip::port_type _portNumber;

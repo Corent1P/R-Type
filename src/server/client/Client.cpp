@@ -104,3 +104,8 @@ void RType::Client::setPosition(double x, double y)
 	_position.first = x;
 	_position.second = y;
 }
+
+bool RType::Client::operator==(const RType::Client &other) const
+{
+	return _id == other.getId();
+}
