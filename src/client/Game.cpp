@@ -15,10 +15,14 @@ RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, c
     createMob();
     createGameSystem();
     _stopLoop = false;
+    _receipter = std::jthread(&Game::loopReceive, this);
 }
 
 RType::Game::~Game()
 {
+    if (_receipter.joinable()) {
+        _receipter.join();
+    }
 }
 
 RType::Coordinator RType::Game::getCoordinator() const
@@ -37,6 +41,15 @@ void RType::Game::gameLoop()
                 _stopLoop = true;
             }
         }
+    }
+}
+
+void RType::Game::loopReceive()
+{
+    while (!_stopLoop) {
+        std::basic_string<unsigned char> command = _client->receive();
+        auto receivInfo = Decoder::getCommandInfo(command);
+        std::cout << "Message received = " << receivInfo.first << " with coordinates " << receivInfo.second[0] << ":" << receivInfo.second[1] << std::endl;
     }
 }
 

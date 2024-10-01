@@ -24,6 +24,11 @@
 #include "../ecs/Systems/HandleDrawSystem.hpp"
 #include "../ecs/Systems/HandleMoveSystem.hpp"
 #include "../ecs/Systems/HandleAnimationSystem.hpp"
+#include <thread>
+
+#include "../protocolHandler/Encoder.hh"
+#include "../protocolHandler/Decoder.hh"
+
 
 namespace RType {
     class Game {
@@ -33,6 +38,7 @@ namespace RType {
             void gameLoop();
             Coordinator getCoordinator() const;
         private:
+            void loopReceive();
             void createPlayer();
             void createMob();
             void createBoss();
@@ -41,6 +47,7 @@ namespace RType {
             RType::Coordinator _coord;
             std::shared_ptr<RType::Client> _client;
             bool _stopLoop;
+            std::jthread _receipter;
     };
 }
 
