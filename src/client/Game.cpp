@@ -132,9 +132,9 @@ void RType::Game::createParallaxBackground(std::shared_ptr<RType::Entity> window
         backgrounds[i]->pushComponent(CREATE_ENTITY_TYPE(RType::LAYER));
         backgrounds[i]->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(),
             position->getPositions()));
-        spriteWidth = backgrounds[i]->getComponent<RType::SpriteComponent>()->getSprite()->getGlobalBounds().width;
-        spriteHeight = backgrounds[i]->getComponent<RType::SpriteComponent>()->getSprite()->getGlobalBounds().height;
-        backgrounds[i]->getComponent<SpriteComponent>()->getSprite()->setScale(sf::Vector2f(1920 / 272, 1080 / 160));
+        spriteWidth = backgrounds[i]->getComponent<RType::TextureComponent>()->getTexture()->getSize().x;
+        spriteHeight = backgrounds[i]->getComponent<RType::TextureComponent>()->getTexture()->getSize().y;
+        backgrounds[i]->getComponent<SpriteComponent>()->getSprite()->setScale(sf::Vector2f(float(winMaxX / spriteWidth), float(winMaxY / spriteHeight)));
     }
 }
 
