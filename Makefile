@@ -57,8 +57,8 @@ fclean:     clean
 	rm -rf unit_tests_protocolHandler
 
 unit_tests: fclean
-	g++ -o unit_tests_client $(SRC_CLIENT) $(SRC_ECS) $(UNIT_TEST_FLAGS) $(UNIT_TEST_CLIENT_FILE)
-	g++ -o unit_tests_ecs $(SRC_CLIENT) $(SRC_ECS) $(UNIT_TEST_FLAGS) $(UNIT_TEST_ESC_FILE)
+	g++ -o unit_tests_client $(SRC_PROTOCOLHANDLER) $(SRC_CLIENT) $(SRC_ECS) $(UNIT_TEST_FLAGS) $(UNIT_TEST_CLIENT_FILE)
+	g++ -o unit_tests_ecs $(SRC_PROTOCOLHANDLER) $(SRC_CLIENT) $(SRC_ECS) $(UNIT_TEST_FLAGS) $(UNIT_TEST_ESC_FILE)
 	g++ -o unit_tests_protocolHandler $(SRC_PROTOCOLHANDLER) $(UNIT_TEST_FLAGS) $(UNIT_TEST_PROTOCOLHANDLER_FILE)
 	g++ -o unit_tests_server $(UNIT_TEST_FLAGS) $(UNIT_TEST_SERVER_FILE)
 
