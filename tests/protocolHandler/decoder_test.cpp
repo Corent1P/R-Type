@@ -75,6 +75,10 @@ Test(main, TestMovePlayerPacketDecoder) {
 
     cr_assert_eq(args[0], 45, "Expected: 45, Got: %lu", args[0]);
     cr_assert_eq(args[1], 12, "Expected: 12, Got: %lu", args[1]);
+    packet = RType::Encoder::movePlayer(-100, -100);
+    args = RType::Decoder::movePlayer(packet);
+    cr_assert_eq(args[0], -100, "Expected: -100, Got: %ld", args[0]);
+    cr_assert_eq(args[1], -100, "Expected: -100, Got: %ld", args[1]);
 }
 
 Test(main, TestActionPlayerPacketDecoder) {
