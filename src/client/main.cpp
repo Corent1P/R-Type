@@ -39,7 +39,7 @@ int main(int ac, char **av)
             return printHelp(84);
         boost::asio::io_context ioContext;
         RType::Game game(ioContext, av[1], av[2]);
-        std::cout << game;
+        // std::cout << game;
         game.gameLoop();
     }  catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;

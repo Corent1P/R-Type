@@ -28,6 +28,7 @@ namespace RType {
             std::string makeDaytimeString(void);
             std::shared_ptr<Client> createClient(void);
             std::shared_ptr<Client> getConnectedClient(void);
+            std::size_t getMaxClientId(void);
             bool removeClient(void);
             void sendToAllClient(const std::basic_string<unsigned char> &message);
 

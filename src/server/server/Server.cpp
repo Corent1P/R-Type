@@ -38,14 +38,15 @@ void RType::Server::handleReceive(const boost::system::error_code &error, std::s
     }
     std::basic_string<unsigned char> command(_recvBuffer.data(), bytesTransferred);
     auto receivInfo = Decoder::getCommandInfo(command);
-    std::cout << "Message received = " << receivInfo.first << " with coordinates " << receivInfo.second[0] << ":" << receivInfo.second[1] << std::endl;
+    // std::cout << "Message received = " << receivInfo.first << " with coordinates " << receivInfo.second[0] << ":" << receivInfo.second[1] << std::endl;
     std::shared_ptr<Client> connectedClient = getConnectedClient();
     if (!connectedClient)
         connectedClient = createClient();
 
     // ! TO REORGANISE {
     // connectedClient->sendMessage(_socket, Encoder::movePlayer(receivInfo.second[0], receivInfo.second[1]));
-    sendToAllClient(Encoder::movePlayer(receivInfo.second[0], receivInfo.second[1]));
+    if (receivInfo.first == 7)
+        sendToAllClient(Encoder::moveEntity(connectedClient->getId(), receivInfo.second[0], receivInfo.second[1], 0));
     // std::shared_ptr<ICommand> com = _commandFactory.createCommand(command);
     // std::string response;
     // if (!com)
@@ -70,8 +71,10 @@ void RType::Server::handleSend(std::string, const boost::system::error_code &err
 
 std::shared_ptr<RType::Client> RType::Server::createClient(void)
 {
-    std::shared_ptr<Client> newClient(new Client(_remoteEndpoint));
+    std::size_t newId = getMaxClientId();
+    std::shared_ptr<Client> newClient(new Client(_remoteEndpoint, newId));
     _clients.push_back(newClient);
+    sendToAllClient(Encoder::newEntity(2, newId, 10, 10)); //TODO: change this (when including the ecs in the server)
     return newClient;
 }
 
@@ -81,6 +84,18 @@ std::shared_ptr<RType::Client> RType::Server::getConnectedClient(void)
         if (client->getAddress() == _remoteEndpoint.address() && client->getPortNumber() == _remoteEndpoint.port() && client->getIsConnected())
             return client;
     return nullptr;
+}
+
+std::size_t RType::Server::getMaxClientId(void)
+{
+    std::size_t max = 0;
+
+    if (_clients.empty())
+        return 0;
+    for (auto client: _clients)
+        if (client->getId() > max)
+            max = client->getId();
+    return max + 1;
 }
 
 bool RType::Server::removeClient(void)

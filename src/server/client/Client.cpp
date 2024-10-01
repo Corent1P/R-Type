@@ -7,8 +7,8 @@
 
 #include "Client.hh"
 
-RType::Client::Client(boost::asio::ip::udp::endpoint endpoint):
-	_endpoint(endpoint), _portNumber(_endpoint.port()), _address(_endpoint.address()), _isConnected(true)
+RType::Client::Client(boost::asio::ip::udp::endpoint endpoint, std::size_t id):
+	_endpoint(endpoint), _portNumber(_endpoint.port()), _address(_endpoint.address()), _isConnected(true), _id(id)
 {
 	std::cout << "Client created with adress " << _address << ":" << _portNumber << std::endl;
 }
@@ -41,6 +41,11 @@ void RType::Client::setAddress(boost::asio::ip::address address)
 boost::asio::ip::address RType::Client::getAddress(void) const
 {
 	return _address;
+}
+
+std::size_t RType::Client::getId(void) const
+{
+	return _id;
 }
 
 void RType::Client::sendMessage(udp::socket &socket, const std::string &message)

@@ -10,6 +10,7 @@
 RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, const std::string &port)
 {
     _client = std::make_shared<RType::Client> (ioContext, host, port);
+    _client->send(Encoder::connexion());
     createWindow();
     createPlayer();
     createMob();

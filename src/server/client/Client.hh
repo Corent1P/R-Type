@@ -13,7 +13,7 @@
 namespace RType {
     class Client {
         public:
-            Client(boost::asio::ip::udp::endpoint endpoint);
+            Client(boost::asio::ip::udp::endpoint endpoint, std::size_t id);
             ~Client() = default;
 
             void setIsConnected(bool isConnected);
@@ -26,6 +26,7 @@ namespace RType {
             boost::asio::ip::address getAddress(void) const;
 
             boost::asio::ip::udp::endpoint getEndpoint(void) const;
+            std::size_t getId(void) const;
 
             void sendMessage(udp::socket &socket, const std::string &message); //deprecated
             void sendMessage(udp::socket &socket, const std::basic_string<unsigned char> &message);
@@ -35,6 +36,7 @@ namespace RType {
             boost::asio::ip::port_type _portNumber;
             boost::asio::ip::address _address;
             bool _isConnected;
+            std::size_t _id;
 
             void sendCallback(const std::string &message, const boost::system::error_code &error, std::size_t bytes_transferred); //deprecated
             void sendCallback(const std::basic_string<unsigned char> &message, const boost::system::error_code &error, std::size_t bytes_transferred);
