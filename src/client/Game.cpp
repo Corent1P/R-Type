@@ -30,6 +30,7 @@ void RType::Game::gameLoop()
     while (!_stopLoop) {
         for (auto sys: _coord.getSystems()) {
             sys->effects(_coord.getEntities());
+            handleShot();
         }
         for (auto entity : _coord.getEntities()) {
             if (entity->getComponent<RType::SFWindowComponent>() && !entity->getComponent<RType::SFWindowComponent>()->getIsOpen()) {
@@ -44,13 +45,14 @@ void RType::Game::createPlayer()
     std::shared_ptr<RType::Entity> player = _coord.generateNewEntity();
 
     player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::PLAYER));
-    std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(10, 10));
+    std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(50, 50));
     player->pushComponent(std::make_shared<RType::HealthComponent>(25));
     std::shared_ptr<RType::TextureComponent> texture = player->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/player-sheet.png"));
 
     player->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(), sf::Vector2f(2, 2), sf::IntRect(0, 0, 26, 21)));
     player->pushComponent(std::make_shared<RType::DirectionComponent>());
     player->pushComponent(std::make_shared<RType::ClockComponent>());
+    player->pushComponent(std::make_shared<RType::ActionComponent>());
 }
 
 void RType::Game::createWindow()
@@ -135,6 +137,28 @@ void RType::Game::createParallaxBackground(std::shared_ptr<RType::Entity> window
         spriteWidth = backgrounds[i]->getComponent<RType::TextureComponent>()->getTexture()->getSize().x;
         spriteHeight = backgrounds[i]->getComponent<RType::TextureComponent>()->getTexture()->getSize().y;
         backgrounds[i]->getComponent<SpriteComponent>()->getSprite()->setScale(sf::Vector2f(float(winMaxX / spriteWidth), float(winMaxY / spriteHeight)));
+    }
+}
+
+void  RType::Game::handleShot()
+{
+    for (const auto &entities : _coord.getEntities()) {
+        if (entities->getComponent<RType::ActionComponent>() != nullptr
+        && entities->getComponent<RType::SpriteComponent>() != nullptr) {
+            if (entities->getComponent<RType::ActionComponent>()->getActions(RType::SHOOTING) == true) {
+                std::cout << "New shot!" << std::endl;
+                entities->getComponent<RType::ActionComponent>()->setActions(RType::SHOOTING, false);
+                std::shared_ptr<RType::Entity> shot = _coord.generateNewEntity();
+
+                shot->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::WEAPON));
+                std::shared_ptr<RType::PositionComponent> position = shot->pushComponent(std::make_shared<RType::PositionComponent>(entities->getComponent<SpriteComponent>()->getSprite()->getPosition().x, entities->getComponent<SpriteComponent>()->getSprite()->getPosition().y));
+                std::shared_ptr<RType::TextureComponent> texture = shot->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/shoot-spritesheet.png"));
+                shot->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(), sf::Vector2f(2, 2), sf::IntRect(0, 0, 19, 6)));
+                shot->pushComponent(std::make_shared<RType::DirectionComponent>(RType::RIGHT));
+                shot->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, true);
+                shot->pushComponent(std::make_shared<RType::ClockComponent>());
+            }
+        }
     }
 }
 
