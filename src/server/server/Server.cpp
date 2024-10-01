@@ -44,7 +44,8 @@ void RType::Server::handleReceive(const boost::system::error_code &error, std::s
         connectedClient = createClient();
 
     // ! TO REORGANISE {
-    connectedClient->sendMessage(_socket, Encoder::movePlayer(receivInfo.second[0], receivInfo.second[1]));
+    // connectedClient->sendMessage(_socket, Encoder::movePlayer(receivInfo.second[0], receivInfo.second[1]));
+    sendToAllClient(Encoder::movePlayer(receivInfo.second[0], receivInfo.second[1]));
     // std::shared_ptr<ICommand> com = _commandFactory.createCommand(command);
     // std::string response;
     // if (!com)
@@ -91,4 +92,10 @@ bool RType::Server::removeClient(void)
         }
     }
     return false;
+}
+
+void RType::Server::sendToAllClient(const std::basic_string<unsigned char> &message)
+{
+    for (auto client: _clients)
+        client->sendMessage(_socket, message);
 }
