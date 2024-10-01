@@ -8,7 +8,7 @@
 #include "Client.hh"
 
 RType::Client::Client(boost::asio::ip::udp::endpoint endpoint, std::size_t id):
-	_endpoint(endpoint), _portNumber(_endpoint.port()), _address(_endpoint.address()), _isConnected(true), _id(id)
+	_endpoint(endpoint), _portNumber(_endpoint.port()), _address(_endpoint.address()), _isConnected(true), _id(id), _position({10., 10.})
 {
 	std::cout << "Client created with adress " << _address << ":" << _portNumber << std::endl;
 }
@@ -87,4 +87,20 @@ void RType::Client::sendCallback(const std::basic_string<unsigned char> &, const
 boost::asio::ip::udp::endpoint RType::Client::getEndpoint(void) const
 {
 	return _endpoint;
+}
+
+std::pair<double, double> RType::Client::getPosition(void) const
+{
+	return _position;
+}
+
+void RType::Client::setPosition(std::pair<double, double> position)
+{
+	_position = position;
+}
+
+void RType::Client::setPosition(double x, double y)
+{
+	_position.first = x;
+	_position.second = y;
 }

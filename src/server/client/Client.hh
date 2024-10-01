@@ -28,6 +28,10 @@ namespace RType {
             boost::asio::ip::udp::endpoint getEndpoint(void) const;
             std::size_t getId(void) const;
 
+            void setPosition(std::pair<double, double> position);
+            void setPosition(double x, double y);
+            std::pair<double, double> getPosition(void) const;
+
             void sendMessage(udp::socket &socket, const std::string &message); //deprecated
             void sendMessage(udp::socket &socket, const std::basic_string<unsigned char> &message);
 
@@ -37,6 +41,7 @@ namespace RType {
             boost::asio::ip::address _address;
             bool _isConnected;
             std::size_t _id;
+            std::pair<double, double> _position;
 
             void sendCallback(const std::string &message, const boost::system::error_code &error, std::size_t bytes_transferred); //deprecated
             void sendCallback(const std::basic_string<unsigned char> &message, const boost::system::error_code &error, std::size_t bytes_transferred);
