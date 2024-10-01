@@ -47,7 +47,7 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
                         entity->getComponent<RType::SpriteComponent>()->getSprite()->move(0, 0.1);
                         movePosition.second += 100;
                     }
-                    if (_client && (movePosition.first != 0 ||  movePosition.second != 0)) {
+                    if (_client && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == PLAYER && (movePosition.first != 0 ||  movePosition.second != 0)) {
                         // std::cout << "Move " + std::to_string(movePosition.first) + " " +  std::to_string(movePosition.second) << std::endl;
                         _client->send(Encoder::movePlayer(movePosition.first, movePosition.second));
                     }

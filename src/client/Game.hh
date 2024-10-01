@@ -40,6 +40,7 @@ namespace RType {
         private:
             void loopReceive();
             void createPlayer();
+            void createPlayer(long serverId, long posX, long posY);
             void createMob();
             void createBoss();
             void createWindow();

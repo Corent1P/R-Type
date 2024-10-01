@@ -12,8 +12,8 @@ RType::Coordinator::Coordinator():
 {
 }
 
-std::shared_ptr<RType::Entity> RType::Coordinator::generateNewEntity() {
-    std::shared_ptr<Entity> newEntity = std::make_unique<Entity>(_idEntities++);
+std::shared_ptr<RType::Entity> RType::Coordinator::generateNewEntity(uint16_t serverId) {
+    std::shared_ptr<Entity> newEntity = std::make_unique<Entity>(_idEntities++, serverId);
     _entities.push_back(newEntity);
     return (newEntity);
 }
