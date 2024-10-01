@@ -22,6 +22,7 @@ RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, c
 
 RType::Game::~Game()
 {
+    _client->send(Encoder::disconnexion());
     if (_receipter.joinable()) {
         _receipter.join();
     }
@@ -40,6 +41,7 @@ void RType::Game::gameLoop()
         }
         for (auto entity : _coord.getEntities()) {
             if (entity->getComponent<RType::SFWindowComponent>() && !entity->getComponent<RType::SFWindowComponent>()->getIsOpen()) {
+                _client->cancel();
                 _stopLoop = true;
             }
         }
@@ -55,7 +57,6 @@ void RType::Game::loopReceive()
             std::cout << "Message received = " << receivInfo.first << " move with coordinates " << receivInfo.second[0] << ":" << receivInfo.second[1] << std::endl;
 
         if (receivInfo.first == NEW_ENTITY) {
-            std::cout << "Message received = " << receivInfo.first << " new entity with type " << receivInfo.second[0] << ":" << receivInfo.second[1] << ":" << receivInfo.second[2] << ":" << receivInfo.second[3] << std::endl;
             if (_initConnection)
                 createPlayer(receivInfo.second[1], receivInfo.second[2], receivInfo.second[3]);
             else {
@@ -68,11 +69,9 @@ void RType::Game::loopReceive()
             }
         }
         if (receivInfo.first == MOVE_ENTITY) {
-            std::cout << "Message received = " << receivInfo.first << " move Entity " << receivInfo.second[0] << " to coordinates " << receivInfo.second[1] << ":" << receivInfo.second[2] << std::endl;
             auto entities = _coord.getEntities();
             for (const auto &entity : entities) {
                 if (entity->getServerId() == receivInfo.second[0]) {
-                    std::cout << "set Position" << std::endl;
                     entity->getComponent<RType::PositionComponent>()->setPositions(receivInfo.second[1], receivInfo.second[2]);
                     entity->getComponent<RType::SpriteComponent>()->getSprite()->setPosition(receivInfo.second[1], receivInfo.second[2]);
                 }

@@ -27,6 +27,7 @@ namespace RType {
              */
             void send(const std::string &message);
             void send(const std::basic_string<unsigned char> &message);
+            void cancel(void);
             std::basic_string<unsigned char> receive(void);
 
         private:

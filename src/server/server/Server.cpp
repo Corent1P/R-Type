@@ -45,7 +45,7 @@ void RType::Server::handleReceive(const boost::system::error_code &error, std::s
 
     // ! TO REORGANISE {
     // connectedClient->sendMessage(_socket, Encoder::movePlayer(receivInfo.second[0], receivInfo.second[1]));
-    if (receivInfo.first == 7) {
+    if (receivInfo.first == MOVE_PLAYER) {
         std::pair<double, double> position = connectedClient->getPosition();
         position.first += ((double)receivInfo.second[0]) / 10.;
         position.second += ((double)receivInfo.second[1]) / 10.;
@@ -59,6 +59,8 @@ void RType::Server::handleReceive(const boost::system::error_code &error, std::s
             position.second = 1080.;
         connectedClient->setPosition(position);
         sendToAllClient(Encoder::moveEntity(connectedClient->getId(), position.first, position.second, 0));
+    } else if (receivInfo.first == DISCONNEXION) {
+        std::cout << "disconnect this noob" << std::endl;
     }
     // std::shared_ptr<ICommand> com = _commandFactory.createCommand(command);
     // std::string response;

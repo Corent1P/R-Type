@@ -53,3 +53,8 @@ std::basic_string<unsigned char> RType::Client::receive(void)
     size_t len = _socket.receive_from(boost::asio::buffer(recvBuf), senderEndpoint);
     return std::basic_string<unsigned char>(recvBuf.data(), len);
 }
+
+void RType::Client::cancel(void)
+{
+    std::cout << "cancel Socket" << std::endl;
+}
