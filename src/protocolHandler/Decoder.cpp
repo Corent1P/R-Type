@@ -101,8 +101,8 @@ namespace RType {
     {
         COMMAND_ARGS args(2);
 
-        args[0] = (packet[2] << 8) | packet[3];
-        args[1] = (packet[4] << 8) | packet[5];
+        args[0] = static_cast<std::int8_t>(packet[2]);
+        args[1] = static_cast<std::int8_t>(packet[3]);
         return args;
     }
 
