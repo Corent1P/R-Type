@@ -12,8 +12,8 @@
 #include <utility>
 #include <vector>
 
-#define COMMAND_INFO std::pair<RType::PacketType, std::vector<std::size_t>>
-#define COMMAND_ARGS std::vector<std::size_t>
+#define COMMAND_ARGS std::vector<long>
+#define COMMAND_INFO std::pair<RType::PacketType, COMMAND_ARGS>
 
 namespace RType {
 
