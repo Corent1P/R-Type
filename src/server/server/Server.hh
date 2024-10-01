@@ -29,6 +29,7 @@ namespace RType {
             std::shared_ptr<Client> createClient(void);
             std::shared_ptr<Client> getConnectedClient(void);
             bool removeClient(void);
+            void sendToAllClient(const std::basic_string<unsigned char> &message);
 
             udp::socket _socket;
             udp::endpoint _remoteEndpoint;
