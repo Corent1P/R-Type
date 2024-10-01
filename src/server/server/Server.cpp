@@ -44,6 +44,7 @@ void RType::Server::handleReceive(const boost::system::error_code &error, std::s
         connectedClient = createClient();
 
     // ! TO REORGANISE {
+    connectedClient->sendMessage(_socket, Encoder::movePlayer(receivInfo.second[0], receivInfo.second[1]));
     // std::shared_ptr<ICommand> com = _commandFactory.createCommand(command);
     // std::string response;
     // if (!com)

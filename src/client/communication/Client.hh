@@ -27,7 +27,7 @@ namespace RType {
              */
             void send(const std::string &message);
             void send(const std::basic_string<unsigned char> &message);
-            std::string receive(void);
+            std::basic_string<unsigned char> receive(void);
 
         private:
             boost::asio::io_context &_ioContext;

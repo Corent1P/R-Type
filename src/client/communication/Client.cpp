@@ -46,10 +46,10 @@ void RType::Client::send(const std::basic_string<unsigned char> &message)
         throw ClientError("Unable to send the message: " + ec.message());
 }
 
-std::string RType::Client::receive(void)
+std::basic_string<unsigned char> RType::Client::receive(void)
 {
-    std::array<char, 128> recvBuf;
+    std::array<unsigned char, 128> recvBuf; //* see if the size has to be changed
     udp::endpoint senderEndpoint;
     size_t len = _socket.receive_from(boost::asio::buffer(recvBuf), senderEndpoint);
-    return std::string(recvBuf.data(), len);
+    return std::basic_string<unsigned char>(recvBuf.data(), len);
 }

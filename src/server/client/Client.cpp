@@ -52,7 +52,25 @@ void RType::Client::sendMessage(udp::socket &socket, const std::string &message)
 	);
 }
 
+void RType::Client::sendMessage(udp::socket &socket, const std::basic_string<unsigned char> &message)
+{
+	socket.async_send_to(boost::asio::buffer(message), _endpoint,
+		[this, message](const boost::system::error_code &error, std::size_t bytes_transferred) {
+            sendCallback(message, error, bytes_transferred);
+        }
+	);
+}
+
 void RType::Client::sendCallback(const std::string &, const boost::system::error_code &error, std::size_t bytesTransferred)
+{
+	if (!error) {
+        std::cout << "Sent response to client, bytes transferred: " << bytesTransferred << std::endl;
+    } else {
+        std::cout << "Error on send: " << error.message() << std::endl;
+    }
+}
+
+void RType::Client::sendCallback(const std::basic_string<unsigned char> &, const boost::system::error_code &error, std::size_t bytesTransferred)
 {
 	if (!error) {
         std::cout << "Sent response to client, bytes transferred: " << bytesTransferred << std::endl;

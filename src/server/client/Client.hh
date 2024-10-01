@@ -27,7 +27,8 @@ namespace RType {
 
             boost::asio::ip::udp::endpoint getEndpoint(void) const;
 
-            void sendMessage(udp::socket &socket, const std::string &message);
+            void sendMessage(udp::socket &socket, const std::string &message); //deprecated
+            void sendMessage(udp::socket &socket, const std::basic_string<unsigned char> &message);
 
         private:
             udp::endpoint _endpoint;
@@ -35,6 +36,7 @@ namespace RType {
             boost::asio::ip::address _address;
             bool _isConnected;
 
-            void sendCallback(const std::string &message, const boost::system::error_code &error, std::size_t bytes_transferred);
+            void sendCallback(const std::string &message, const boost::system::error_code &error, std::size_t bytes_transferred); //deprecated
+            void sendCallback(const std::basic_string<unsigned char> &message, const boost::system::error_code &error, std::size_t bytes_transferred);
     };
 }
