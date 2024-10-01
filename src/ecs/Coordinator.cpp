@@ -44,3 +44,14 @@ std::ostream &operator<<(std::ostream &s, const RType::Coordinator &coordinator)
         s << "\t" << *system << std::endl;
     return s;
 }
+
+bool RType::Coordinator::deleteEntity(std::shared_ptr<Entity> entityToDestroy)
+{
+    auto it = std::find(_entities.begin(), _entities.end(), entityToDestroy);
+    if (it != _entities.end()) {
+        _entities.erase(it);
+        return true;
+    }
+    return false;
+}
+

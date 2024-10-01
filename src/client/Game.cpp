@@ -68,6 +68,15 @@ void RType::Game::loopReceive()
                 }
             }
         }
+        if (receivInfo.first == DELETE_ENTITY) {
+            auto entities = _coord.getEntities();
+            for (const auto &entity : entities) {
+                if (entity->getServerId() == receivInfo.second[0]) {
+                    _coord.deleteEntity(entity);
+                    std::cout << "deleteEntity" << std::endl;
+                }
+            }
+        }
         if (receivInfo.first == MOVE_ENTITY) {
             auto entities = _coord.getEntities();
             for (const auto &entity : entities) {
