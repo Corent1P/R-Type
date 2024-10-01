@@ -11,3 +11,4 @@
 #include <vector>
 #include <memory>
 #include "Error.hh"
+#include "../protocolHandler/Encoder.hh"
