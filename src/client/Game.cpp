@@ -53,6 +53,7 @@ void RType::Game::createPlayer()
     player->pushComponent(std::make_shared<RType::DirectionComponent>());
     player->pushComponent(std::make_shared<RType::ClockComponent>());
     player->pushComponent(std::make_shared<RType::ActionComponent>());
+    player->pushComponent(std::make_shared<VelocityComponent>(10));
 }
 
 void RType::Game::createWindow()
@@ -62,7 +63,8 @@ void RType::Game::createWindow()
     window->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::WINDOW));
     window->pushComponent(std::make_shared<RType::SFWindowComponent>(1920, 1080));
     window->pushComponent(std::make_shared<RType::EventComponent>());
-    createParallaxBackground(window);
+    createParallaxBackground(window, 0, 0);
+    createParallaxBackground(window, window->getComponent<SFWindowComponent>()->getWindow()->getSize().x, 0);
 }
 
 void RType::Game::createMob()
@@ -78,6 +80,7 @@ void RType::Game::createMob()
     player->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(), sf::Vector2f(2, 2), sf::IntRect(0, 0, 29, 29)));
     player->pushComponent(std::make_shared<RType::DirectionComponent>());
     player->pushComponent(std::make_shared<RType::ClockComponent>());
+    player->pushComponent(std::make_shared<VelocityComponent>(5));
 
     std::shared_ptr<RType::Entity> player2 = _coord.generateNewEntity();
 
@@ -90,6 +93,7 @@ void RType::Game::createMob()
     player2->pushComponent(std::make_shared<RType::SpriteComponent>(texture2->getTexture(), position2->getPositions(), sf::Vector2f(2, 2), sf::IntRect(0, 0, 65, 74)));
     player2->pushComponent(std::make_shared<RType::DirectionComponent>());
     player2->pushComponent(std::make_shared<RType::ClockComponent>());
+    player2->pushComponent(std::make_shared<VelocityComponent>(5));
 }
 
 void RType::Game::createBoss()
@@ -109,7 +113,7 @@ void RType::Game::createGameSystem()
     _coord.generateNewSystem(std::make_shared<HandleAnimationSystem>());
 }
 
-void RType::Game::createParallaxBackground(std::shared_ptr<RType::Entity> window)
+void RType::Game::createParallaxBackground(std::shared_ptr<RType::Entity> window, int posX, int posY)
 {
     std::vector<std::shared_ptr<RType::Entity>> backgrounds;
     std::shared_ptr<RType::TextureComponent> texture;
@@ -130,13 +134,16 @@ void RType::Game::createParallaxBackground(std::shared_ptr<RType::Entity> window
     for (std::size_t i = 0; i < bgMap[Backgrounds::PURPLEBG].size(); i++) {
         backgrounds[i] = _coord.generateNewEntity();
         texture = backgrounds[i]->pushComponent(CREATE_TEXTURE(bgMap[Backgrounds::PURPLEBG][i]));
-        position = backgrounds[i]->pushComponent(CREATE_POS_COMPONENT(0, 0));
+        position = backgrounds[i]->pushComponent(CREATE_POS_COMPONENT(posX, posY));
         backgrounds[i]->pushComponent(CREATE_ENTITY_TYPE(RType::LAYER));
-        backgrounds[i]->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(),
+        backgrounds[i]->pushComponent(std::make_shared<SpriteComponent>(texture->getTexture(),
             position->getPositions()));
-        spriteWidth = backgrounds[i]->getComponent<RType::TextureComponent>()->getTexture()->getSize().x;
-        spriteHeight = backgrounds[i]->getComponent<RType::TextureComponent>()->getTexture()->getSize().y;
+        spriteWidth = backgrounds[i]->getComponent<TextureComponent>()->getTexture()->getSize().x;
+        spriteHeight = backgrounds[i]->getComponent<TextureComponent>()->getTexture()->getSize().y;
         backgrounds[i]->getComponent<SpriteComponent>()->getSprite()->setScale(sf::Vector2f(float(winMaxX / spriteWidth), float(winMaxY / spriteHeight)));
+        auto dir = backgrounds[i]->pushComponent(std::make_shared<RType::DirectionComponent>());
+        dir->setDirections(LEFT, true);
+        backgrounds[i]->pushComponent(std::make_shared<VelocityComponent>(i + 1));
     }
 }
 
@@ -157,6 +164,7 @@ void  RType::Game::handleShot()
                 shot->pushComponent(std::make_shared<RType::DirectionComponent>(RType::RIGHT));
                 shot->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, true);
                 shot->pushComponent(std::make_shared<RType::ClockComponent>());
+                shot->pushComponent(std::make_shared<VelocityComponent>(20));
             }
         }
     }

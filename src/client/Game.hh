@@ -20,6 +20,7 @@
 #include "../ecs//Components/DirectionComponent.hh"
 #include "../ecs//Components/ClockComponent.hh"
 #include "../ecs/Components/ActionComponent.hh"
+#include "../ecs/Components/VelocityComponent.hh"
 
 #include "../ecs/Systems/HandleEventSystem.hpp"
 #include "../ecs/Systems/HandleDrawSystem.hpp"
@@ -51,7 +52,7 @@ namespace RType {
             void createBoss();
             void createWindow();
             void createGameSystem();
-            void createParallaxBackground(std::shared_ptr<RType::Entity> window);
+            void createParallaxBackground(std::shared_ptr<RType::Entity> window, int posX, int posY);
             void handleShot();
             RType::Coordinator _coord;
             bool _stopLoop;
