@@ -10,6 +10,8 @@
 #include "../includes.hh"
 #include "../client/Client.hh"
 #include "../command/factory/CommandFactory.hh"
+#include "../../protocolHandler/Decoder.hh"
+#include "../../protocolHandler/Encoder.hh"
 
 #define MAX_SIZE 1024
 
@@ -30,7 +32,7 @@ namespace RType {
 
             udp::socket _socket;
             udp::endpoint _remoteEndpoint;
-            std::array<char, MAX_SIZE> _recvBuffer;
+            std::array<unsigned char, MAX_SIZE> _recvBuffer;
             std::vector<std::shared_ptr<Client>> _clients;
             CommandFactory _commandFactory;
     };

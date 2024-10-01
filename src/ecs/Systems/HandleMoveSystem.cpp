@@ -48,8 +48,8 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
                         movePosition.second += 100;
                     }
                     if (_client && (movePosition.first != 0 ||  movePosition.second != 0)) {
-                        _client->send("Move " + std::to_string(movePosition.first) + " " +  std::to_string(movePosition.second));
-                        // _client->send(Encoder::movePlayer(movePosition.first, movePosition.second));
+                        // std::cout << "Move " + std::to_string(movePosition.first) + " " +  std::to_string(movePosition.second) << std::endl;
+                        _client->send(Encoder::movePlayer(movePosition.first, movePosition.second));
                     }
                 }
             }

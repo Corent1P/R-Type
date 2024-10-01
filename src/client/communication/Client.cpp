@@ -37,6 +37,15 @@ void RType::Client::send(const std::string &message)
         throw ClientError("Unable to send the message: " + ec.message());
 }
 
+void RType::Client::send(const std::basic_string<unsigned char> &message)
+{
+    boost::system::error_code ec;
+
+    _socket.send_to(boost::asio::buffer(message, message.size()), _endpoint, 0, ec);
+    if (ec)
+        throw ClientError("Unable to send the message: " + ec.message());
+}
+
 std::string RType::Client::receive(void)
 {
     std::array<char, 128> recvBuf;

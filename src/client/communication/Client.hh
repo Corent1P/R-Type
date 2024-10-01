@@ -19,7 +19,14 @@ namespace RType {
         public:
             Client(boost::asio::io_context &ioContext, const std::string &host, const std::string &port);
             ~Client();
+            /**
+             * @brief send a message to the endpoint
+             *
+             * @deprecated
+             * @param message (std::string) the message to send
+             */
             void send(const std::string &message);
+            void send(const std::basic_string<unsigned char> &message);
             std::string receive(void);
 
         private:

@@ -16,6 +16,7 @@ std::string RType::Server::makeDaytimeString(void)
 RType::Server::Server(boost::asio::io_context &ioContext, int port):
     _socket(ioContext, udp::endpoint(udp::v4(), port))
 {
+    std::cout << "Server listening on port " << port << std::endl;
     startReceive();
 }
 
@@ -35,22 +36,23 @@ void RType::Server::handleReceive(const boost::system::error_code &error, std::s
         std::cout << "There was an error during receival" << std::endl;
         return;
     }
-    std::string command(_recvBuffer.data(), bytesTransferred);
-    std::cout << "Message received = " << command << std::endl;
+    std::basic_string<unsigned char> command(_recvBuffer.data(), bytesTransferred);
+    auto receivInfo = Decoder::getCommandInfo(command);
+    std::cout << "Message received = " << receivInfo.first << " with coordinates " << receivInfo.second[0] << ":" << receivInfo.second[1] << std::endl;
     std::shared_ptr<Client> connectedClient = getConnectedClient();
     if (!connectedClient)
         connectedClient = createClient();
 
     // ! TO REORGANISE {
-    std::shared_ptr<ICommand> com = _commandFactory.createCommand(command);
-    std::string response;
-    if (!com)
-        response = "Unvalid Command\n";
-    else {
-        com->execute(_socket, connectedClient);
-        response = makeDaytimeString();
-    }
-    connectedClient->sendMessage(_socket, response);
+    // std::shared_ptr<ICommand> com = _commandFactory.createCommand(command);
+    // std::string response;
+    // if (!com)
+    //     response = "Unvalid Command\n";
+    // else {
+    //     com->execute(_socket, connectedClient);
+    //     response = makeDaytimeString();
+    // }
+    // connectedClient->sendMessage(_socket, response);
     // ! }
     startReceive();
 }
