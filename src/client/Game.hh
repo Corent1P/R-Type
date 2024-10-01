@@ -49,6 +49,7 @@ namespace RType {
             std::shared_ptr<RType::Client> _client;
             bool _stopLoop;
             std::jthread _receipter;
+            bool _initConnection;
     };
 }
 

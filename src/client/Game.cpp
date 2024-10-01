@@ -17,6 +17,7 @@ RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, c
     createGameSystem();
     _stopLoop = false;
     _receipter = std::jthread(&Game::loopReceive, this);
+    _initConnection = false;
 }
 
 RType::Game::~Game()
@@ -55,15 +56,26 @@ void RType::Game::loopReceive()
 
         if (receivInfo.first == NEW_ENTITY) {
             std::cout << "Message received = " << receivInfo.first << " new entity with type " << receivInfo.second[0] << ":" << receivInfo.second[1] << ":" << receivInfo.second[2] << ":" << receivInfo.second[3] << std::endl;
-            if (receivInfo.second[0] == ALLIES)
+            if (_initConnection)
                 createPlayer(receivInfo.second[1], receivInfo.second[2], receivInfo.second[3]);
+            else {
+                _initConnection = true;
+                auto entities = _coord.getEntities();
+                for (const auto &entity : entities) {
+                    if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == PLAYER)
+                        entity->setServerId(receivInfo.second[1]);
+                }
+            }
         }
         if (receivInfo.first == MOVE_ENTITY) {
-            std::cout << "Message received = " << receivInfo.first << " move Entity" << receivInfo.second[0] << " to coordinates " << receivInfo.second[1] << ":" << receivInfo.second[2] << std::endl;
+            std::cout << "Message received = " << receivInfo.first << " move Entity " << receivInfo.second[0] << " to coordinates " << receivInfo.second[1] << ":" << receivInfo.second[2] << std::endl;
             auto entities = _coord.getEntities();
             for (const auto &entity : entities) {
-                if (entity->getServerId() == receivInfo.second[0])
+                if (entity->getServerId() == receivInfo.second[0]) {
+                    std::cout << "set Position" << std::endl;
                     entity->getComponent<RType::PositionComponent>()->setPositions(receivInfo.second[1], receivInfo.second[2]);
+                    entity->getComponent<RType::SpriteComponent>()->getSprite()->setPosition(receivInfo.second[1], receivInfo.second[2]);
+                }
             }
         }
     }

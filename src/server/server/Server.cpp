@@ -47,8 +47,8 @@ void RType::Server::handleReceive(const boost::system::error_code &error, std::s
     // connectedClient->sendMessage(_socket, Encoder::movePlayer(receivInfo.second[0], receivInfo.second[1]));
     if (receivInfo.first == 7) {
         std::pair<double, double> position = connectedClient->getPosition();
-        position.first += ((double)receivInfo.second[0]) / 100.;
-        position.second += ((double)receivInfo.second[1]) / 100.;
+        position.first += ((double)receivInfo.second[0]) / 10.;
+        position.second += ((double)receivInfo.second[1]) / 10.;
         if (position.first < 0.)
             position.first = 0.;
         if (position.first > 1920.)
@@ -89,7 +89,7 @@ std::shared_ptr<RType::Client> RType::Server::createClient(void)
     _clients.push_back(newClient);
     sendToAllClient(Encoder::newEntity(2, newId, 10, 10)); //TODO: change this (when including the ecs in the server)
     for (auto client: _clients)
-        if (client->getId != newClient.getId())
+        if (client->getId() != newClient->getId())
             newClient->sendMessage(_socket, Encoder::newEntity(2, client->getId(), client->getPosition().first, client->getPosition().second));
     return newClient;
 }
