@@ -47,16 +47,16 @@ void RType::Server::handleReceive(const boost::system::error_code &error, std::s
     // connectedClient->sendMessage(_socket, Encoder::movePlayer(receivInfo.second[0], receivInfo.second[1]));
     if (receivInfo.first == 7) {
         std::pair<double, double> position = connectedClient->getPosition();
-        position.first += ((double)receivInfo.second[0]) / 1000.;
-        position.second += ((double)receivInfo.second[1]) / 1000.;
+        position.first += ((double)receivInfo.second[0]) / 100.;
+        position.second += ((double)receivInfo.second[1]) / 100.;
         if (position.first < 0.)
             position.first = 0.;
         if (position.first > 1920.)
             position.first = 1920.;
         if (position.second < 0.)
             position.second = 0.;
-        if (position.first > 1080.)
-            position.first = 1080.;
+        if (position.second > 1080.)
+            position.second = 1080.;
         connectedClient->setPosition(position);
         sendToAllClient(Encoder::moveEntity(connectedClient->getId(), position.first, position.second, 0));
     }
@@ -88,6 +88,9 @@ std::shared_ptr<RType::Client> RType::Server::createClient(void)
     std::shared_ptr<Client> newClient(new Client(_remoteEndpoint, newId));
     _clients.push_back(newClient);
     sendToAllClient(Encoder::newEntity(2, newId, 10, 10)); //TODO: change this (when including the ecs in the server)
+    for (auto client: _clients)
+        if (client->getId != newClient.getId())
+            newClient->sendMessage(_socket, Encoder::newEntity(2, client->getId(), client->getPosition().first, client->getPosition().second));
     return newClient;
 }
 
