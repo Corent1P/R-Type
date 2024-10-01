@@ -29,6 +29,8 @@ namespace RType {
         INFO_ENTITY = 6,
         MOVE_PLAYER = 7,
         ACTION_PLAYER = 8,
+        GAME_START = 9,
+        GAME_END = 10,
     };
 
     /**
@@ -139,5 +141,19 @@ namespace RType {
         */
         static U_STRING actionPlayer(bool action1, bool action2, bool action3,
                                     bool action4);
+
+        /**
+        * @brief Encode the game start packet
+        *
+        * @return U_STRING Encoded game start packet
+        */
+        static U_STRING gameStart();
+
+        /**
+        * @brief Encode the game end packet
+        *
+        * @return U_STRING Encoded game end packet
+        */
+        static U_STRING gameEnd();
     };
 }

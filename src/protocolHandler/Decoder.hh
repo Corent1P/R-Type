@@ -51,7 +51,7 @@ namespace RType {
         static std::size_t getSize(U_STRING &packet);
 
         /**
-        * @brief Decode the new entity packet (maybe create the entity)
+        * @brief Decode the new entity packet
         *
         * @param packet Packet received
         *
@@ -60,7 +60,7 @@ namespace RType {
         static COMMAND_ARGS newEntity(U_STRING &packet);
 
         /**
-        * @brief Decode the delete entity packet (maybe delete the entity)
+        * @brief Decode the delete entity packet
         *
         * @param packet Packet received
         *
@@ -69,7 +69,7 @@ namespace RType {
         static COMMAND_ARGS deleteEntity(U_STRING &packet);
 
         /**
-        * @brief Decode the move entity packet (maybe move the entity)
+        * @brief Decode the move entity packet
         *
         * @param packet Packet received
         *
@@ -78,7 +78,7 @@ namespace RType {
         static COMMAND_ARGS moveEntity(U_STRING &packet);
 
         /**
-        * @brief Decode the info level packet (maybe set the level)
+        * @brief Decode the info level packet
         *
         * @param packet Packet received
         *
@@ -87,7 +87,7 @@ namespace RType {
         static COMMAND_ARGS infoLevel(U_STRING &packet);
 
         /**
-        * @brief Decode the info entity packet (maybe set the entity)
+        * @brief Decode the info entity packet
         *
         * @param packet Packet received
         *
@@ -96,7 +96,7 @@ namespace RType {
         static COMMAND_ARGS infoEntity(U_STRING &packet);
 
         /**
-        * @brief Decode the move player packet (maybe move the player)
+        * @brief Decode the move player packet
         *
         * @param packet Packet received
         *
@@ -105,12 +105,30 @@ namespace RType {
         static COMMAND_ARGS movePlayer(U_STRING &packet);
 
         /**
-        * @brief Decode the action player packet (maybe do the action)
+        * @brief Decode the action player packet
         *
         * @param packet Packet received
         *
         * @return COMMAND_ARGS the content of the command
         */
         static COMMAND_ARGS actionPlayer(U_STRING &packet);
+
+        /**
+        * @brief Decode the game start packet
+        *
+        * @param packet Packet received
+        *
+        * @return COMMAND_ARGS the content of the command
+        */
+        static COMMAND_ARGS gameStart(U_STRING &packet);
+
+        /**
+        * @brief Decode the game end packet
+        *
+        * @param packet Packet received
+        *
+        * @return COMMAND_ARGS the content of the command
+        */
+        static COMMAND_ARGS gameEnd(U_STRING &packet);
     };
 }

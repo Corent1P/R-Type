@@ -106,4 +106,14 @@ namespace RType {
         encodedPlayer += action1 << 3 | action2 << 2 | action3 << 1 | action4;
         return header(encodedPlayer.size(), ACTION_PLAYER) + encodedPlayer;
     }
+
+    U_STRING Encoder::gameStart()
+    {
+        return header(0, GAME_START);
+    }
+
+    U_STRING Encoder::gameEnd()
+    {
+        return header(0, GAME_END);
+    }
 }
