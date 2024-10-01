@@ -128,7 +128,7 @@ namespace RType {
         *
         * @return U_STRING Encoded player movement packet
         */
-        static U_STRING movePlayer(std::int16_t x, std::int16_t y);
+        static U_STRING movePlayer(std::int8_t x, std::int8_t y);
 
         /**
         * @brief Encode the player action packet
