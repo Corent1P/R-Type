@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <unordered_map>
+#include <vector>
 #include "../ecs/Coordinator.hh"
 #include "../ecs/Components/PositionComponent.hh"
 #include "../ecs/Components/HealthComponent.hh"
@@ -23,7 +25,19 @@
 #include "../ecs/Systems/HandleMoveSystem.hpp"
 #include "../ecs/Systems/HandleAnimationSystem.hpp"
 
+#define CREATE_TEXTURE std::make_shared<RType::TextureComponent>
+#define CREATE_ENTITY_TYPE std::make_shared<RType::EntityTypeComponent>
+#define CREATE_POS_COMPONENT std::make_shared<RType::PositionComponent>
+
 namespace RType {
+
+    enum Backgrounds{
+        REDBG,
+        BLUEBG,
+        PURPLEBG,
+        BROWNBG,
+        GREENBG
+    };
     class Game {
         public:
             Game();
@@ -36,6 +50,7 @@ namespace RType {
             void createBoss();
             void createWindow();
             void createGameSystem();
+            void createParallaxBackground(std::shared_ptr<RType::Entity> window);
             RType::Coordinator _coord;
             bool _stopLoop;
     };

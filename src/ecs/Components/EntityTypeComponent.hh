@@ -15,7 +15,8 @@ namespace RType {
         PLAYER,
         MOB,
         BOSS,
-        BUTTON
+        BUTTON,
+        LAYER
     };
 
     class EntityTypeComponent: public RType::IComponent {

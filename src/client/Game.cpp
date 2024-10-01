@@ -60,6 +60,7 @@ void RType::Game::createWindow()
     window->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::WINDOW));
     window->pushComponent(std::make_shared<RType::SFWindowComponent>(1920, 1080));
     window->pushComponent(std::make_shared<RType::EventComponent>());
+    createParallaxBackground(window);
 }
 
 void RType::Game::createMob()
@@ -104,6 +105,37 @@ void RType::Game::createGameSystem()
     _coord.generateNewSystem(std::make_shared<HandleDrawSystem>());
     _coord.generateNewSystem(std::make_shared<HandleMoveSystem>());
     _coord.generateNewSystem(std::make_shared<HandleAnimationSystem>());
+}
+
+void RType::Game::createParallaxBackground(std::shared_ptr<RType::Entity> window)
+{
+    std::vector<std::shared_ptr<RType::Entity>> backgrounds;
+    std::shared_ptr<RType::TextureComponent> texture;
+    float winMaxX = window->getComponent<RType::SFWindowComponent>()->getWindow()->getSize().x;
+    float winMaxY = window->getComponent<RType::SFWindowComponent>()->getWindow()->getSize().y;
+    float spriteHeight = 0.;
+    float spriteWidth = 0.;
+    std::shared_ptr<RType::PositionComponent> position;
+    std::unordered_map<Backgrounds, std::vector<std::string>> bgMap =
+    {
+        // {Backgrounds::REDBG, 6},
+        // {Backgrounds::BLUEBG, 3},
+        {Backgrounds::PURPLEBG, {"./ressources/parallax/purple/back.png", "./ressources/parallax/purple/front.png"}}
+        // {Backgrounds::BROWNBG, 6},
+        // {Backgrounds::GREENBG, 4}
+    };
+    backgrounds.resize(bgMap[Backgrounds::PURPLEBG].size());
+    for (std::size_t i = 0; i < bgMap[Backgrounds::PURPLEBG].size(); i++) {
+        backgrounds[i] = _coord.generateNewEntity();
+        texture = backgrounds[i]->pushComponent(CREATE_TEXTURE(bgMap[Backgrounds::PURPLEBG][i]));
+        position = backgrounds[i]->pushComponent(CREATE_POS_COMPONENT(0, 0));
+        backgrounds[i]->pushComponent(CREATE_ENTITY_TYPE(RType::LAYER));
+        backgrounds[i]->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(),
+            position->getPositions()));
+        spriteWidth = backgrounds[i]->getComponent<RType::SpriteComponent>()->getSprite()->getGlobalBounds().width;
+        spriteHeight = backgrounds[i]->getComponent<RType::SpriteComponent>()->getSprite()->getGlobalBounds().height;
+        backgrounds[i]->getComponent<SpriteComponent>()->getSprite()->setScale(sf::Vector2f(1920 / 272, 1080 / 160));
+    }
 }
 
 std::ostream &operator<<(std::ostream &s, const RType::Game &game)

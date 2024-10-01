@@ -27,7 +27,6 @@ RType::SpriteComponent::SpriteComponent(std::shared_ptr<sf::Texture> texture, sf
 
 void RType::SpriteComponent::setSprite(std::shared_ptr<sf::Texture> texture, sf::Vector2f pos)
 {
-    std::cout << "texture x: " << texture->getSize().x << std::endl;
     _sprite->setTexture(*(texture));
     _sprite->setPosition(pos);
     _sprite->setScale(sf::Vector2f (2, 2));

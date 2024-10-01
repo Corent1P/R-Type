@@ -46,6 +46,9 @@ std::string RType::EntityTypeComponent::getOutput() const
         case BUTTON:
             entityType = "button";
             break;
+        case LAYER:
+            entityType = "layer";
+            break;
         default:
             entityType = "unknown";
             break;
