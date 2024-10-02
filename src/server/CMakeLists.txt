@@ -25,4 +25,5 @@ target_link_libraries(r-type_server PRIVATE
     sfml-system
     sfml-window
     sfml-graphics
+    protocolHandler
 )

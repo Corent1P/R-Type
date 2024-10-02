@@ -12,8 +12,8 @@ RType::Coordinator::Coordinator():
 {
 }
 
-std::shared_ptr<RType::Entity> RType::Coordinator::generateNewEntity() {
-    std::shared_ptr<Entity> newEntity = std::make_unique<Entity>(_idEntities++);
+std::shared_ptr<RType::Entity> RType::Coordinator::generateNewEntity(uint16_t serverId) {
+    std::shared_ptr<Entity> newEntity = std::make_unique<Entity>(_idEntities++, serverId);
     _entities.push_back(newEntity);
     return (newEntity);
 }
@@ -44,3 +44,14 @@ std::ostream &operator<<(std::ostream &s, const RType::Coordinator &coordinator)
         s << "\t" << *system << std::endl;
     return s;
 }
+
+bool RType::Coordinator::deleteEntity(std::shared_ptr<Entity> entityToDestroy)
+{
+    auto it = std::find(_entities.begin(), _entities.end(), entityToDestroy);
+    if (it != _entities.end()) {
+        _entities.erase(it);
+        return true;
+    }
+    return false;
+}
+

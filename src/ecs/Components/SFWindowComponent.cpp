@@ -10,6 +10,7 @@
 RType::SFWindowComponent::SFWindowComponent(int screenWidth, int screenHeight):
     _window(std::make_shared<sf::RenderWindow>(sf::VideoMode(screenWidth, screenHeight), "SFML window"))
 {
+    _window->setFramerateLimit(60);
 }
 
 RType::SFWindowComponent::~SFWindowComponent()
@@ -17,7 +18,7 @@ RType::SFWindowComponent::~SFWindowComponent()
     _window->close();
 }
 
-std::shared_ptr<sf::RenderWindow> RType::SFWindowComponent::getWindow() const 
+std::shared_ptr<sf::RenderWindow> RType::SFWindowComponent::getWindow() const
 {
     return _window;
 }

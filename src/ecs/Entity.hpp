@@ -14,11 +14,13 @@ namespace RType {
 
     class Entity {
         public:
-            Entity(uint16_t id);
+            Entity(uint16_t id, uint16_t serverId = -1);
             ~Entity() = default;
 
             std::vector<std::shared_ptr<IComponent>> getComponents(void) const;
             uint16_t getId(void) const;
+            uint16_t getServerId(void) const;
+            void setServerId(uint16_t serverId);
 
             template <typename T>
             std::shared_ptr<T> pushComponent(std::shared_ptr<T> component) {
@@ -40,6 +42,8 @@ namespace RType {
         private:
             std::vector<std::shared_ptr<IComponent>> _components;
             uint16_t _id;
+            uint16_t _serverId;
+
     };
 }
 std::ostream &operator<<(std::ostream &s, const RType::Entity &entity);

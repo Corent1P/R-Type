@@ -31,6 +31,10 @@ namespace RType {
                 return std::make_pair(MOVE_PLAYER, movePlayer(packet));
             case ACTION_PLAYER:
                 return std::make_pair(ACTION_PLAYER, actionPlayer(packet));
+            case GAME_START:
+                return std::make_pair(GAME_START, COMMAND_ARGS());
+            case GAME_END:
+                return std::make_pair(GAME_END, COMMAND_ARGS());
             default:
                 return std::make_pair(ERROR, COMMAND_ARGS());
         }
@@ -101,8 +105,8 @@ namespace RType {
     {
         COMMAND_ARGS args(2);
 
-        args[0] = (packet[2] << 8) | packet[3];
-        args[1] = (packet[4] << 8) | packet[5];
+        args[0] = static_cast<std::int8_t>(packet[2]);
+        args[1] = static_cast<std::int8_t>(packet[3]);
         return args;
     }
 
