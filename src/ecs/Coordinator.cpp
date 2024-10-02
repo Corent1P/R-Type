@@ -38,6 +38,7 @@ void RType::Coordinator::deleteEntity(std::shared_ptr<Entity> entityToDestroy)
     if (it != _entities.end()) {
         _entities.erase(it);
     }
+    std::cout << "delete entity: " << _entities.size() << std::endl;
 }
 
 

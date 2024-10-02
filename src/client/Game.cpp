@@ -106,11 +106,30 @@ void RType::Game::createBoss()
 
 void RType::Game::createGameSystem()
 {
-    _coord.generateNewSystem(std::make_shared<HandleEventSystem>(std::bind(&_coord.addEntity, this), std::bind(&_coord.deleteEntity, this));
-    _coord.generateNewSystem(std::make_shared<HandleDrawSystem>(std::bind(&_coord.addEntity, this), std::bind(&_coord.deleteEntity, this));
-    _coord.generateNewSystem(std::make_shared<HandleMoveSystem>(std::bind(&_coord.addEntity, this), std::bind(&_coord.deleteEntity, this));
-    _coord.generateNewSystem(std::make_shared<HandlePatternSystem>(std::bind(&_coord.addEntity, this), std::bind(&_coord.deleteEntity, this));
-    _coord.generateNewSystem(std::make_shared<HandleAnimationSystem>(std::bind(&_coord.addEntity, this), std::bind(&_coord.deleteEntity, this));
+    _coord.generateNewSystem(std::make_shared<HandleEventSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+    ));
+
+    _coord.generateNewSystem(std::make_shared<HandleDrawSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+    ));
+
+    _coord.generateNewSystem(std::make_shared<HandleMoveSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+    ));
+
+    _coord.generateNewSystem(std::make_shared<HandlePatternSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+    ));
+
+    _coord.generateNewSystem(std::make_shared<HandleAnimationSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+    ));
 }
 
 void  RType::Game::handleShot()
