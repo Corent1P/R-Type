@@ -63,8 +63,7 @@ void RType::Game::createWindow()
     window->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::WINDOW));
     window->pushComponent(std::make_shared<RType::SFWindowComponent>(1920, 1080));
     window->pushComponent(std::make_shared<RType::EventComponent>());
-    createParallaxBackground(window, 0, 0);
-    createParallaxBackground(window, window->getComponent<SFWindowComponent>()->getWindow()->getSize().x, 0);
+    createParallaxBackground(window);
 }
 
 void RType::Game::createMob()
@@ -113,38 +112,44 @@ void RType::Game::createGameSystem()
     _coord.generateNewSystem(std::make_shared<HandleAnimationSystem>());
 }
 
-void RType::Game::createParallaxBackground(std::shared_ptr<RType::Entity> window, int posX, int posY)
+void RType::Game::createParallaxBackground(std::shared_ptr<RType::Entity> window)
 {
-    std::vector<std::shared_ptr<RType::Entity>> backgrounds;
+    std::shared_ptr<RType::Entity> backgrounds;
     std::shared_ptr<RType::TextureComponent> texture;
     float winMaxX = window->getComponent<RType::SFWindowComponent>()->getWindow()->getSize().x;
     float winMaxY = window->getComponent<RType::SFWindowComponent>()->getWindow()->getSize().y;
-    float spriteHeight = 0.;
-    float spriteWidth = 0.;
     std::shared_ptr<RType::PositionComponent> position;
     std::unordered_map<Backgrounds, std::vector<std::string>> bgMap =
     {
         // {Backgrounds::REDBG, 6},
-        // {Backgrounds::BLUEBG, 3},
-        {Backgrounds::PURPLEBG, {"./ressources/parallax/purple/back.png", "./ressources/parallax/purple/front.png"}}
+        {Backgrounds::BLUEBG, {"./ressources/parallax/blue/back.png", "./ressources/parallax/blue/mid.png", "./ressources/parallax/blue/front.png"}},
+        {Backgrounds::PURPLEBG, {"./ressources/parallax/purple/back.png", "./ressources/parallax/purple/front.png"}},
         // {Backgrounds::BROWNBG, 6},
-        // {Backgrounds::GREENBG, 4}
+        {Backgrounds::GREENBG, {"./ressources/parallax/green/back.png", "./ressources/parallax/green/mid.png", "./ressources/parallax/green/front.png"}}
     };
-    backgrounds.resize(bgMap[Backgrounds::PURPLEBG].size());
-    for (std::size_t i = 0; i < bgMap[Backgrounds::PURPLEBG].size(); i++) {
-        backgrounds[i] = _coord.generateNewEntity();
-        texture = backgrounds[i]->pushComponent(CREATE_TEXTURE(bgMap[Backgrounds::PURPLEBG][i]));
-        position = backgrounds[i]->pushComponent(CREATE_POS_COMPONENT(posX, posY));
-        backgrounds[i]->pushComponent(CREATE_ENTITY_TYPE(RType::LAYER));
-        backgrounds[i]->pushComponent(std::make_shared<SpriteComponent>(texture->getTexture(),
-            position->getPositions()));
-        spriteWidth = backgrounds[i]->getComponent<TextureComponent>()->getTexture()->getSize().x;
-        spriteHeight = backgrounds[i]->getComponent<TextureComponent>()->getTexture()->getSize().y;
-        backgrounds[i]->getComponent<SpriteComponent>()->getSprite()->setScale(sf::Vector2f(float(winMaxX / spriteWidth), float(winMaxY / spriteHeight)));
-        auto dir = backgrounds[i]->pushComponent(std::make_shared<RType::DirectionComponent>());
-        dir->setDirections(LEFT, true);
-        backgrounds[i]->pushComponent(std::make_shared<VelocityComponent>(i + 1));
+    for (std::size_t i = 0; i < bgMap[Backgrounds::GREENBG].size(); i++) {
+        createParallaxEntity(bgMap[Backgrounds::GREENBG][i], 0, 0, winMaxX, winMaxY, i);
+        createParallaxEntity(bgMap[Backgrounds::GREENBG][i], winMaxX, 0, winMaxX, winMaxY, i);
     }
+}
+
+void RType::Game::createParallaxEntity(const std::string &path, const int &posX, const int &posY, const int &winMaxX,const int &winMaxY, const int &index)
+{
+    std::shared_ptr<RType::Entity> backgrounds = _coord.generateNewEntity();
+    std::shared_ptr<RType::TextureComponent> texture = backgrounds->pushComponent(CREATE_TEXTURE(path));
+    std::shared_ptr<RType::PositionComponent> position = backgrounds->pushComponent(CREATE_POS_COMPONENT(posX, posY));
+    float spriteHeight = 0.;
+    float spriteWidth = 0.;
+
+    backgrounds->pushComponent(CREATE_ENTITY_TYPE(RType::LAYER));
+    backgrounds->pushComponent(std::make_shared<SpriteComponent>(texture->getTexture(),
+        position->getPositions()));
+    spriteWidth = backgrounds->getComponent<TextureComponent>()->getTexture()->getSize().x;
+    spriteHeight = backgrounds->getComponent<TextureComponent>()->getTexture()->getSize().y;
+    backgrounds->getComponent<SpriteComponent>()->getSprite()->setScale(sf::Vector2f(float(winMaxX / spriteWidth), float(winMaxY / spriteHeight)));
+    auto dir = backgrounds->pushComponent(std::make_shared<RType::DirectionComponent>());
+    dir->setDirections(LEFT, true);
+    backgrounds->pushComponent(std::make_shared<VelocityComponent>(index + 1));
 }
 
 void  RType::Game::handleShot()

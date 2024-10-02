@@ -52,7 +52,8 @@ namespace RType {
             void createBoss();
             void createWindow();
             void createGameSystem();
-            void createParallaxBackground(std::shared_ptr<RType::Entity> window, int posX, int posY);
+            void createParallaxBackground(std::shared_ptr<RType::Entity> window);
+            void createParallaxEntity(const std::string &path, const int &posX, const int &posY, const int &winMaxX,const int &winMaxY,const int &index);
             void handleShot();
             RType::Coordinator _coord;
             bool _stopLoop;
