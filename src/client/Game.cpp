@@ -36,8 +36,19 @@ RType::Coordinator RType::Game::getCoordinator() const
 void RType::Game::gameLoop()
 {
     while (!_stopLoop) {
-        for (auto sys: _coord.getSystems()) {
-            sys->effects(_coord.getEntities());
+        for (auto entity: _coord.getEntities()) {
+            if (entity->getComponent<RType::SFWindowComponent>() != nullptr && entity->getComponent<RType::ClockComponent>() != nullptr) {
+                if (entity->getComponent<RType::ClockComponent>()->getClock().getElapsedTime().asMilliseconds() % 16) {
+                    if (entity->getComponent<RType::ClockComponent>()->getClock().getElapsedTime().asSeconds() >= 1.) {
+                        // std::cout << "reset" << std::endl;
+                        entity->getComponent<RType::ClockComponent>()->getClock().restart();
+                    }
+                    for (auto sys: _coord.getSystems()) {
+                        sys->effects(_coord.getEntities());
+                    }
+                }
+                break;
+            }
         }
         for (auto entity : _coord.getEntities()) {
             if (entity->getComponent<RType::SFWindowComponent>() && !entity->getComponent<RType::SFWindowComponent>()->getIsOpen()) {
@@ -124,6 +135,7 @@ void RType::Game::createWindow()
     window->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::WINDOW));
     window->pushComponent(std::make_shared<RType::SFWindowComponent>(1920, 1080));
     window->pushComponent(std::make_shared<RType::EventComponent>());
+    window->pushComponent(std::make_shared<RType::ClockComponent>());
 }
 
 void RType::Game::createMob()
