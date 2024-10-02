@@ -121,15 +121,15 @@ void RType::Game::createParallaxBackground(std::shared_ptr<RType::Entity> window
     std::shared_ptr<RType::PositionComponent> position;
     std::unordered_map<Backgrounds, std::vector<std::string>> bgMap =
     {
-        // {Backgrounds::REDBG, 6},
+        {Backgrounds::REDBG, {"./ressources/parallax/red/back.png", "./ressources/parallax/red/stars.png", "./ressources/parallax/red/mid.png", "./ressources/parallax/red/front.png"}},
         {Backgrounds::BLUEBG, {"./ressources/parallax/blue/back.png", "./ressources/parallax/blue/mid.png", "./ressources/parallax/blue/front.png"}},
         {Backgrounds::PURPLEBG, {"./ressources/parallax/purple/back.png", "./ressources/parallax/purple/front.png"}},
         // {Backgrounds::BROWNBG, 6},
         {Backgrounds::GREENBG, {"./ressources/parallax/green/back.png", "./ressources/parallax/green/mid.png", "./ressources/parallax/green/front.png"}}
     };
-    for (std::size_t i = 0; i < bgMap[Backgrounds::GREENBG].size(); i++) {
-        createParallaxEntity(bgMap[Backgrounds::GREENBG][i], 0, 0, winMaxX, winMaxY, i);
-        createParallaxEntity(bgMap[Backgrounds::GREENBG][i], winMaxX, 0, winMaxX, winMaxY, i);
+    for (std::size_t i = 0; i < bgMap[Backgrounds::BLUEBG].size(); i++) {
+        createParallaxEntity(bgMap[Backgrounds::BLUEBG][i], 0, 0, winMaxX, winMaxY, i);
+        createParallaxEntity(bgMap[Backgrounds::BLUEBG][i], winMaxX, 0, winMaxX, winMaxY, i);
     }
 }
 
