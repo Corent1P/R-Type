@@ -7,7 +7,7 @@
 
 #include "HandleMoveSystem.hpp"
 
-RType::HandleMoveSystem::HandleMoveSystem(std::function<void(std::shared_ptr<Entity>)> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
+RType::HandleMoveSystem::HandleMoveSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
     ASystem(MOVE, addEntity, deleteEntity)
 {
 }

@@ -30,7 +30,6 @@ void RType::Game::gameLoop()
     while (!_stopLoop) {
         for (auto sys: _coord.getSystems()) {
             sys->effects(_coord.getEntities());
-            handleShot();
         }
         for (auto entity : _coord.getEntities()) {
             if (entity->getComponent<RType::SFWindowComponent>() && !entity->getComponent<RType::SFWindowComponent>()->getIsOpen()) {
@@ -107,52 +106,34 @@ void RType::Game::createBoss()
 void RType::Game::createGameSystem()
 {
     _coord.generateNewSystem(std::make_shared<HandleEventSystem>(
-        std::bind(&RType::Coordinator::addEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::generateNewEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleDrawSystem>(
-        std::bind(&RType::Coordinator::addEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::generateNewEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleMoveSystem>(
-        std::bind(&RType::Coordinator::addEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::generateNewEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandlePatternSystem>(
-        std::bind(&RType::Coordinator::addEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::generateNewEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleAnimationSystem>(
-        std::bind(&RType::Coordinator::addEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::generateNewEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
     ));
-}
 
-void  RType::Game::handleShot()
-{
-    for (const auto &entities : _coord.getEntities()) {
-        if (entities->getComponent<RType::ActionComponent>() != nullptr
-        && entities->getComponent<RType::SpriteComponent>() != nullptr) {
-            if (entities->getComponent<RType::ActionComponent>()->getActions(RType::SHOOTING) == true) {
-                std::cout << "New shot!" << std::endl;
-                entities->getComponent<RType::ActionComponent>()->setActions(RType::SHOOTING, false);
-                std::shared_ptr<RType::Entity> shot = _coord.generateNewEntity();
-
-                shot->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::WEAPON));
-                std::shared_ptr<RType::PositionComponent> position = shot->pushComponent(std::make_shared<RType::PositionComponent>(entities->getComponent<SpriteComponent>()->getSprite()->getPosition().x, entities->getComponent<SpriteComponent>()->getSprite()->getPosition().y));
-                std::shared_ptr<RType::TextureComponent> texture = shot->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/shoot-spritesheet.png"));
-                shot->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(), sf::Vector2f(2, 2), sf::IntRect(0, 0, 19, 6)));
-                shot->pushComponent(std::make_shared<RType::DirectionComponent>(RType::RIGHT));
-                shot->pushComponent(std::make_shared<RType::DirectionPatternComponent>(RType::UP_N_DOWN_RIGHT));
-                shot->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, true);
-                shot->pushComponent(std::make_shared<RType::ClockComponent>());
-            }
-        }
-    }
+    _coord.generateNewSystem(std::make_shared<HandleShootSystem>(
+        std::bind(&RType::Coordinator::generateNewEntity, &_coord),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+    ));
 }
 
 std::ostream &operator<<(std::ostream &s, const RType::Game &game)

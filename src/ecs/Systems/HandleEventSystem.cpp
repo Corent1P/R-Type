@@ -7,7 +7,7 @@
 
 #include "HandleEventSystem.hpp"
 
-RType::HandleEventSystem::HandleEventSystem(std::function<void(std::shared_ptr<Entity>)> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
+RType::HandleEventSystem::HandleEventSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
     ASystem(EVENT, addEntity, deleteEntity)
 {
 }

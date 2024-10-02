@@ -18,7 +18,7 @@
 namespace RType {
     class HandlePatternSystem: public ASystem {
         public:
-            HandlePatternSystem(std::function<void(std::shared_ptr<Entity>)> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
+            HandlePatternSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
             ~HandlePatternSystem();
             void effect(std::shared_ptr<RType::Entity> entity);
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);

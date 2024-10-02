@@ -26,11 +26,12 @@ set(SRC_SYSTEMS
     ./Systems/HandleMoveSystem.cpp
     ./Systems/HandleAnimationSystem.cpp
     ./Systems/HandlePatternSystem.cpp
+    ./Systems/HandleShootSystem.cpp
 )
 
 add_library(ecs ${SRC_CLIENT} ${SRC_COMPONENTS} ${SRC_SYSTEMS})
 
-target_compile_options(ecs PRIVATE 
+target_compile_options(ecs PRIVATE
     -fPIC
     -Wall
     -Wextra

@@ -17,7 +17,7 @@
 namespace RType {
     class HandleAnimationSystem: public ASystem {
         public:
-            HandleAnimationSystem(std::function<void(std::shared_ptr<Entity>)> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
+            HandleAnimationSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
             ~HandleAnimationSystem();
             void effect(std::shared_ptr<RType::Entity> entity);
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);

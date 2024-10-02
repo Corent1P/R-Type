@@ -41,11 +41,6 @@ void RType::Coordinator::deleteEntity(std::shared_ptr<Entity> entityToDestroy)
     std::cout << "delete entity: " << _entities.size() << std::endl;
 }
 
-
-void RType::Coordinator::addEntity(std::shared_ptr<Entity> entityToPush) {
-    _entities.push_back(entityToPush);
-}
-
 std::ostream &operator<<(std::ostream &s, const RType::Coordinator &coordinator)
 {
 	std::vector<std::shared_ptr<RType::Entity>> entities = coordinator.getEntities();

@@ -23,7 +23,7 @@ namespace RType {
 
     class HandleMoveSystem: public  RType::ASystem {
         public:
-            HandleMoveSystem(std::function<void(std::shared_ptr<Entity>)> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
+            HandleMoveSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
             ~HandleMoveSystem();
             void effects(std::vector<std::shared_ptr<RType::Entity>> entities);
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);

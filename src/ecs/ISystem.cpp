@@ -27,8 +27,11 @@ std::ostream &operator<<(std::ostream &s, const RType::ISystem &system)
         case RType::ANIMATION:
             s << "Animation system";
             break;
-            case RType::PATTERN:
+        case RType::PATTERN:
             s << "Pattern system";
+            break;
+        case RType::SHOOT:
+            s << "Shoot system";
             break;
         default:
             s << "Unknown system";

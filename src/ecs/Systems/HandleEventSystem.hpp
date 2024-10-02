@@ -25,7 +25,7 @@ namespace RType {
 
     class HandleEventSystem: public  RType::ASystem {
         public:
-            HandleEventSystem(std::function<void(std::shared_ptr<Entity>)> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
+            HandleEventSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
             ~HandleEventSystem();
             void effects(std::vector<std::shared_ptr<RType::Entity>> entities);
             void effect(std::shared_ptr<RType::Entity> entity);

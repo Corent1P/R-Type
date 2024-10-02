@@ -15,12 +15,15 @@
 #include ".././Components/SpriteComponent.hh"
 #include ".././Components/ActionComponent.hh"
 #include ".././Components/PositionComponent.hh"
+#include ".././Components/DirectionPatternComponent.hh"
+#include ".././Components/TextureComponent.hh"
+#include ".././Components/ClockComponent.hh"
 
 namespace RType {
 
     class HandleShootSystem: public  RType::ASystem {
         public:
-            HandleShootSystem(std::function<void(std::shared_ptr<Entity>)> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
+            HandleShootSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
             ~HandleShootSystem();
             void effects(std::vector<std::shared_ptr<RType::Entity>> entities);
             void effect(std::shared_ptr<RType::Entity> entity);

@@ -7,7 +7,7 @@
 
 #include "HandlePatternSystem.hpp"
 
-RType::HandlePatternSystem::HandlePatternSystem(std::function<void(std::shared_ptr<Entity>)> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
+RType::HandlePatternSystem::HandlePatternSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
     ASystem(PATTERN, addEntity, deleteEntity)
 {
 }

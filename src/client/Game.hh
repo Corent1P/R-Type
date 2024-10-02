@@ -25,6 +25,7 @@
 #include "../ecs/Systems/HandleMoveSystem.hpp"
 #include "../ecs/Systems/HandleAnimationSystem.hpp"
 #include "../ecs/Systems/HandlePatternSystem.hpp"
+#include "../ecs/Systems/HandleShootSystem.hpp"
 
 namespace RType {
     class Game {
@@ -39,7 +40,6 @@ namespace RType {
             void createBoss();
             void createWindow();
             void createGameSystem();
-            void handleShot();
             RType::Coordinator _coord;
             bool _stopLoop;
     };
