@@ -21,55 +21,41 @@ is_conan_installed() {
     fi
 }
 
-check_libraries() {
+check_first_compilation() {
     echo "Checking if Boost and SFML are installed in the Conan local cache..."
 
-    # Checking Boost library
     echo "Checking Boost..."
     is_conan_installed "boost/1.83.0" || return 1
 
-    # Checking SFML library
     echo "Checking SFML..."
     is_conan_installed "sfml/2.6.1" || return 1
-}
 
-build() {
-    mkdir build
-    cd build
-    cmake .. -DCMAKE_TOOLCHAIN_FILE=build/Release/generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
-    cmake --build .
+    echo "Checking for build/ directory..."
+    if [ -d "build" ]; then
+        echo "build/ directory exists."
+        return 0
+    else
+        echo "build/ directory does not exist."
+        return 1
+    fi
 }
 
 if command_exists conan; then
     echo "Conan is already installed."
 else
-    echo "Conan is not installed. Installing..."
-
-    if command_exists pip; then
-        echo "pip found. Installing Conan using pip..."
-        sudo pip install -y conan
-    elif command_exists pip3; then
-        echo "pip3 found. Installing Conan using pip3..."
-        pip3 install conan
-    else
-        echo "pip is not installed. Please install pip or install Conan manually."
-        exit 1
-    fi
-
-    if command_exists conan; then
-        echo "Conan installed successfully!"
-    else
-        echo "Conan installation failed. Please check your environment."
-        exit 1
-    fi
+    echo "Conan is not installed. Please install it to run this project"
+    exit 1
 fi
 
-if check_libraries; then
+if check_first_compilation; then
     echo "All required libraries are installed."
-    build
-    exit 0
+else
+    echo "Some required libraries are not installed. Installing..."
+    conan profile detect --force
+    conan install . --output-folder=build --build=missing -c tools.system.package_manager:mode=install
 fi
 
-conan profile detect --force
-conan install . --output-folder=build --build=missing -c tools.system.package_manager:mode=install
-build
+mkdir build
+cd build
+cmake .. -DCMAKE_TOOLCHAIN_FILE=build/Release/generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+cmake --build .
