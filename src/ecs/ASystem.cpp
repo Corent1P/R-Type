@@ -7,8 +7,8 @@
 
 #include "ASystem.hh"
 
-RType::ASystem::ASystem(SystemType type):
-    _type(type)
+RType::ASystem::ASystem(SystemType type, std::function<void(std::shared_ptr<Entity>)> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
+    _type(type), _addEntity(addEntity), _deleteEntity(deleteEntity)
 {
 }
 

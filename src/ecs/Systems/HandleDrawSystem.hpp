@@ -16,7 +16,7 @@
 namespace RType {
     class HandleDrawSystem: public ASystem {
         public:
-            HandleDrawSystem();
+            HandleDrawSystem(std::function<void(std::shared_ptr<Entity>)> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
             ~HandleDrawSystem();
             void effect(std::shared_ptr<RType::Entity> entity);
             void effects(std::vector<std::shared_ptr<RType::Entity>> entities);

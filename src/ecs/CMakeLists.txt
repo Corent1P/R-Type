@@ -17,6 +17,7 @@ set(SRC_COMPONENTS
     ./Components/DirectionComponent.cpp
     ./Components/ClockComponent.cpp
     ./Components/ActionComponent.cpp
+    ./Components/DirectionPatternComponent.cpp
 )
 
 set(SRC_SYSTEMS
@@ -24,6 +25,7 @@ set(SRC_SYSTEMS
     ./Systems/HandleDrawSystem.cpp
     ./Systems/HandleMoveSystem.cpp
     ./Systems/HandleAnimationSystem.cpp
+    ./Systems/HandlePatternSystem.cpp
 )
 
 add_library(ecs ${SRC_CLIENT} ${SRC_COMPONENTS} ${SRC_SYSTEMS})

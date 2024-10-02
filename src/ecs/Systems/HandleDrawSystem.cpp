@@ -7,8 +7,8 @@
 
 #include "HandleDrawSystem.hpp"
 
-RType::HandleDrawSystem::HandleDrawSystem():
-    ASystem(DRAW)
+RType::HandleDrawSystem::HandleDrawSystem(std::function<void(std::shared_ptr<Entity>)> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
+    ASystem(DRAW, addEntity, deleteEntity)
 {
 }
 
@@ -19,7 +19,6 @@ RType::HandleDrawSystem::~HandleDrawSystem()
 
 void RType::HandleDrawSystem::effects(std::vector<std::shared_ptr<RType::Entity>> entities)
 {
-    
     for (const auto &w: entities) {
         if (GET_WINDOW_FOR_DRAW != nullptr) {
             GET_WINDOW_FOR_DRAW->getWindow()->clear();

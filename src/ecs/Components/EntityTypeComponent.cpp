@@ -26,24 +26,34 @@ RType::EntityType RType::EntityTypeComponent::getEntityType() const
 	return _entityType;
 }
 
-void RType::EntityTypeComponent::setWeaponType(WeaponType weaponType) 
+void RType::EntityTypeComponent::setWeaponType(WeaponType weaponType)
 {
     _weaponType = weaponType;
 }
 
-RType::WeaponType RType::EntityTypeComponent::getWeaponType() const 
+RType::WeaponType RType::EntityTypeComponent::getWeaponType() const
 {
     return(_weaponType);
 }
 
-void RType::EntityTypeComponent::setPowerUpType(PowerUpType powerUpType) 
+void RType::EntityTypeComponent::setPowerUpType(PowerUpType powerUpType)
 {
     _powerUpType = powerUpType;
 }
 
-RType::PowerUpType RType::EntityTypeComponent::getPowerUpType() const 
+RType::PowerUpType RType::EntityTypeComponent::getPowerUpType() const
 {
     return(_powerUpType);
+}
+
+void RType::EntityTypeComponent::setEnemyType(EnemyType enemyType)
+{
+	_enemyType = enemyType;
+}
+
+RType::EnemyType RType::EntityTypeComponent::getEnemyType() const
+{
+	return _enemyType;
 }
 
 std::string RType::EntityTypeComponent::getOutput() const

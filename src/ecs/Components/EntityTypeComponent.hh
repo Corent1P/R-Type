@@ -26,6 +26,12 @@ namespace RType {
         LVL_3,
     };
 
+    enum EnemyType {
+        SMALL_SPACESHIP,
+        OCTOPUS,
+        FLY,
+    };
+
     enum PowerUpType {
         NOPOWERUP,
         SHIELD,
@@ -41,11 +47,14 @@ namespace RType {
             WeaponType getWeaponType() const;
             void setPowerUpType(PowerUpType powerUpType);
             PowerUpType getPowerUpType() const;
+            void setEnemyType(EnemyType powerUpType);
+            EnemyType getEnemyType() const;
             std::string getOutput() const;
         private:
             EntityType _entityType;
             WeaponType _weaponType;
             PowerUpType _powerUpType;
+            EnemyType _enemyType;
     };
 }
 #endif /* !TYPECOMPONENT_HPP_ */

@@ -13,6 +13,7 @@
 #include ".././Components/DirectionComponent.hh"
 #include ".././Components/EntityTypeComponent.hh"
 #include ".././Components/SpriteComponent.hh"
+#include ".././Components/DirectionPatternComponent.hh"
 
 #define GET_WINDOW_SET_ISOPEN entity->getComponent<RType::SFWindowComponent>()
 #define GET_WINDOW_POLL_EVENT e->getComponent<RType::SFWindowComponent>()->getWindow()
@@ -22,10 +23,9 @@ namespace RType {
 
     class HandleMoveSystem: public  RType::ASystem {
         public:
-            HandleMoveSystem();
+            HandleMoveSystem(std::function<void(std::shared_ptr<Entity>)> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
             ~HandleMoveSystem();
             void effects(std::vector<std::shared_ptr<RType::Entity>> entities);
-            void effect(std::shared_ptr<RType::Entity> entity);
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
         protected:
         private:

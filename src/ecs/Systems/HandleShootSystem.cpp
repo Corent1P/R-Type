@@ -7,8 +7,8 @@
 
 #include "HandleShootSystem.hpp"
 
-RType::HandleShootSystem::HandleShootSystem():
-    ASystem(MOVE)
+RType::HandleShootSystem::HandleShootSystem(std::function<void(std::shared_ptr<Entity>)> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
+    ASystem(MOVE, addEntity, deleteEntity)
 {
 }
 

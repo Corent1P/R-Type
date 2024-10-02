@@ -32,6 +32,19 @@ std::vector<std::shared_ptr<RType::ISystem>> RType::Coordinator::getSystems() co
     return _systems;
 }
 
+void RType::Coordinator::deleteEntity(std::shared_ptr<Entity> entityToDestroy)
+{
+    auto it = std::find(_entities.begin(), _entities.end(), entityToDestroy);
+    if (it != _entities.end()) {
+        _entities.erase(it);
+    }
+}
+
+
+void RType::Coordinator::addEntity(std::shared_ptr<Entity> entityToPush) {
+    _entities.push_back(entityToPush);
+}
+
 std::ostream &operator<<(std::ostream &s, const RType::Coordinator &coordinator)
 {
 	std::vector<std::shared_ptr<RType::Entity>> entities = coordinator.getEntities();

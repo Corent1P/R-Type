@@ -2,23 +2,24 @@
 ** EPITECH PROJECT, 2024
 ** R-Type
 ** File description:
-** System handling any entity based on their type
+** System handling direction pattern for any entity
 */
 
-#ifndef HANDLEANIMATIONSYSTEM_HPP_
-#define HANDLEANIMATIONSYSTEM_HPP_
+#ifndef HANDLEPATTERNSYSTEM_HPP_
+#define HANDLEPATTERNSYSTEM_HPP_
 #include "../ASystem.hh"
 #include ".././Components/SFWindowComponent.hh"
 #include ".././Components/SpriteComponent.hh"
 #include ".././Components/PositionComponent.hh"
 #include ".././Components/ClockComponent.hh"
 #include ".././Components/EntityTypeComponent.hh"
+#include ".././Components/DirectionPatternComponent.hh"
 
 namespace RType {
-    class HandleAnimationSystem: public ASystem {
+    class HandlePatternSystem: public ASystem {
         public:
-            HandleAnimationSystem(std::function<void(std::shared_ptr<Entity>)> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
-            ~HandleAnimationSystem();
+            HandlePatternSystem(std::function<void(std::shared_ptr<Entity>)> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
+            ~HandlePatternSystem();
             void effect(std::shared_ptr<RType::Entity> entity);
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
         protected:
@@ -27,4 +28,4 @@ namespace RType {
     };
 }
 
-#endif /* !HANDLEANIMATIONSYSTEM_HPP_ */
+#endif /* !HANDLEPATTERNSYSTEM_HPP_ */

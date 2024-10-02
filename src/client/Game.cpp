@@ -72,11 +72,13 @@ void RType::Game::createMob()
     player->pushComponent(std::make_shared<RType::PositionComponent>(2000, 800));
     player->pushComponent(std::make_shared<RType::HealthComponent>(5));
 
-    std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(500, 500));
+    std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(1500, 500));
     std::shared_ptr<RType::TextureComponent> texture = player->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/enemy-sheet.png"));
     player->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(), sf::Vector2f(2, 2), sf::IntRect(0, 0, 29, 29)));
     player->pushComponent(std::make_shared<RType::DirectionComponent>());
+    player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, true);
     player->pushComponent(std::make_shared<RType::ClockComponent>());
+    player->pushComponent(std::make_shared<RType::DirectionPatternComponent>(UP_N_DOWN_LEFT));
 
     std::shared_ptr<RType::Entity> player2 = _coord.generateNewEntity();
 
@@ -84,11 +86,13 @@ void RType::Game::createMob()
     player2->pushComponent(std::make_shared<RType::PositionComponent>(2000, 800));
     player2->pushComponent(std::make_shared<RType::HealthComponent>(5));
 
-    std::shared_ptr<RType::PositionComponent> position2 = player2->pushComponent(std::make_shared<RType::PositionComponent>(300, 700));
+    std::shared_ptr<RType::PositionComponent> position2 = player2->pushComponent(std::make_shared<RType::PositionComponent>(1500, 700));
     std::shared_ptr<RType::TextureComponent> texture2 = player2->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/fly-sheet.png"));
     player2->pushComponent(std::make_shared<RType::SpriteComponent>(texture2->getTexture(), position2->getPositions(), sf::Vector2f(2, 2), sf::IntRect(0, 0, 65, 74)));
     player2->pushComponent(std::make_shared<RType::DirectionComponent>());
+    player2->getComponent<RType::DirectionComponent>()->setDirections(LEFT, true);
     player2->pushComponent(std::make_shared<RType::ClockComponent>());
+    player2->pushComponent(std::make_shared<RType::DirectionPatternComponent>(UP_N_DOWN_LEFT));
 }
 
 void RType::Game::createBoss()
@@ -102,10 +106,11 @@ void RType::Game::createBoss()
 
 void RType::Game::createGameSystem()
 {
-    _coord.generateNewSystem(std::make_shared<HandleEventSystem>());
-    _coord.generateNewSystem(std::make_shared<HandleDrawSystem>());
-    _coord.generateNewSystem(std::make_shared<HandleMoveSystem>());
-    _coord.generateNewSystem(std::make_shared<HandleAnimationSystem>());
+    _coord.generateNewSystem(std::make_shared<HandleEventSystem>(std::bind(&_coord.addEntity, this), std::bind(&_coord.deleteEntity, this));
+    _coord.generateNewSystem(std::make_shared<HandleDrawSystem>(std::bind(&_coord.addEntity, this), std::bind(&_coord.deleteEntity, this));
+    _coord.generateNewSystem(std::make_shared<HandleMoveSystem>(std::bind(&_coord.addEntity, this), std::bind(&_coord.deleteEntity, this));
+    _coord.generateNewSystem(std::make_shared<HandlePatternSystem>(std::bind(&_coord.addEntity, this), std::bind(&_coord.deleteEntity, this));
+    _coord.generateNewSystem(std::make_shared<HandleAnimationSystem>(std::bind(&_coord.addEntity, this), std::bind(&_coord.deleteEntity, this));
 }
 
 void  RType::Game::handleShot()
@@ -123,6 +128,7 @@ void  RType::Game::handleShot()
                 std::shared_ptr<RType::TextureComponent> texture = shot->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/shoot-spritesheet.png"));
                 shot->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(), sf::Vector2f(2, 2), sf::IntRect(0, 0, 19, 6)));
                 shot->pushComponent(std::make_shared<RType::DirectionComponent>(RType::RIGHT));
+                shot->pushComponent(std::make_shared<RType::DirectionPatternComponent>(RType::UP_N_DOWN_RIGHT));
                 shot->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, true);
                 shot->pushComponent(std::make_shared<RType::ClockComponent>());
             }

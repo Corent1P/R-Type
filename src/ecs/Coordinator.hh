@@ -20,7 +20,8 @@ namespace RType {
             void generateNewSystem(std::shared_ptr<ISystem> sys);
             std::vector<std::shared_ptr<Entity>> getEntities() const;
             std::vector<std::shared_ptr<ISystem>> getSystems() const;
-
+            void deleteEntity(std::shared_ptr<Entity> entityToDestroy);
+            void addEntity(std::shared_ptr<Entity> entityToPush);
         private:
             uint16_t _idEntities;
             std::vector<std::shared_ptr<Entity>> _entities;

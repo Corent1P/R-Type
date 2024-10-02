@@ -7,8 +7,8 @@
 
 #include "HandleEventSystem.hpp"
 
-RType::HandleEventSystem::HandleEventSystem():
-    ASystem(EVENT)
+RType::HandleEventSystem::HandleEventSystem(std::function<void(std::shared_ptr<Entity>)> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
+    ASystem(EVENT, addEntity, deleteEntity)
 {
 }
 
@@ -30,7 +30,6 @@ void RType::HandleEventSystem::effects(std::vector<std::shared_ptr<RType::Entity
                     && player->getComponent<RType::SpriteComponent>() != nullptr
                     && player->getComponent<RType::ActionComponent>() != nullptr
                     ) {
-                            
                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
                             player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, true);
                         } else {
@@ -57,14 +56,14 @@ void RType::HandleEventSystem::effects(std::vector<std::shared_ptr<RType::Entity
                         } else {
                             player->getComponent<RType::ActionComponent>()->setActions(RType::SHOOTING, false);
                         }
-                        
+
                         if (sf::Joystick::isConnected(0))
                         {
                            float x = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
                            float y = sf::Joystick::getAxisPosition(0, sf::Joystick::Y);
                            if (e->getComponent<RType::EventComponent>()->getEvent().type == sf::Event::JoystickButtonPressed) {
                                 std::cout << "Bouton " << e->getComponent<RType::EventComponent>()->getEvent().joystickButton.button 
-                                        << " pressé sur la manette " 
+                                        << " pressé sur la manette "
                                         << e->getComponent<RType::EventComponent>()->getEvent().joystickButton.joystickId << std::endl;
                                 if (e->getComponent<RType::EventComponent>()->getEvent().joystickButton.button == 1) {
                                     player->getComponent<RType::ActionComponent>()->setActions(RType::SHOOTING, true);
@@ -90,7 +89,7 @@ void RType::HandleEventSystem::effects(std::vector<std::shared_ptr<RType::Entity
                            } else {
                                 player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, false);
                            }
-                           
+
                         }
                     }
                 }
