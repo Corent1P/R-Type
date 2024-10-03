@@ -36,8 +36,7 @@ jobs:
               uses: actions/cache@v3
               with:
                 path: |
-                  ${{github.workspace}}/build/_deps/*-build
-                  ${{github.workspace}}/build/_deps/*-subbuild
+                  build
                 key: ${{ runner.os }}-cmake-${{ hashFiles('**/CMakeLists.txt', '**/*.cmake', '**/*.cpp', '**/*.hpp', '**/*.h') }}
                 restore-keys: |
                   ${{ runner.os }}-cmake-
