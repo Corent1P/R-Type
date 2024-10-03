@@ -32,10 +32,19 @@ jobs:
                 key: ${{ runner.os }}-dependencies-${{ hashFiles('**/conanfile.txt') }}
                 restore-keys: |
                   ${{ runner.os }}-dependencies-
+            - name: Cache CMake build
+              uses: actions/cache@v3
+              with:
+                path: |
+                  build
+                  ~/.ccache
+                key: ${{ runner.os }}-cmake-${{ hashFiles('**/CMakeLists.txt', '**/*.cmake', '**/*.cpp', '**/*.hpp', '**/*.h') }}
+                restore-keys: |
+                  ${{ runner.os }}-cmake-
             - name: Install dependencies
               id: package
               run: |
-                  sudo apt-get update -y && sudo apt-get install -y pipx
+                  sudo apt-get update -y && sudo apt-get install -y pipx ccache
                   pipx install conan
                   pipx ensurepath
                   echo "$HOME/.local/bin" >> $GITHUB_PATH
@@ -45,6 +54,9 @@ jobs:
               if: steps.package.outcome == 'success'
               run: |
                   conan profile detect
+                  export CCACHE_DIR=~/.ccache
+                  export CC="ccache gcc"
+                  export CXX="ccache g++"
                   ./build.sh
                   make unit_tests
             - name: Run Unit Tests Client
