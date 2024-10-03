@@ -125,7 +125,8 @@ void RType::Game::createParallaxBackground(std::shared_ptr<RType::Entity> window
         {Backgrounds::BLUEBG, {"./ressources/parallax/blue/back.png", "./ressources/parallax/blue/mid.png", "./ressources/parallax/blue/front.png"}},
         {Backgrounds::PURPLEBG, {"./ressources/parallax/purple/back.png", "./ressources/parallax/purple/front.png"}},
         // {Backgrounds::BROWNBG, 6},
-        {Backgrounds::GREENBG, {"./ressources/parallax/green/back.png", "./ressources/parallax/green/mid.png", "./ressources/parallax/green/front.png"}}
+        {Backgrounds::GREENBG, {"./ressources/parallax/green/back.png", "./ressources/parallax/green/mid.png", "./ressources/parallax/green/front.png"}},
+        {Backgrounds::SATURNBG, {"./ressources/parallax/saturn/back.png", "./ressources/parallax/blue/mid.png", "./ressources/parallax/saturn/front.png"}}
     };
     for (std::size_t i = 0; i < bgMap[Backgrounds::BLUEBG].size(); i++) {
         createParallaxEntity(bgMap[Backgrounds::BLUEBG][i], 0, 0, winMaxX, winMaxY, i);

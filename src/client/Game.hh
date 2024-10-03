@@ -38,7 +38,8 @@ namespace RType {
         BLUEBG,
         PURPLEBG,
         BROWNBG,
-        GREENBG
+        GREENBG,
+        SATURNBG
     };
     class Game {
         public:
