@@ -36,15 +36,15 @@ jobs:
               uses: actions/cache@v3
               with:
                 path: |
-                  build
-                  ~/.ccache
+                  ${{github.workspace}}/build/_deps/*-build
+                  ${{github.workspace}}/build/_deps/*-subbuild
                 key: ${{ runner.os }}-cmake-${{ hashFiles('**/CMakeLists.txt', '**/*.cmake', '**/*.cpp', '**/*.hpp', '**/*.h') }}
                 restore-keys: |
                   ${{ runner.os }}-cmake-
             - name: Install dependencies
               id: package
               run: |
-                  sudo apt-get update -y && sudo apt-get install -y pipx ccache
+                  sudo apt-get update -y && sudo apt-get install -y pipx
                   pipx install conan
                   pipx ensurepath
                   echo "$HOME/.local/bin" >> $GITHUB_PATH
@@ -54,9 +54,6 @@ jobs:
               if: steps.package.outcome == 'success'
               run: |
                   conan profile detect
-                  export CCACHE_DIR=~/.ccache
-                  export CC="ccache gcc"
-                  export CXX="ccache g++"
                   ./build.sh
                   make unit_tests
             - name: Run Unit Tests Client
