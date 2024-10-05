@@ -34,12 +34,11 @@
 namespace RType {
 
     enum Backgrounds{
-        REDBG,
-        BLUEBG,
         PURPLEBG,
-        BROWNBG,
-        GREENBG,
-        SATURNBG
+        BLUEBG,
+        REDBG,
+        SATURNBG,
+        GREENBG
     };
     class Game {
         public:
@@ -54,7 +53,8 @@ namespace RType {
             void createWindow();
             void createGameSystem();
             void createParallaxBackground(std::shared_ptr<RType::Entity> window);
-            void createParallaxEntity(const std::string &path, const int &posX, const int &posY, const int &winMaxX,const int &winMaxY,const int &index);
+            void createParallaxEntity(const std::string &path, const int &posX, const int &posY,
+                const int &winMaxX, const int &winMaxY, const int &index, const int &level);
             void handleShot();
             RType::Coordinator _coord;
             bool _stopLoop;

@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** R-Type
 ** File description:
-** system about all components drawing 
+** system about all components drawing
 */
 
 #ifndef HANDLEDRAWSYSTEM_HPP_
@@ -11,6 +11,8 @@
 #include ".././Components/SFWindowComponent.hh"
 #include ".././Components/SpriteComponent.hh"
 #include ".././Components/PositionComponent.hh"
+#include ".././Components/EntityTypeComponent.hh"
+#include ".././Components/LevelComponent.hh"
 
 #define GET_WINDOW_FOR_DRAW w->getComponent<RType::SFWindowComponent>()
 namespace RType {

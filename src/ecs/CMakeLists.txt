@@ -18,6 +18,7 @@ set(SRC_COMPONENTS
     ./Components/ClockComponent.cpp
     ./Components/ActionComponent.cpp
     ./Components/VelocityComponent.cpp
+    ./Components/LevelComponent.cpp
 )
 
 set(SRC_SYSTEMS
@@ -29,7 +30,7 @@ set(SRC_SYSTEMS
 
 add_library(ecs ${SRC_CLIENT} ${SRC_COMPONENTS} ${SRC_SYSTEMS})
 
-target_compile_options(ecs PRIVATE 
+target_compile_options(ecs PRIVATE
     -fPIC
     -Wall
     -Wextra
