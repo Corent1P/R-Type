@@ -8,7 +8,7 @@
 #include "HandleDrawSystem.hpp"
 
 RType::HandleDrawSystem::HandleDrawSystem():
-    ASystem(DRAW)
+    ASystem(S_DRAW)
 {
 }
 

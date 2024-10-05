@@ -11,6 +11,6 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
-#include "Error.hh"
+#include "EcsError.hh"
 #include "../protocolHandler/Encoder.hh"
 

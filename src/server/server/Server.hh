@@ -8,7 +8,7 @@
 #pragma once
 
 #include "../includes.hh"
-#include "../client/Client.hh"
+#include "../clientServer/ClientServer.hh"
 #include "../command/factory/CommandFactory.hh"
 #include "../../protocolHandler/Decoder.hh"
 #include "../../protocolHandler/Encoder.hh"
@@ -26,8 +26,8 @@ namespace RType {
             void handleReceive(const boost::system::error_code& error, std::size_t byteTransferred);
             void handleSend(std::string message, const boost::system::error_code &error, std::size_t byteTransferred);
             std::string makeDaytimeString(void);
-            std::shared_ptr<Client> createClient(void);
-            std::shared_ptr<Client> getConnectedClient(void);
+            std::shared_ptr<ClientServer> createClient(void);
+            std::shared_ptr<ClientServer> getConnectedClient(void);
             std::size_t getMaxClientId(void);
             bool removeClient(void);
             void sendToAllClient(const std::basic_string<unsigned char> &message);
@@ -35,7 +35,8 @@ namespace RType {
             udp::socket _socket;
             udp::endpoint _remoteEndpoint;
             std::array<unsigned char, MAX_SIZE> _recvBuffer;
-            std::vector<std::shared_ptr<Client>> _clients;
+            std::vector<std::shared_ptr<ClientServer>> _clients;
             CommandFactory _commandFactory;
+            RType::Coordinator _coord;
     };
 }

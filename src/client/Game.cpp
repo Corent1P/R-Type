@@ -63,7 +63,7 @@ void RType::Game::loopReceive()
                 _initConnection = true;
                 auto entities = _coord.getEntities();
                 for (const auto &entity : entities) {
-                    if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == PLAYER)
+                    if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER)
                         entity->setServerId(receivInfo.second[1]);
                 }
             }
@@ -93,7 +93,7 @@ void RType::Game::createPlayer()
 {
     std::shared_ptr<RType::Entity> player = _coord.generateNewEntity();
 
-    player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::PLAYER));
+    player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_PLAYER));
     std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(10, 10));
     player->pushComponent(std::make_shared<RType::HealthComponent>(25));
     std::shared_ptr<RType::TextureComponent> texture = player->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/player-sheet.png"));
@@ -107,7 +107,7 @@ void RType::Game::createPlayer(long serverId, long posX, long posY)
 {
     std::shared_ptr<RType::Entity> player = _coord.generateNewEntity(serverId);
 
-    player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::ALLIES));
+    player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_ALLIES));
     std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
     player->pushComponent(std::make_shared<RType::HealthComponent>(25));
     std::shared_ptr<RType::TextureComponent> texture = player->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/player-sheet.png"));
@@ -121,7 +121,7 @@ void RType::Game::createWindow()
 {
     std::shared_ptr<RType::Entity> window = _coord.generateNewEntity();
 
-    window->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::WINDOW));
+    window->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_WINDOW));
     window->pushComponent(std::make_shared<RType::SFWindowComponent>(1920, 1080));
     window->pushComponent(std::make_shared<RType::EventComponent>());
 }
@@ -130,7 +130,7 @@ void RType::Game::createMob()
 {
     std::shared_ptr<RType::Entity> player = _coord.generateNewEntity();
 
-    player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::MOB));
+    player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_MOB));
     player->pushComponent(std::make_shared<RType::PositionComponent>(2000, 800));
     player->pushComponent(std::make_shared<RType::HealthComponent>(5));
 
@@ -142,7 +142,7 @@ void RType::Game::createMob()
 
     std::shared_ptr<RType::Entity> player2 = _coord.generateNewEntity();
 
-    player2->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::MOB));
+    player2->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_MOB));
     player2->pushComponent(std::make_shared<RType::PositionComponent>(2000, 800));
     player2->pushComponent(std::make_shared<RType::HealthComponent>(5));
 
@@ -157,7 +157,7 @@ void RType::Game::createBoss()
 {
     std::shared_ptr<RType::Entity> player = _coord.generateNewEntity();
 
-    player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::BOSS));
+    player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BOSS));
     player->pushComponent(std::make_shared<RType::PositionComponent>(2000, 545));
     player->pushComponent(std::make_shared<RType::HealthComponent>(250));
 }

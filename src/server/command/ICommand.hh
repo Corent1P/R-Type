@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "../client/Client.hh"
+#include "../clientServer/ClientServer.hh"
 
 namespace RType {
     /**
@@ -53,6 +53,6 @@ namespace RType {
              * @param socket the socket to send the response
              * @param client the client that sent the command
              */
-            virtual void execute(udp::socket &socket, std::shared_ptr<Client> client) = 0;
+            virtual void execute(udp::socket &socket, std::shared_ptr<ClientServer> client) = 0;
     };
 }

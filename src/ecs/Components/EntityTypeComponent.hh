@@ -10,13 +10,13 @@
 #include "../IComponent.hh"
 namespace RType {
     enum EntityType {
-        OTHER,
-        WINDOW,
-        PLAYER,
-        ALLIES,
-        MOB,
-        BOSS,
-        BUTTON
+        E_OTHER,
+        E_WINDOW,
+        E_PLAYER,
+        E_ALLIES,
+        E_MOB,
+        E_BOSS,
+        E_BUTTON
     };
 
     class EntityTypeComponent: public RType::IComponent {

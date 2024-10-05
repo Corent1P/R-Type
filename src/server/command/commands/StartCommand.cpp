@@ -13,7 +13,7 @@ RType::StartCommand::StartCommand(std::string data):
     std::cout << "start command created" << std::endl;
 }
 
-void RType::StartCommand::execute(udp::socket &socket, std::shared_ptr<Client> client)
+void RType::StartCommand::execute(udp::socket &socket, std::shared_ptr<ClientServer> client)
 {
     client->sendMessage(socket, "Start command\n");
     std::cout << "execution of start command" << std::endl;

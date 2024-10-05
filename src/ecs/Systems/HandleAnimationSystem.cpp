@@ -8,7 +8,7 @@
 #include "HandleAnimationSystem.hpp"
 
 RType::HandleAnimationSystem::HandleAnimationSystem():
-    ASystem(ANIMATION)
+    ASystem(S_ANIMATION)
 {
 }
 

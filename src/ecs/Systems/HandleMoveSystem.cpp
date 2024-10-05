@@ -8,12 +8,12 @@
 #include "HandleMoveSystem.hpp"
 
 RType::HandleMoveSystem::HandleMoveSystem():
-    ASystem(MOVE), _client(nullptr)
+    ASystem(S_MOVE), _client(nullptr)
 {
 }
 
 RType::HandleMoveSystem::HandleMoveSystem(std::shared_ptr<RType::Client> client):
-    ASystem(MOVE), _client(client)
+    ASystem(S_MOVE), _client(client)
 {
 }
 
@@ -47,8 +47,7 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
                         entity->getComponent<RType::SpriteComponent>()->getSprite()->move(0, 10);
                         movePosition.second += 100;
                     }
-                    if (_client && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == PLAYER && (movePosition.first != 0 ||  movePosition.second != 0)) {
-                        // std::cout << "Move " + std::to_string(movePosition.first) + " " +  std::to_string(movePosition.second) << std::endl;
+                    if (_client && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER && (movePosition.first != 0 ||  movePosition.second != 0)) {
                         _client->send(Encoder::movePlayer(movePosition.first, movePosition.second));
                     }
                 }

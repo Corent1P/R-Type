@@ -3,7 +3,7 @@ set(SRC_CLIENT
     ./Entity.cpp
     ./ISystem.cpp
     ./ASystem.cpp
-    ./Error.cpp
+    ./EcsError.cpp
     ../client/Game.cpp
 )
 

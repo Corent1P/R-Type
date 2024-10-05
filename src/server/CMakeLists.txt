@@ -2,7 +2,7 @@ set(SRC_SERVER
     ./main.cpp
     ./Error.cpp
     ./server/Server.cpp
-    ./client/Client.cpp
+    ./clientServer/ClientServer.cpp
     ./command/ACommand.cpp
     ./command/factory/CommandFactory.cpp
     ./command/commands/MoveCommand.cpp
@@ -12,7 +12,7 @@ set(SRC_SERVER
 
 add_executable(r-type_server ${SRC_SERVER})
 
-target_compile_options(r-type_server PRIVATE 
+target_compile_options(r-type_server PRIVATE
     -fPIC
     -Wall
     -Wextra
@@ -21,6 +21,7 @@ target_compile_options(r-type_server PRIVATE
 )
 
 target_link_libraries(r-type_server PRIVATE
+    ecs
     Boost::boost
     sfml-system
     sfml-window
