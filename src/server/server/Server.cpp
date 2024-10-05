@@ -38,7 +38,6 @@ void RType::Server::handleReceive(const boost::system::error_code &error, std::s
     }
     std::basic_string<unsigned char> command(_recvBuffer.data(), bytesTransferred);
     auto receivInfo = Decoder::getCommandInfo(command);
-    // std::cout << "Message received = " << receivInfo.first << " with coordinates " << receivInfo.second[0] << ":" << receivInfo.second[1] << std::endl;
     std::shared_ptr<Client> connectedClient = getConnectedClient();
     if (!connectedClient)
         connectedClient = createClient();
@@ -46,19 +45,10 @@ void RType::Server::handleReceive(const boost::system::error_code &error, std::s
     // ! TO REORGANISE {
     // connectedClient->sendMessage(_socket, Encoder::movePlayer(receivInfo.second[0], receivInfo.second[1]));
     if (receivInfo.first == MOVE_PLAYER) {
-        std::pair<double, double> position = connectedClient->getPosition();
-        position.first += ((double)receivInfo.second[0]) / 10.;
-        position.second += ((double)receivInfo.second[1]) / 10.;
-        if (position.first < 0.)
-            position.first = 0.;
-        if (position.first > 1920.)
-            position.first = 1920.;
-        if (position.second < 0.)
-            position.second = 0.;
-        if (position.second > 1080.)
-            position.second = 1080.;
-        connectedClient->setPosition(position);
-        sendToAllClient(Encoder::moveEntity(connectedClient->getId(), position.first, position.second, 0));
+        std::shared_ptr<ICommand> moveCommand = _commandFactory.createCommand(receivInfo);
+        moveCommand->execute(connectedClient,
+            [this, &connectedClient](const std::basic_string<unsigned char>& message) { connectedClient->sendMessage(_socket, message); },
+            [this](const std::basic_string<unsigned char>& message) { sendToAllClient(message); });
     } else if (receivInfo.first == DISCONNEXION) {
         removeClient();
     }

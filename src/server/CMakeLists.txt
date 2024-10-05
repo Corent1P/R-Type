@@ -5,9 +5,7 @@ set(SRC_SERVER
     ./client/Client.cpp
     ./command/ACommand.cpp
     ./command/factory/CommandFactory.cpp
-    ./command/commands/MoveCommand.cpp
-    ./command/commands/ShootCommand.cpp
-    ./command/commands/StartCommand.cpp
+    ./command/commands/MovePlayerCommand.cpp
 )
 
 add_executable(r-type_server ${SRC_SERVER})

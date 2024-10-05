@@ -8,19 +8,11 @@
 #pragma once
 
 #include "../client/Client.hh"
+#include "../../protocolHandler/Encoder.hh"
+
+#define FUNCTION_SEND std::function<void(const std::basic_string<unsigned char>&)>
 
 namespace RType {
-    /**
-     * @brief An enum to differentiate the type of all the commands
-     *
-     */
-    enum CommandType {
-        MOVE,
-        SHOOT,
-        START,
-        OTHER
-    };
-
     /**
      * @brief An interface that represents a command
      *
@@ -36,23 +28,24 @@ namespace RType {
             /**
              * @brief Get the Type member of the object
              *
-             * @return CommandType the type of the Command (cf. CommandType)
+             * @return PacketType the type of the Command (cf. PacketType)
              */
-            virtual CommandType getType(void) const = 0;
+            virtual PacketType getType(void) const = 0;
 
             /**
              * @brief Get the Data member of the object
              *
              * @return std::string the data of the object
              */
-            virtual std::string getData(void) const = 0;
+            virtual std::vector<long> getData(void) const = 0;
 
             /**
-             * @brief Execute the command
+             * @brief execute the command
              *
-             * @param socket the socket to send the response
-             * @param client the client that sent the command
+             * @param client the client that send the command
+             * @param sendToClient the function that will send the message to the client
+             * @param sendToAll the function that will send the message to all the connected client
              */
-            virtual void execute(udp::socket &socket, std::shared_ptr<Client> client) = 0;
+            virtual void execute(std::shared_ptr<Client> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll) = 0;
     };
 }
