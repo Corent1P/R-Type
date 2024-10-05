@@ -9,6 +9,8 @@
 
 #include <unordered_map>
 #include <vector>
+#include "./communication/Client.hh"
+
 #include "../ecs/Coordinator.hh"
 #include "../ecs/Components/PositionComponent.hh"
 #include "../ecs/Components/HealthComponent.hh"
@@ -26,6 +28,11 @@
 #include "../ecs/Systems/HandleDrawSystem.hpp"
 #include "../ecs/Systems/HandleMoveSystem.hpp"
 #include "../ecs/Systems/HandleAnimationSystem.hpp"
+#include <thread>
+
+#include "../protocolHandler/Encoder.hh"
+#include "../protocolHandler/Decoder.hh"
+
 
 #define CREATE_TEXTURE std::make_shared<RType::TextureComponent>
 #define CREATE_ENTITY_TYPE std::make_shared<RType::EntityTypeComponent>
@@ -42,12 +49,14 @@ namespace RType {
     };
     class Game {
         public:
-            Game();
+            Game(boost::asio::io_context &ioContext, const std::string &host, const std::string &port);
             ~Game();
             void gameLoop();
             Coordinator getCoordinator() const;
         private:
+            void loopReceive();
             void createPlayer();
+            void createPlayer(long serverId, long posX, long posY);
             void createMob();
             void createBoss();
             void createWindow();
@@ -57,7 +66,10 @@ namespace RType {
                 const int &winMaxX, const int &winMaxY, const int &index, const int &level);
             void handleShot();
             RType::Coordinator _coord;
+            std::shared_ptr<RType::Client> _client;
             bool _stopLoop;
+            std::jthread _receipter;
+            bool _initConnection;
     };
 }
 

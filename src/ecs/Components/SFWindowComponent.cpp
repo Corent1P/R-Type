@@ -18,7 +18,7 @@ RType::SFWindowComponent::~SFWindowComponent()
     _window->close();
 }
 
-std::shared_ptr<sf::RenderWindow> RType::SFWindowComponent::getWindow() const 
+std::shared_ptr<sf::RenderWindow> RType::SFWindowComponent::getWindow() const
 {
     return _window;
 }

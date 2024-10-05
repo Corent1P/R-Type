@@ -89,14 +89,12 @@ namespace RType {
         return header(encodedEntity.size(), INFO_ENTITY) + encodedEntity;
     }
 
-    U_STRING Encoder::movePlayer(std::int16_t x, std::int16_t y)
+    U_STRING Encoder::movePlayer(std::int8_t x, std::int8_t y)
     {
         U_STRING encodedPlayer;
 
-        encodedPlayer += x >> 8;
-        encodedPlayer += x & 0xff;
-        encodedPlayer += y >> 8;
-        encodedPlayer += y & 0xff;
+        encodedPlayer += static_cast<std::uint8_t>(x);
+        encodedPlayer += static_cast<std::uint8_t>(y);
         return header(encodedPlayer.size(), MOVE_PLAYER) + encodedPlayer;
     }
 
@@ -107,5 +105,15 @@ namespace RType {
 
         encodedPlayer += action1 << 3 | action2 << 2 | action3 << 1 | action4;
         return header(encodedPlayer.size(), ACTION_PLAYER) + encodedPlayer;
+    }
+
+    U_STRING Encoder::gameStart()
+    {
+        return header(0, GAME_START);
+    }
+
+    U_STRING Encoder::gameEnd()
+    {
+        return header(0, GAME_END);
     }
 }

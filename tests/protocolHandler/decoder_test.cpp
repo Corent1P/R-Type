@@ -75,6 +75,10 @@ Test(main, TestMovePlayerPacketDecoder) {
 
     cr_assert_eq(args[0], 45, "Expected: 45, Got: %lu", args[0]);
     cr_assert_eq(args[1], 12, "Expected: 12, Got: %lu", args[1]);
+    packet = RType::Encoder::movePlayer(-100, -100);
+    args = RType::Decoder::movePlayer(packet);
+    cr_assert_eq(args[0], -100, "Expected: -100, Got: %ld", args[0]);
+    cr_assert_eq(args[1], -100, "Expected: -100, Got: %ld", args[1]);
 }
 
 Test(main, TestActionPlayerPacketDecoder) {
@@ -85,4 +89,20 @@ Test(main, TestActionPlayerPacketDecoder) {
     cr_assert_eq(args[1], 1, "Expected: 1, Got: %lu", args[1]);
     cr_assert_eq(args[2], 0, "Expected: 0, Got: %lu", args[2]);
     cr_assert_eq(args[3], 1, "Expected: 1, Got: %lu", args[3]);
+}
+
+Test(main, TestGameStartPacketDecoder) {
+    U_STRING packetHeader = RType::Encoder::header(70, RType::GAME_START);
+
+    cr_assert_eq(RType::Decoder::getType(packetHeader), RType::GAME_START);
+    cr_assert_eq(RType::Decoder::getSize(packetHeader), 70, "Expected: 70, Got: %lu",
+                 RType::Decoder::getSize(packetHeader));
+}
+
+Test(main, TestGameEndPacketDecoder) {
+    U_STRING packetHeader = RType::Encoder::header(70, RType::GAME_END);
+
+    cr_assert_eq(RType::Decoder::getType(packetHeader), RType::GAME_END);
+    cr_assert_eq(RType::Decoder::getSize(packetHeader), 70, "Expected: 70, Got: %lu",
+                 RType::Decoder::getSize(packetHeader));
 }
