@@ -12,15 +12,20 @@
 #include "../IComponent.hh"
 
 namespace RType {
+    enum ClockType {
+        ANIMATION_CLOCK,
+        SHOOTING_CLOCK,
+        CHARGED_SHOT_CLOCK,
+    };
 
     class ClockComponent: public RType::IComponent {
         public:
-            ClockComponent() = default;
+            ClockComponent();
             ~ClockComponent() = default;
-            sf::Clock &getClock();
+            sf::Clock &getClock(ClockType type);
             std::string getOutput() const;
         private:
-            sf::Clock _clock;
+            std::vector<sf::Clock> _clock;
     };
 }
 

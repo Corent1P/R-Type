@@ -1,13 +1,12 @@
 /*
 ** EPITECH PROJECT, 2024
-** R-type
+** R-Type
 ** File description:
-** handling event system
+** system used to handle entity shoot
 */
 
-#ifndef HANDLEEVENTSYTEM_HPP_
-#define HANDLEEVENTSYTEM_HPP_
-
+#ifndef HANDLESHOOTSYTEM_HPP_
+#define HANDLESHOOTSYTEM_HPP_
 #include "../ASystem.hh"
 #include ".././Components/SFWindowComponent.hh"
 #include ".././Components/EventComponent.hh"
@@ -15,19 +14,14 @@
 #include ".././Components/EntityTypeComponent.hh"
 #include ".././Components/SpriteComponent.hh"
 #include ".././Components/ActionComponent.hh"
-#include ".././Components/ClockComponent.hh"
-
-#define GET_WINDOW_SET_ISOPEN entity->getComponent<RType::SFWindowComponent>()
-#define GET_WINDOW_POLL_EVENT e->getComponent<RType::SFWindowComponent>()->getWindow()
-#define EVENT_TYPE e->getComponent<RType::EventComponent>()->getEvent().type
-#define GET_ENTITY_SPRITE player->getComponent<SpriteComponent>()->getSprite()
+#include ".././Components/PositionComponent.hh"
 
 namespace RType {
 
-    class HandleEventSystem: public  RType::ASystem {
+    class HandleShootSystem: public  RType::ASystem {
         public:
-            HandleEventSystem();
-            ~HandleEventSystem();
+            HandleShootSystem();
+            ~HandleShootSystem();
             void effects(std::vector<std::shared_ptr<RType::Entity>> entities);
             void effect(std::shared_ptr<RType::Entity> entity);
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
@@ -35,4 +29,4 @@ namespace RType {
         private:
     };
 }
-#endif /* !HANDLEEVENTSYTEM_HPP_ */
+#endif /* !HANDLESHOOTSYTEM_HPP_ */
