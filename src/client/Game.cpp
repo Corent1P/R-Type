@@ -35,14 +35,51 @@ RType::Coordinator RType::Game::getCoordinator() const
 
 void RType::Game::gameLoop()
 {
-    while (!_stopLoop) {
-        for (auto sys: _coord.getSystems()) {
-            sys->effects(_coord.getEntities());
+    std::shared_ptr<RType::ISystem> drawSystem = nullptr;
+    std::shared_ptr<RType::Entity> clockEntity = nullptr;
+    float logicTime = 0.0;
+    float renderTime = 0.0;
+    float deltaTime = 0.0;
+
+    for (auto sys : _coord.getSystems()) {
+        if (sys->getType() == SystemType::DRAW) {
+            drawSystem = sys;
+            break;
         }
+    }
+
+    for (auto entity: _coord.getEntities()) {
+        if (entity->getComponent<RType::SFWindowComponent>() != nullptr && entity->getComponent<RType::ClockComponent>() != nullptr) {
+            clockEntity = entity;
+            break;
+        }
+    }
+
+    while (!_stopLoop) {
+        deltaTime = clockEntity->getComponent<RType::ClockComponent>()->getClock().restart().asSeconds();
+        logicTime += deltaTime;
+        while (logicTime >= FRAME_TIME_LOGIC) {
+            for (auto sys : _coord.getSystems())
+                if (sys->getType() != SystemType::DRAW)
+                    sys->effects(_coord.getEntities());
+            logicTime -= FRAME_TIME_LOGIC;
+        }
+
+        renderTime += deltaTime;
+        if (renderTime >= RENDER_FRAME_TIME) {
+            if (drawSystem != nullptr) {
+                drawSystem->effects(_coord.getEntities());
+            }
+            renderTime = 0.0;
+        }
+
         for (auto entity : _coord.getEntities()) {
-            if (entity->getComponent<RType::SFWindowComponent>() && !entity->getComponent<RType::SFWindowComponent>()->getIsOpen()) {
+            auto windowComp = entity->getComponent<RType::SFWindowComponent>();
+
+            if (windowComp != nullptr && !windowComp->getIsOpen()) {
                 _client->cancel();
                 _stopLoop = true;
+                break;
             }
         }
     }
@@ -124,6 +161,7 @@ void RType::Game::createWindow()
     window->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::WINDOW));
     window->pushComponent(std::make_shared<RType::SFWindowComponent>(1920, 1080));
     window->pushComponent(std::make_shared<RType::EventComponent>());
+    window->pushComponent(std::make_shared<RType::ClockComponent>());
 }
 
 void RType::Game::createMob()
