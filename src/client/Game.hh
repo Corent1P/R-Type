@@ -33,6 +33,11 @@
 #include "../protocolHandler/Encoder.hh"
 #include "../protocolHandler/Decoder.hh"
 
+#define MAX_FPS 60.0
+
+#define FRAME_TIME_LOGIC 1.0 / 60.0
+#define RENDER_FRAME_TIME 1.0 / MAX_FPS
+
 
 #define CREATE_TEXTURE std::make_shared<RType::TextureComponent>
 #define CREATE_ENTITY_TYPE std::make_shared<RType::EntityTypeComponent>

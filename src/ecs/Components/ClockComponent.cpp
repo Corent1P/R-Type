@@ -11,9 +11,12 @@ RType::ClockComponent::ClockComponent() {
     sf::Clock animation;
     sf::Clock shooting;
     sf::Clock chargedShot;
+    sf::Clock logicClock;
+
     _clock.push_back(animation);
     _clock.push_back(shooting);
     _clock.push_back(chargedShot);
+    _clock.push_back(logicClock);
 }
 
 sf::Clock  &RType::ClockComponent::getClock(ClockType type)
