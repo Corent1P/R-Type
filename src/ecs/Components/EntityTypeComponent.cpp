@@ -26,6 +26,26 @@ RType::EntityType RType::EntityTypeComponent::getEntityType() const
 	return _entityType;
 }
 
+void RType::EntityTypeComponent::setWeaponType(WeaponType weaponType) 
+{
+    _weaponType = weaponType;
+}
+
+RType::WeaponType RType::EntityTypeComponent::getWeaponType() const 
+{
+    return(_weaponType);
+}
+
+void RType::EntityTypeComponent::setPowerUpType(PowerUpType powerUpType) 
+{
+    _powerUpType = powerUpType;
+}
+
+RType::PowerUpType RType::EntityTypeComponent::getPowerUpType() const 
+{
+    return(_powerUpType);
+}
+
 std::string RType::EntityTypeComponent::getOutput() const
 {
     std::string entityType("");
@@ -45,6 +65,9 @@ std::string RType::EntityTypeComponent::getOutput() const
             break;
         case E_BUTTON:
             entityType = "button";
+            break;
+        case E_LAYER:
+            entityType = "layer";
             break;
         default:
             entityType = "unknown";
