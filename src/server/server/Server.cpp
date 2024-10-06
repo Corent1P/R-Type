@@ -14,10 +14,19 @@ std::string RType::Server::makeDaytimeString(void)
 }
 
 RType::Server::Server(boost::asio::io_context &ioContext, int port):
-    _socket(ioContext, udp::endpoint(udp::v4(), port))
+    _stopLoop(false), _socket(ioContext, udp::endpoint(udp::v4(), port))
 {
     std::cout << "Server listening on port " << port << std::endl;
+    // initSystem();
+    // _gameLoop = std::jthread(&Server::gameLoop, this);
     startReceive();
+}
+
+RType::Server::~Server()
+{
+    if (_gameLoop.joinable()) {
+        _gameLoop.join();
+    }
 }
 
 void RType::Server::startReceive(void)
@@ -143,4 +152,39 @@ void RType::Server::sendToAllClient(const std::basic_string<unsigned char> &mess
 {
     for (auto client: _clients)
         client->sendMessage(_socket, message);
+}
+
+
+void RType::Server::gameLoop(void)
+{
+    std::shared_ptr<RType::Entity> clockEntity = nullptr;
+    float logicTime = 0.0;
+    float deltaTime = 0.0;
+
+    for (auto entity: _coord.getEntities()) {
+        if (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_WINDOW && entity->getComponent<RType::ClockComponent>() != nullptr) {
+            clockEntity = entity;
+            break;
+        }
+    }
+    std::cout << "loop" << std::endl;
+    while (!_stopLoop) {
+        deltaTime = clockEntity->getComponent<RType::ClockComponent>()->getClock(LOGIC_CLOCK).restart().asSeconds();
+        logicTime += deltaTime;
+        while (logicTime >= FRAME_TIME_LOGIC) {
+            std::cout << logicTime << std::endl;
+            for (auto sys : _coord.getSystems())
+                sys->effects(_coord.getEntities());
+            logicTime -= FRAME_TIME_LOGIC;
+        }
+    }
+}
+
+void RType::Server::initSystem(void)
+{
+    // _coord.generateNewSystem(std::make_shared<HandleMoveSystem>());
+
+    std::shared_ptr<RType::Entity> window = _coord.generateNewEntity();
+    window->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_WINDOW));
+    window->pushComponent(std::make_shared<RType::ClockComponent>());
 }

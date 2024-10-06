@@ -19,9 +19,10 @@ namespace RType {
     class Server {
         public:
             Server(boost::asio::io_context &ioContext, int port);
-            ~Server() = default;
-
+            ~Server();
+            void gameLoop(void);
         private:
+            void initSystem(void);
             void startReceive(void);
             void handleReceive(const boost::system::error_code& error, std::size_t byteTransferred);
             void handleSend(std::string message, const boost::system::error_code &error, std::size_t byteTransferred);
@@ -32,6 +33,8 @@ namespace RType {
             bool removeClient(void);
             void sendToAllClient(const std::basic_string<unsigned char> &message);
 
+            bool _stopLoop;
+            std::jthread _gameLoop;
             udp::socket _socket;
             udp::endpoint _remoteEndpoint;
             std::array<unsigned char, MAX_SIZE> _recvBuffer;
