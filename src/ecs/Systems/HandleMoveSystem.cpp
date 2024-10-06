@@ -33,15 +33,23 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
                     int speed = entity->getComponent<VelocityComponent>()->getVelocity();;
                     if (entity->getComponent<RType::DirectionComponent>()->getDirections(LEFT) == true) {
                         entity->getComponent<RType::SpriteComponent>()->getSprite()->move((speed * -1), 0);
+                        if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::PLAYER)
+                            movePosition.first -= speed * 10;
                     }
                     if (entity->getComponent<RType::DirectionComponent>()->getDirections(RIGHT) == true && spriteBounds.left + spriteBounds.width < windowWidth) {
                         entity->getComponent<RType::SpriteComponent>()->getSprite()->move(speed, 0);
+                                                if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::PLAYER)
+                            movePosition.first += speed * 10;
                     }
                     if (entity->getComponent<RType::DirectionComponent>()->getDirections(UP) == true && spriteBounds.top > 0) {
                         entity->getComponent<RType::SpriteComponent>()->getSprite()->move(0, (speed * -1));
+                        if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::PLAYER)
+                            movePosition.second -= speed * 10;
                     }
                     if (entity->getComponent<RType::DirectionComponent>()->getDirections(DOWN) == true && spriteBounds.top + spriteBounds.height < windowHeight) {
                         entity->getComponent<RType::SpriteComponent>()->getSprite()->move(0, speed);
+                        if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::PLAYER)
+                            movePosition.second += speed * 10;
                     }
 
                     if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::WEAPON && entity->getComponent<RType::DirectionComponent>()->getDirections(LEFT) == true && spriteBounds.left > 0) {
@@ -62,7 +70,6 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
                         }
                     }
                     if (_client && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == PLAYER && (movePosition.first != 0 ||  movePosition.second != 0)) {
-                        // std::cout << "Move " + std::to_string(movePosition.first) + " " +  std::to_string(movePosition.second) << std::endl;
                         _client->send(Encoder::movePlayer(movePosition.first, movePosition.second));
                     }
                 }
