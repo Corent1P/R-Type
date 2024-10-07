@@ -27,9 +27,8 @@ void RType::HandleShootSystem::effects(std::vector<std::shared_ptr<RType::Entity
                 std::shared_ptr<RType::PositionComponent> position = shot->pushComponent(std::make_shared<RType::PositionComponent>(playerGlobalBounds.width + playerGlobalBounds.left, (playerGlobalBounds.height / 2) + playerGlobalBounds.top));
                 std::shared_ptr<RType::TextureComponent> texture = shot->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/shoot-spritesheet.png"));
                 shot->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(), sf::Vector2f(2, 2), sf::IntRect(0, 0, 19, 6)));
-                shot->pushComponent(std::make_shared<RType::DirectionComponent>(RType::RIGHT));
-                shot->pushComponent(std::make_shared<RType::DirectionPatternComponent>(RType::UP_N_DOWN_RIGHT));
-                shot->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, true);
+                shot->pushComponent(std::make_shared<RType::DirectionPatternComponent>(RType::STRAIGHT_RIGHT));
+                shot->pushComponent(std::make_shared<RType::VelocityComponent>(5));
                 shot->pushComponent(std::make_shared<RType::ClockComponent>());
             }
         }

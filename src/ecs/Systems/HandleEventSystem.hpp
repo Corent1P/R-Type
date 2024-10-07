@@ -7,6 +7,7 @@
 
 #ifndef HANDLEEVENTSYTEM_HPP_
 #define HANDLEEVENTSYTEM_HPP_
+
 #include "../ASystem.hh"
 #include ".././Components/SFWindowComponent.hh"
 #include ".././Components/EventComponent.hh"
@@ -32,6 +33,7 @@ namespace RType {
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
         protected:
         private:
+            bool _isShooting;
     };
 }
 #endif /* !HANDLEEVENTSYTEM_HPP_ */

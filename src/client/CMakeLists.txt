@@ -16,6 +16,7 @@ target_compile_options(r-type_client PRIVATE
 )
 target_link_libraries(r-type_client PRIVATE
     ecs
+    protocolHandler
     Boost::boost
     sfml-system
     sfml-window

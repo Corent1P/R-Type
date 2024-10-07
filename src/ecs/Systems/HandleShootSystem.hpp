@@ -18,6 +18,7 @@
 #include ".././Components/DirectionPatternComponent.hh"
 #include ".././Components/TextureComponent.hh"
 #include ".././Components/ClockComponent.hh"
+#include ".././Components/VelocityComponent.hh"
 
 namespace RType {
 

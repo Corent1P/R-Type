@@ -76,6 +76,15 @@ std::string RType::EntityTypeComponent::getOutput() const
         case BUTTON:
             entityType = "button";
             break;
+        case LAYER:
+            entityType = "layer";
+            break;
+        case WEAPON:
+            entityType = "weapon";
+            break;
+        case POWER_UP:
+            entityType = "power up";
+            break;
         default:
             entityType = "unknown";
             break;

@@ -14,6 +14,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 # endif()
 
 add_subdirectory(src/ecs)
+add_subdirectory(src/protocolHandler)
 
 find_package(Boost REQUIRED)
 find_package(SFML 2.6.1 COMPONENTS system window graphics REQUIRED)

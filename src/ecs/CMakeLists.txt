@@ -4,6 +4,7 @@ set(SRC_CLIENT
     ./ISystem.cpp
     ./ASystem.cpp
     ./Error.cpp
+    ../client/Game.cpp
 )
 
 set(SRC_COMPONENTS
@@ -18,6 +19,8 @@ set(SRC_COMPONENTS
     ./Components/ClockComponent.cpp
     ./Components/ActionComponent.cpp
     ./Components/DirectionPatternComponent.cpp
+    ./Components/VelocityComponent.cpp
+    ./Components/LevelComponent.cpp
 )
 
 set(SRC_SYSTEMS

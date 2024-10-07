@@ -13,9 +13,11 @@ namespace RType {
         OTHER,
         WINDOW,
         PLAYER,
+        ALLIES,
         MOB,
         BOSS,
         BUTTON,
+        LAYER,
         WEAPON,
         POWER_UP,
     };
