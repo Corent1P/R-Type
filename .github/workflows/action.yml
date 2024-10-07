@@ -54,7 +54,7 @@ jobs:
 
             - name: Configure Cmake
               run: |
-                sudo apt-get install build-essential -y
+                conan profile detect
                 conan install . --output-folder=build --build=missing -c tools.system.package_manager:mode=install
                 mkdir build
                 cmake . -DCMAKE_TOOLCHAIN_FILE=./build/build/Release/generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
@@ -63,7 +63,6 @@ jobs:
               id: build
               if: steps.package.outcome == 'success'
               run: |
-                  conan profile detect
                   cmake --build build/
                   make unit_tests
               env:
