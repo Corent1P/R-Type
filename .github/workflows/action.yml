@@ -34,14 +34,6 @@ jobs:
                 restore-keys: |
                   ${{ runner.os }}-dependencies-
 
-            - name: Cache CMake build
-              uses: actions/cache@v3
-              with:
-                path: |
-                  build
-                key: ${{ runner.os }}-cmake-${{ hashFiles('**/') }}
-                restore-keys: |
-                  ${{ runner.os }}-cmake-
 
             - name: Install dependencies
               id: package
@@ -56,7 +48,6 @@ jobs:
               run: |
                 conan profile detect
                 conan install . --output-folder=build --build=missing -c tools.system.package_manager:mode=install
-                mkdir build
                 cmake . -DCMAKE_TOOLCHAIN_FILE=./build/build/Release/generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 
             - name: Compilation with CMake
@@ -67,6 +58,15 @@ jobs:
                   make unit_tests
               env:
                 MAKEFLAGS: "-j2"
+
+            - name: Cache CMake build
+              uses: actions/cache@v3
+              with:
+                path: |
+                  build
+                key: ${{ runner.os }}-cmake-${{ hashFiles('**/') }}
+                restore-keys: |
+                  ${{ runner.os }}-cmake-
 
             - name: Run Unit Tests Client
               if: steps.build.outcome == 'success'
