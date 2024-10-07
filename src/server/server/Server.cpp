@@ -7,12 +7,6 @@
 
 #include "Server.hh"
 
-std::string RType::Server::makeDaytimeString(void)
-{
-    std::time_t now = std::time(0);
-    return std::ctime(&now);
-}
-
 RType::Server::Server(boost::asio::io_context &ioContext, int port):
     _stopLoop(false), _socket(ioContext, udp::endpoint(udp::v4(), port))
 {
@@ -48,23 +42,19 @@ void RType::Server::handleReceive(const boost::system::error_code& error, std::s
     std::basic_string<unsigned char> command(_recvBuffer.data(), bytesTransferred);
     auto receivInfo = Decoder::getCommandInfo(command);
     std::shared_ptr<ClientServer> connectedClient = getConnectedClient();
+
     if (!connectedClient)
         connectedClient = createClient();
-
-    std::shared_ptr<ICommand> com = _commandFactory.createCommand(receivInfo);
-    if (!com) {
-        connectedClient->sendMessage(_socket, Encoder::header(0, RType::ERROR)); //TODO: create an error in the encoder and decoder
-        std::cout << "unvalid command sent by client" << std::endl;
-    } else {
-        com->execute(connectedClient,
-            [this, &connectedClient](const std::basic_string<unsigned char>& message) { connectedClient->sendMessage(_socket, message); },
-            [this](const std::basic_string<unsigned char>& message) { sendToAllClient(message); });
-    }
-    // TODO: handle player disconection (for the moment, no disconnection because _clients are not accessible in the command execution)
+    if (receivInfo.first == CONNEXION)
+        handleConnection(connectedClient);
+    else if (receivInfo.first == DISCONNEXION)
+        handleDisconnection(connectedClient);
+    else
+        handleCommand(receivInfo, connectedClient);
     startReceive();
 }
 
-void RType::Server::handleSend(std::string message, const boost::system::error_code &error, std::size_t bytesTransferred)
+void RType::Server::handleSend(std::string, const boost::system::error_code &error, std::size_t bytesTransferred)
 {
     if (!error) {
         std::cout << "Sent response to client, bytes transferred: " << bytesTransferred << std::endl;
@@ -77,35 +67,8 @@ std::shared_ptr<RType::ClientServer> RType::Server::createClient(void)
 {
     std::shared_ptr<ClientServer> newClient(new ClientServer(_remoteEndpoint));
 
-    std::shared_ptr<RType::Entity> player = _coord.generateNewEntity();
-
-    player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_PLAYER));
-    std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(10, 10));
-    player->pushComponent(std::make_shared<RType::HealthComponent>(25));
-    player->pushComponent(std::make_shared<RType::ClockComponent>());
-
-    newClient->setEntity(player);
     _clients.push_back(newClient);
-    sendToAllClient(Encoder::newEntity(E_PLAYER, newClient->getEntity()->getId(), position->getPositionX(), position->getPositionY()));
-    sendAllEntity(newClient);
-    createMob();
     return newClient;
-}
-
-void RType::Server::createMob(void)
-{
-
-    std::shared_ptr<RType::Entity> mob = _coord.generateNewEntity();
-
-    mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_MOB));
-    std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(2000, 800));
-    mob->pushComponent(std::make_shared<RType::HealthComponent>(25));
-    mob->pushComponent(std::make_shared<RType::ClockComponent>());
-    mob->pushComponent(std::make_shared<RType::VelocityComponent>(3));
-
-    auto direction = mob->pushComponent(std::make_shared<RType::DirectionComponent>());
-    direction->setDirections(LEFT, true);
-    sendToAllClient(Encoder::newEntity(E_MOB, mob->getId(), position->getPositionX(), position->getPositionY()));
 }
 
 std::shared_ptr<RType::ClientServer> RType::Server::getConnectedClient(void)
@@ -123,23 +86,9 @@ std::size_t RType::Server::getMaxClientId(void)
     if (_clients.empty())
         return 0;
     for (auto client: _clients)
-        if (client->getEntity()->getId() > max)
-            max = client->getEntity()->getId();
+        if (client->getEntity()->getServerId() > max)
+            max = client->getEntity()->getServerId();
     return max + 1;
-}
-
-bool RType::Server::removeClient(void)
-{
-    for (auto it = _clients.begin(); it != _clients.end(); it++) {
-        if (*it == getConnectedClient()) {
-            std::cout << "remove client with id: " << (*it)->getEntity()->getId() << std::endl;
-            sendToAllClient(Encoder::deleteEntity((*it)->getEntity()->getId()));
-            _coord.deleteEntity((*it)->getEntity());
-            _clients.erase(it);
-            return true;
-        }
-    }
-    return false;
 }
 
 void RType::Server::sendToAllClient(const std::basic_string<unsigned char> &message)
@@ -148,6 +97,45 @@ void RType::Server::sendToAllClient(const std::basic_string<unsigned char> &mess
         client->sendMessage(_socket, message);
 }
 
+void RType::Server::handleConnection(std::shared_ptr<ClientServer> connectedClient)
+{
+    std::shared_ptr<RType::Entity> player = _coord.generateNewEntity();
+
+    player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_PLAYER));
+    std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(10, 10));
+    player->pushComponent(std::make_shared<RType::HealthComponent>(25));
+    player->pushComponent(std::make_shared<RType::ClockComponent>());
+
+    connectedClient->setEntity(player);
+
+    sendToAllClient(Encoder::newEntity(E_PLAYER, connectedClient->getEntity()->getId(), position->getPositionX(), position->getPositionY()));
+    sendAllEntity(connectedClient);
+    createMob(); //TODO: remove this when the tests are finished
+}
+
+void RType::Server::handleDisconnection(std::shared_ptr<ClientServer> connectedClient)
+{
+    for (std::size_t i = 0; i < _clients.size(); i++) {
+        if (_clients[i] == connectedClient) {
+            sendToAllClient(Encoder::deleteEntity(_clients[i]->getEntity()->getId()));
+            _coord.deleteEntity(_clients[i]->getEntity());
+            _clients.erase(std::next(_clients.begin(), i));
+        }
+    }
+}
+
+void RType::Server::handleCommand(std::pair<RType::PacketType, std::vector<long>> receivInfo, std::shared_ptr<ClientServer> connectedClient)
+{
+    std::shared_ptr<ICommand> com = _commandFactory.createCommand(receivInfo);
+    if (!com) {
+        connectedClient->sendMessage(_socket, Encoder::header(0, RType::ERROR));
+        std::cout << "unvalid command sent by client" << std::endl;
+    } else {
+        com->execute(connectedClient,
+            [this, &connectedClient](const std::basic_string<unsigned char>& message) { connectedClient->sendMessage(_socket, message); },
+            [this](const std::basic_string<unsigned char>& message) { sendToAllClient(message); });
+    }
+}
 
 void RType::Server::gameLoop(void)
 {
@@ -192,5 +180,19 @@ void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)
             client->sendMessage(_socket, Encoder::newEntity(entity->getComponent<EntityTypeComponent>()->getEntityType(), entity->getId(), entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY()));
         }
     }
+}
 
+void RType::Server::createMob(void)
+{
+    std::shared_ptr<RType::Entity> mob = _coord.generateNewEntity();
+
+    mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_MOB));
+    std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(2000, 800));
+    mob->pushComponent(std::make_shared<RType::HealthComponent>(25));
+    mob->pushComponent(std::make_shared<RType::ClockComponent>());
+    mob->pushComponent(std::make_shared<RType::VelocityComponent>(3));
+
+    auto direction = mob->pushComponent(std::make_shared<RType::DirectionComponent>());
+    direction->setDirections(LEFT, true);
+    sendToAllClient(Encoder::newEntity(E_MOB, mob->getId(), position->getPositionX(), position->getPositionY()));
 }

@@ -86,7 +86,7 @@ boost::asio::ip::udp::endpoint RType::ClientServer::getEndpoint(void) const
 
 bool RType::ClientServer::operator==(const RType::ClientServer &other) const
 {
-	return _entity->getId() == other.getEntity()->getId();
+	return _entity->getServerId() == other.getEntity()->getServerId();
 }
 
 std::shared_ptr<RType::Entity> RType::ClientServer::getEntity(void) const

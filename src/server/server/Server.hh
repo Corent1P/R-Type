@@ -20,21 +20,27 @@ namespace RType {
         public:
             Server(boost::asio::io_context &ioContext, int port);
             ~Server();
-            void gameLoop(void);
+
         private:
-            void initSystem(void);
+            // Communication handling
             void startReceive(void);
             void handleReceive(const boost::system::error_code& error, std::size_t bytesTransferred);
             void handleSend(std::string message, const boost::system::error_code &error, std::size_t bytesTransferred);
-            std::string makeDaytimeString(void);
             std::shared_ptr<RType::ClientServer> createClient(void);
-            void createMob(void);
-
             std::shared_ptr<RType::ClientServer> getConnectedClient(void);
             std::size_t getMaxClientId(void);
-            bool removeClient(void);
             void sendToAllClient(const std::basic_string<unsigned char> &message);
+
+            // Command handling
+            void handleConnection(std::shared_ptr<ClientServer> connectedClient);
+            void handleDisconnection(std::shared_ptr<ClientServer> connectedClient);
+            void handleCommand(std::pair<RType::PacketType, std::vector<long>> receivInfo, std::shared_ptr<ClientServer> connectedClient);
+
+            // Game handling
+            void gameLoop(void);
+            void initSystem(void);
             void sendAllEntity(std::shared_ptr<RType::ClientServer> client);
+            void createMob(void);
 
             bool _stopLoop;
             std::jthread _gameLoop;
