@@ -37,7 +37,6 @@ int main(int ac, char **av)
             return printHelp(84);
         boost::asio::io_context ioContext;
         RType::Server server(ioContext, port);
-        std::cout << "run" << std::endl;
         ioContext.run();
     } catch(std::exception &err) {
         std::cerr << "Error in server execution " << err.what() << std::endl;

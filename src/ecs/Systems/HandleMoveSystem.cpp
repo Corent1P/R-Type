@@ -8,12 +8,18 @@
 #include "HandleMoveSystem.hpp"
 
 RType::HandleMoveSystem::HandleMoveSystem():
-    ASystem(S_MOVE), _client(nullptr)
+    ASystem(S_MOVE), _client(nullptr), _sendMessageToAllClient(nullptr)
 {
 }
 
 RType::HandleMoveSystem::HandleMoveSystem(std::shared_ptr<RType::Client> client):
-    ASystem(S_MOVE), _client(client)
+    ASystem(S_MOVE), _client(client), _sendMessageToAllClient(nullptr)
+{
+
+}
+
+RType::HandleMoveSystem::HandleMoveSystem(std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient):
+    ASystem(S_MOVE), _client(nullptr), _sendMessageToAllClient(sendMessageToAllClient)
 {
 }
 
@@ -71,6 +77,11 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
                     }
                     if (_client && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER && (movePosition.first != 0 ||  movePosition.second != 0)) {
                         _client->send(Encoder::movePlayer(movePosition.first, movePosition.second));
+                    }
+
+                    if (_sendMessageToAllClient) {
+                        std::cout << "send: " << entity->getId() << " " << entity->getComponent<RType::SpriteComponent>()->getSprite()->getPosition().x << " " << entity->getComponent<RType::SpriteComponent>()->getSprite()->getPosition().y << std::endl;
+                        _sendMessageToAllClient(Encoder::moveEntity(entity->getId(), entity->getComponent<RType::SpriteComponent>()->getSprite()->getPosition().x, entity->getComponent<RType::SpriteComponent>()->getSprite()->getPosition().y, 0));
                     }
                 }
             }

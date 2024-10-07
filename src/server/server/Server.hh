@@ -24,14 +24,17 @@ namespace RType {
         private:
             void initSystem(void);
             void startReceive(void);
-            void handleReceive(const boost::system::error_code& error, std::size_t byteTransferred);
-            void handleSend(std::string message, const boost::system::error_code &error, std::size_t byteTransferred);
+            void handleReceive(const boost::system::error_code& error, std::size_t bytesTransferred);
+            void handleSend(std::string message, const boost::system::error_code &error, std::size_t bytesTransferred);
             std::string makeDaytimeString(void);
-            std::shared_ptr<ClientServer> createClient(void);
-            std::shared_ptr<ClientServer> getConnectedClient(void);
+            std::shared_ptr<RType::ClientServer> createClient(void);
+            void createMob(void);
+
+            std::shared_ptr<RType::ClientServer> getConnectedClient(void);
             std::size_t getMaxClientId(void);
             bool removeClient(void);
             void sendToAllClient(const std::basic_string<unsigned char> &message);
+            void sendAllEntity(std::shared_ptr<RType::ClientServer> client);
 
             bool _stopLoop;
             std::jthread _gameLoop;

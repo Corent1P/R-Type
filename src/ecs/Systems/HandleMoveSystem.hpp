@@ -26,6 +26,7 @@ namespace RType {
         public:
             HandleMoveSystem();
             HandleMoveSystem(std::shared_ptr<RType::Client> client);
+            HandleMoveSystem(std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient);
             ~HandleMoveSystem();
             void effects(std::vector<std::shared_ptr<RType::Entity>> entities);
             void effect(std::shared_ptr<RType::Entity> entity);
@@ -33,6 +34,7 @@ namespace RType {
         protected:
         private:
             std::shared_ptr<RType::Client> _client;
+            std::function<void(const std::basic_string<unsigned char> &message)> _sendMessageToAllClient;
     };
 }
 #endif /* !HANDLEMOVESYTEM_HPP_ */
