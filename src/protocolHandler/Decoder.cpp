@@ -10,33 +10,35 @@
 #include <utility>
 
 namespace RType {
-    COMMAND_INFO Decoder::getCommandInfo(U_STRING &packet)
+    PACKET Decoder::getCommandInfo(U_STRING &packet)
     {
         switch (getType(packet)) {
             case CONNEXION:
-                return std::make_pair(CONNEXION, COMMAND_ARGS());
+                return std::make_pair(decryptHeader(packet), COMMAND_ARGS());
             case DISCONNEXION:
-                return std::make_pair(DISCONNEXION, COMMAND_ARGS());
+                return std::make_pair(decryptHeader(packet), COMMAND_ARGS());
             case NEW_ENTITY:
-                return std::make_pair(NEW_ENTITY, newEntity(packet));
+                return std::make_pair(decryptHeader(packet), newEntity(packet));
             case DELETE_ENTITY:
-                return std::make_pair(DELETE_ENTITY, deleteEntity(packet));
+                return std::make_pair(decryptHeader(packet), deleteEntity(packet));
             case MOVE_ENTITY:
-                return std::make_pair(MOVE_ENTITY, moveEntity(packet));
+                return std::make_pair(decryptHeader(packet), moveEntity(packet));
             case INFO_LEVEL:
-                return std::make_pair(INFO_LEVEL, infoLevel(packet));
+                return std::make_pair(decryptHeader(packet), infoLevel(packet));
             case INFO_ENTITY:
-                return std::make_pair(INFO_ENTITY, infoEntity(packet));
+                return std::make_pair(decryptHeader(packet), infoEntity(packet));
             case MOVE_PLAYER:
-                return std::make_pair(MOVE_PLAYER, movePlayer(packet));
+                return std::make_pair(decryptHeader(packet), movePlayer(packet));
             case ACTION_PLAYER:
-                return std::make_pair(ACTION_PLAYER, actionPlayer(packet));
+                return std::make_pair(decryptHeader(packet), actionPlayer(packet));
             case GAME_START:
-                return std::make_pair(GAME_START, COMMAND_ARGS());
+                return std::make_pair(decryptHeader(packet), COMMAND_ARGS());
             case GAME_END:
-                return std::make_pair(GAME_END, COMMAND_ARGS());
+                return std::make_pair(decryptHeader(packet), COMMAND_ARGS());
+            case ERROR:
+                return std::make_pair(decryptHeader(packet), COMMAND_ARGS());
             default:
-                return std::make_pair(ERROR, COMMAND_ARGS());
+                return std::make_pair(decryptHeader(packet), COMMAND_ARGS());
         }
     }
 
@@ -50,14 +52,24 @@ namespace RType {
         return ((packet[0] << 8) | (packet[1] & 0xC0)) >> 6;
     }
 
+    std::uint8_t Decoder::getPacketNumber(U_STRING &packet)
+    {
+        return packet[2];
+    }
+
+    HEADER Decoder::decryptHeader(U_STRING &packet)
+    {
+        return std::make_pair(getType(packet), getPacketNumber(packet));
+    }
+
     COMMAND_ARGS Decoder::newEntity(U_STRING &packet)
     {
         COMMAND_ARGS args(4);
 
-        args[0] = packet[2];
-        args[1] = (packet[3] << 8) + packet[4];
-        args[2] = (packet[5] << 8) + packet[6];
-        args[3] = (packet[7] << 8) + packet[8];
+        args[0] = packet[3];
+        args[1] = (packet[4] << 8) + packet[5];
+        args[2] = (packet[6] << 8) + packet[7];
+        args[3] = (packet[8] << 8) + packet[9];
         return args;
     }
 
@@ -65,7 +77,7 @@ namespace RType {
     {
         COMMAND_ARGS args(1);
 
-        args[0] = (packet[2] << 8) + packet[3];
+        args[0] = (packet[3] << 8) + packet[4];
         return args;
     }
 
@@ -73,9 +85,9 @@ namespace RType {
     {
         COMMAND_ARGS args(4);
 
-        args[0] = (packet[2] << 8) + packet[3];
-        args[1] = (packet[4] << 8) + packet[5];
-        args[2] = (packet[6] << 8) + packet[7];
+        args[0] = (packet[3] << 8) + packet[4];
+        args[1] = (packet[5] << 8) + packet[6];
+        args[2] = (packet[7] << 8) + packet[8];
         args[3] = packet[8];
         return args;
     }
@@ -84,7 +96,7 @@ namespace RType {
     {
         COMMAND_ARGS args(1);
 
-        args[0] = packet[2];
+        args[0] = packet[3];
         return args;
     }
 
@@ -92,12 +104,12 @@ namespace RType {
     {
         COMMAND_ARGS args(6);
 
-        args[0] = (packet[2] << 8) + packet[3];
-        args[1] = packet[4];
-        args[2] = (packet[5] << 8) | packet[6];
-        args[3] = (packet[7] << 8) | packet[8];
-        args[4] = packet[9];
-        args[5] = packet[10];
+        args[0] = (packet[3] << 8) + packet[4];
+        args[1] = packet[5];
+        args[2] = (packet[6] << 8) | packet[7];
+        args[3] = (packet[8] << 8) | packet[9];
+        args[4] = packet[10];
+        args[5] = packet[11];
         return args;
     }
 
@@ -105,8 +117,8 @@ namespace RType {
     {
         COMMAND_ARGS args(2);
 
-        args[0] = static_cast<std::int8_t>(packet[2]);
-        args[1] = static_cast<std::int8_t>(packet[3]);
+        args[0] = static_cast<std::int8_t>(packet[3]);
+        args[1] = static_cast<std::int8_t>(packet[4]);
         return args;
     }
 
@@ -114,10 +126,10 @@ namespace RType {
     {
         COMMAND_ARGS args(4);
 
-        args[0] = (packet[2] >> 3) & 1;
-        args[1] = (packet[2] >> 2) & 1;
-        args[2] = (packet[2] >> 1) & 1;
-        args[3] = packet[2] & 1;
+        args[0] = (packet[3] >> 3) & 1;
+        args[1] = (packet[3] >> 2) & 1;
+        args[2] = (packet[3] >> 1) & 1;
+        args[3] = packet[3] & 1;
         return args;
     }
 }
