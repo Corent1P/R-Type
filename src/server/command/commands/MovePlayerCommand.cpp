@@ -13,7 +13,7 @@ RType::MovePlayerCommand::MovePlayerCommand(const std::vector<long> &data):
     std::cout << "Move command created" << std::endl;
 }
 
-void RType::MovePlayerCommand::execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll)
+void RType::MovePlayerCommand::execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll, Coordinator &coord)
 {
     std::cout << "execution of move command" << std::endl;
     std::pair<double, double> position = {client->getEntity()->getComponent<PositionComponent>()->getPositions().x, client->getEntity()->getComponent<PositionComponent>()->getPositions().y};

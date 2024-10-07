@@ -27,6 +27,6 @@ namespace RType {
              * @param socket the socket to send the response
              * @param client the client that sent the command
              */
-            void execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll) override;
+            void execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll, Coordinator &coord) override;
     };
 }

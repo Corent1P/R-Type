@@ -13,7 +13,7 @@ RType::DeleteEntityCommand::DeleteEntityCommand(const std::vector<long> &argumen
     std::cout << "DeleteEntity command created" << std::endl;
 }
 
-void RType::DeleteEntityCommand::execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll)
+void RType::DeleteEntityCommand::execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll, Coordinator &coord)
 {
     std::cout << "execution of delete entity command" << std::endl;
 }

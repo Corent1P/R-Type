@@ -46,6 +46,6 @@ namespace RType {
              * @param sendToClient the function that will send the message to the client
              * @param sendToAll the function that will send the message to all the connected client
              */
-            virtual void execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll) = 0;
+            virtual void execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll, Coordinator &coord) = 0;
     };
 }

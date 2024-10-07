@@ -133,7 +133,8 @@ void RType::Server::handleCommand(std::pair<RType::PacketType, std::vector<long>
     } else {
         com->execute(connectedClient,
             [this, &connectedClient](const std::basic_string<unsigned char>& message) { connectedClient->sendMessage(_socket, message); },
-            [this](const std::basic_string<unsigned char>& message) { sendToAllClient(message); });
+            [this](const std::basic_string<unsigned char>& message) { sendToAllClient(message); },
+            _coord);
     }
 }
 

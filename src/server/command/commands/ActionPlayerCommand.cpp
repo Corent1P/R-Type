@@ -13,7 +13,7 @@ RType::ActionPlayerCommand::ActionPlayerCommand(const std::vector<long> &data):
     std::cout << "Action command created" << std::endl;
 }
 
-void RType::ActionPlayerCommand::execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll)
+void RType::ActionPlayerCommand::execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll, Coordinator &coord)
 {
     std::cout << "execution of action command" << std::endl;
 }
