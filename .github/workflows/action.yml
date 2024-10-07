@@ -34,13 +34,6 @@ jobs:
                 restore-keys: |
                   ${{ runner.os }}-dependencies-
 
-            - name: Configure Cmake
-              run: |
-                sudo apt-get install build-essential -y
-                mkdir build
-                cd build
-                cmake .. -DCMAKE_TOOLCHAIN_FILE=build/Release/generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
-
             - name: Cache CMake build
               uses: actions/cache@v3
               with:
@@ -58,6 +51,13 @@ jobs:
                   pipx ensurepath
                   echo "$HOME/.local/bin" >> $GITHUB_PATH
                   sudo apt-get install -y libx11-dev libx11-xcb-dev libfontenc-dev libice-dev libsm-dev libxau-dev libxaw7-dev
+
+            - name: Configure Cmake
+              run: |
+                sudo apt-get install build-essential -y
+                conan install . --output-folder=build --build=missing -c tools.system.package_manager:mode=install
+                mkdir build
+                cmake . -DCMAKE_TOOLCHAIN_FILE=./build/build/Release/generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 
             - name: Compilation with CMake
               id: build
