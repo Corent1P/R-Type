@@ -27,6 +27,7 @@ set(SRC_SYSTEMS
     ./Systems/HandleEventSystem.cpp
     ./Systems/HandleDrawSystem.cpp
     ./Systems/HandleMoveSystem.cpp
+    ./Systems/HandleMoveSpriteSystem.cpp
     ./Systems/HandleAnimationSystem.cpp
     ./Systems/HandlePatternSystem.cpp
     ./Systems/HandleShootSystem.cpp

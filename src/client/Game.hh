@@ -28,6 +28,7 @@
 #include "../ecs/Systems/HandleEventSystem.hpp"
 #include "../ecs/Systems/HandleDrawSystem.hpp"
 #include "../ecs/Systems/HandleMoveSystem.hpp"
+#include "../ecs/Systems/HandleMoveSpriteSystem.hpp"
 #include "../ecs/Systems/HandleAnimationSystem.hpp"
 #include "../ecs/Systems/HandlePatternSystem.hpp"
 #include "../ecs/Systems/HandleShootSystem.hpp"

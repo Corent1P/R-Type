@@ -112,7 +112,6 @@ void RType::Game::loopReceive()
             for (const auto &entity : entities) {
                 if (entity->getServerId() == receivInfo.second[0]) {
                     _coord.deleteEntity(entity);
-                    std::cout << "deleteEntity" << std::endl;
                 }
             }
         }
@@ -180,8 +179,8 @@ void RType::Game::createMob()
     std::shared_ptr<RType::TextureComponent> texture = mob->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/enemy-sheet.png"));
     mob->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(), sf::Vector2f(2, 2), sf::IntRect(0, 0, 29, 29)));
     mob->pushComponent(std::make_shared<RType::ClockComponent>());
-    mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(UP_N_DOWN_LEFT));
-    mob->pushComponent(std::make_shared<VelocityComponent>(2));
+    mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(STRAIGHT_LEFT));
+    mob->pushComponent(std::make_shared<VelocityComponent>(1));
 }
 
 void RType::Game::createMob(long serverId, long posX, long posY)
@@ -195,7 +194,7 @@ void RType::Game::createMob(long serverId, long posX, long posY)
     std::shared_ptr<RType::TextureComponent> texture = mob->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/enemy-sheet.png"));
     mob->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(), sf::Vector2f(2, 2), sf::IntRect(0, 0, 29, 29)));
     mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(UP_N_DOWN_LEFT));
-    mob->pushComponent(std::make_shared<VelocityComponent>(2));
+    mob->pushComponent(std::make_shared<VelocityComponent>(1));
 }
 
 void RType::Game::createBoss()
@@ -214,7 +213,7 @@ void RType::Game::createGameSystem()
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
     ));
 
-    _coord.generateNewSystem(std::make_shared<HandleDrawSystem>(
+    _coord.generateNewSystem(std::make_shared<HandlePatternSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
     ));
@@ -225,7 +224,7 @@ void RType::Game::createGameSystem()
         _client
     ));
 
-    _coord.generateNewSystem(std::make_shared<HandlePatternSystem>(
+    _coord.generateNewSystem(std::make_shared<HandleMoveSpriteSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
     ));
@@ -236,6 +235,11 @@ void RType::Game::createGameSystem()
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleShootSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+    ));
+
+    _coord.generateNewSystem(std::make_shared<HandleDrawSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
     ));
