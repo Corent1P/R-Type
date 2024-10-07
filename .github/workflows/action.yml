@@ -22,6 +22,19 @@ jobs:
               uses: actions/checkout@v4
               with:
                   fetch-depth: 0
+
+            - name: Cache Conan dependencies
+              uses: actions/cache@v3
+              with:
+                path: |
+                  ~/.cache/pip
+                  ~/.conan2
+                  ${{github.workspace}}/build
+                key: ${{ runner.os }}-dependencies-${{ hashFiles('**/conanfile.txt') }}
+                restore-keys: |
+                  ${{ runner.os }}-dependencies-
+
+
             - name: Install dependencies
               id: package
               run: |
@@ -30,31 +43,35 @@ jobs:
                   pipx ensurepath
                   echo "$HOME/.local/bin" >> $GITHUB_PATH
                   sudo apt-get install -y libx11-dev libx11-xcb-dev libfontenc-dev libice-dev libsm-dev libxau-dev libxaw7-dev
+
             - name: Compilation with CMake
               id: build
               if: steps.package.outcome == 'success'
               run: |
-                  conan profile detect
                   ./build.sh
                   make unit_tests
+
             - name: Run Unit Tests Client
               if: steps.build.outcome == 'success'
               run: |
                   ./unit_tests_client --verbose
                   gcovr --exclude tests
                   gcovr --exclude tests --branches
+
             - name: Run Unit Tests ECS
               if: steps.build.outcome == 'success'
               run: |
                   ./unit_tests_ecs --verbose
                   gcovr --exclude tests
                   gcovr --exclude tests --branches
+
             - name: Run Unit Tests Server
               if: steps.build.outcome == 'success'
               run: |
                   ./unit_tests_server --verbose
                   gcovr --exclude tests
                   gcovr --exclude tests --branches
+
     push_to_mirror:
         needs: [check_program_compilation]
         runs-on: ubuntu-latest

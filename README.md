@@ -133,7 +133,7 @@ To start the client, you only have to execute the following command:
 
 ## Contact
 
-Piquet Corentin - corentin.piquet@epitech.eu
+Piqueto Corentin - corentin.piquet@epitech.eu
 
 Rognon Xavier - xavier.rognon@epitech.eu
 
