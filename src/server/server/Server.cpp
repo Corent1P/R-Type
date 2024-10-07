@@ -98,13 +98,12 @@ void RType::Server::createMob(void)
     std::shared_ptr<RType::Entity> mob = _coord.generateNewEntity();
 
     mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_MOB));
-    std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(2000, 800));
+    std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(2000, 700));
     mob->pushComponent(std::make_shared<RType::HealthComponent>(25));
     mob->pushComponent(std::make_shared<RType::ClockComponent>());
-    mob->pushComponent(std::make_shared<RType::VelocityComponent>(3));
+    mob->pushComponent(std::make_shared<RType::VelocityComponent>(1));
 
-    auto direction = mob->pushComponent(std::make_shared<RType::DirectionComponent>());
-    direction->setDirections(LEFT, true);
+    mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(STRAIGHT_LEFT));
     sendToAllClient(Encoder::newEntity(E_MOB, mob->getId(), position->getPositionX(), position->getPositionY()));
 }
 
@@ -174,6 +173,11 @@ void RType::Server::gameLoop(void)
 
 void RType::Server::initSystem(void)
 {
+    _coord.generateNewSystem(std::make_shared<HandlePatternSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+    ));
+
     _coord.generateNewSystem(std::make_shared<HandleMoveSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
