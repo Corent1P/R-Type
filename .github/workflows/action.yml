@@ -34,12 +34,19 @@ jobs:
                 restore-keys: |
                   ${{ runner.os }}-dependencies-
 
+            - name: Configure Cmake
+              run: |
+                sudo apt-get install cmake -y
+                mkdir build
+                cd build
+                cmake .. -DCMAKE_TOOLCHAIN_FILE=build/Release/generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+
             - name: Cache CMake build
               uses: actions/cache@v3
               with:
                 path: |
-                  cache
-                key: ${{ runner.os }}-cmake-${{ hashFiles('**/CMakeLists.txt', '**/*.cmake', '**/*.cpp', '**/*.hpp', '**/*.h') }}
+                  build
+                key: ${{ runner.os }}-cmake-${{ hashFiles('**/') }}
                 restore-keys: |
                   ${{ runner.os }}-cmake-
 
@@ -52,12 +59,15 @@ jobs:
                   echo "$HOME/.local/bin" >> $GITHUB_PATH
                   sudo apt-get install -y libx11-dev libx11-xcb-dev libfontenc-dev libice-dev libsm-dev libxau-dev libxaw7-dev
 
-            - name: Build Project
-              uses: threeal/cmake-action@v2.0.0
-              with:
-                options: |
-                  DCMAKE_TOOLCHAIN_FILE=build/Release/generators/conan_toolchain.cmake
-                  DCMAKE_BUILD_TYPE=Release
+            - name: Compilation with CMake
+              id: build
+              if: steps.package.outcome == 'success'
+              run: |
+                  conan profile detect
+                  cmake --build build/
+                  make unit_tests
+              env:
+                MAKEFLAGS: "-j2"
 
             - name: Run Unit Tests Client
               if: steps.build.outcome == 'success'
