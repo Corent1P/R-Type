@@ -21,6 +21,8 @@ namespace RType {
         DRAW,
         MOVE,
         ANIMATION,
+        PATTERN,
+        SHOOT,
     };
 
     class ISystem {

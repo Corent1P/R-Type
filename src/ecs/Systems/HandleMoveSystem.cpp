@@ -7,13 +7,13 @@
 
 #include "HandleMoveSystem.hpp"
 
-RType::HandleMoveSystem::HandleMoveSystem():
-    ASystem(MOVE), _client(nullptr)
+RType::HandleMoveSystem::HandleMoveSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
+    ASystem(MOVE, addEntity, deleteEntity), _client(nullptr)
 {
 }
 
-RType::HandleMoveSystem::HandleMoveSystem(std::shared_ptr<RType::Client> client):
-    ASystem(MOVE), _client(client)
+RType::HandleMoveSystem::HandleMoveSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::shared_ptr<RType::Client> client):
+    ASystem(MOVE, addEntity, deleteEntity), _client(client)
 {
 }
 
@@ -31,36 +31,39 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
                     float windowHeight = window->getComponent<RType::SFWindowComponent>()->getWindow()->getSize().y;
                     float windowWidth = window->getComponent<RType::SFWindowComponent>()->getWindow()->getSize().x;
                     int speed = entity->getComponent<VelocityComponent>()->getVelocity();;
-                    if (entity->getComponent<RType::DirectionComponent>()->getDirections(LEFT) == true) {
-                        entity->getComponent<RType::SpriteComponent>()->getSprite()->move((speed * -1), 0);
-                        if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::PLAYER)
-                            movePosition.first -= speed * 10;
-                    }
-                    if (entity->getComponent<RType::DirectionComponent>()->getDirections(RIGHT) == true && spriteBounds.left + spriteBounds.width < windowWidth) {
-                        entity->getComponent<RType::SpriteComponent>()->getSprite()->move(speed, 0);
-                                                if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::PLAYER)
-                            movePosition.first += speed * 10;
-                    }
-                    if (entity->getComponent<RType::DirectionComponent>()->getDirections(UP) == true && spriteBounds.top > 0) {
-                        entity->getComponent<RType::SpriteComponent>()->getSprite()->move(0, (speed * -1));
-                        if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::PLAYER)
-                            movePosition.second -= speed * 10;
-                    }
-                    if (entity->getComponent<RType::DirectionComponent>()->getDirections(DOWN) == true && spriteBounds.top + spriteBounds.height < windowHeight) {
-                        entity->getComponent<RType::SpriteComponent>()->getSprite()->move(0, speed);
-                        if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::PLAYER)
-                            movePosition.second += speed * 10;
-                    }
 
-                    if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::WEAPON && entity->getComponent<RType::DirectionComponent>()->getDirections(LEFT) == true && spriteBounds.left > 0) {
-                        entity->getComponent<RType::SpriteComponent>()->getSprite()->move((speed * -1), 0);
-                    } else if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::WEAPON && entity->getComponent<RType::DirectionComponent>()->getDirections(LEFT) == true && spriteBounds.left < 0) {
-                        entity->~Entity();
+                    if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::PLAYER) {
+                        if (entity->getComponent<RType::DirectionComponent>()->getDirections(LEFT) == true && spriteBounds.left > 0) {
+                            entity->getComponent<RType::SpriteComponent>()->getSprite()->move(-speed, 0);
+                            movePosition.first -= speed * 10;
+                        }
+                        if (entity->getComponent<RType::DirectionComponent>()->getDirections(RIGHT) == true && spriteBounds.left + spriteBounds.width < windowWidth) {
+                            entity->getComponent<RType::SpriteComponent>()->getSprite()->move(speed, 0);
+                            movePosition.first += speed * 10;
+                        }
+                        if (entity->getComponent<RType::DirectionComponent>()->getDirections(UP) == true && spriteBounds.top > 0) {
+                            entity->getComponent<RType::SpriteComponent>()->getSprite()->move(0, -speed);
+                            movePosition.second -= speed * 10;
+                        }
+                        if (entity->getComponent<RType::DirectionComponent>()->getDirections(DOWN) == true && spriteBounds.top + spriteBounds.height < windowHeight) {
+                            entity->getComponent<RType::SpriteComponent>()->getSprite()->move(0, speed);
+                            movePosition.second += speed * 10;
+                        }
                     }
-                    if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::WEAPON && entity->getComponent<RType::DirectionComponent>()->getDirections(RIGHT) == true && spriteBounds.left + spriteBounds.width < windowWidth) {
-                        entity->getComponent<RType::SpriteComponent>()->getSprite()->move(speed, 0);
-                    } else if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::WEAPON && entity->getComponent<RType::DirectionComponent>()->getDirections(RIGHT) == true && spriteBounds.left + spriteBounds.width > windowWidth){
-                        entity->~Entity();
+                    if(entity->getComponent<DirectionPatternComponent>() != nullptr) {
+                        auto pattern = entity->getComponent<RType::DirectionPatternComponent>()->getPattern();
+                        entity->getComponent<RType::SpriteComponent>()->getSprite()->move(pattern.x * speed / 5., pattern.y * speed / 5.);
+                        if ((entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::STRAIGHT_LEFT
+                        || entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::UP_N_DOWN_LEFT)
+                        && spriteBounds.left + spriteBounds.width < 0) {
+                            _deleteEntity(entity);
+                        }
+
+                        if ((entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::STRAIGHT_RIGHT
+                        || entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::UP_N_DOWN_RIGHT)
+                        && spriteBounds.left + spriteBounds.width > windowWidth) {
+                            _deleteEntity(entity);
+                        }
                     }
 
                     if (entity->getComponent<EntityTypeComponent>()->getEntityType() == RType::LAYER) {
@@ -78,30 +81,9 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
     }
 }
 
-void RType::HandleMoveSystem::effect(std::shared_ptr<RType::Entity> entity)
-{
-    // if (entity->getComponent<RType::DirectionComponent>()->getDirections(LEFT) == true) {
-    //     // std::cout << ">>LEFT" << std::endl;
-    //     entity->getComponent<RType::SpriteComponent>()->getSprite()->move(-0.1, 0);
-    // }
-    // if (entity->getComponent<RType::DirectionComponent>()->getDirections(RIGHT) == true) {
-    //     //  std::cout << ">>RIGHT" << std::endl;
-    //     entity->getComponent<RType::SpriteComponent>()->getSprite()->move(0.1, 0);
-    // }
-    // if (entity->getComponent<RType::DirectionComponent>()->getDirections(UP) == true) {
-    //     //  std::cout << ">>UP" << std::endl;
-    //     entity->getComponent<RType::SpriteComponent>()->getSprite()->move(0, -0.1);
-    // }
-    // if (entity->getComponent<RType::DirectionComponent>()->getDirections(DOWN) == true) {
-    //     //  std::cout << ">>DOWN" << std::endl;
-    //     entity->getComponent<RType::SpriteComponent>()->getSprite()->move(0, 0.1);
-    // }
-    (void) entity;
-}
-
 bool RType::HandleMoveSystem::verifyRequiredComponent(std::shared_ptr<RType::Entity> entity)
 {
-    if ( entity->getComponent<VelocityComponent>() == nullptr || entity->getComponent<RType::DirectionComponent>() == nullptr || entity->getComponent<RType::SpriteComponent>() == nullptr)
+    if (entity->getComponent<VelocityComponent>() == nullptr || (entity->getComponent<RType::DirectionComponent>() == nullptr && entity->getComponent<RType::DirectionPatternComponent>() == nullptr) || entity->getComponent<RType::SpriteComponent>() == nullptr)
     {
         return false;
     }

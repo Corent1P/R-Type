@@ -2,26 +2,25 @@
 ** EPITECH PROJECT, 2024
 ** R-Type
 ** File description:
-** system about all components drawing
+** System handling direction pattern for any entity
 */
 
-#ifndef HANDLEDRAWSYSTEM_HPP_
-#define HANDLEDRAWSYSTEM_HPP_
+#ifndef HANDLEPATTERNSYSTEM_HPP_
+#define HANDLEPATTERNSYSTEM_HPP_
 #include "../ASystem.hh"
 #include ".././Components/SFWindowComponent.hh"
 #include ".././Components/SpriteComponent.hh"
 #include ".././Components/PositionComponent.hh"
+#include ".././Components/ClockComponent.hh"
 #include ".././Components/EntityTypeComponent.hh"
-#include ".././Components/LevelComponent.hh"
+#include ".././Components/DirectionPatternComponent.hh"
 
-#define GET_WINDOW_FOR_DRAW w->getComponent<RType::SFWindowComponent>()
 namespace RType {
-    class HandleDrawSystem: public ASystem {
+    class HandlePatternSystem: public ASystem {
         public:
-            HandleDrawSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
-            ~HandleDrawSystem();
+            HandlePatternSystem(std::function<std::shared_ptr<Entity>(void)> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
+            ~HandlePatternSystem();
             void effect(std::shared_ptr<RType::Entity> entity);
-            void effects(std::vector<std::shared_ptr<RType::Entity>> entities);
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
         protected:
         private:
@@ -29,4 +28,4 @@ namespace RType {
     };
 }
 
-#endif /* !HANDLEDRAWSYSTEM_HPP_ */
+#endif /* !HANDLEPATTERNSYSTEM_HPP_ */

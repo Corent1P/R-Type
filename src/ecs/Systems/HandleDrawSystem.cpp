@@ -7,8 +7,8 @@
 
 #include "HandleDrawSystem.hpp"
 
-RType::HandleDrawSystem::HandleDrawSystem():
-    ASystem(DRAW)
+RType::HandleDrawSystem::HandleDrawSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
+    ASystem(DRAW, addEntity, deleteEntity)
 {
 }
 
@@ -44,9 +44,5 @@ bool RType::HandleDrawSystem::verifyRequiredComponent(std::shared_ptr<RType::Ent
     ||entity->getComponent<RType::SpriteComponent>() == nullptr) {
         return false;
     }
-    if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::LAYER
-        && entity->getComponent<RType::LevelComponent>()->getLevel() != 1)
-        return false;
-
     return (true);
 }
