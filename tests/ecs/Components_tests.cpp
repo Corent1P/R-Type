@@ -47,8 +47,8 @@ Test(main, TestHealthComponent) {
 }
 
 Test(main, TestEntityTypeComponent) {
-    RType::EntityTypeComponent entityType(RType::PLAYER);
-    cr_assert_eq(entityType.getEntityType(), RType::PLAYER, "Expected: %d, Got: %d", entityType.getEntityType(), RType::PLAYER);
+    RType::EntityTypeComponent entityType(RType::E_PLAYER);
+    cr_assert_eq(entityType.getEntityType(), RType::E_PLAYER, "Expected: %d, Got: %d", entityType.getEntityType(), RType::E_PLAYER);
 
     std::string output = entityType.getOutput();
     std::string expected = "Entity Type Component (entity type: player)";

@@ -7,8 +7,8 @@
 
 #include "HandleEventSystem.hpp"
 
-RType::HandleEventSystem::HandleEventSystem():
-    ASystem(S_EVENT)
+RType::HandleEventSystem::HandleEventSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
+    ASystem(S_EVENT, addEntity, deleteEntity), _isShooting(false)
 {
 }
 
@@ -52,10 +52,11 @@ void RType::HandleEventSystem::effects(std::vector<std::shared_ptr<RType::Entity
                             player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, false);
                         }
 
-                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !_isShooting) {
+                            _isShooting = true;
                             player->getComponent<RType::ActionComponent>()->setActions(RType::SHOOTING, true);
-                        } else {
-                            player->getComponent<RType::ActionComponent>()->setActions(RType::SHOOTING, false);
+                        } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && _isShooting) {
+                            _isShooting = false;
                         }
 
                         if (sf::Joystick::isConnected(0))

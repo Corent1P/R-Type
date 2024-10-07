@@ -19,9 +19,9 @@ namespace RType {
             std::shared_ptr<Entity> generateNewEntity(uint16_t serverId = -1);
             void generateNewSystem(std::shared_ptr<ISystem> sys);
             std::vector<std::shared_ptr<Entity>> getEntities() const;
-            bool deleteEntity(std::shared_ptr<Entity> entityToDestroy);
             std::vector<std::shared_ptr<ISystem>> getSystems() const;
-
+            std::shared_ptr<Entity> addEntity(void);
+            void deleteEntity(std::shared_ptr<Entity> entityToDestroy);
         private:
             uint16_t _idEntities;
             std::vector<std::shared_ptr<Entity>> _entities;

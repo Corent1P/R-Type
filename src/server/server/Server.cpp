@@ -98,7 +98,7 @@ void RType::Server::createMob(void)
     std::shared_ptr<RType::Entity> mob = _coord.generateNewEntity();
 
     mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_MOB));
-    std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(420, 420));
+    std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(2000, 800));
     mob->pushComponent(std::make_shared<RType::HealthComponent>(25));
     mob->pushComponent(std::make_shared<RType::ClockComponent>());
     mob->pushComponent(std::make_shared<RType::VelocityComponent>(3));
@@ -174,7 +174,11 @@ void RType::Server::gameLoop(void)
 
 void RType::Server::initSystem(void)
 {
-    _coord.generateNewSystem(std::make_shared<HandleMoveSystem>(std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)));
+    _coord.generateNewSystem(std::make_shared<HandleMoveSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
+    ));
 
     std::shared_ptr<RType::Entity> window = _coord.generateNewEntity();
     window->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_WINDOW));

@@ -18,6 +18,7 @@ set(SRC_COMPONENTS
     ./Components/DirectionComponent.cpp
     ./Components/ClockComponent.cpp
     ./Components/ActionComponent.cpp
+    ./Components/DirectionPatternComponent.cpp
     ./Components/VelocityComponent.cpp
     ./Components/LevelComponent.cpp
 )
@@ -27,6 +28,8 @@ set(SRC_SYSTEMS
     ./Systems/HandleDrawSystem.cpp
     ./Systems/HandleMoveSystem.cpp
     ./Systems/HandleAnimationSystem.cpp
+    ./Systems/HandlePatternSystem.cpp
+    ./Systems/HandleShootSystem.cpp
 )
 
 set(SRC_CLIENTS # To Remove

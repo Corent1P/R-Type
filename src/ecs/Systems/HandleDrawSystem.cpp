@@ -7,8 +7,8 @@
 
 #include "HandleDrawSystem.hpp"
 
-RType::HandleDrawSystem::HandleDrawSystem():
-    ASystem(S_DRAW)
+RType::HandleDrawSystem::HandleDrawSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
+    ASystem(S_DRAW, addEntity, deleteEntity)
 {
 }
 

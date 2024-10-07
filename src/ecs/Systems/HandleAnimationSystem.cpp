@@ -7,8 +7,8 @@
 
 #include "HandleAnimationSystem.hpp"
 
-RType::HandleAnimationSystem::HandleAnimationSystem():
-    ASystem(S_ANIMATION)
+RType::HandleAnimationSystem::HandleAnimationSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
+    ASystem(S_ANIMATION, addEntity, deleteEntity)
 {
 }
 

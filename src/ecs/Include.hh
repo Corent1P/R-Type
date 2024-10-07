@@ -12,5 +12,7 @@
 #include <memory>
 #include <algorithm>
 #include "EcsError.hh"
+// #include "/opt/homebrew/opt/sfml/include/SFML/Graphics.hpp"
+#include <algorithm>
 #include "../protocolHandler/Encoder.hh"
 

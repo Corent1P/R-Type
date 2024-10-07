@@ -17,6 +17,7 @@ SRC_ECS	=		src/ecs/Components/PositionComponent.cpp\
 			src/ecs/Components/TextureComponent.cpp\
 			src/ecs/Components/SpriteComponent.cpp\
 			src/ecs/Components/DirectionComponent.cpp\
+			src/ecs/Components/DirectionPatternComponent.cpp\
 			src/ecs/Components/ClockComponent.cpp\
 			src/ecs/Components/VelocityComponent.cpp\
 			src/ecs/Components/ActionComponent.cpp\
@@ -25,6 +26,8 @@ SRC_ECS	=		src/ecs/Components/PositionComponent.cpp\
 			src/ecs/Systems/HandleDrawSystem.cpp\
 			src/ecs/Systems/HandleAnimationSystem.cpp\
 			src/ecs/Systems/HandleMoveSystem.cpp\
+			src/ecs/Systems/HandleShootSystem.cpp\
+			src/ecs/Systems/HandlePatternSystem.cpp\
 			src/ecs/Coordinator.cpp\
 			src/ecs/Entity.cpp\
 			src/ecs/ISystem.cpp\
