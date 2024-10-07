@@ -36,7 +36,7 @@ jobs:
 
             - name: Configure Cmake
               run: |
-                sudo apt-get install cmake -y
+                sudo apt-get install build-essential -y
                 mkdir build
                 cd build
                 cmake .. -DCMAKE_TOOLCHAIN_FILE=build/Release/generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
