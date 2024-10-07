@@ -29,6 +29,7 @@ jobs:
                 path: |
                   ~/.cache/pip
                   ~/.conan2
+                  ${{github.workspace}}/build
                 key: ${{ runner.os }}-dependencies-${{ hashFiles('**/conanfile.txt') }}
                 restore-keys: |
                   ${{ runner.os }}-dependencies-
@@ -45,11 +46,12 @@ jobs:
 
             - name: Create default Conan profile
               if: ${{steps.cache-conan.outputs.cache-hit != 'true'}}
-              run: conan profile detect --force
+              run: |
+                conan profile detect --force
+                conan install . --output-folder=build --build=missing -c tools.system.package_manager:mode=install
 
             - name: Configure Cmake
               run: |
-                conan install . --output-folder=build --build=missing -c tools.system.package_manager:mode=install
                 cmake . -DCMAKE_TOOLCHAIN_FILE=./build/build/Release/generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 
             - name: Compilation with CMake
