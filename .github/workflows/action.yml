@@ -23,7 +23,7 @@ jobs:
               with:
                   fetch-depth: 0
 
-            - name: Cache dependencies
+            - name: Cache Conan dependencies
               uses: actions/cache@v3
               with:
                 path: |
@@ -43,12 +43,6 @@ jobs:
                   pipx ensurepath
                   echo "$HOME/.local/bin" >> $GITHUB_PATH
                   sudo apt-get install -y libx11-dev libx11-xcb-dev libfontenc-dev libice-dev libsm-dev libxau-dev libxaw7-dev
-
-            - name: Create default Conan profile
-              if: ${{steps.cache-conan.outputs.cache-hit != 'true'}}
-              run: |
-                conan profile detect --force
-                conan install . --output-folder=build --build=missing -c tools.system.package_manager:mode=install
 
             - name: Compilation with CMake
               id: build
