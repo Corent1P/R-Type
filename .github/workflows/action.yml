@@ -45,7 +45,7 @@ jobs:
 
             - name: Create default Conan profile
               if: ${{steps.cache-conan.outputs.cache-hit != 'true'}}
-              run: conan profile new default --detect
+              run: conan profile detect --force
 
             - name: Configure Cmake
               run: |
