@@ -34,7 +34,7 @@ jobs:
                 restore-keys: |
                   ${{ runner.os }}-dependencies-
 
-            - name: Configure Cmake:
+            - name: Configure Cmake
               run: |
                 mkdir build
                 cd build
