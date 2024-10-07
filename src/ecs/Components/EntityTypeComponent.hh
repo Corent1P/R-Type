@@ -18,7 +18,7 @@ namespace RType {
         E_BOSS,
         E_BUTTON,
         E_LAYER,
-        E_WEAPON,
+        E_BULLET,
         E_POWER_UP,
     };
 

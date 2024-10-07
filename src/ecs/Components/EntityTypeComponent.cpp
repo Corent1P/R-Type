@@ -79,8 +79,8 @@ std::string RType::EntityTypeComponent::getOutput() const
         case E_LAYER:
             entityType = "layer";
             break;
-        case E_WEAPON:
-            entityType = "weapon";
+        case E_BULLET:
+            entityType = "bullet";
             break;
         case E_POWER_UP:
             entityType = "power up";

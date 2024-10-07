@@ -8,37 +8,46 @@
 #include "Coordinator.hh"
 
 RType::Coordinator::Coordinator():
-    _idEntities(0)
+    _mtx(std::make_shared<std::mutex>()), _idEntities(0)
 {
 }
 
 std::shared_ptr<RType::Entity> RType::Coordinator::generateNewEntity(uint16_t serverId) {
-    std::shared_ptr<Entity> newEntity = std::make_unique<Entity>(_idEntities++, serverId);
+    std::unique_lock<std::mutex> lock(*_mtx);
+
+    std::shared_ptr<Entity> newEntity = std::make_shared<Entity>(_idEntities++, _mtx, serverId);
     _entities.push_back(newEntity);
     return (newEntity);
 }
 
 void RType::Coordinator::generateNewSystem(std::shared_ptr<ISystem> sys) {
+    std::unique_lock<std::mutex> lock(*_mtx);
     _systems.push_back(sys);
 }
 
-std::vector<std::shared_ptr<RType::Entity>> RType::Coordinator::getEntities() const
+const std::vector<std::shared_ptr<RType::Entity>> &RType::Coordinator::getEntities() const
 {
+    std::unique_lock<std::mutex> lock(*_mtx);
     return _entities;
 }
 
-std::vector<std::shared_ptr<RType::ISystem>> RType::Coordinator::getSystems() const
+const std::vector<std::shared_ptr<RType::ISystem>> &RType::Coordinator::getSystems() const
 {
+    std::unique_lock<std::mutex> lock(*_mtx);
     return _systems;
 }
 
 std::shared_ptr<RType::Entity> RType::Coordinator::addEntity(void)
 {
+    std::unique_lock<std::mutex> lock(*_mtx);
     return generateNewEntity(-1);
 }
 
 void RType::Coordinator::deleteEntity(std::shared_ptr<Entity> entityToDestroy)
 {
+    std::cout << "delete: " << entityToDestroy->getId() << std::endl;
+    std::unique_lock<std::mutex> lock(*_mtx);
+    // entityToDestroy->clearComponents();
     auto it = std::find(_entities.begin(), _entities.end(), entityToDestroy);
     if (it != _entities.end()) {
         _entities.erase(it);

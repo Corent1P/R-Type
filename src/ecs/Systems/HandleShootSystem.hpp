@@ -19,18 +19,20 @@
 #include ".././Components/TextureComponent.hh"
 #include ".././Components/ClockComponent.hh"
 #include ".././Components/VelocityComponent.hh"
+#include "../../client/Game.hh"
 
 namespace RType {
 
     class HandleShootSystem: public  RType::ASystem {
         public:
-            HandleShootSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
+            HandleShootSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::shared_ptr<RType::Client> client);
             ~HandleShootSystem();
             void effects(std::vector<std::shared_ptr<RType::Entity>> entities);
             void effect(std::shared_ptr<RType::Entity> entity);
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
         protected:
         private:
+            std::shared_ptr<RType::Client> _client;
     };
 }
 #endif /* !HANDLESHOOTSYTEM_HPP_ */

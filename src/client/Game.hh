@@ -60,24 +60,27 @@ namespace RType {
             Game(boost::asio::io_context &ioContext, const std::string &host, const std::string &port);
             ~Game();
             void gameLoop();
-            Coordinator getCoordinator() const;
+            const Coordinator &getCoordinator() const;
         private:
             void loopReceive();
             void createPlayer();
             void createPlayer(long serverId, long posX, long posY);
-            void createMob();
             void createMob(long serverId, long posX, long posY);
-            void createBoss();
+            void createBullet(long serverId, long posX, long posY);
             void createWindow();
             void createGameSystem();
             void createParallaxBackground(std::shared_ptr<RType::Entity> window);
             void createParallaxEntity(const std::string &path, const int &posX, const int &posY,
                 const int &winMaxX, const int &winMaxY, const int &index, const int &level);
+            std::shared_ptr<RType::TextureComponent> getTextureComponent(const std::string &path);
+
             RType::Coordinator _coord;
             std::shared_ptr<RType::Client> _client;
             bool _stopLoop;
             std::jthread _receipter;
             bool _initConnection;
+            std::unordered_map<std::string, std::shared_ptr<RType::TextureComponent>> _texturesMap;
+
     };
 }
 

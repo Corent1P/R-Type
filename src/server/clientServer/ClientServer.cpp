@@ -64,7 +64,7 @@ void RType::ClientServer::sendMessage(udp::socket &socket, const std::basic_stri
 void RType::ClientServer::sendCallback(const std::string &, const boost::system::error_code &error, std::size_t bytesTransferred)
 {
 	if (!error) {
-        std::cout << "Sent response to client, bytes transferred: " << bytesTransferred << std::endl;
+        // std::cout << "Sent response to client, bytes transferred: " << bytesTransferred << std::endl;
     } else {
         std::cout << "Error on send: " << error.message() << std::endl;
     }
@@ -73,7 +73,7 @@ void RType::ClientServer::sendCallback(const std::string &, const boost::system:
 void RType::ClientServer::sendCallback(const std::basic_string<unsigned char> &, const boost::system::error_code &error, std::size_t bytesTransferred)
 {
 	if (!error) {
-        std::cout << "Sent response to client, bytes transferred: " << bytesTransferred << std::endl;
+        // std::cout << "Sent response to client, bytes transferred: " << bytesTransferred << std::endl;
     } else {
         std::cout << "Error on send: " << error.message() << std::endl;
     }
