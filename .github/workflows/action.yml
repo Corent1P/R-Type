@@ -31,8 +31,7 @@ jobs:
                   ~/.conan2
                   ${{github.workspace}}/build
                 key: ${{ runner.os }}-dependencies-${{ hashFiles('**/conanfile.txt') }}
-                restore-keys: |
-                  ${{ runner.os }}-dependencies-${{ hashFiles('**/conanfile.txt') }}
+                restore-keys: ${{ runner.os }}-dependencies-
 
 
             - name: Install dependencies
