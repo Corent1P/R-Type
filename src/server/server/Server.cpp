@@ -42,26 +42,16 @@ void RType::Server::handleReceive(const boost::system::error_code &error, std::s
     if (!connectedClient)
         connectedClient = createClient();
 
-    // ! TO REORGANISE {
-    // connectedClient->sendMessage(_socket, Encoder::movePlayer(receivInfo.second[0], receivInfo.second[1]));
-    if (receivInfo.first == MOVE_PLAYER) {
-        std::shared_ptr<ICommand> moveCommand = _commandFactory.createCommand(receivInfo);
-        moveCommand->execute(connectedClient,
+    std::shared_ptr<ICommand> com = _commandFactory.createCommand(receivInfo);
+    if (!com) {
+        connectedClient->sendMessage(_socket, Encoder::header(0, RType::ERROR)); //TODO: create an error in the encoder and decoder
+        std::cout << "unvalid command sent by client" << std::endl;
+    } else {
+        com->execute(connectedClient,
             [this, &connectedClient](const std::basic_string<unsigned char>& message) { connectedClient->sendMessage(_socket, message); },
             [this](const std::basic_string<unsigned char>& message) { sendToAllClient(message); });
-    } else if (receivInfo.first == DISCONNEXION) {
-        removeClient();
     }
-    // std::shared_ptr<ICommand> com = _commandFactory.createCommand(command);
-    // std::string response;
-    // if (!com)
-    //     response = "Unvalid Command\n";
-    // else {
-    //     com->execute(_socket, connectedClient);
-    //     response = makeDaytimeString();
-    // }
-    // connectedClient->sendMessage(_socket, response);
-    // ! }
+    // TODO: handle player disconection (for the moment, no disconnection because _clients are not accessible in the command execution)
     startReceive();
 }
 

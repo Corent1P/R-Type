@@ -8,7 +8,17 @@
 #pragma once
 
 #include "../ICommand.hh"
+#include "../commands/ConnexionCommand.hh"
+#include "../commands/DisconnexionCommand.hh"
+#include "../commands/NewEntityCommand.hh"
+#include "../commands/DeleteEntityCommand.hh"
+#include "../commands/MoveEntityCommand.hh"
+#include "../commands/InfoLevelCommand.hh"
+#include "../commands/InfoEntityCommand.hh"
 #include "../commands/MovePlayerCommand.hh"
+#include "../commands/ActionPlayerCommand.hh"
+#include "../commands/GameStartCommand.hh"
+#include "../commands/GameEndCommand.hh"
 #include "../../Error.hh"
 
 namespace RType {

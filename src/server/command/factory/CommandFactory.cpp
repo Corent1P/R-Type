@@ -10,10 +10,18 @@
 // TODO: check if the throw error is catch or not
 RType::CommandFactory::CommandFactory()
 {
+    // TODO implement the commands
+    _constructors.insert({CONNEXION, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new ConnexionCommand(data));}});
+    _constructors.insert({DISCONNEXION, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new DisconnexionCommand(data));}});
+    _constructors.insert({NEW_ENTITY, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new NewEntityCommand(data));}});
+    _constructors.insert({DELETE_ENTITY, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new DeleteEntityCommand(data));}});
+    _constructors.insert({MOVE_ENTITY, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new MoveEntityCommand(data));}});
+    _constructors.insert({INFO_LEVEL, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new InfoLevelCommand(data));}});
+    _constructors.insert({INFO_ENTITY, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new InfoEntityCommand(data));}});
     _constructors.insert({MOVE_PLAYER, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new MovePlayerCommand(data));}});
-    // TODO implement the other commands
-    // _constructors.insert({SHOOT, [](std::string data){return std::shared_ptr<ICommand>(new ShootCommand(data));}});
-    // _constructors.insert({START, [](std::string data){return std::shared_ptr<ICommand>(new StartCommand(data));}});
+    _constructors.insert({ACTION_PLAYER, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new ActionPlayerCommand(data));}});
+    _constructors.insert({GAME_START, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new GameStartCommand(data));}});
+    _constructors.insert({GAME_END, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new GameEndCommand(data));}});
 }
 
 std::shared_ptr<RType::ICommand> RType::CommandFactory::createCommand(const std::pair<RType::PacketType, std::vector<long>> &command)
