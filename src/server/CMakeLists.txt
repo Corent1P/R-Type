@@ -2,7 +2,7 @@ set(SRC_SERVER
     ./main.cpp
     ./Error.cpp
     ./server/Server.cpp
-    ./client/Client.cpp
+    ./clientServer/ClientServer.cpp
     ./command/ACommand.cpp
     ./command/factory/CommandFactory.cpp
     ./command/commands/ConnexionCommand.cpp
@@ -29,6 +29,7 @@ target_compile_options(r-type_server PRIVATE
 )
 
 target_link_libraries(r-type_server PRIVATE
+    ecs
     Boost::boost
     sfml-system
     sfml-window

@@ -13,7 +13,7 @@ RType::MoveEntityCommand::MoveEntityCommand(const std::vector<long> &arguments):
     std::cout << "MoveEntityCommand command created" << std::endl;
 }
 
-void RType::MoveEntityCommand::execute(std::shared_ptr<Client> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll)
+void RType::MoveEntityCommand::execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll)
 {
     std::cout << "execution of move entity command" << std::endl;
 }

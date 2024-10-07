@@ -14,6 +14,8 @@
 #include ".././Components/DirectionComponent.hh"
 #include ".././Components/EntityTypeComponent.hh"
 #include ".././Components/SpriteComponent.hh"
+#include ".././Components/ActionComponent.hh"
+#include ".././Components/ClockComponent.hh"
 
 #define GET_WINDOW_SET_ISOPEN entity->getComponent<RType::SFWindowComponent>()
 #define GET_WINDOW_POLL_EVENT e->getComponent<RType::SFWindowComponent>()->getWindow()

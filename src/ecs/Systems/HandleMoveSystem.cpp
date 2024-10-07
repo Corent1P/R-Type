@@ -8,12 +8,18 @@
 #include "HandleMoveSystem.hpp"
 
 RType::HandleMoveSystem::HandleMoveSystem():
-    ASystem(MOVE), _client(nullptr)
+    ASystem(S_MOVE), _client(nullptr), _sendMessageToAllClient(nullptr)
 {
 }
 
 RType::HandleMoveSystem::HandleMoveSystem(std::shared_ptr<RType::Client> client):
-    ASystem(MOVE), _client(client)
+    ASystem(S_MOVE), _client(client), _sendMessageToAllClient(nullptr)
+{
+
+}
+
+RType::HandleMoveSystem::HandleMoveSystem(std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient):
+    ASystem(S_MOVE), _client(nullptr), _sendMessageToAllClient(sendMessageToAllClient)
 {
 }
 
@@ -30,26 +36,52 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
                     auto spriteBounds = entity->getComponent<RType::SpriteComponent>()->getSprite()->getGlobalBounds();
                     float windowHeight = window->getComponent<RType::SFWindowComponent>()->getWindow()->getSize().y;
                     float windowWidth = window->getComponent<RType::SFWindowComponent>()->getWindow()->getSize().x;
-                    if (entity->getComponent<RType::DirectionComponent>()->getDirections(LEFT) == true && spriteBounds.left > 0) {
-                        entity->getComponent<RType::SpriteComponent>()->getSprite()->move(-10, 0);
-                        movePosition.first += -100;
+                    int speed = entity->getComponent<VelocityComponent>()->getVelocity();;
+                    if (entity->getComponent<RType::DirectionComponent>()->getDirections(LEFT) == true) {
+                        entity->getComponent<RType::SpriteComponent>()->getSprite()->move((speed * -1), 0);
+                        if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_PLAYER)
+                            movePosition.first -= speed * 10;
                     }
                     if (entity->getComponent<RType::DirectionComponent>()->getDirections(RIGHT) == true && spriteBounds.left + spriteBounds.width < windowWidth) {
-                        entity->getComponent<RType::SpriteComponent>()->getSprite()->move(10, 0);
-                        movePosition.first += 100;
+                        entity->getComponent<RType::SpriteComponent>()->getSprite()->move(speed, 0);
+                                                if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_PLAYER)
+                            movePosition.first += speed * 10;
                     }
                     if (entity->getComponent<RType::DirectionComponent>()->getDirections(UP) == true && spriteBounds.top > 0) {
-                        entity->getComponent<RType::SpriteComponent>()->getSprite()->move(0, -10);
-                        movePosition.second += -100;
-
+                        entity->getComponent<RType::SpriteComponent>()->getSprite()->move(0, (speed * -1));
+                        if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_PLAYER)
+                            movePosition.second -= speed * 10;
                     }
                     if (entity->getComponent<RType::DirectionComponent>()->getDirections(DOWN) == true && spriteBounds.top + spriteBounds.height < windowHeight) {
-                        entity->getComponent<RType::SpriteComponent>()->getSprite()->move(0, 10);
-                        movePosition.second += 100;
+                        entity->getComponent<RType::SpriteComponent>()->getSprite()->move(0, speed);
+                        if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_PLAYER)
+                            movePosition.second += speed * 10;
                     }
-                    if (_client && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == PLAYER && (movePosition.first != 0 ||  movePosition.second != 0)) {
-                        // std::cout << "Move " + std::to_string(movePosition.first) + " " +  std::to_string(movePosition.second) << std::endl;
+
+                    if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_WEAPON && entity->getComponent<RType::DirectionComponent>()->getDirections(LEFT) == true && spriteBounds.left > 0) {
+                        entity->getComponent<RType::SpriteComponent>()->getSprite()->move((speed * -1), 0);
+                    } else if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_WEAPON && entity->getComponent<RType::DirectionComponent>()->getDirections(LEFT) == true && spriteBounds.left < 0) {
+                        entity->~Entity();
+                    }
+                    if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_WEAPON && entity->getComponent<RType::DirectionComponent>()->getDirections(RIGHT) == true && spriteBounds.left + spriteBounds.width < windowWidth) {
+                        entity->getComponent<RType::SpriteComponent>()->getSprite()->move(speed, 0);
+                    } else if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_WEAPON && entity->getComponent<RType::DirectionComponent>()->getDirections(RIGHT) == true && spriteBounds.left + spriteBounds.width > windowWidth){
+                        entity->~Entity();
+                    }
+
+                    if (entity->getComponent<EntityTypeComponent>()->getEntityType() == RType::E_LAYER) {
+                        int entityPos = (ENTITY_SPRITE->getGlobalBounds().left + ENTITY_SPRITE->getGlobalBounds().width);
+                        if (entityPos < 0) {
+                            ENTITY_SPRITE->setPosition(sf::Vector2f(window->getComponent<SFWindowComponent>()->getWindow()->getSize().x - 5, 0));
+                        }
+                    }
+                    if (_client && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER && (movePosition.first != 0 ||  movePosition.second != 0)) {
                         _client->send(Encoder::movePlayer(movePosition.first, movePosition.second));
+                    }
+
+                    if (_sendMessageToAllClient) {
+                        std::cout << "send: " << entity->getId() << " " << entity->getComponent<RType::SpriteComponent>()->getSprite()->getPosition().x << " " << entity->getComponent<RType::SpriteComponent>()->getSprite()->getPosition().y << std::endl;
+                        _sendMessageToAllClient(Encoder::moveEntity(entity->getId(), entity->getComponent<RType::SpriteComponent>()->getSprite()->getPosition().x, entity->getComponent<RType::SpriteComponent>()->getSprite()->getPosition().y, 0));
                     }
                 }
             }
@@ -80,7 +112,7 @@ void RType::HandleMoveSystem::effect(std::shared_ptr<RType::Entity> entity)
 
 bool RType::HandleMoveSystem::verifyRequiredComponent(std::shared_ptr<RType::Entity> entity)
 {
-    if (entity->getComponent<RType::DirectionComponent>() == nullptr || entity->getComponent<RType::SpriteComponent>() == nullptr)
+    if ( entity->getComponent<VelocityComponent>() == nullptr || entity->getComponent<RType::DirectionComponent>() == nullptr || entity->getComponent<RType::SpriteComponent>() == nullptr)
     {
         return false;
     }

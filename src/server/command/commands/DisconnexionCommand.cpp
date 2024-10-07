@@ -13,7 +13,7 @@ RType::DisconnexionCommand::DisconnexionCommand(const std::vector<long> &argumen
     std::cout << "Disconnexion command created" << std::endl;
 }
 
-void RType::DisconnexionCommand::execute(std::shared_ptr<Client> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll)
+void RType::DisconnexionCommand::execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll)
 {
     std::cout << "execution of disconnexion command" << std::endl;
 }

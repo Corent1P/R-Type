@@ -13,10 +13,10 @@ RType::MovePlayerCommand::MovePlayerCommand(const std::vector<long> &data):
     std::cout << "Move command created" << std::endl;
 }
 
-void RType::MovePlayerCommand::execute(std::shared_ptr<Client> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll)
+void RType::MovePlayerCommand::execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll)
 {
     std::cout << "execution of move command" << std::endl;
-    std::pair<double, double> position = client->getPosition();
+    std::pair<double, double> position = {client->getEntity()->getComponent<PositionComponent>()->getPositions().x, client->getEntity()->getComponent<PositionComponent>()->getPositions().y};
     position.first += ((double)_data[0]) / 10.;
     position.second += ((double)_data[1]) / 10.;
     if (position.first < 0.)
@@ -27,6 +27,6 @@ void RType::MovePlayerCommand::execute(std::shared_ptr<Client> client, FUNCTION_
         position.second = 0.;
     if (position.second > 1080.)
         position.second = 1080.;
-    client->setPosition(position);
-    sendToAll(Encoder::moveEntity(client->getId(), position.first, position.second, 0));
+    client->getEntity()->getComponent<PositionComponent>()->setPositions(position.first, position.second);
+    sendToAll(Encoder::moveEntity(client->getEntity()->getId(), position.first, position.second, 0));
 }

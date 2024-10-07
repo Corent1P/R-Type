@@ -8,7 +8,7 @@
 #include "HandleDrawSystem.hpp"
 
 RType::HandleDrawSystem::HandleDrawSystem():
-    ASystem(DRAW)
+    ASystem(S_DRAW)
 {
 }
 
@@ -19,7 +19,6 @@ RType::HandleDrawSystem::~HandleDrawSystem()
 
 void RType::HandleDrawSystem::effects(std::vector<std::shared_ptr<RType::Entity>> entities)
 {
-    
     for (const auto &w: entities) {
         if (GET_WINDOW_FOR_DRAW != nullptr) {
             GET_WINDOW_FOR_DRAW->getWindow()->clear();
@@ -45,5 +44,9 @@ bool RType::HandleDrawSystem::verifyRequiredComponent(std::shared_ptr<RType::Ent
     ||entity->getComponent<RType::SpriteComponent>() == nullptr) {
         return false;
     }
+    if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_LAYER
+        && entity->getComponent<RType::LevelComponent>()->getLevel() != 1)
+        return false;
+
     return (true);
 }

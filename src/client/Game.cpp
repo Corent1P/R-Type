@@ -13,7 +13,6 @@ RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, c
     _client->send(Encoder::connexion());
     createWindow();
     createPlayer();
-    createMob();
     createGameSystem();
     _stopLoop = false;
     _receipter = std::jthread(&Game::loopReceive, this);
@@ -35,14 +34,51 @@ RType::Coordinator RType::Game::getCoordinator() const
 
 void RType::Game::gameLoop()
 {
-    while (!_stopLoop) {
-        for (auto sys: _coord.getSystems()) {
-            sys->effects(_coord.getEntities());
+    std::shared_ptr<RType::ISystem> drawSystem = nullptr;
+    std::shared_ptr<RType::Entity> clockEntity = nullptr;
+    float logicTime = 0.0;
+    float renderTime = 0.0;
+    float deltaTime = 0.0;
+
+    for (auto sys : _coord.getSystems()) {
+        if (sys->getType() == SystemType::S_DRAW) {
+            drawSystem = sys;
+            break;
         }
+    }
+
+    for (auto entity: _coord.getEntities()) {
+        if (entity->getComponent<RType::SFWindowComponent>() != nullptr && entity->getComponent<RType::ClockComponent>() != nullptr) {
+            clockEntity = entity;
+            break;
+        }
+    }
+
+    while (!_stopLoop) {
+        deltaTime = clockEntity->getComponent<RType::ClockComponent>()->getClock(LOGIC_CLOCK).restart().asSeconds();
+        logicTime += deltaTime;
+        while (logicTime >= FRAME_TIME_LOGIC) {
+            for (auto sys : _coord.getSystems())
+                if (sys->getType() != SystemType::S_DRAW)
+                    sys->effects(_coord.getEntities());
+            logicTime -= FRAME_TIME_LOGIC;
+        }
+
+        renderTime += deltaTime;
+        if (renderTime >= RENDER_FRAME_TIME) {
+            if (drawSystem != nullptr) {
+                drawSystem->effects(_coord.getEntities());
+            }
+            renderTime = 0.0;
+        }
+
         for (auto entity : _coord.getEntities()) {
-            if (entity->getComponent<RType::SFWindowComponent>() && !entity->getComponent<RType::SFWindowComponent>()->getIsOpen()) {
+            auto windowComp = entity->getComponent<RType::SFWindowComponent>();
+
+            if (windowComp != nullptr && !windowComp->getIsOpen()) {
                 _client->cancel();
                 _stopLoop = true;
+                break;
             }
         }
     }
@@ -57,13 +93,16 @@ void RType::Game::loopReceive()
             std::cout << "Message received = " << receivInfo.first << " move with coordinates " << receivInfo.second[0] << ":" << receivInfo.second[1] << std::endl;
 
         if (receivInfo.first == NEW_ENTITY) {
-            if (_initConnection)
-                createPlayer(receivInfo.second[1], receivInfo.second[2], receivInfo.second[3]);
-            else {
+            if (_initConnection) {
+                if (receivInfo.second[0] == E_PLAYER)
+                    createPlayer(receivInfo.second[1], receivInfo.second[2], receivInfo.second[3]);
+                if (receivInfo.second[0] == E_MOB)
+                    createMob(receivInfo.second[1], receivInfo.second[2], receivInfo.second[3]);
+            } else {
                 _initConnection = true;
                 auto entities = _coord.getEntities();
                 for (const auto &entity : entities) {
-                    if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == PLAYER)
+                    if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER)
                         entity->setServerId(receivInfo.second[1]);
                 }
             }
@@ -93,7 +132,7 @@ void RType::Game::createPlayer()
 {
     std::shared_ptr<RType::Entity> player = _coord.generateNewEntity();
 
-    player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::PLAYER));
+    player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_PLAYER));
     std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(10, 10));
     player->pushComponent(std::make_shared<RType::HealthComponent>(25));
     std::shared_ptr<RType::TextureComponent> texture = player->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/player-sheet.png"));
@@ -101,13 +140,15 @@ void RType::Game::createPlayer()
     player->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(), sf::Vector2f(2, 2), sf::IntRect(0, 0, 26, 21)));
     player->pushComponent(std::make_shared<RType::DirectionComponent>());
     player->pushComponent(std::make_shared<RType::ClockComponent>());
+    player->pushComponent(std::make_shared<RType::ActionComponent>());
+    player->pushComponent(std::make_shared<VelocityComponent>(10));
 }
 
 void RType::Game::createPlayer(long serverId, long posX, long posY)
 {
     std::shared_ptr<RType::Entity> player = _coord.generateNewEntity(serverId);
 
-    player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::ALLIES));
+    player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_ALLIES));
     std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
     player->pushComponent(std::make_shared<RType::HealthComponent>(25));
     std::shared_ptr<RType::TextureComponent> texture = player->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/player-sheet.png"));
@@ -121,43 +162,50 @@ void RType::Game::createWindow()
 {
     std::shared_ptr<RType::Entity> window = _coord.generateNewEntity();
 
-    window->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::WINDOW));
+    window->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_WINDOW));
     window->pushComponent(std::make_shared<RType::SFWindowComponent>(1920, 1080));
     window->pushComponent(std::make_shared<RType::EventComponent>());
+    window->pushComponent(std::make_shared<RType::ClockComponent>());
+    createParallaxBackground(window);
 }
 
 void RType::Game::createMob()
 {
-    std::shared_ptr<RType::Entity> player = _coord.generateNewEntity();
+    std::shared_ptr<RType::Entity> mob = _coord.generateNewEntity();
 
-    player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::MOB));
-    player->pushComponent(std::make_shared<RType::PositionComponent>(2000, 800));
-    player->pushComponent(std::make_shared<RType::HealthComponent>(5));
+    mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_MOB));
+    mob->pushComponent(std::make_shared<RType::PositionComponent>(2000, 800));
+    mob->pushComponent(std::make_shared<RType::HealthComponent>(5));
 
-    std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(500, 500));
-    std::shared_ptr<RType::TextureComponent> texture = player->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/enemy-sheet.png"));
-    player->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(), sf::Vector2f(2, 2), sf::IntRect(0, 0, 29, 29)));
-    player->pushComponent(std::make_shared<RType::DirectionComponent>());
-    player->pushComponent(std::make_shared<RType::ClockComponent>());
+    std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(500, 500));
+    std::shared_ptr<RType::TextureComponent> texture = mob->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/enemy-sheet.png"));
+    mob->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(), sf::Vector2f(2, 2), sf::IntRect(0, 0, 29, 29)));
+    mob->pushComponent(std::make_shared<RType::DirectionComponent>());
+    mob->pushComponent(std::make_shared<RType::ClockComponent>());
+    mob->pushComponent(std::make_shared<VelocityComponent>(5));
+}
 
-    std::shared_ptr<RType::Entity> player2 = _coord.generateNewEntity();
+void RType::Game::createMob(long serverId, long posX, long posY)
+{
+    std::shared_ptr<RType::Entity> mob = _coord.generateNewEntity(serverId);
 
-    player2->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::MOB));
-    player2->pushComponent(std::make_shared<RType::PositionComponent>(2000, 800));
-    player2->pushComponent(std::make_shared<RType::HealthComponent>(5));
+    mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_MOB));
+    mob->pushComponent(std::make_shared<RType::PositionComponent>(2000, 800));
+    mob->pushComponent(std::make_shared<RType::HealthComponent>(5));
 
-    std::shared_ptr<RType::PositionComponent> position2 = player2->pushComponent(std::make_shared<RType::PositionComponent>(300, 700));
-    std::shared_ptr<RType::TextureComponent> texture2 = player2->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/fly-sheet.png"));
-    player2->pushComponent(std::make_shared<RType::SpriteComponent>(texture2->getTexture(), position2->getPositions(), sf::Vector2f(2, 2), sf::IntRect(0, 0, 65, 74)));
-    player2->pushComponent(std::make_shared<RType::DirectionComponent>());
-    player2->pushComponent(std::make_shared<RType::ClockComponent>());
+    std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
+    std::shared_ptr<RType::TextureComponent> texture = mob->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/enemy-sheet.png"));
+    mob->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(), sf::Vector2f(2, 2), sf::IntRect(0, 0, 29, 29)));
+    mob->pushComponent(std::make_shared<RType::DirectionComponent>());
+    mob->pushComponent(std::make_shared<RType::ClockComponent>());
+    mob->pushComponent(std::make_shared<VelocityComponent>(5));
 }
 
 void RType::Game::createBoss()
 {
     std::shared_ptr<RType::Entity> player = _coord.generateNewEntity();
 
-    player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::BOSS));
+    player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BOSS));
     player->pushComponent(std::make_shared<RType::PositionComponent>(2000, 545));
     player->pushComponent(std::make_shared<RType::HealthComponent>(250));
 }
@@ -168,6 +216,74 @@ void RType::Game::createGameSystem()
     _coord.generateNewSystem(std::make_shared<HandleDrawSystem>());
     _coord.generateNewSystem(std::make_shared<HandleMoveSystem>(_client));
     _coord.generateNewSystem(std::make_shared<HandleAnimationSystem>());
+}
+
+void RType::Game::createParallaxBackground(std::shared_ptr<RType::Entity> window)
+{
+    std::shared_ptr<RType::Entity> backgrounds;
+    std::shared_ptr<RType::TextureComponent> texture;
+    float winMaxX = window->getComponent<RType::SFWindowComponent>()->getWindow()->getSize().x;
+    float winMaxY = window->getComponent<RType::SFWindowComponent>()->getWindow()->getSize().y;
+    std::shared_ptr<RType::PositionComponent> position;
+    std::unordered_map<Backgrounds, std::vector<std::string>> bgMap =
+    {
+        {Backgrounds::PURPLEBG, {"./ressources/parallax/purple/back.png", "./ressources/parallax/purple/front.png"}},
+        {Backgrounds::BLUEBG, {"./ressources/parallax/blue/back.png", "./ressources/parallax/blue/mid.png", "./ressources/parallax/blue/front.png"}},
+        {Backgrounds::REDBG, {"./ressources/parallax/red/back.png", "./ressources/parallax/red/stars.png", "./ressources/parallax/red/mid.png", "./ressources/parallax/red/front.png"}},
+        {Backgrounds::SATURNBG, {"./ressources/parallax/saturn/back.png", "./ressources/parallax/blue/mid.png", "./ressources/parallax/saturn/front.png"}},
+        // {Backgrounds::BROWNBG, 6},
+        {Backgrounds::GREENBG, {"./ressources/parallax/green/back.png", "./ressources/parallax/green/mid.png", "./ressources/parallax/green/front.png"}}
+    };
+    for (std::size_t i = 0; i < bgMap.size(); i++) {
+        for (std::size_t j = 0; j < bgMap[static_cast<Backgrounds>(i)].size(); j++) {
+            createParallaxEntity(bgMap[static_cast<Backgrounds>(i)][j], 0, 0, winMaxX, winMaxY, j, i + 1);
+            createParallaxEntity(bgMap[static_cast<Backgrounds>(i)][j], winMaxX, 0, winMaxX, winMaxY, j, i + 1);
+        }
+    }
+}
+
+void RType::Game::createParallaxEntity(const std::string &path, const int &posX, const int &posY,
+    const int &winMaxX,const int &winMaxY, const int &index, const int &level)
+{
+    std::shared_ptr<RType::Entity> backgrounds = _coord.generateNewEntity();
+    std::shared_ptr<RType::TextureComponent> texture = backgrounds->pushComponent(CREATE_TEXTURE(path));
+    std::shared_ptr<RType::PositionComponent> position = backgrounds->pushComponent(CREATE_POS_COMPONENT(posX, posY));
+    float spriteHeight = 0.;
+    float spriteWidth = 0.;
+
+    backgrounds->pushComponent(CREATE_ENTITY_TYPE(RType::E_LAYER));
+    backgrounds->pushComponent(std::make_shared<SpriteComponent>(texture->getTexture(),
+        position->getPositions()));
+    spriteWidth = backgrounds->getComponent<TextureComponent>()->getTexture()->getSize().x;
+    spriteHeight = backgrounds->getComponent<TextureComponent>()->getTexture()->getSize().y;
+    backgrounds->getComponent<SpriteComponent>()->getSprite()->setScale(sf::Vector2f(float(winMaxX / spriteWidth), float(winMaxY / spriteHeight)));
+    auto dir = backgrounds->pushComponent(std::make_shared<RType::DirectionComponent>());
+    dir->setDirections(LEFT, true);
+    backgrounds->pushComponent(std::make_shared<VelocityComponent>(index + 1));
+    backgrounds->pushComponent(std::make_shared<LevelComponent>(level));
+}
+
+void  RType::Game::handleShot()
+{
+    for (const auto &entities : _coord.getEntities()) {
+        if (entities->getComponent<RType::ActionComponent>() != nullptr
+        && entities->getComponent<RType::SpriteComponent>() != nullptr) {
+            if (entities->getComponent<RType::ActionComponent>()->getActions(RType::SHOOTING) == true) {
+                std::cout << "New shot!" << std::endl;
+                entities->getComponent<RType::ActionComponent>()->setActions(RType::SHOOTING, false);
+                std::shared_ptr<RType::Entity> shot = _coord.generateNewEntity();
+
+                shot->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_WEAPON));
+                std::shared_ptr<RType::PositionComponent> position = shot->pushComponent(std::make_shared<RType::PositionComponent>(entities->getComponent<SpriteComponent>()->getSprite()->getPosition().x, entities->getComponent<SpriteComponent>()->getSprite()->getPosition().y));
+                std::shared_ptr<RType::TextureComponent> texture = shot->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/shoot-spritesheet.png"));
+                shot->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(), sf::Vector2f(2, 2), sf::IntRect(0, 0, 19, 6)));
+                shot->pushComponent(std::make_shared<RType::DirectionComponent>(RType::RIGHT));
+                shot->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, true);
+                shot->pushComponent(std::make_shared<RType::ClockComponent>());
+                shot->pushComponent(std::make_shared<VelocityComponent>(20));
+            }
+        }
+    }
 }
 
 std::ostream &operator<<(std::ostream &s, const RType::Game &game)

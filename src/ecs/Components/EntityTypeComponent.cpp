@@ -26,25 +26,48 @@ RType::EntityType RType::EntityTypeComponent::getEntityType() const
 	return _entityType;
 }
 
+void RType::EntityTypeComponent::setWeaponType(WeaponType weaponType) 
+{
+    _weaponType = weaponType;
+}
+
+RType::WeaponType RType::EntityTypeComponent::getWeaponType() const 
+{
+    return(_weaponType);
+}
+
+void RType::EntityTypeComponent::setPowerUpType(PowerUpType powerUpType) 
+{
+    _powerUpType = powerUpType;
+}
+
+RType::PowerUpType RType::EntityTypeComponent::getPowerUpType() const 
+{
+    return(_powerUpType);
+}
+
 std::string RType::EntityTypeComponent::getOutput() const
 {
     std::string entityType("");
     switch (_entityType)
         {
-        case WINDOW:
+        case E_WINDOW:
             entityType = "window";
             break;
-        case PLAYER:
+        case E_PLAYER:
             entityType = "player";
             break;
-        case MOB:
+        case E_MOB:
             entityType = "mob";
             break;
-        case BOSS:
+        case E_BOSS:
             entityType = "boss";
             break;
-        case BUTTON:
+        case E_BUTTON:
             entityType = "button";
+            break;
+        case E_LAYER:
+            entityType = "layer";
             break;
         default:
             entityType = "unknown";

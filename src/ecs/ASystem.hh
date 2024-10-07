@@ -12,7 +12,7 @@
 namespace RType {
     class ASystem: public ISystem {
         public:
-            ASystem(SystemType type = BASIC);
+            ASystem(SystemType type = S_BASIC);
             ~ASystem() = default;
             void effects(std::vector<std::shared_ptr<RType::Entity>> entities);
             void effect(std::shared_ptr<RType::Entity> entity);
