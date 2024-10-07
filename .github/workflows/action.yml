@@ -37,7 +37,8 @@ jobs:
             - name: Configure Cmake
               run: |
                 mkdir build
-                cmake ./build -DCMAKE_TOOLCHAIN_FILE=build/Release/generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+                cd build
+                cmake .. -DCMAKE_TOOLCHAIN_FILE=build/Release/generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 
             - name: Cache CMake build
               uses: actions/cache@v3
