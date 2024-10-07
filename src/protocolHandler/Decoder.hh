@@ -9,10 +9,8 @@
 #pragma once
 
 #include "Encoder.hh"
-#include <utility>
-#include <vector>
 
-#define COMMAND_ARGS std::vector<long>
+#define COMMAND_ARGS std::vector<std::int16_t>
 
 /*
 * @brief Define the header of the packet,
@@ -164,5 +162,7 @@ namespace RType {
         * @return COMMAND_ARGS the content of the command
         */
         static COMMAND_ARGS error(U_STRING &packet);
+
+        static COMMAND_ARGS ACKMissing(U_STRING &packet);
     };
 }

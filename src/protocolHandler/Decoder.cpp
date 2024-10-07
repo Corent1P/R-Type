@@ -132,4 +132,19 @@ namespace RType {
         args[3] = packet[3] & 1;
         return args;
     }
+
+    COMMAND_ARGS Decoder::ACKMissing(U_STRING &packet)
+    {
+        COMMAND_ARGS args(PACKET_PER_TICK);
+        std::uint8_t nbMissing;
+
+        for (std::size_t i = 0; i < PACKET_PER_TICK; i++) {
+            if ((packet[i / 8 + 3] & (1 << (i % 8))) != 0) {
+                args[nbMissing] = i;
+                nbMissing++;
+            }
+        }
+        args.resize(nbMissing);
+        return args;
+    }
 }

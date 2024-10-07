@@ -7,11 +7,15 @@
 
 #pragma once
 
+#include <bitset>
 #include <cstdint>
 #include <iostream>
 #include <stdbool.h>
+#include <vector>
+#include <array>
 
 #define U_STRING std::basic_string<unsigned char>
+#define PACKET_PER_TICK 64
 
 namespace RType {
 
@@ -31,7 +35,8 @@ namespace RType {
         ACTION_PLAYER = 8,
         GAME_START = 9,
         GAME_END = 10,
-        ERROR = 11,
+        ACKMISSING = 11,
+        ERROR = 12,
     };
 
     /**
@@ -185,5 +190,14 @@ namespace RType {
         * @return U_STRING Encoded error packet
         */
         static U_STRING error(std::uint8_t packetNumber);
+
+        /**
+        * @brief Encode the ACK packet
+        *
+        *
+        * @return U_STRING Encoded ACK packet
+        */
+        static U_STRING ACKMissing(std::uint8_t packetNumber,
+                                   std::vector<std::uint8_t> &packets);
     };
 }
