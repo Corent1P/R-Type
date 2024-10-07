@@ -30,7 +30,7 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
     std::pair<int, int> movePosition(0, 0);
 
     for (const auto &entity: entities) {
-        std::cout << "HandleMoveSystem " << entity->getId() << std::endl;
+        // std::cout << "HandleMoveSystem " << entity->getId() << std::endl;
         if (verifyRequiredComponent(entity)) {
             int speed = entity->getComponent<VelocityComponent>()->getVelocity();;
             sf::Vector2 position = entity->getComponent<PositionComponent>()->getPositions();

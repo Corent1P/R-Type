@@ -20,7 +20,7 @@ void RType::HandleMoveSpriteSystem::effects(std::vector<std::shared_ptr<RType::E
     for (const auto &window: entities) {
         if (window->getComponent<RType::SFWindowComponent>() != nullptr) {
             for (const auto &entity: entities) {
-                std::cout << "HandleMoveSpriteSystem " << entity->getId() << std::endl;
+                // std::cout << "HandleMoveSpriteSystem " << entity->getId() << std::endl;
 
                 if (verifyRequiredComponent(entity)) {
                     auto spriteBounds = entity->getComponent<RType::SpriteComponent>()->getSprite()->getGlobalBounds();

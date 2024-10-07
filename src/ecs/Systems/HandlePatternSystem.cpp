@@ -18,7 +18,7 @@ RType::HandlePatternSystem::~HandlePatternSystem()
 
 void RType::HandlePatternSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
-    std::cout << "HandlePatternSystem " << entity->getId() << std::endl;
+    // std::cout << "HandlePatternSystem " << entity->getId() << std::endl;
 
 
     if (verifyRequiredComponent(entity)) {

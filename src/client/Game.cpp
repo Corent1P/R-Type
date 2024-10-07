@@ -58,6 +58,7 @@ void RType::Game::gameLoop()
         deltaTime = clockEntity->getComponent<RType::ClockComponent>()->getClock(LOGIC_CLOCK).restart().asSeconds();
         logicTime += deltaTime;
         while (logicTime >= FRAME_TIME_LOGIC) {
+            std::unique_lock<std::mutex> lock(_mtx);
             for (auto sys : _coord.getSystems())
                 if (sys->getType() != SystemType::S_DRAW)
                     sys->effects(_coord.getEntities());
@@ -67,6 +68,7 @@ void RType::Game::gameLoop()
         renderTime += deltaTime;
         if (renderTime >= RENDER_FRAME_TIME) {
             if (drawSystem != nullptr) {
+                std::unique_lock<std::mutex> lock(_mtx);
                 drawSystem->effects(_coord.getEntities());
             }
             renderTime = 0.0;
@@ -74,6 +76,7 @@ void RType::Game::gameLoop()
 
         for (auto entity : _coord.getEntities()) {
             // std::cout << *entity << std::endl;
+            std::unique_lock<std::mutex> lock(_mtx);
             auto windowComp = entity->getComponent<RType::SFWindowComponent>();
 
             if (windowComp != nullptr && !windowComp->getIsOpen()) {
@@ -95,6 +98,8 @@ void RType::Game::loopReceive()
 
         if (receivInfo.first == NEW_ENTITY) {
             if (_initConnection) {
+                std::unique_lock<std::mutex> lock(_mtx);
+
                 if (receivInfo.second[0] == E_PLAYER)
                     createPlayer(receivInfo.second[1], receivInfo.second[2], receivInfo.second[3]);
                 if (receivInfo.second[0] == E_MOB)
@@ -102,6 +107,7 @@ void RType::Game::loopReceive()
                 if (receivInfo.second[0] == E_BULLET)
                     createBullet(receivInfo.second[1], receivInfo.second[2], receivInfo.second[3]);
             } else {
+                std::unique_lock<std::mutex> lock(_mtx);
                 _initConnection = true;
                 auto entities = _coord.getEntities();
                 for (const auto &entity : entities) {
@@ -111,19 +117,25 @@ void RType::Game::loopReceive()
             }
         }
         if (receivInfo.first == DELETE_ENTITY) {
+
             auto entities = _coord.getEntities();
             for (const auto &entity : entities) {
+                std::unique_lock<std::mutex> lock(_mtx);
                 if (entity->getServerId() == receivInfo.second[0]) {
                     _coord.deleteEntity(entity);
+                    break;
                 }
             }
         }
         if (receivInfo.first == MOVE_ENTITY) {
+
             auto entities = _coord.getEntities();
             for (const auto &entity : entities) {
+                std::unique_lock<std::mutex> lock(_mtx);
                 if (entity->getServerId() == receivInfo.second[0]) {
                     entity->getComponent<RType::PositionComponent>()->setPositions(receivInfo.second[1], receivInfo.second[2]);
                     entity->getComponent<RType::SpriteComponent>()->getSprite()->setPosition(receivInfo.second[1], receivInfo.second[2]);
+                    break;
                 }
             }
         }
@@ -204,6 +216,7 @@ void RType::Game::createBullet(long serverId, long posX, long posY)
 
 void RType::Game::createGameSystem()
 {
+    std::unique_lock<std::mutex> lock(_mtx);
     _coord.generateNewSystem(std::make_shared<HandleEventSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
