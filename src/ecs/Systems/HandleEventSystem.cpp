@@ -8,7 +8,7 @@
 #include "HandleEventSystem.hpp"
 
 RType::HandleEventSystem::HandleEventSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
-    ASystem(EVENT, addEntity, deleteEntity), _isShooting(false)
+    ASystem(S_EVENT, addEntity, deleteEntity), _isShooting(false)
 {
 }
 
@@ -26,7 +26,7 @@ void RType::HandleEventSystem::effects(std::vector<std::shared_ptr<RType::Entity
                 }
                 for (const auto &player: entities) {
                     if (player->getComponent<RType::EntityTypeComponent>() != nullptr
-                    && player->getComponent<RType::EntityTypeComponent>()->getEntityType() == PLAYER
+                    && player->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER
                     && player->getComponent<RType::DirectionComponent>() != nullptr
                     && player->getComponent<RType::SpriteComponent>() != nullptr
                     && player->getComponent<RType::ActionComponent>() != nullptr

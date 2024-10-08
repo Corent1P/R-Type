@@ -10,17 +10,13 @@
 RType::Client::Client(boost::asio::io_context &ioContext, const std::string &host, const std::string &port):
     _ioContext(ioContext), _socket(ioContext, udp::endpoint(udp::v4(), 0))
 {
-    try {
-        udp::resolver resolver(_ioContext);
-		udp::resolver::query query(udp::v4(), host, port);
-        boost::system::error_code ec;
-		udp::resolver::results_type results = resolver.resolve(query, ec);
-        if (ec || results.empty())
-            throw ClientError("Unvalid connection");
-		_endpoint = *results;
-    } catch(std::exception &err) {
-        throw err;
-    }
+    udp::resolver resolver(_ioContext);
+    udp::resolver::query query(udp::v4(), host, port);
+    boost::system::error_code ec;
+    udp::resolver::results_type results = resolver.resolve(query, ec);
+    if (ec || results.empty())
+        throw ClientError("Unvalid connection");
+    _endpoint = *results;
 }
 
 RType::Client::~Client()
