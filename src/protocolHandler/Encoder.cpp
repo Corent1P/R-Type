@@ -28,13 +28,14 @@ namespace RType {
         return header(0, DISCONNEXION);
     }
 
-    U_STRING Encoder::newEntity(std::uint8_t type, std::uint8_t id,
+    U_STRING Encoder::newEntity(std::uint8_t type, std::uint16_t id,
                                 std::uint16_t x, std::uint16_t y)
     {
         U_STRING encodedEntity;
 
         encodedEntity += type;
-        encodedEntity += id;
+        encodedEntity += id >> 8;
+        encodedEntity += id & 0xff;
         encodedEntity += x >> 8;
         encodedEntity += x & 0xff;
         encodedEntity += y >> 8;
@@ -42,20 +43,22 @@ namespace RType {
         return header(encodedEntity.size(), NEW_ENTITY) + encodedEntity;
     }
 
-    U_STRING Encoder::deleteEntity(std::uint8_t id)
+    U_STRING Encoder::deleteEntity(std::uint16_t id)
     {
         U_STRING encodedEntity;
 
-        encodedEntity += id;
+        encodedEntity += id >> 8;
+        encodedEntity += id & 0xff;
         return header(encodedEntity.size(), DELETE_ENTITY) + encodedEntity;
     }
 
-    U_STRING Encoder::moveEntity(std::uint8_t id, std::uint16_t x,
+    U_STRING Encoder::moveEntity(std::uint16_t id, std::uint16_t x,
                                 std::uint16_t y, std::uint8_t rotation)
     {
         U_STRING encodedEntity;
 
-        encodedEntity += id;
+        encodedEntity += id >> 8;
+        encodedEntity += id & 0xff;
         encodedEntity += x >> 8;
         encodedEntity += x & 0xff;
         encodedEntity += y >> 8;
@@ -72,13 +75,14 @@ namespace RType {
         return header(encodedLevel.size(), INFO_LEVEL) + encodedLevel;
     }
 
-    U_STRING Encoder::infoEntity(std::uint8_t id, std::uint8_t type,
+    U_STRING Encoder::infoEntity(std::uint16_t id, std::uint8_t type,
                                 std::uint16_t x, std::uint16_t y,
                                 std::uint8_t rotation, std::uint8_t life)
     {
         U_STRING encodedEntity;
 
-        encodedEntity += id;
+        encodedEntity += id >> 8;
+        encodedEntity += id & 0xff;
         encodedEntity += type;
         encodedEntity += x >> 8;
         encodedEntity += x & 0xff;

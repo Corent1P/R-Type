@@ -72,7 +72,7 @@ namespace RType {
         *
         * @return U_STRING Encoded new entity packet
         */
-        static U_STRING newEntity(std::uint8_t type, std::uint8_t id,
+        static U_STRING newEntity(std::uint8_t type, std::uint16_t id,
                                   std::uint16_t x, std::uint16_t y);
 
         /**
@@ -82,7 +82,7 @@ namespace RType {
         *
         * @return U_STRING Encoded delete entity packet
         */
-        static U_STRING deleteEntity(std::uint8_t id);
+        static U_STRING deleteEntity(std::uint16_t id);
 
         /**
         * @brief Encode the entity movement packet
@@ -94,7 +94,7 @@ namespace RType {
         *
         * @return U_STRING Encoded move entity packet
         */
-        static U_STRING moveEntity(std::uint8_t id, std::uint16_t x,
+        static U_STRING moveEntity(std::uint16_t id, std::uint16_t x,
                                   std::uint16_t y, std::uint8_t rotation);
 
         /**
@@ -118,7 +118,7 @@ namespace RType {
         *
         * @return U_STRING Encoded entity information packet
         */
-        static U_STRING infoEntity(std::uint8_t id, std::uint8_t type,
+        static U_STRING infoEntity(std::uint16_t id, std::uint8_t type,
                                   std::uint16_t x, std::uint16_t y,
                                   std::uint8_t rotation, std::uint8_t life);
 

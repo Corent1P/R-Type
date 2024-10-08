@@ -55,9 +55,9 @@ namespace RType {
         COMMAND_ARGS args(4);
 
         args[0] = packet[2];
-        args[1] = packet[3];
-        args[2] = (packet[4] << 8) + packet[5];
-        args[3] = (packet[6] << 8) + packet[7];
+        args[1] = (packet[3] << 8) + packet[4];
+        args[2] = (packet[5] << 8) + packet[6];
+        args[3] = (packet[7] << 8) + packet[8];
         return args;
     }
 
@@ -65,7 +65,7 @@ namespace RType {
     {
         COMMAND_ARGS args(1);
 
-        args[0] = packet[2];
+        args[0] = (packet[2] << 8) + packet[3];
         return args;
     }
 
@@ -73,10 +73,10 @@ namespace RType {
     {
         COMMAND_ARGS args(4);
 
-        args[0] = packet[2];
-        args[1] = (packet[3] << 8) + packet[4];
-        args[2] = (packet[5] << 8) + packet[6];
-        args[3] = packet[7];
+        args[0] = (packet[2] << 8) + packet[3];
+        args[1] = (packet[4] << 8) + packet[5];
+        args[2] = (packet[6] << 8) + packet[7];
+        args[3] = packet[8];
         return args;
     }
 
@@ -92,12 +92,12 @@ namespace RType {
     {
         COMMAND_ARGS args(6);
 
-        args[0] = packet[2];
-        args[1] = packet[3];
-        args[2] = (packet[4] << 8) | packet[5];
-        args[3] = (packet[6] << 8) | packet[7];
-        args[4] = packet[8];
-        args[5] = packet[9];
+        args[0] = (packet[2] << 8) + packet[3];
+        args[1] = packet[4];
+        args[2] = (packet[5] << 8) | packet[6];
+        args[3] = (packet[7] << 8) | packet[8];
+        args[4] = packet[9];
+        args[5] = packet[10];
         return args;
     }
 
