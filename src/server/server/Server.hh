@@ -14,7 +14,7 @@
 #include "../../protocolHandler/Encoder.hh"
 
 #define MAX_SIZE 1024
-
+#define FRAME_SERVER_TIME_LOGIC 1.0 / 20.0
 namespace RType {
     class Server {
         public:

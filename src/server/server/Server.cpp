@@ -147,12 +147,12 @@ void RType::Server::gameLoop(void)
     while (!_stopLoop) {
         deltaTime = clockEntity->getComponent<RType::ClockComponent>()->getClock(LOGIC_CLOCK).restart().asSeconds();
         logicTime += deltaTime;
-        while (logicTime >= FRAME_TIME_LOGIC) {
+        while (logicTime >= FRAME_SERVER_TIME_LOGIC) {
             std::unique_lock<std::mutex> lock(_mtx);
             std::cout << _coord.getEntities().size() << std::endl;
             for (auto sys : _coord.getSystems())
                 sys->effects(_coord.getEntities());
-            logicTime -= FRAME_TIME_LOGIC;
+            logicTime -= FRAME_SERVER_TIME_LOGIC;
             std::cout << "End system" << std::endl;
         }
     }
@@ -193,7 +193,7 @@ void RType::Server::createMob(void)
     std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(2000, 700));
     mob->pushComponent(std::make_shared<RType::HealthComponent>(25));
     mob->pushComponent(std::make_shared<RType::ClockComponent>());
-    mob->pushComponent(std::make_shared<RType::VelocityComponent>(1));
+    mob->pushComponent(std::make_shared<RType::VelocityComponent>(3));
 
     mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(STRAIGHT_LEFT));
     sendToAllClient(Encoder::newEntity(E_MOB, mob->getId(), position->getPositionX(), position->getPositionY()));

@@ -196,9 +196,6 @@ void RType::Game::createMob(long serverId, long posX, long posY)
 
 void RType::Game::createBullet(long serverId, long posX, long posY)
 {
-    // (void) posX;
-    // (void) posY;
-
     std::shared_ptr<RType::Entity> bullet = _coord.generateNewEntity(serverId);
 
     bullet->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BULLET));
@@ -208,7 +205,6 @@ void RType::Game::createBullet(long serverId, long posX, long posY)
     bullet->pushComponent(std::make_shared<RType::DirectionPatternComponent>(RType::STRAIGHT_RIGHT));
     bullet->pushComponent(std::make_shared<RType::VelocityComponent>(7));
     bullet->pushComponent(std::make_shared<RType::ClockComponent>());
-    std::cout << "create Bullet: " << serverId  << " " << _coord.getEntities().size() << std::endl;
 }
 
 void RType::Game::createGameSystem()
