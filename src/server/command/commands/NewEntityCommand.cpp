@@ -15,5 +15,9 @@ RType::NewEntityCommand::NewEntityCommand(const std::vector<long> &arguments):
 
 void RType::NewEntityCommand::execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll, Coordinator &coord)
 {
+    (void)client;
+    (void)sendToClient;
+    (void)sendToAll;
+    (void)coord;
     std::cout << "execution of new entity command" << std::endl;
 }

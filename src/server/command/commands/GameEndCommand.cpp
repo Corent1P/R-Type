@@ -15,5 +15,9 @@ RType::GameEndCommand::GameEndCommand(const std::vector<long> &data):
 
 void RType::GameEndCommand::execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll, Coordinator &coord)
 {
+    (void)client;
+    (void)sendToClient;
+    (void)sendToAll;
+    (void)coord;
     std::cout << "execution of GameEnd command" << std::endl;
 }
