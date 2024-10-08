@@ -13,9 +13,7 @@ RType::Coordinator::Coordinator():
 }
 
 std::shared_ptr<RType::Entity> RType::Coordinator::generateNewEntity(uint16_t serverId) {
-    std::cout << "lock" << std::endl;
     std::unique_lock<std::mutex> lock(*_mtx);
-    std::cout << "generateNewEntity" << std::endl;
     std::shared_ptr<Entity> newEntity = std::make_shared<Entity>(getNextEntityId(), _mtx, serverId);
     _entities.push_back(newEntity);
     return (newEntity);
@@ -46,7 +44,6 @@ std::shared_ptr<RType::Entity> RType::Coordinator::addEntity(void)
 
 void RType::Coordinator::deleteEntity(std::shared_ptr<Entity> entityToDestroy)
 {
-    std::cout << "delete: " << entityToDestroy->getId() << std::endl;
     std::unique_lock<std::mutex> lock(*_mtx);
     entityToDestroy->clearComponents();
     auto it = std::find(_entities.begin(), _entities.end(), entityToDestroy);

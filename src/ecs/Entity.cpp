@@ -68,7 +68,7 @@ std::ostream &operator<<(std::ostream &s, const RType::Entity &entity)
 	std::vector<std::shared_ptr<RType::IComponent>> components = entity.getComponents();
 
     s << "Entity[" << entity.getId() << "]";
-    if (entity.getServerId() >= 0) {
+    if (entity.getServerId() >= 0 && entity.getServerId() < 65535) {
         s << "[" << entity.getServerId() << "]:" << std::endl;
     } else
         s << ":" << std::endl;

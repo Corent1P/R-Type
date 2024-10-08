@@ -18,9 +18,6 @@ RType::HandlePatternSystem::~HandlePatternSystem()
 
 void RType::HandlePatternSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
-    // std::cout << "HandlePatternSystem " << entity->getId() << std::endl;
-
-
     if (verifyRequiredComponent(entity)) {
         if (entity->getComponent<DirectionPatternComponent>()->getPatternType() == RType::STRAIGHT_UP) {
             entity->getComponent<DirectionPatternComponent>()->setPattern(sf::Vector2f(0, -10));

@@ -18,8 +18,6 @@ RType::HandleAnimationSystem::~HandleAnimationSystem()
 
 void RType::HandleAnimationSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
-    // std::cout << "HandleAnimationSystem " << entity->getId() << std::endl;
-
     if (verifyRequiredComponent(entity)) {
         sf::IntRect rect = entity->getComponent<RType::SpriteComponent>()->getSprite()->getTextureRect();  //need to create a component ?
         int maxSpritWidth = entity->getComponent<RType::SpriteComponent>()->getSprite()->getTexture()->getSize().x;

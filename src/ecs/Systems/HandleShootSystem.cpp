@@ -18,8 +18,6 @@ RType::HandleShootSystem::~HandleShootSystem()
 
 void RType::HandleShootSystem::effects(std::vector<std::shared_ptr<RType::Entity>> entities) {
     for (const auto &entity: entities) {
-            // std::cout << "HandleShootSystem " << entity->getId() << std::endl;
-
         if (verifyRequiredComponent(entity)) {
             // auto playerGlobalBounds = entity->getComponent<SpriteComponent>()->getSprite()->getGlobalBounds();
             if (entity->getComponent<ActionComponent>()->getActions(RType::SHOOTING) == true) {
