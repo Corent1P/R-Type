@@ -16,7 +16,7 @@ RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, c
     createMob();
     createGameSystem();
     _stopLoop = false;
-    _receipter = std::jthread(&Game::loopReceive, this);
+    _receipter = std::thread(&Game::loopReceive, this);
     _initConnection = false;
 }
 
@@ -132,10 +132,14 @@ void RType::Game::createPlayer()
 
     player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::PLAYER));
     std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(50, 50));
+    std::shared_ptr<RType::ScaleComponent> scale = player->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
+    std::shared_ptr<RType::IntRectComponent> intRect = player->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 26, 21));
     player->pushComponent(std::make_shared<RType::HealthComponent>(25));
     std::shared_ptr<RType::TextureComponent> texture = player->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/player-sheet.png"));
 
-    player->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(), sf::Vector2f(2, 2), sf::IntRect(0, 0, 26, 21)));
+    player->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(),
+    sf::Vector2f(scale->getScaleX(), scale->getScaleY()),
+    sf::IntRect(intRect->getIntRectLeft(),intRect->getIntRectTop(), intRect->getIntRectWidth(), intRect->getIntRectHeight())));
     player->pushComponent(std::make_shared<RType::DirectionComponent>());
     player->pushComponent(std::make_shared<RType::ClockComponent>());
     player->pushComponent(std::make_shared<RType::ActionComponent>());

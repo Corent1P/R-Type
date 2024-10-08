@@ -21,6 +21,8 @@ set(SRC_COMPONENTS
     ./Components/DirectionPatternComponent.cpp
     ./Components/VelocityComponent.cpp
     ./Components/LevelComponent.cpp
+    ./Components/ScaleComponent.cpp
+    ./Components/IntRectComponent.cpp
 )
 
 set(SRC_SYSTEMS

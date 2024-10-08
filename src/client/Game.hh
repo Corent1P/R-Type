@@ -24,6 +24,8 @@
 #include "../ecs/Components/ActionComponent.hh"
 #include "../ecs/Components/DirectionPatternComponent.hh"
 #include "../ecs/Components/VelocityComponent.hh"
+#include "../ecs/Components/ScaleComponent.hh"
+#include "../ecs/Components/IntRectComponent.hh"
 
 #include "../ecs/Systems/HandleEventSystem.hpp"
 #include "../ecs/Systems/HandleDrawSystem.hpp"
@@ -74,7 +76,7 @@ namespace RType {
             RType::Coordinator _coord;
             std::shared_ptr<RType::Client> _client;
             bool _stopLoop;
-            std::jthread _receipter;
+            std::thread _receipter;
             bool _initConnection;
     };
 }
