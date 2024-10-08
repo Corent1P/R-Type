@@ -23,6 +23,7 @@ namespace RType {
         ANIMATION,
         PATTERN,
         SHOOT,
+        COLISION,
     };
 
     class ISystem {

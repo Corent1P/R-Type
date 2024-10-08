@@ -241,6 +241,11 @@ void RType::Game::createGameSystem()
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
     ));
+
+    _coord.generateNewSystem(std::make_shared<HandleColisionSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+    ));
 }
 
 void RType::Game::createParallaxBackground(std::shared_ptr<RType::Entity> window)

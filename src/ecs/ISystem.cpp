@@ -33,6 +33,9 @@ std::ostream &operator<<(std::ostream &s, const RType::ISystem &system)
         case RType::SHOOT:
             s << "Shoot system";
             break;
+        case RType::COLISION:
+            s << "Colision system";
+            break;
         default:
             s << "Unknown system";
             break;

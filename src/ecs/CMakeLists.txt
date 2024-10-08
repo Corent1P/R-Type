@@ -32,6 +32,7 @@ set(SRC_SYSTEMS
     ./Systems/HandleAnimationSystem.cpp
     ./Systems/HandlePatternSystem.cpp
     ./Systems/HandleShootSystem.cpp
+    ./Systems/HandleColisionSystem.cpp
 )
 
 add_library(ecs ${SRC_CLIENT} ${SRC_COMPONENTS} ${SRC_SYSTEMS})
