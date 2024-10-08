@@ -88,7 +88,7 @@ namespace RType {
         args[0] = (packet[3] << 8) + packet[4];
         args[1] = (packet[5] << 8) + packet[6];
         args[2] = (packet[7] << 8) + packet[8];
-        args[3] = packet[8];
+        args[3] = packet[9];
         return args;
     }
 

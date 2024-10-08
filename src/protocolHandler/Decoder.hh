@@ -10,7 +10,7 @@
 
 #include "Encoder.hh"
 
-#define COMMAND_ARGS std::vector<std::int16_t>
+#define COMMAND_ARGS std::vector<std::int32_t>
 
 /*
 * @brief Define the header of the packet,
