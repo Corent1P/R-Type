@@ -43,14 +43,20 @@ void RType::Server::handleReceive(const boost::system::error_code& error, std::s
     auto receivInfo = Decoder::getCommandInfo(command);
     std::shared_ptr<ClientServer> connectedClient = getConnectedClient();
 
-    if (!connectedClient)
+    if (!connectedClient) {
+        std::unique_lock<std::mutex> lock(_mtx);
         connectedClient = createClient();
-    if (receivInfo.first == CONNEXION)
+    }
+    if (receivInfo.first == CONNEXION) {
+        std::unique_lock<std::mutex> lock(_mtx);
         handleConnection(connectedClient);
-    else if (receivInfo.first == DISCONNEXION)
+    } else if (receivInfo.first == DISCONNEXION) {
+        std::unique_lock<std::mutex> lock(_mtx);
         handleDisconnection(connectedClient);
-    else
+    } else {
+        std::unique_lock<std::mutex> lock(_mtx);
         handleCommand(receivInfo, connectedClient);
+    }
     startReceive();
 }
 
@@ -154,6 +160,7 @@ void RType::Server::gameLoop(void)
         deltaTime = clockEntity->getComponent<RType::ClockComponent>()->getClock(LOGIC_CLOCK).restart().asSeconds();
         logicTime += deltaTime;
         while (logicTime >= FRAME_TIME_LOGIC) {
+            std::unique_lock<std::mutex> lock(_mtx);
             for (auto sys : _coord.getSystems())
                 sys->effects(_coord.getEntities());
             logicTime -= FRAME_TIME_LOGIC;

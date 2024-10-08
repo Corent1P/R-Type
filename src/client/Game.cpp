@@ -36,6 +36,7 @@ void RType::Game::gameLoop()
 {
     std::shared_ptr<RType::ISystem> drawSystem = nullptr;
     std::shared_ptr<RType::Entity> clockEntity = nullptr;
+    std::shared_ptr<RType::SFWindowComponent> windowComponent = nullptr;
     float logicTime = 0.0;
     float renderTime = 0.0;
     float deltaTime = 0.0;
@@ -50,6 +51,7 @@ void RType::Game::gameLoop()
     for (auto entity: _coord.getEntities()) {
         if (entity->getComponent<RType::SFWindowComponent>() != nullptr && entity->getComponent<RType::ClockComponent>() != nullptr) {
             clockEntity = entity;
+            windowComponent = entity->getComponent<RType::SFWindowComponent>();
             break;
         }
     }
@@ -72,14 +74,9 @@ void RType::Game::gameLoop()
                 drawSystem->effects(_coord.getEntities());
             }
             renderTime = 0.0;
-        }
-
-        for (auto entity : _coord.getEntities()) {
-            // std::cout << *entity << std::endl;
+                // std::cout << *entity << std::endl;
             std::unique_lock<std::mutex> lock(_mtx);
-            auto windowComp = entity->getComponent<RType::SFWindowComponent>();
-
-            if (windowComp != nullptr && !windowComp->getIsOpen()) {
+            if (windowComponent != nullptr && !windowComponent->getIsOpen()) {
                 _client->cancel();
                 _stopLoop = true;
                 break;

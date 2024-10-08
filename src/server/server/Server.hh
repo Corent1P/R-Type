@@ -43,6 +43,7 @@ namespace RType {
             void createMob(void);
 
             bool _stopLoop;
+            std::mutex _mtx;
             std::jthread _gameLoop;
             udp::socket _socket;
             udp::endpoint _remoteEndpoint;
