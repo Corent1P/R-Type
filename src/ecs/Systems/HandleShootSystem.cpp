@@ -23,7 +23,7 @@ void RType::HandleShootSystem::effects(std::vector<std::shared_ptr<RType::Entity
         if (verifyRequiredComponent(entity)) {
             // auto playerGlobalBounds = entity->getComponent<SpriteComponent>()->getSprite()->getGlobalBounds();
             if (entity->getComponent<ActionComponent>()->getActions(RType::SHOOTING) == true) {
-                // entity->getComponent<RType::ActionComponent>()->setActions(RType::SHOOTING, false);
+                entity->getComponent<RType::ActionComponent>()->setActions(RType::SHOOTING, false);
                 // std::shared_ptr<RType::Entity> shot = _addEntity();
                 // shot->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BULLET));
                 // std::shared_ptr<RType::PositionComponent> position = shot->pushComponent(std::make_shared<RType::PositionComponent>(playerGlobalBounds.width + playerGlobalBounds.left, (playerGlobalBounds.height / 2) + playerGlobalBounds.top));
