@@ -20,7 +20,6 @@ std::vector<std::shared_ptr<RType::IComponent>> RType::Entity::getComponents(voi
 
 uint16_t RType::Entity::getId(void) const
 {
-    std::unique_lock<std::mutex> lock(*_mtx);
 	return _id;
 }
 
@@ -53,11 +52,15 @@ bool RType::Entity::operator==(const RType::Entity &other) const
 
 RType::Entity &RType::Entity::operator=(const RType::Entity &other)
 {
+    if (this == &other)
+        return *this;
     _components = other._components;
     _id = other._id;
-    _mtx = other._mtx;
     _serverId = other._serverId;
-	return *this;
+
+    _mtx = std::make_shared<std::mutex>();
+
+    return *this;
 }
 
 std::ostream &operator<<(std::ostream &s, const RType::Entity &entity)
@@ -74,4 +77,9 @@ std::ostream &operator<<(std::ostream &s, const RType::Entity &entity)
     }
 
     return s;
+}
+
+bool RType::Entity::compareEntity(const std::shared_ptr<RType::Entity> &entity1, const std::shared_ptr<RType::Entity> &entity2)
+{
+    return entity1->getId() < entity2->getId();
 }

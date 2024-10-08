@@ -55,16 +55,19 @@ void RType::Coordinator::deleteEntity(std::shared_ptr<Entity> entityToDestroy)
     }
 }
 
-std::size_t RType::Coordinator::getNextEntityId(void) const
+std::size_t RType::Coordinator::getNextEntityId(void)
 {
     std::size_t min = 0;
 
-    if (_entities.empty())
+    if (_entities.empty()) {
         return 0;
-    std::sort(_entities.begin(), _entities.end(), Entity::compareEntity);
-    for (auto entity: _entities)
+    }
+
+    std::sort(_entities.begin(), _entities.end(), RType::Entity::compareEntity);
+    for (auto entity: _entities) {
         if (entity->getId() == min)
             min += 1;
+    }
     return min;
 }
 

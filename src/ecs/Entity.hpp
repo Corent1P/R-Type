@@ -44,7 +44,7 @@ namespace RType {
             void clearComponents(void);
             bool operator<(const Entity &other) const;
             bool operator==(const Entity &other) const;
-            Entity &operator==(const Entity &other);
+            Entity &operator=(const Entity &other);
             static bool compareEntity(const std::shared_ptr<RType::Entity> &entity1, const std::shared_ptr<RType::Entity> &entity2);
         private:
             std::vector<std::shared_ptr<IComponent>> _components;
