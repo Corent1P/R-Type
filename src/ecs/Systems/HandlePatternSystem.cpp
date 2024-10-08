@@ -8,7 +8,7 @@
 #include "HandlePatternSystem.hpp"
 
 RType::HandlePatternSystem::HandlePatternSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
-    ASystem(PATTERN, addEntity, deleteEntity)
+    ASystem(S_PATTERN, addEntity, deleteEntity)
 {
 }
 
@@ -18,7 +18,6 @@ RType::HandlePatternSystem::~HandlePatternSystem()
 
 void RType::HandlePatternSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
-
     if (verifyRequiredComponent(entity)) {
         if (entity->getComponent<DirectionPatternComponent>()->getPatternType() == RType::STRAIGHT_UP) {
             entity->getComponent<DirectionPatternComponent>()->setPattern(sf::Vector2f(0, -10));

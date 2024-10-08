@@ -47,36 +47,36 @@ Test(main, TestHealthComponent) {
 }
 
 Test(main, TestEntityTypeComponent) {
-    RType::EntityTypeComponent entityType(RType::PLAYER);
-    cr_assert_eq(entityType.getEntityType(), RType::PLAYER, "Expected: %d, Got: %d", entityType.getEntityType(), RType::PLAYER);
+    RType::EntityTypeComponent entityType(RType::E_PLAYER);
+    cr_assert_eq(entityType.getEntityType(), RType::E_PLAYER, "Expected: %d, Got: %d", entityType.getEntityType(), RType::E_PLAYER);
 
     std::string output = entityType.getOutput();
     std::string expected = "Entity Type Component (entity type: player)";
     cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
     
-    entityType.setEntityType(RType::BOSS);
-    cr_assert_eq(entityType.getEntityType(), RType::BOSS, "Expected: %d, Got: %d", entityType.getEntityType(), RType::BOSS);
+    entityType.setEntityType(RType::E_BOSS);
+    cr_assert_eq(entityType.getEntityType(), RType::E_BOSS, "Expected: %d, Got: %d", entityType.getEntityType(), RType::E_BOSS);
 
     output = entityType.getOutput();
     expected = "Entity Type Component (entity type: boss)";
     cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
 
-    entityType.setEntityType(RType::MOB);
+    entityType.setEntityType(RType::E_MOB);
     output = entityType.getOutput();
     expected = "Entity Type Component (entity type: mob)";
     cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
 
-    entityType.setEntityType(RType::BUTTON);
+    entityType.setEntityType(RType::E_BUTTON);
     output = entityType.getOutput();
     expected = "Entity Type Component (entity type: button)";
     cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
     
-    entityType.setEntityType(RType::WINDOW);
+    entityType.setEntityType(RType::E_WINDOW);
     output = entityType.getOutput();
     expected = "Entity Type Component (entity type: window)";
     cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
 
-    entityType.setEntityType(RType::OTHER);
+    entityType.setEntityType(RType::E_OTHER);
     output = entityType.getOutput();
     expected = "Entity Type Component (entity type: unknown)";
     cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);

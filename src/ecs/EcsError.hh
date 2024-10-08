@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** rType
 ** File description:
-** Error
+** EcsError
 */
 
 #pragma once
@@ -11,9 +11,9 @@
 
 namespace RType
 {
-    class Error: public std::exception {
+    class EcsError: public std::exception {
         public:
-            Error(std::string error);
+            EcsError(std::string error);
             const char *what() const noexcept override;
 
         private:

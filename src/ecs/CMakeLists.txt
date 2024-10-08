@@ -1,9 +1,9 @@
-set(SRC_CLIENT
+set(SRC_ECS
     ./Coordinator.cpp
     ./Entity.cpp
     ./ISystem.cpp
     ./ASystem.cpp
-    ./Error.cpp
+    ./EcsError.cpp
     ../client/Game.cpp
 )
 
@@ -27,12 +27,19 @@ set(SRC_SYSTEMS
     ./Systems/HandleEventSystem.cpp
     ./Systems/HandleDrawSystem.cpp
     ./Systems/HandleMoveSystem.cpp
+    ./Systems/HandleMoveSpriteSystem.cpp
     ./Systems/HandleAnimationSystem.cpp
     ./Systems/HandlePatternSystem.cpp
     ./Systems/HandleShootSystem.cpp
 )
 
-add_library(ecs ${SRC_CLIENT} ${SRC_COMPONENTS} ${SRC_SYSTEMS})
+set(SRC_CLIENTS # To Remove
+    ../client/communication/Client.cpp
+    ../client/ClientError.cpp
+
+)
+
+add_library(ecs ${SRC_ECS} ${SRC_COMPONENTS} ${SRC_SYSTEMS} ${SRC_CLIENTS} )
 
 target_compile_options(ecs PRIVATE
     -fPIC

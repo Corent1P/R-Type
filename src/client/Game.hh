@@ -28,6 +28,7 @@
 #include "../ecs/Systems/HandleEventSystem.hpp"
 #include "../ecs/Systems/HandleDrawSystem.hpp"
 #include "../ecs/Systems/HandleMoveSystem.hpp"
+#include "../ecs/Systems/HandleMoveSpriteSystem.hpp"
 #include "../ecs/Systems/HandleAnimationSystem.hpp"
 #include "../ecs/Systems/HandlePatternSystem.hpp"
 #include "../ecs/Systems/HandleShootSystem.hpp"
@@ -59,23 +60,29 @@ namespace RType {
             Game(boost::asio::io_context &ioContext, const std::string &host, const std::string &port);
             ~Game();
             void gameLoop();
-            Coordinator getCoordinator() const;
+            const Coordinator &getCoordinator() const;
         private:
             void loopReceive();
             void createPlayer();
             void createPlayer(long serverId, long posX, long posY);
-            void createMob();
-            void createBoss();
+            void createMob(long serverId, long posX, long posY);
+            void createBullet(long serverId, long posX, long posY);
             void createWindow();
             void createGameSystem();
             void createParallaxBackground(std::shared_ptr<RType::Entity> window);
             void createParallaxEntity(const std::string &path, const int &posX, const int &posY,
                 const int &winMaxX, const int &winMaxY, const int &index, const int &level);
+            std::shared_ptr<RType::TextureComponent> getTextureComponent(const std::string &path);
+            std::size_t getMaxClientId(void);
+        
+            std::mutex _mtx;
             RType::Coordinator _coord;
             std::shared_ptr<RType::Client> _client;
             bool _stopLoop;
             std::jthread _receipter;
             bool _initConnection;
+            std::unordered_map<std::string, std::shared_ptr<RType::TextureComponent>> _texturesMap;
+
     };
 }
 

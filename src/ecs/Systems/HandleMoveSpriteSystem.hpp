@@ -2,11 +2,11 @@
 ** EPITECH PROJECT, 2024
 ** R-Type
 ** File description:
-** system used to handle entity movement
+** system used to handle entity sprite movement
 */
 
-#ifndef HANDLEMOVESYTEM_HPP_
-#define HANDLEMOVESYTEM_HPP_
+#ifndef HANDLEMOVESPRITESYTEM_HPP_
+#define HANDLEMOVESPRITESYTEM_HPP_
 #include "../ASystem.hh"
 #include ".././Components/SFWindowComponent.hh"
 #include ".././Components/EventComponent.hh"
@@ -23,18 +23,15 @@
 #define ENTITY_SPRITE entity->getComponent<SpriteComponent>()->getSprite()
 namespace RType {
 
-    class HandleMoveSystem: public  RType::ASystem {
+    class HandleMoveSpriteSystem: public  RType::ASystem {
         public:
-            HandleMoveSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
-            HandleMoveSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::shared_ptr<RType::Client> client);
-            HandleMoveSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient);
-            ~HandleMoveSystem();
+            HandleMoveSpriteSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
+            ~HandleMoveSpriteSystem();
             void effects(std::vector<std::shared_ptr<RType::Entity>> entities);
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
         protected:
         private:
-            std::shared_ptr<RType::Client> _client;
-            std::function<void(const std::basic_string<unsigned char> &message)> _sendMessageToAllClient;
+
     };
 }
-#endif /* !HANDLEMOVESYTEM_HPP_ */
+#endif /* !HANDLEMOVESPRITESYTEM_HPP_ */

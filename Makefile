@@ -26,13 +26,14 @@ SRC_ECS	=		src/ecs/Components/PositionComponent.cpp\
 			src/ecs/Systems/HandleDrawSystem.cpp\
 			src/ecs/Systems/HandleAnimationSystem.cpp\
 			src/ecs/Systems/HandleMoveSystem.cpp\
+			src/ecs/Systems/HandleMoveSpriteSystem.cpp\
 			src/ecs/Systems/HandleShootSystem.cpp\
 			src/ecs/Systems/HandlePatternSystem.cpp\
 			src/ecs/Coordinator.cpp\
 			src/ecs/Entity.cpp\
 			src/ecs/ISystem.cpp\
 			src/ecs/ASystem.cpp\
-			src/ecs/Error.cpp
+			src/ecs/EcsError.cpp
 
 SRC_PROTOCOLHANDLER	=	./src/protocolHandler/Encoder.cpp\
 						./src/protocolHandler/Decoder.cpp
