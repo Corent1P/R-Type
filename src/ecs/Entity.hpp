@@ -14,13 +14,13 @@ namespace RType {
 
     class Entity {
         public:
-            Entity(uint16_t id, std::shared_ptr<std::mutex> mtx, uint16_t serverId = -1);
+            Entity(uint16_t id, std::shared_ptr<std::mutex> mtx, int serverId = -1);
             ~Entity() = default;
 
             std::vector<std::shared_ptr<IComponent>> getComponents(void) const;
             uint16_t getId(void) const;
-            uint16_t getServerId(void) const;
-            void setServerId(uint16_t serverId);
+            int getServerId(void) const;
+            void setServerId(int serverId);
 
             template <typename T>
             std::shared_ptr<T> pushComponent(std::shared_ptr<T> component) {
@@ -42,12 +42,15 @@ namespace RType {
             }
 
             void clearComponents(void);
-
+            bool operator<(const Entity &other) const;
+            bool operator==(const Entity &other) const;
+            Entity &operator==(const Entity &other);
+            static bool compareEntity(const std::shared_ptr<RType::Entity> &entity1, const std::shared_ptr<RType::Entity> &entity2);
         private:
             std::vector<std::shared_ptr<IComponent>> _components;
             uint16_t _id;
             std::shared_ptr<std::mutex> _mtx;
-            uint16_t _serverId;
+            int _serverId;
 
     };
 }

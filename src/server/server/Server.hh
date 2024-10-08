@@ -28,7 +28,6 @@ namespace RType {
             void handleSend(std::string message, const boost::system::error_code &error, std::size_t bytesTransferred);
             std::shared_ptr<RType::ClientServer> createClient(void);
             std::shared_ptr<RType::ClientServer> getConnectedClient(void);
-            std::size_t getMaxClientId(void);
             void sendToAllClient(const std::basic_string<unsigned char> &message);
 
             // Command handling

@@ -54,7 +54,6 @@ void RType::Server::handleReceive(const boost::system::error_code& error, std::s
         std::unique_lock<std::mutex> lock(_mtx);
         handleDisconnection(connectedClient);
     } else {
-        std::unique_lock<std::mutex> lock(_mtx);
         handleCommand(receivInfo, connectedClient);
     }
     startReceive();
@@ -83,18 +82,6 @@ std::shared_ptr<RType::ClientServer> RType::Server::getConnectedClient(void)
         if (client->getAddress() == _remoteEndpoint.address() && client->getPortNumber() == _remoteEndpoint.port() && client->getIsConnected())
             return client;
     return nullptr;
-}
-
-std::size_t RType::Server::getMaxClientId(void)
-{
-    std::size_t max = 0;
-
-    if (_clients.empty())
-        return 0;
-    for (auto client: _clients)
-        if (client->getEntity()->getServerId() > max)
-            max = client->getEntity()->getServerId();
-    return max + 1;
 }
 
 void RType::Server::sendToAllClient(const std::basic_string<unsigned char> &message)
@@ -132,6 +119,7 @@ void RType::Server::handleDisconnection(std::shared_ptr<ClientServer> connectedC
 
 void RType::Server::handleCommand(std::pair<RType::PacketType, std::vector<long>> receivInfo, std::shared_ptr<ClientServer> connectedClient)
 {
+    std::unique_lock<std::mutex> lock(_mtx);
     std::shared_ptr<ICommand> com = _commandFactory.createCommand(receivInfo);
     if (!com) {
         connectedClient->sendMessage(_socket, Encoder::header(0, RType::ERROR));
@@ -161,9 +149,11 @@ void RType::Server::gameLoop(void)
         logicTime += deltaTime;
         while (logicTime >= FRAME_TIME_LOGIC) {
             std::unique_lock<std::mutex> lock(_mtx);
+            std::cout << _coord.getEntities().size() << std::endl;
             for (auto sys : _coord.getSystems())
                 sys->effects(_coord.getEntities());
             logicTime -= FRAME_TIME_LOGIC;
+            std::cout << "End system" << std::endl;
         }
     }
 }

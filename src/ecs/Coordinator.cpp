@@ -8,14 +8,15 @@
 #include "Coordinator.hh"
 
 RType::Coordinator::Coordinator():
-    _mtx(std::make_shared<std::mutex>()), _idEntities(0)
+    _mtx(std::make_shared<std::mutex>())
 {
 }
 
 std::shared_ptr<RType::Entity> RType::Coordinator::generateNewEntity(uint16_t serverId) {
+    std::cout << "lock" << std::endl;
     std::unique_lock<std::mutex> lock(*_mtx);
-
-    std::shared_ptr<Entity> newEntity = std::make_shared<Entity>(_idEntities++, _mtx, serverId);
+    std::cout << "generateNewEntity" << std::endl;
+    std::shared_ptr<Entity> newEntity = std::make_shared<Entity>(getNextEntityId(), _mtx, serverId);
     _entities.push_back(newEntity);
     return (newEntity);
 }
@@ -47,11 +48,24 @@ void RType::Coordinator::deleteEntity(std::shared_ptr<Entity> entityToDestroy)
 {
     std::cout << "delete: " << entityToDestroy->getId() << std::endl;
     std::unique_lock<std::mutex> lock(*_mtx);
-    // entityToDestroy->clearComponents();
+    entityToDestroy->clearComponents();
     auto it = std::find(_entities.begin(), _entities.end(), entityToDestroy);
     if (it != _entities.end()) {
         _entities.erase(it);
     }
+}
+
+std::size_t RType::Coordinator::getNextEntityId(void) const
+{
+    std::size_t min = 0;
+
+    if (_entities.empty())
+        return 0;
+    std::sort(_entities.begin(), _entities.end(), Entity::compareEntity);
+    for (auto entity: _entities)
+        if (entity->getId() == min)
+            min += 1;
+    return min;
 }
 
 std::ostream &operator<<(std::ostream &s, const RType::Coordinator &coordinator)

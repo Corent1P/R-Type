@@ -7,7 +7,7 @@
 
 #include "Entity.hpp"
 
-RType::Entity::Entity(uint16_t id, std::shared_ptr<std::mutex> mtx, uint16_t serverId):
+RType::Entity::Entity(uint16_t id, std::shared_ptr<std::mutex> mtx, int serverId):
     _id(id), _mtx(mtx), _serverId(serverId)
 {
 }
@@ -24,13 +24,13 @@ uint16_t RType::Entity::getId(void) const
 	return _id;
 }
 
-void RType::Entity::setServerId(uint16_t serverId)
+void RType::Entity::setServerId(int serverId)
 {
     std::unique_lock<std::mutex> lock(*_mtx);
 	_serverId = serverId;
 }
 
-uint16_t RType::Entity::getServerId(void) const
+int RType::Entity::getServerId(void) const
 {
     std::unique_lock<std::mutex> lock(*_mtx);
 	return _serverId;
@@ -41,12 +41,34 @@ void RType::Entity::clearComponents()
     _components.clear();
 }
 
+bool RType::Entity::operator<(const RType::Entity &other) const
+{
+	return _id < other.getId();
+}
+
+bool RType::Entity::operator==(const RType::Entity &other) const
+{
+	return _id == other.getId();
+}
+
+RType::Entity &RType::Entity::operator=(const RType::Entity &other)
+{
+    _components = other._components;
+    _id = other._id;
+    _mtx = other._mtx;
+    _serverId = other._serverId;
+	return *this;
+}
+
 std::ostream &operator<<(std::ostream &s, const RType::Entity &entity)
 {
 	std::vector<std::shared_ptr<RType::IComponent>> components = entity.getComponents();
 
-    s << "Entity[" << entity.getId() << "]:" << std::endl;
-
+    s << "Entity[" << entity.getId() << "]";
+    if (entity.getServerId() >= 0) {
+        s << "[" << entity.getServerId() << "]:" << std::endl;
+    } else
+        s << ":" << std::endl;
     for (auto component: components) {
         s << "\t\t" << component->getOutput() << std::endl;
     }

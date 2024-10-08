@@ -57,13 +57,21 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
                     if ((entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::STRAIGHT_LEFT
                     || entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::UP_N_DOWN_LEFT)
                     && entity->getComponent<RType::PositionComponent>()->getPositionX() < -300) {
-                        _deleteEntity(entity);
+                        if (_sendMessageToAllClient) {
+                            _sendMessageToAllClient(Encoder::deleteEntity(entity->getId()));
+                            _deleteEntity(entity);
+                        }
+                        continue;
                     }
 
                     if ((entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::STRAIGHT_RIGHT
                     || entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::UP_N_DOWN_RIGHT)
                     && entity->getComponent<RType::PositionComponent>()->getPositionX() > 2200) {
-                        _deleteEntity(entity);
+                        if (_sendMessageToAllClient) {
+                            _sendMessageToAllClient(Encoder::deleteEntity(entity->getId()));
+                            _deleteEntity(entity);
+                        }
+                        continue;
                     }
                 }
             }

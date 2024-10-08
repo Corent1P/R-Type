@@ -56,7 +56,7 @@ void RType::Game::gameLoop()
         }
     }
 
-    while (!_stopLoop) {
+    while (!_stopLoop && clockEntity && clockEntity->getComponent<RType::ClockComponent>()) {
         deltaTime = clockEntity->getComponent<RType::ClockComponent>()->getClock(LOGIC_CLOCK).restart().asSeconds();
         logicTime += deltaTime;
         while (logicTime >= FRAME_TIME_LOGIC) {
@@ -129,7 +129,7 @@ void RType::Game::loopReceive()
             auto entities = _coord.getEntities();
             for (const auto &entity : entities) {
                 std::unique_lock<std::mutex> lock(_mtx);
-                if (entity->getServerId() == receivInfo.second[0]) {
+                if (entity->getServerId() == receivInfo.second[0] && entity->getComponent<RType::PositionComponent>() && entity->getComponent<RType::SpriteComponent>()) {
                     entity->getComponent<RType::PositionComponent>()->setPositions(receivInfo.second[1], receivInfo.second[2]);
                     entity->getComponent<RType::SpriteComponent>()->getSprite()->setPosition(receivInfo.second[1], receivInfo.second[2]);
                     break;

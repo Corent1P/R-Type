@@ -52,14 +52,16 @@ void RType::HandleMoveSpriteSystem::effects(std::vector<std::shared_ptr<RType::E
                         entity->getComponent<RType::SpriteComponent>()->getSprite()->setPosition(position);
                         if ((entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::STRAIGHT_LEFT
                         || entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::UP_N_DOWN_LEFT)
-                        && spriteBounds.left + spriteBounds.width < 0) {
+                        && spriteBounds.left + spriteBounds.width < -300) {
                             _deleteEntity(entity);
+                            continue;
                         }
 
                         if ((entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::STRAIGHT_RIGHT
                         || entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::UP_N_DOWN_RIGHT)
-                        && spriteBounds.left + spriteBounds.width > windowWidth) {
+                        && spriteBounds.left + spriteBounds.width > windowWidth + 300) {
                             _deleteEntity(entity);
+                            continue;
                         }
                     }
 
