@@ -74,7 +74,6 @@ void RType::Game::gameLoop()
                 drawSystem->effects(_coord.getEntities());
             }
             renderTime = 0.0;
-                // std::cout << *entity << std::endl;
             std::unique_lock<std::mutex> lock(_mtx);
             if (windowComponent != nullptr && !windowComponent->getIsOpen()) {
                 _client->cancel();

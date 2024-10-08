@@ -149,11 +149,9 @@ void RType::Server::gameLoop(void)
         logicTime += deltaTime;
         while (logicTime >= FRAME_SERVER_TIME_LOGIC) {
             std::unique_lock<std::mutex> lock(_mtx);
-            std::cout << _coord.getEntities().size() << std::endl;
             for (auto sys : _coord.getSystems())
                 sys->effects(_coord.getEntities());
             logicTime -= FRAME_SERVER_TIME_LOGIC;
-            std::cout << "End system" << std::endl;
         }
     }
 }
