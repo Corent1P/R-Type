@@ -80,3 +80,12 @@ std::ostream &operator<<(std::ostream &s, const RType::Coordinator &coordinator)
         s << "\t" << *system << std::endl;
     return s;
 }
+
+std::shared_ptr<RType::Entity> RType::Coordinator::getEntityById(uint16_t id)
+{
+    std::unique_lock<std::mutex> lock(*_mtx);
+    for (auto entity: _entities)
+        if (entity->getId() == id)
+            return entity;
+    return nullptr;
+}
