@@ -15,5 +15,9 @@ RType::InfoLevelCommand::InfoLevelCommand(const std::vector<long> &arguments):
 
 void RType::InfoLevelCommand::execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll, Coordinator &coord)
 {
+    (void)client;
+    (void)sendToClient;
+    (void)sendToAll;
+    (void)coord;
     std::cout << "execution of info level command" << std::endl;
 }
