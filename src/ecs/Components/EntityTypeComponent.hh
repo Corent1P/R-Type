@@ -10,16 +10,16 @@
 #include "../IComponent.hh"
 namespace RType {
     enum EntityType {
-        OTHER,
-        WINDOW,
-        PLAYER,
-        ALLIES,
-        MOB,
-        BOSS,
-        BUTTON,
-        LAYER,
-        WEAPON,
-        POWER_UP,
+        E_OTHER,
+        E_WINDOW,
+        E_PLAYER,
+        E_ALLIES,
+        E_MOB,
+        E_BOSS,
+        E_BUTTON,
+        E_LAYER,
+        E_BULLET,
+        E_POWER_UP,
     };
 
     enum WeaponType {

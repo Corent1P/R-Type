@@ -22,7 +22,6 @@ namespace RType {
             int getPositionX() const;
             int getPositionY() const;
             sf::Vector2f getPositions() const;
-
             std::string getOutput() const;
         private:
             int _x;

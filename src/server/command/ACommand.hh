@@ -19,35 +19,35 @@ namespace RType {
             /**
              * @brief Construct a new ACommand object
              *
-             * @param data is a string argument that contains the data of the Command
-             * @param type is the type of the Command (cf. CommandType)
+             * @param data is the vector that contains the data of the Command
+             * @param type is the type of the Command (cf. PacketType)
              */
-            ACommand(const std::string &data, CommandType type);
+            ACommand(const std::vector<long> &data, PacketType type);
 
             /**
              * @brief Get the Data member of the object
              *
              * @return std::string the data of the object
              */
-            std::string getData(void) const;
+            std::vector<long> getData(void) const override;
 
             /**
              * @brief Get the Type member of the object
              *
-             * @return CommandType the type of the Command (cf. CommandType)
+             * @return PacketType the type of the Command (cf. PacketType)
              */
-            CommandType getType(void) const;
+            PacketType getType(void) const;
 
         protected:
             /**
              * @brief The data of the Command (ex.: "45" in the command "Move 45")
              *
              */
-            std::string _data;
+            std::vector<long> _data;
             /**
-             * @brief The type of the Command (cf. CommandType)
+             * @brief The type of the Command (cf. PacketType)
              *
              */
-            CommandType _type;
+            PacketType _type;
     };
 }
