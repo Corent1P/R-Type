@@ -97,15 +97,15 @@ void RType::Game::loopReceive()
                 std::unique_lock<std::mutex> lock(_mtx);
 
                 if (receivInfo.second[0] == E_PLAYER)
-                    createPlayer(receivInfo.second[1], receivInfo.second[2], receivInfo.second[3]);
+                    createPlayer(receivInfo.second[1], static_cast<short>(receivInfo.second[2]), static_cast<short> (receivInfo.second[3]));
                 if (receivInfo.second[0] == E_OCTOPUS)
-                    createMobOctopus(receivInfo.second[1], receivInfo.second[2], receivInfo.second[3]);
+                    createMobOctopus(receivInfo.second[1], static_cast<short> (receivInfo.second[2]), static_cast<short> (receivInfo.second[3]));
                 if (receivInfo.second[0] == E_SMALL_SPACESHIP)
-                    createMobSpaceShip(receivInfo.second[1], receivInfo.second[2], receivInfo.second[3]);
+                    createMobSpaceShip(receivInfo.second[1], static_cast<short> (receivInfo.second[2]), static_cast<short> (receivInfo.second[3]));
                 if (receivInfo.second[0] == E_FLY)
-                    createMobFly(receivInfo.second[1], receivInfo.second[2], receivInfo.second[3]);
+                    createMobFly(receivInfo.second[1], static_cast<short> (receivInfo.second[2]), static_cast<short> (receivInfo.second[3]));
                 if (receivInfo.second[0] == E_BULLET)
-                    createBullet(receivInfo.second[1], receivInfo.second[2], receivInfo.second[3]);
+                    createBullet(receivInfo.second[1], static_cast<short> (receivInfo.second[2]), static_cast<short> (receivInfo.second[3]));
             } else {
                 std::unique_lock<std::mutex> lock(_mtx);
                 _initConnection = true;
@@ -133,8 +133,8 @@ void RType::Game::loopReceive()
             for (const auto &entity : entities) {
                 std::unique_lock<std::mutex> lock(_mtx);
                 if (entity->getServerId() == receivInfo.second[0] && entity->getComponent<RType::PositionComponent>() && entity->getComponent<RType::SpriteComponent>()) {
-                    entity->getComponent<RType::PositionComponent>()->setPositions(receivInfo.second[1], receivInfo.second[2]);
-                    entity->getComponent<RType::SpriteComponent>()->getSprite()->setPosition(receivInfo.second[1], receivInfo.second[2]);
+                    entity->getComponent<RType::PositionComponent>()->setPositions(static_cast<short>(receivInfo.second[1]), static_cast<short> (receivInfo.second[2]));
+                    entity->getComponent<RType::SpriteComponent>()->getSprite()->setPosition(static_cast<short>(receivInfo.second[1]), static_cast<short> (receivInfo.second[2]));
                     break;
                 }
             }
