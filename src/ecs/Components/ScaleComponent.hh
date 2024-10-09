@@ -21,6 +21,7 @@ namespace RType {
             void setScale(float x, float y);
             float getScaleX() const;
             float getScaleY() const;
+            sf::Vector2f getScales() const;
             std::string getOutput() const;
         private:
             float _scaleX;

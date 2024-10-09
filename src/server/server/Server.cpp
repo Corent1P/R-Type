@@ -97,6 +97,7 @@ void RType::Server::handleConnection(std::shared_ptr<ClientServer> connectedClie
     player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_PLAYER));
     std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(10, 10));
     player->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 26, 21));
+    player->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     player->pushComponent(std::make_shared<RType::HealthComponent>(25));
     player->pushComponent(std::make_shared<RType::ClockComponent>());
 
@@ -203,6 +204,7 @@ void RType::Server::createMob(void)
     mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_MOB));
     std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(2000, 700));
     mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 29, 29));
+    mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     mob->pushComponent(std::make_shared<RType::HealthComponent>(25));
     mob->pushComponent(std::make_shared<RType::ClockComponent>());
     mob->pushComponent(std::make_shared<RType::VelocityComponent>(3));

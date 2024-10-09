@@ -21,7 +21,7 @@ void RType::ActionPlayerCommand::execute(std::shared_ptr<ClientServer> client, F
     std::shared_ptr<RType::PositionComponent> position = bullet->pushComponent(std::make_shared<RType::PositionComponent>(client->getEntity()->getComponent<PositionComponent>()->getPositions().x, client->getEntity()->getComponent<PositionComponent>()->getPositions().y));
     bullet->pushComponent(std::make_shared<RType::DirectionPatternComponent>(RType::STRAIGHT_RIGHT));
     bullet->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 19, 6));
-
+    bullet->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     bullet->pushComponent(std::make_shared<RType::VelocityComponent>(21));
     bullet->pushComponent(std::make_shared<RType::ClockComponent>());
 

@@ -26,17 +26,23 @@ void RType::HandleColisionSystem::effects(std::vector<std::shared_ptr<RType::Ent
     for (const auto &entity: entities) {
         if (verifyRequiredComponent(entity)) {
             auto position1 = entity->getComponent<PositionComponent>()->getPositions();
+            sf::Vector2f scale1({1.0, 1.0});
+            if (entity->getComponent<ScaleComponent>())
+                scale1 = entity->getComponent<ScaleComponent>()->getScales();
             auto width1 = entity->getComponent<IntRectComponent>()->getIntRectWidth();
             auto height1 = entity->getComponent<IntRectComponent>()->getIntRectWidth();
             for (const auto &otherEntity: entities) {
                 if (entity->getId() != otherEntity->getId() && verifyRequiredComponent(otherEntity)) {
+                    sf::Vector2f scale2({1.0, 1.0});
+                    if (otherEntity->getComponent<ScaleComponent>())
+                        scale2 = otherEntity->getComponent<ScaleComponent>()->getScales();
                     auto position2 = otherEntity->getComponent<PositionComponent>()->getPositions();
                     auto width2 = otherEntity->getComponent<IntRectComponent>()->getIntRectWidth();
                     auto height2 = otherEntity->getComponent<IntRectComponent>()->getIntRectWidth();
-                    if (position1.x + width1 > position2.x
-                    && position1.x < position2.x + width2
-                    && position1.y + height1 > position2.y
-                    && position1.y < position2.y + height2) {
+                    if (position1.x + (width1 * scale1.x) > position2.x
+                    && position1.x < position2.x + (width2 * scale2.x)
+                    && position1.y + (height1 * scale2.y) > position2.y
+                    && position1.y < position2.y + (height2 * scale2.y)) {
                         if (GET_ENTITY_TYPE(entity) == RType::E_PLAYER && GET_ENTITY_TYPE(otherEntity) == RType::E_BULLET)
                             std::cout << "Player intersect bullet" << std::endl;
                         if (GET_ENTITY_TYPE(entity) == RType::E_BULLET && GET_ENTITY_TYPE(otherEntity) == RType::E_PLAYER)
