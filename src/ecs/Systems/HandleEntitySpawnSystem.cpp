@@ -24,9 +24,9 @@ RType::HandleEntitySpawnSystem::~HandleEntitySpawnSystem()
 void RType::HandleEntitySpawnSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
     if (entity->getComponent<RType::ClockComponent>()->getClock(RType::SPAWN_CLOCK).getElapsedTime().asSeconds() > 1) {
-        createMobFly(2000, _y_spawn);
-        createMobOctopus(2000, _y_spawn + 100);
-        createMobSpaceShip(2000, _y_spawn - 100);
+        createMobFly(1920, _y_spawn);
+        createMobOctopus(1920, _y_spawn + 100);
+        createMobSpaceShip(1920, _y_spawn - 100);
         entity->getComponent<RType::ClockComponent>()->getClock(RType::SPAWN_CLOCK).restart();
         if (_y_spawn > 100)
             _y_spawn -= 100;
@@ -52,7 +52,7 @@ void RType::HandleEntitySpawnSystem::createMobOctopus(int posX, int posY)
     mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 41, 46));
     mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(UP_N_DOWN_LEFT));
-    mob->pushComponent(std::make_shared<VelocityComponent>(OCTOPUS_SPEED));
+    mob->pushComponent(std::make_shared<VelocityComponent>(SERVER_SPEED(OCTOPUS_SPEED)));
     mob->pushComponent(std::make_shared<ClockComponent>());
     _sendToAllClient(Encoder::newEntity(E_OCTOPUS, mob->getId(), position->getPositionX(), position->getPositionY()));
 }
@@ -67,7 +67,7 @@ void RType::HandleEntitySpawnSystem::createMobFly(int posX, int posY)
     mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 65, 74));
     mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(UP_N_DOWN_LEFT));
-    mob->pushComponent(std::make_shared<VelocityComponent>(FLY_SPEED));
+    mob->pushComponent(std::make_shared<VelocityComponent>(SERVER_SPEED(FLY_SPEED)));
     mob->pushComponent(std::make_shared<ClockComponent>());
     _sendToAllClient(Encoder::newEntity(E_FLY, mob->getId(), position->getPositionX(), position->getPositionY()));
 }
@@ -82,7 +82,7 @@ void RType::HandleEntitySpawnSystem::createMobSpaceShip(int posX, int posY)
     mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 29, 29));
     mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(STRAIGHT_LEFT));
-    mob->pushComponent(std::make_shared<VelocityComponent>(SPACESHIP_SPEED));
+    mob->pushComponent(std::make_shared<VelocityComponent>(SERVER_SPEED(SPACESHIP_SPEED)));
     mob->pushComponent(std::make_shared<ClockComponent>());
     _sendToAllClient(Encoder::newEntity(E_SMALL_SPACESHIP, mob->getId(), position->getPositionX(), position->getPositionY()));
 }
