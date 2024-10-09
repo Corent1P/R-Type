@@ -47,6 +47,7 @@ void RType::HandleEntitySpawnSystem::createEntity(int x, int y)
     mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_MOB));
     std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(x, y));
     mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 29, 29));
+    mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     mob->pushComponent(std::make_shared<RType::HealthComponent>(25));
     mob->pushComponent(std::make_shared<RType::ClockComponent>());
     mob->pushComponent(std::make_shared<RType::VelocityComponent>(3));

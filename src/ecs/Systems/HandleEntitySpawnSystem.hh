@@ -15,6 +15,7 @@
 #include "../Components/HealthComponent.hh"
 #include "../Components/VelocityComponent.hh"
 #include "../Components/DirectionPatternComponent.hh"
+#include "../Components/ScaleComponent.hh"
 
 namespace RType {
     class HandleEntitySpawnSystem : public ASystem {

@@ -56,8 +56,9 @@ void RType::HandleColisionSystem::effects(std::vector<std::shared_ptr<RType::Ent
                             entitiesToDestroy.push_back(otherEntity);
                             std::cout << "Bullet intersect mob" << std::endl;
                         }
-                        if (GET_ENTITY_TYPE(entity) == RType::E_MOB && GET_ENTITY_TYPE(otherEntity) == RType::E_BULLET)
+                        if (GET_ENTITY_TYPE(entity) == RType::E_MOB && GET_ENTITY_TYPE(otherEntity) == RType::E_BULLET) {
                             std::cout << "Mob intersect Bullet" << std::endl;
+                        }
                     }
                 }
             }

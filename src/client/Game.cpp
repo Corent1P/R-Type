@@ -162,7 +162,7 @@ void RType::Game::createPlayer(long serverId, long posX, long posY)
 {
     std::shared_ptr<RType::Entity> player = _coord.generateNewEntity(serverId);
 
-    player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_PLAYER));
+    player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_ALLIES));
     std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
     std::shared_ptr<RType::ScaleComponent> scale = player->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     std::shared_ptr<RType::IntRectComponent> intRect = player->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 26, 21));

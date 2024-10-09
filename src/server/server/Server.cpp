@@ -105,7 +105,6 @@ void RType::Server::handleConnection(std::shared_ptr<ClientServer> connectedClie
 
     sendToAllClient(Encoder::newEntity(E_PLAYER, connectedClient->getEntity()->getId(), position->getPositionX(), position->getPositionY()));
     sendAllEntity(connectedClient);
-    createMob(); //TODO: remove this when the tests are finished
 }
 
 void RType::Server::handleDisconnection(std::shared_ptr<ClientServer> connectedClient)
