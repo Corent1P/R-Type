@@ -50,7 +50,8 @@ bool RType::HandleDrawSystem::verifyRequiredComponent(std::shared_ptr<RType::Ent
 void RType::HandleDrawSystem::drawHitBox(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &entity)
 {
     if (entity->getComponent<EntityTypeComponent>()->getEntityType() != E_LAYER) {
-        sf::RectangleShape rect(entity->getComponent<RType::SpriteComponent>()->getSprite()->getGlobalBounds().getSize());
+        sf::FloatRect bounds = entity->getComponent<RType::SpriteComponent>()->getSprite()->getGlobalBounds();
+        sf::RectangleShape rect(sf::Vector2f(bounds.width, bounds.height));
         rect.setPosition(entity->getComponent<RType::SpriteComponent>()->getSprite()->getPosition());
         rect.setOutlineColor(sf::Color::Red);
         rect.setOutlineThickness(2);
