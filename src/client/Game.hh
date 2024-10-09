@@ -80,7 +80,7 @@ namespace RType {
                 const int &winMaxX, const int &winMaxY, const int &index, const int &level);
             std::shared_ptr<RType::TextureComponent> getTextureComponent(const std::string &path);
             std::size_t getMaxClientId(void);
-        
+
             std::mutex _mtx;
             RType::Coordinator _coord;
             std::shared_ptr<RType::Client> _client;

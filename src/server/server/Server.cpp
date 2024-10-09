@@ -12,7 +12,7 @@ RType::Server::Server(boost::asio::io_context &ioContext, int port):
 {
     std::cout << "Server listening on port " << port << std::endl;
     initSystem();
-    _gameLoop = std::jthread(&Server::gameLoop, this);
+    _gameLoop = std::thread(&Server::gameLoop, this);
     startReceive();
 }
 

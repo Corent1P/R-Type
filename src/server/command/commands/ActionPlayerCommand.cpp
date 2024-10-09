@@ -15,6 +15,7 @@ RType::ActionPlayerCommand::ActionPlayerCommand(const std::vector<long> &data):
 
 void RType::ActionPlayerCommand::execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll, Coordinator &coord)
 {
+    (void)sendToClient;
     std::shared_ptr<RType::Entity> bullet = coord.generateNewEntity();
 
     bullet->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BULLET));
