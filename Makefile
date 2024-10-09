@@ -22,13 +22,17 @@ SRC_ECS	=		src/ecs/Components/PositionComponent.cpp\
 			src/ecs/Components/VelocityComponent.cpp\
 			src/ecs/Components/ActionComponent.cpp\
 			src/ecs/Components/LevelComponent.cpp\
+			src/ecs/Components/ScaleComponent.cpp\
+			src/ecs/Components/IntRectComponent.cpp\
 			src/ecs/Systems/HandleEventSystem.cpp\
+			src/ecs/Systems/HandleColisionSystem.cpp\
 			src/ecs/Systems/HandleDrawSystem.cpp\
 			src/ecs/Systems/HandleAnimationSystem.cpp\
 			src/ecs/Systems/HandleMoveSystem.cpp\
 			src/ecs/Systems/HandleMoveSpriteSystem.cpp\
 			src/ecs/Systems/HandleShootSystem.cpp\
 			src/ecs/Systems/HandlePatternSystem.cpp\
+			src/ecs/Systems/HandleEntitySpawnSystem.cpp\
 			src/ecs/Coordinator.cpp\
 			src/ecs/Entity.cpp\
 			src/ecs/ISystem.cpp\

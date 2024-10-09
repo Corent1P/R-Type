@@ -24,24 +24,14 @@ void RType::HandleDrawSystem::effects(std::vector<std::shared_ptr<RType::Entity>
             GET_WINDOW_FOR_DRAW->getWindow()->clear();
             for (const auto &entity: entities) {
                 if (verifyRequiredComponent(entity)) {
-                    // sf::RectangleShape rect(entity->getComponent<RType::SpriteComponent>()->getSprite()->getGlobalBounds().getSize());
-                    // rect.setPosition(entity->getComponent<RType::SpriteComponent>()->getSprite()->getPosition());
-                    // rect.setOutlineColor(sf::Color::Red);
-                    // rect.setOutlineThickness(2);
-                    // GET_WINDOW_FOR_DRAW->getWindow()->draw(rect);
+                    // drawHitBox(w, entity);
                     GET_WINDOW_FOR_DRAW->getWindow()->draw(*(entity->getComponent<RType::SpriteComponent>()->getSprite()));
-
                 }
             }
             GET_WINDOW_FOR_DRAW->getWindow()->display();
             return;
         }
     }
-}
-
-void RType::HandleDrawSystem::effect(std::shared_ptr<RType::Entity> entity)
-{
-    (void) entity;
 }
 
 bool RType::HandleDrawSystem::verifyRequiredComponent(std::shared_ptr<RType::Entity> entity)
@@ -55,4 +45,15 @@ bool RType::HandleDrawSystem::verifyRequiredComponent(std::shared_ptr<RType::Ent
         return false;
 
     return (true);
+}
+
+void RType::HandleDrawSystem::drawHitBox(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &entity)
+{
+    if (entity->getComponent<EntityTypeComponent>()->getEntityType() != E_LAYER) {
+        sf::RectangleShape rect(entity->getComponent<RType::SpriteComponent>()->getSprite()->getGlobalBounds().getSize());
+        rect.setPosition(entity->getComponent<RType::SpriteComponent>()->getSprite()->getPosition());
+        rect.setOutlineColor(sf::Color::Red);
+        rect.setOutlineThickness(2);
+        GET_WINDOW_FOR_DRAW->getWindow()->draw(rect);
+    }
 }
