@@ -98,8 +98,12 @@ void RType::Game::loopReceive()
 
                 if (receivInfo.second[0] == E_PLAYER)
                     createPlayer(receivInfo.second[1], receivInfo.second[2], receivInfo.second[3]);
-                if (receivInfo.second[0] == E_MOB)
-                    createMob(receivInfo.second[1], receivInfo.second[2], receivInfo.second[3]);
+                if (receivInfo.second[0] == E_OCTOPUS)
+                    createMobOctopus(receivInfo.second[1], receivInfo.second[2], receivInfo.second[3]);
+                if (receivInfo.second[0] == E_SMALL_SPACESHIP)
+                    createMobSpaceShip(receivInfo.second[1], receivInfo.second[2], receivInfo.second[3]);
+                if (receivInfo.second[0] == E_FLY)
+                    createMobFly(receivInfo.second[1], receivInfo.second[2], receivInfo.second[3]);
                 if (receivInfo.second[0] == E_BULLET)
                     createBullet(receivInfo.second[1], receivInfo.second[2], receivInfo.second[3]);
             } else {
@@ -186,11 +190,47 @@ void RType::Game::createWindow()
     createParallaxBackground(window);
 }
 
-void RType::Game::createMob(long serverId, long posX, long posY)
+void RType::Game::createMobOctopus(long serverId, long posX, long posY)
 {
     std::shared_ptr<RType::Entity> mob = _coord.generateNewEntity(serverId);
 
-    mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_MOB));
+    mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_OCTOPUS));
+    mob->pushComponent(std::make_shared<RType::HealthComponent>(5));
+    std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
+    std::shared_ptr<RType::ScaleComponent> scale = mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
+    std::shared_ptr<RType::IntRectComponent> intRect = mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 41, 46));
+    std::shared_ptr<RType::TextureComponent> texture = getTextureComponent("./ressources/octopus-sheet.png");
+    mob->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(),
+    sf::Vector2f(scale->getScaleX(), scale->getScaleY()),
+    sf::IntRect(intRect->getIntRectLeft(),intRect->getIntRectTop(), intRect->getIntRectWidth(), intRect->getIntRectHeight())));
+    mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(UP_N_DOWN_LEFT));
+    mob->pushComponent(std::make_shared<VelocityComponent>(1));
+    mob->pushComponent(std::make_shared<ClockComponent>());
+}
+
+void RType::Game::createMobFly(long serverId, long posX, long posY)
+{
+    std::shared_ptr<RType::Entity> mob = _coord.generateNewEntity(serverId);
+
+    mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_FLY));
+    mob->pushComponent(std::make_shared<RType::HealthComponent>(5));
+    std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
+    std::shared_ptr<RType::ScaleComponent> scale = mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
+    std::shared_ptr<RType::IntRectComponent> intRect = mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 65, 74));
+    std::shared_ptr<RType::TextureComponent> texture = getTextureComponent("./ressources/fly-sheet.png");
+    mob->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(),
+    sf::Vector2f(scale->getScaleX(), scale->getScaleY()),
+    sf::IntRect(intRect->getIntRectLeft(),intRect->getIntRectTop(), intRect->getIntRectWidth(), intRect->getIntRectHeight())));
+    mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(UP_N_DOWN_LEFT));
+    mob->pushComponent(std::make_shared<VelocityComponent>(1));
+    mob->pushComponent(std::make_shared<ClockComponent>());
+}
+
+void RType::Game::createMobSpaceShip(long serverId, long posX, long posY)
+{
+    std::shared_ptr<RType::Entity> mob = _coord.generateNewEntity(serverId);
+
+    mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_SMALL_SPACESHIP));
     mob->pushComponent(std::make_shared<RType::HealthComponent>(5));
     std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
     std::shared_ptr<RType::ScaleComponent> scale = mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
@@ -202,8 +242,6 @@ void RType::Game::createMob(long serverId, long posX, long posY)
     mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(STRAIGHT_LEFT));
     mob->pushComponent(std::make_shared<VelocityComponent>(1));
     mob->pushComponent(std::make_shared<ClockComponent>());
-
-    std::cout << _coord << std::endl;
 }
 
 void RType::Game::createBullet(long serverId, long posX, long posY)

@@ -68,7 +68,10 @@ namespace RType {
             void loopReceive();
             void createPlayer();
             void createPlayer(long serverId, long posX, long posY);
-            void createMob(long serverId, long posX, long posY);
+            void createMobOctopus(long serverId, long posX, long posY);
+            void createMobFly(long serverId, long posX, long posY);
+            void createMobSpaceShip(long serverId, long posX, long posY);
+
             void createBullet(long serverId, long posX, long posY);
             void createWindow();
             void createGameSystem();

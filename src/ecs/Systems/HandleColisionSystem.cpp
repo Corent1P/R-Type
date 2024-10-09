@@ -47,16 +47,16 @@ void RType::HandleColisionSystem::effects(std::vector<std::shared_ptr<RType::Ent
                             std::cout << "Player intersect bullet" << std::endl;
                         if (GET_ENTITY_TYPE(entity) == RType::E_BULLET && GET_ENTITY_TYPE(otherEntity) == RType::E_PLAYER)
                             std::cout << "Bullet intersect player" << std::endl;
-                        if (GET_ENTITY_TYPE(entity) == RType::E_PLAYER && GET_ENTITY_TYPE(otherEntity) == RType::E_MOB)
+                        if (GET_ENTITY_TYPE(entity) == RType::E_PLAYER && EntityTypeComponent::isMob(GET_ENTITY_TYPE(otherEntity)))
                             std::cout << "Player intersect mob" << std::endl;
-                        if (GET_ENTITY_TYPE(entity) == RType::E_MOB && GET_ENTITY_TYPE(otherEntity) == RType::E_PLAYER)
+                        if (EntityTypeComponent::isMob(GET_ENTITY_TYPE(entity)) && GET_ENTITY_TYPE(otherEntity) == RType::E_PLAYER)
                             std::cout << "Mob intersect Player" << std::endl;
-                        if (GET_ENTITY_TYPE(entity) == RType::E_BULLET && GET_ENTITY_TYPE(otherEntity) == RType::E_MOB) {
+                        if (GET_ENTITY_TYPE(entity) == RType::E_BULLET && EntityTypeComponent::isMob(GET_ENTITY_TYPE(otherEntity))) {
                             entitiesToDestroy.push_back(entity);
                             entitiesToDestroy.push_back(otherEntity);
                             std::cout << "Bullet intersect mob" << std::endl;
                         }
-                        if (GET_ENTITY_TYPE(entity) == RType::E_MOB && GET_ENTITY_TYPE(otherEntity) == RType::E_BULLET) {
+                        if (EntityTypeComponent::isMob(GET_ENTITY_TYPE(entity)) && GET_ENTITY_TYPE(otherEntity) == RType::E_BULLET) {
                             std::cout << "Mob intersect Bullet" << std::endl;
                         }
                     }

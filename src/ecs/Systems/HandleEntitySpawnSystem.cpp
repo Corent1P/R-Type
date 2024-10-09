@@ -24,7 +24,9 @@ RType::HandleEntitySpawnSystem::~HandleEntitySpawnSystem()
 void RType::HandleEntitySpawnSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
     if (entity->getComponent<RType::ClockComponent>()->getClock(RType::SPAWN_CLOCK).getElapsedTime().asSeconds() > 1) {
-        createEntity(2000, _y_spawn);
+        createMobFly(2000, _y_spawn);
+        createMobOctopus(2000, _y_spawn + 100);
+        createMobSpaceShip(2000, _y_spawn - 100);
         entity->getComponent<RType::ClockComponent>()->getClock(RType::SPAWN_CLOCK).restart();
         if (_y_spawn > 100)
             _y_spawn -= 100;
@@ -40,18 +42,47 @@ bool RType::HandleEntitySpawnSystem::verifyRequiredComponent(std::shared_ptr<RTy
     return false;
 }
 
-void RType::HandleEntitySpawnSystem::createEntity(int x, int y)
+void RType::HandleEntitySpawnSystem::createMobOctopus(int posX, int posY)
 {
     std::shared_ptr<RType::Entity> mob = _addEntity();
 
-    mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_MOB));
-    std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(x, y));
-    mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 29, 29));
+    mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_OCTOPUS));
+    mob->pushComponent(std::make_shared<RType::HealthComponent>(5));
+    auto position = mob->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
     mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
-    mob->pushComponent(std::make_shared<RType::HealthComponent>(25));
-    mob->pushComponent(std::make_shared<RType::ClockComponent>());
-    mob->pushComponent(std::make_shared<RType::VelocityComponent>(3));
+    mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 41, 46));
+    mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(UP_N_DOWN_LEFT));
+    mob->pushComponent(std::make_shared<VelocityComponent>(1));
+    mob->pushComponent(std::make_shared<ClockComponent>());
+    _sendToAllClient(Encoder::newEntity(E_OCTOPUS, mob->getId(), position->getPositionX(), position->getPositionY()));
+}
 
+void RType::HandleEntitySpawnSystem::createMobFly(int posX, int posY)
+{
+    std::shared_ptr<RType::Entity> mob = _addEntity();
+
+    mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_FLY));
+    mob->pushComponent(std::make_shared<RType::HealthComponent>(5));
+    auto position = mob->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
+    mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
+    mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 65, 74));
+    mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(UP_N_DOWN_LEFT));
+    mob->pushComponent(std::make_shared<VelocityComponent>(1));
+    mob->pushComponent(std::make_shared<ClockComponent>());
+    _sendToAllClient(Encoder::newEntity(E_FLY, mob->getId(), position->getPositionX(), position->getPositionY()));
+}
+
+void RType::HandleEntitySpawnSystem::createMobSpaceShip(int posX, int posY)
+{
+    std::shared_ptr<RType::Entity> mob = _addEntity();
+
+    mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_SMALL_SPACESHIP));
+    mob->pushComponent(std::make_shared<RType::HealthComponent>(5));
+    auto position = mob->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
+    mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
+    mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 29, 29));
     mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(STRAIGHT_LEFT));
-    _sendToAllClient(Encoder::newEntity(E_MOB, mob->getId(), position->getPositionX(), position->getPositionY()));
+    mob->pushComponent(std::make_shared<VelocityComponent>(1));
+    mob->pushComponent(std::make_shared<ClockComponent>());
+    _sendToAllClient(Encoder::newEntity(E_SMALL_SPACESHIP, mob->getId(), position->getPositionX(), position->getPositionY()));
 }
