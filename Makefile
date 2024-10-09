@@ -43,6 +43,9 @@ SRC_PROTOCOLHANDLER	=	./src/protocolHandler/Encoder.cpp\
 						./src/protocolHandler/Decoder.cpp
 
 SRC_COMMAND	=	./src/server/command/ACommand.cpp	\
+				./src/server/server/Server.cpp	\
+				./src/server/clientServer/ClientServer.cpp	\
+				./src/server/Error.cpp	\
 				./src/server/command/factory/CommandFactory.cpp	\
 				./src/server/command/commands/ActionPlayerCommand.cpp	\
 				./src/server/command/commands/ConnexionCommand.cpp	\
@@ -55,8 +58,6 @@ SRC_COMMAND	=	./src/server/command/ACommand.cpp	\
 				./src/server/command/commands/MoveEntityCommand.cpp	\
 				./src/server/command/commands/MovePlayerCommand.cpp	\
 				./src/server/command/commands/NewEntityCommand.cpp	\
-				./src/server/clientServer/ClientServer.cpp	\
-				./src/server/Error.cpp	\
 
 UNIT_TEST_CLIENT_FILE	=	tests/client/Client_tests.cpp
 
