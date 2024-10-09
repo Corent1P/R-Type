@@ -5,8 +5,6 @@ set(SRC_SERVER
     ./clientServer/ClientServer.cpp
     ./command/ACommand.cpp
     ./command/factory/CommandFactory.cpp
-    ./command/commands/ConnexionCommand.cpp
-    ./command/commands/DisconnexionCommand.cpp
     ./command/commands/NewEntityCommand.cpp
     ./command/commands/DeleteEntityCommand.cpp
     ./command/commands/MoveEntityCommand.cpp

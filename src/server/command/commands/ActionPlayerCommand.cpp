@@ -10,9 +10,9 @@
 RType::ActionPlayerCommand::ActionPlayerCommand(const std::vector<long> &data):
     ACommand(data, ACTION_PLAYER)
 {
-    std::cout << "Action command created" << std::endl;
 }
 
+// TODO: implement the other actions of the player
 void RType::ActionPlayerCommand::execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll, Coordinator &coord)
 {
     (void)sendToClient;
@@ -23,8 +23,6 @@ void RType::ActionPlayerCommand::execute(std::shared_ptr<ClientServer> client, F
     bullet->pushComponent(std::make_shared<RType::DirectionPatternComponent>(RType::STRAIGHT_RIGHT));
     bullet->pushComponent(std::make_shared<RType::VelocityComponent>(21));
     bullet->pushComponent(std::make_shared<RType::ClockComponent>());
-
-    std::cout << "ActionPlayerCommand " << bullet->getId() << std::endl;
 
     sendToAll(Encoder::newEntity(E_BULLET, bullet->getId(), position->getPositionX(), position->getPositionY()));
 }

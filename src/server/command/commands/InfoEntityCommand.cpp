@@ -13,7 +13,7 @@ RType::InfoEntityCommand::InfoEntityCommand(const std::vector<long> &arguments):
     std::cout << "InfoEntity command created" << std::endl;
 }
 
-// TODO: ask Sacha how i get the id from the command
+// TODO: ask Sacha how to get the id from the command
 void RType::InfoEntityCommand::execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll, Coordinator &coord)
 {
     (void)client;

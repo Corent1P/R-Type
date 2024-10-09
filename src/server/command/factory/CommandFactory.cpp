@@ -10,9 +10,6 @@
 // TODO: check if the throw error is catch or not
 RType::CommandFactory::CommandFactory()
 {
-    // TODO implement the commands
-    _constructors.insert({CONNEXION, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new ConnexionCommand(data));}});
-    _constructors.insert({DISCONNEXION, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new DisconnexionCommand(data));}});
     _constructors.insert({NEW_ENTITY, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new NewEntityCommand(data));}});
     _constructors.insert({DELETE_ENTITY, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new DeleteEntityCommand(data));}});
     _constructors.insert({MOVE_ENTITY, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new MoveEntityCommand(data));}});
@@ -29,7 +26,7 @@ std::shared_ptr<RType::ICommand> RType::CommandFactory::createCommand(const std:
     try {
         PacketType type = (PacketType)command.first;
 
-        if (type == ERROR)
+        if (type == ERROR || type == CONNEXION || type == DISCONNEXION)
             throw Error("Unvalid Command sent from client");
         return _constructors[type](command.second);
     } catch(const Error &err) {

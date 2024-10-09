@@ -8,8 +8,6 @@
 #pragma once
 
 #include "../ICommand.hh"
-#include "../commands/ConnexionCommand.hh"
-#include "../commands/DisconnexionCommand.hh"
 #include "../commands/NewEntityCommand.hh"
 #include "../commands/DeleteEntityCommand.hh"
 #include "../commands/MoveEntityCommand.hh"
