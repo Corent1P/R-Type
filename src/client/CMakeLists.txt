@@ -18,6 +18,7 @@ target_link_libraries(r-type_client PRIVATE
     ecs
     protocolHandler
     Boost::boost
+    Boost::thread
     sfml-system
     sfml-window
     sfml-graphics

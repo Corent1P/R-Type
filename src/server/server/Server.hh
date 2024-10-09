@@ -43,7 +43,7 @@ namespace RType {
 
             bool _stopLoop;
             std::mutex _mtx;
-            std::thread _gameLoop;
+            boost::thread _gameLoop;
             udp::socket _socket;
             udp::endpoint _remoteEndpoint;
             std::array<unsigned char, MAX_SIZE> _recvBuffer;

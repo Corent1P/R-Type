@@ -31,6 +31,7 @@ target_compile_options(r-type_server PRIVATE
 target_link_libraries(r-type_server PRIVATE
     ecs
     Boost::boost
+    Boost::thread
     sfml-system
     sfml-window
     sfml-graphics

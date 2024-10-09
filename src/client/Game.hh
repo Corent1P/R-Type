@@ -32,7 +32,7 @@
 #include "../ecs/Systems/HandleAnimationSystem.hpp"
 #include "../ecs/Systems/HandlePatternSystem.hpp"
 #include "../ecs/Systems/HandleShootSystem.hpp"
-#include <thread>
+#include <boost/thread.hpp>
 #include "../protocolHandler/Encoder.hh"
 #include "../protocolHandler/Decoder.hh"
 
@@ -79,7 +79,7 @@ namespace RType {
             RType::Coordinator _coord;
             std::shared_ptr<RType::Client> _client;
             bool _stopLoop;
-            std::thread _receipter;
+            boost::thread _receipter;
             bool _initConnection;
             std::unordered_map<std::string, std::shared_ptr<RType::TextureComponent>> _texturesMap;
 
