@@ -38,7 +38,7 @@ jobs:
             - name: Install dependencies
               id: package
               run: |
-                  sudo apt-get update -y && sudo apt-get install -y pipx
+                  sudo apt-get update -y && sudo apt-get install -y pipx clang-tidy
                   pipx install conan
                   pipx ensurepath
                   echo "$HOME/.local/bin" >> $GITHUB_PATH
