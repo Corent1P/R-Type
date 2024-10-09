@@ -22,9 +22,15 @@ void RType::HandleDrawSystem::effects(std::vector<std::shared_ptr<RType::Entity>
     for (const auto &w: entities) {
         if (GET_WINDOW_FOR_DRAW != nullptr) {
             GET_WINDOW_FOR_DRAW->getWindow()->clear();
-            for (const auto &e: entities) {
-                if (verifyRequiredComponent(e)) {
-                    GET_WINDOW_FOR_DRAW->getWindow()->draw(*(e->getComponent<RType::SpriteComponent>()->getSprite()));
+            for (const auto &entity: entities) {
+                if (verifyRequiredComponent(entity)) {
+                    // sf::RectangleShape rect(entity->getComponent<RType::SpriteComponent>()->getSprite()->getGlobalBounds().getSize());
+                    // rect.setPosition(entity->getComponent<RType::SpriteComponent>()->getSprite()->getPosition());
+                    // rect.setOutlineColor(sf::Color::Red);
+                    // rect.setOutlineThickness(2);
+                    // GET_WINDOW_FOR_DRAW->getWindow()->draw(rect);
+                    GET_WINDOW_FOR_DRAW->getWindow()->draw(*(entity->getComponent<RType::SpriteComponent>()->getSprite()));
+
                 }
             }
             GET_WINDOW_FOR_DRAW->getWindow()->display();

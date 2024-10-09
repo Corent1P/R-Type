@@ -201,6 +201,8 @@ void RType::Game::createMob(long serverId, long posX, long posY)
     sf::IntRect(intRect->getIntRectLeft(),intRect->getIntRectTop(), intRect->getIntRectWidth(), intRect->getIntRectHeight())));
     mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(STRAIGHT_LEFT));
     mob->pushComponent(std::make_shared<VelocityComponent>(1));
+    mob->pushComponent(std::make_shared<ClockComponent>());
+
     std::cout << _coord << std::endl;
 }
 

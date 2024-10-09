@@ -28,8 +28,14 @@ float RType::ScaleComponent::getScaleY() const
     return _scaleY;
 }
 
+sf::Vector2f RType::ScaleComponent::getScales() const
+{
+	return {_scaleX, _scaleY};
+}
+
 std::string RType::ScaleComponent::getOutput() const
 {
     std::string output("Scale Component ("")");
     return (output);
 }
+
