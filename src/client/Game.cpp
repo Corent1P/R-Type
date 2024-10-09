@@ -204,7 +204,7 @@ void RType::Game::createMobOctopus(long serverId, long posX, long posY)
     sf::Vector2f(scale->getScaleX(), scale->getScaleY()),
     sf::IntRect(intRect->getIntRectLeft(),intRect->getIntRectTop(), intRect->getIntRectWidth(), intRect->getIntRectHeight())));
     mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(UP_N_DOWN_LEFT));
-    mob->pushComponent(std::make_shared<VelocityComponent>(1));
+    mob->pushComponent(std::make_shared<VelocityComponent>(OCTOPUS_SPEED));
     mob->pushComponent(std::make_shared<ClockComponent>());
 }
 
@@ -222,7 +222,7 @@ void RType::Game::createMobFly(long serverId, long posX, long posY)
     sf::Vector2f(scale->getScaleX(), scale->getScaleY()),
     sf::IntRect(intRect->getIntRectLeft(),intRect->getIntRectTop(), intRect->getIntRectWidth(), intRect->getIntRectHeight())));
     mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(UP_N_DOWN_LEFT));
-    mob->pushComponent(std::make_shared<VelocityComponent>(1));
+    mob->pushComponent(std::make_shared<VelocityComponent>(FLY_SPEED));
     mob->pushComponent(std::make_shared<ClockComponent>());
 }
 
@@ -240,7 +240,7 @@ void RType::Game::createMobSpaceShip(long serverId, long posX, long posY)
     sf::Vector2f(scale->getScaleX(), scale->getScaleY()),
     sf::IntRect(intRect->getIntRectLeft(),intRect->getIntRectTop(), intRect->getIntRectWidth(), intRect->getIntRectHeight())));
     mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(STRAIGHT_LEFT));
-    mob->pushComponent(std::make_shared<VelocityComponent>(1));
+    mob->pushComponent(std::make_shared<VelocityComponent>(SPACESHIP_SPEED));
     mob->pushComponent(std::make_shared<ClockComponent>());
 }
 
