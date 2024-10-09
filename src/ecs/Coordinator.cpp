@@ -38,7 +38,6 @@ const std::vector<std::shared_ptr<RType::ISystem>> &RType::Coordinator::getSyste
 
 std::shared_ptr<RType::Entity> RType::Coordinator::addEntity(void)
 {
-    std::unique_lock<std::mutex> lock(*_mtx);
     return generateNewEntity(-1);
 }
 

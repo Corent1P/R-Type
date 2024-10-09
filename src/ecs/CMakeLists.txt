@@ -34,6 +34,7 @@ set(SRC_SYSTEMS
     ./Systems/HandlePatternSystem.cpp
     ./Systems/HandleShootSystem.cpp
     ./Systems/HandleColisionSystem.cpp
+    ./Systems/HandleEntitySpawnSystem.cpp
 )
 
 set(SRC_CLIENTS # To Remove
