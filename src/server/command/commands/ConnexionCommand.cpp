@@ -7,7 +7,7 @@
 
 #include "ConnexionCommand.hh"
 
-RType::ConnexionCommand::ConnexionCommand(const std::vector<long> &arguments):
+RType::ConnexionCommand::ConnexionCommand(const COMMAND_ARGS &arguments):
     ACommand(arguments, CONNEXION)
 {
     std::cout << "Connexion command created" << std::endl;

@@ -17,28 +17,32 @@ namespace RType {
                 return std::make_pair(decryptHeader(packet), COMMAND_ARGS());
             case DISCONNEXION:
                 return std::make_pair(decryptHeader(packet), COMMAND_ARGS());
+            case CONNEXION_CONFIRM:
+                return std::make_pair(decryptHeader(packet), COMMAND_ARGS());
+            case ACK_MISSING:
+                return std::make_pair(decryptHeader(packet), ACKMissing(packet));
+            case GAME_START:
+                return std::make_pair(decryptHeader(packet), COMMAND_ARGS());
+            case GAME_END:
+                return std::make_pair(decryptHeader(packet), COMMAND_ARGS());
+            case INFO_LEVEL:
+                return std::make_pair(decryptHeader(packet), infoLevel(packet));
             case NEW_ENTITY:
                 return std::make_pair(decryptHeader(packet), newEntity(packet));
             case DELETE_ENTITY:
                 return std::make_pair(decryptHeader(packet), deleteEntity(packet));
             case MOVE_ENTITY:
                 return std::make_pair(decryptHeader(packet), moveEntity(packet));
-            case INFO_LEVEL:
-                return std::make_pair(decryptHeader(packet), infoLevel(packet));
             case INFO_ENTITY:
                 return std::make_pair(decryptHeader(packet), infoEntity(packet));
             case MOVE_PLAYER:
                 return std::make_pair(decryptHeader(packet), movePlayer(packet));
             case ACTION_PLAYER:
                 return std::make_pair(decryptHeader(packet), actionPlayer(packet));
-            case GAME_START:
-                return std::make_pair(decryptHeader(packet), COMMAND_ARGS());
-            case GAME_END:
-                return std::make_pair(decryptHeader(packet), COMMAND_ARGS());
             case ERROR:
                 return std::make_pair(decryptHeader(packet), COMMAND_ARGS());
             default:
-                return std::make_pair(decryptHeader(packet), COMMAND_ARGS());
+                return std::make_pair(UNKNOWN_HEADER, COMMAND_ARGS());
         }
     }
 
@@ -136,7 +140,7 @@ namespace RType {
     COMMAND_ARGS Decoder::ACKMissing(U_STRING &packet)
     {
         COMMAND_ARGS args(PACKET_PER_TICK);
-        std::uint8_t nbMissing;
+        std::uint8_t nbMissing = 0;
 
         for (std::size_t i = 0; i < PACKET_PER_TICK; i++) {
             if ((packet[i / 8 + 3] & (1 << (i % 8))) != 0) {

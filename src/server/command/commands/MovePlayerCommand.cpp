@@ -7,7 +7,7 @@
 
 #include "MovePlayerCommand.hh"
 
-RType::MovePlayerCommand::MovePlayerCommand(const std::vector<long> &data):
+RType::MovePlayerCommand::MovePlayerCommand(const COMMAND_ARGS &data):
     ACommand(data, MOVE_PLAYER)
 {
     std::cout << "Move command created" << std::endl;
@@ -30,5 +30,5 @@ void RType::MovePlayerCommand::execute(std::shared_ptr<ClientServer> client, FUN
     if (position.second > 1080. - 79)
         position.second = 1080. - 79;
     client->getEntity()->getComponent<PositionComponent>()->setPositions(position.first, position.second);
-    sendToAll(Encoder::moveEntity(client->getEntity()->getId(), position.first, position.second, 0));
+    sendToAll(Encoder::moveEntity(0, client->getEntity()->getId(), position.first, position.second, 0));
 }

@@ -22,14 +22,14 @@ namespace RType {
              * @param data is the vector that contains the data of the Command
              * @param type is the type of the Command (cf. PacketType)
              */
-            ACommand(const std::vector<long> &data, PacketType type);
+            ACommand(const COMMAND_ARGS &data, PacketType type);
 
             /**
              * @brief Get the Data member of the object
              *
              * @return std::string the data of the object
              */
-            std::vector<long> getData(void) const override;
+            COMMAND_ARGS getData(void) const override;
 
             /**
              * @brief Get the Type member of the object
@@ -43,7 +43,7 @@ namespace RType {
              * @brief The data of the Command (ex.: "45" in the command "Move 45")
              *
              */
-            std::vector<long> _data;
+            COMMAND_ARGS _data;
             /**
              * @brief The type of the Command (cf. PacketType)
              *

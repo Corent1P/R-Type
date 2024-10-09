@@ -7,7 +7,7 @@
 
 #include "ActionPlayerCommand.hh"
 
-RType::ActionPlayerCommand::ActionPlayerCommand(const std::vector<long> &data):
+RType::ActionPlayerCommand::ActionPlayerCommand(const COMMAND_ARGS &data):
     ACommand(data, ACTION_PLAYER)
 {
     std::cout << "Action command created" << std::endl;
@@ -26,5 +26,5 @@ void RType::ActionPlayerCommand::execute(std::shared_ptr<ClientServer> client, F
 
     std::cout << "ActionPlayerCommand " << bullet->getId() << std::endl;
 
-    sendToAll(Encoder::newEntity(E_BULLET, bullet->getId(), position->getPositionX(), position->getPositionY()));
+    sendToAll(Encoder::newEntity(0, E_BULLET, bullet->getId(), position->getPositionX(), position->getPositionY()));
 }

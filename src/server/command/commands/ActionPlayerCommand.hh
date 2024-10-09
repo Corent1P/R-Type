@@ -19,7 +19,7 @@ namespace RType {
              *
              * @param data is a vector arguments that contains the data of the Command
              */
-            ActionPlayerCommand(const std::vector<long> &arguments);
+            ActionPlayerCommand(const COMMAND_ARGS &arguments);
 
             /**
              * @brief Execute the command

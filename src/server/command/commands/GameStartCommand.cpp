@@ -7,7 +7,7 @@
 
 #include "GameStartCommand.hh"
 
-RType::GameStartCommand::GameStartCommand(const std::vector<long> &data):
+RType::GameStartCommand::GameStartCommand(const COMMAND_ARGS &data):
     ACommand(data, GAME_START)
 {
     std::cout << "GameStart command created" << std::endl;

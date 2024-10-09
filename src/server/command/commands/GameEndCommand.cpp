@@ -7,7 +7,7 @@
 
 #include "GameEndCommand.hh"
 
-RType::GameEndCommand::GameEndCommand(const std::vector<long> &data):
+RType::GameEndCommand::GameEndCommand(const COMMAND_ARGS &data):
     ACommand(data, GAME_END)
 {
     std::cout << "GameEnd command created" << std::endl;

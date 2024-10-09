@@ -47,13 +47,13 @@ namespace RType {
              * @param command the command to create
              * @return std::shared_ptr<ICommand> the created command (cf. ICommand interface)
              */
-            std::shared_ptr<ICommand> createCommand(const std::pair<RType::PacketType, std::vector<long>> &command);
+            std::shared_ptr<ICommand> createCommand(const PACKET &command);
 
         private:
             /**
              * @brief A map that contains the constructors of all the commands and its associated PacketType
              *
              */
-            std::map<PacketType, std::function<std::shared_ptr<ICommand>(std::vector<long>)>> _constructors;
+            std::map<PacketType, std::function<std::shared_ptr<ICommand>(COMMAND_ARGS)>> _constructors;
     };
 }

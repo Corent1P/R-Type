@@ -7,7 +7,7 @@
 
 #include "NewEntityCommand.hh"
 
-RType::NewEntityCommand::NewEntityCommand(const std::vector<long> &arguments):
+RType::NewEntityCommand::NewEntityCommand(const COMMAND_ARGS &arguments):
     ACommand(arguments, NEW_ENTITY)
 {
     std::cout << "NewEntity command created" << std::endl;

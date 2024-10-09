@@ -145,7 +145,7 @@ namespace RType {
             chars[packet / 8] += 1 << (packet % 8);
         for (std::size_t i = 0; i < PACKET_PER_TICK / 8; i++)
             encoded += chars[i];
-        return header(packetNumber, encoded.size(), ACKMISSING) +
+        return header(packetNumber, encoded.size(), ACK_MISSING) +
                encoded;
     }
 }

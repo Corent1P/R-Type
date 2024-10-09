@@ -19,7 +19,7 @@ namespace RType {
              *
              * @param data is a string argument that contains the data of the Command
              */
-            MovePlayerCommand(const std::vector<long> &arguments);
+            MovePlayerCommand(const COMMAND_ARGS &arguments);
 
             /**
              * @brief Execute the command

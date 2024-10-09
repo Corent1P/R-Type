@@ -33,7 +33,7 @@ namespace RType {
             // Command handling
             void handleConnection(std::shared_ptr<ClientServer> connectedClient);
             void handleDisconnection(std::shared_ptr<ClientServer> connectedClient);
-            void handleCommand(std::pair<RType::PacketType, std::vector<long>> receivInfo, std::shared_ptr<ClientServer> connectedClient);
+            void handleCommand(PACKET receivInfo, std::shared_ptr<ClientServer> connectedClient);
 
             // Game handling
             void gameLoop(void);

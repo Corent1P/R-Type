@@ -19,7 +19,7 @@ namespace RType {
              *
              * @param data is a vector arguments that contains the data of the Command
              */
-            GameEndCommand(const std::vector<long> &data);
+            GameEndCommand(const COMMAND_ARGS &data);
 
             /**
              * @brief Execute the command

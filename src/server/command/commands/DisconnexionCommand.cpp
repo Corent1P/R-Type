@@ -7,7 +7,7 @@
 
 #include "DisconnexionCommand.hh"
 
-RType::DisconnexionCommand::DisconnexionCommand(const std::vector<long> &arguments):
+RType::DisconnexionCommand::DisconnexionCommand(const COMMAND_ARGS &arguments):
     ACommand(arguments, DISCONNEXION)
 {
     std::cout << "Disconnexion command created" << std::endl;

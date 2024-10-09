@@ -18,6 +18,7 @@
 * the second is the number of the packet
 */
 #define HEADER std::pair<RType::PacketType, std::uint8_t>
+#define UNKNOWN_HEADER std::make_pair(UNKNOWN, 0)
 #define PACKET std::pair<HEADER, COMMAND_ARGS>
 
 namespace RType {

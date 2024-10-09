@@ -7,7 +7,7 @@
 
 #include "DeleteEntityCommand.hh"
 
-RType::DeleteEntityCommand::DeleteEntityCommand(const std::vector<long> &arguments):
+RType::DeleteEntityCommand::DeleteEntityCommand(const COMMAND_ARGS &arguments):
     ACommand(arguments, DELETE_ENTITY)
 {
     std::cout << "DeleteEntity command created" << std::endl;

@@ -10,7 +10,7 @@
 RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, const std::string &port)
 {
     _client = std::make_shared<RType::Client> (ioContext, host, port);
-    _client->send(Encoder::connexion());
+    _client->send(Encoder::connexion(0));
     createWindow();
     createPlayer();
     createGameSystem();
@@ -21,7 +21,7 @@ RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, c
 
 RType::Game::~Game()
 {
-    _client->send(Encoder::disconnexion());
+    _client->send(Encoder::disconnexion(0));
     if (_receipter.joinable()) {
         _receipter.join();
     }
@@ -89,10 +89,10 @@ void RType::Game::loopReceive()
     while (!_stopLoop) {
         std::basic_string<unsigned char> command = _client->receive();
         auto receivInfo = Decoder::getCommandInfo(command);
-        if (receivInfo.first == MOVE_PLAYER)
-            std::cout << "Message received = " << receivInfo.first << " move with coordinates " << receivInfo.second[0] << ":" << receivInfo.second[1] << std::endl;
+        if (receivInfo.first.first == MOVE_PLAYER)
+            std::cout << "Message received = " << receivInfo.first.first << " move with coordinates " << receivInfo.second[0] << ":" << receivInfo.second[1] << std::endl;
 
-        if (receivInfo.first == NEW_ENTITY) {
+        if (receivInfo.first.first == NEW_ENTITY) {
             if (_initConnection) {
                 std::unique_lock<std::mutex> lock(_mtx);
 
@@ -112,7 +112,7 @@ void RType::Game::loopReceive()
                 }
             }
         }
-        if (receivInfo.first == DELETE_ENTITY) {
+        if (receivInfo.first.first == DELETE_ENTITY) {
 
             auto entities = _coord.getEntities();
             for (const auto &entity : entities) {
@@ -123,7 +123,7 @@ void RType::Game::loopReceive()
                 }
             }
         }
-        if (receivInfo.first == MOVE_ENTITY) {
+        if (receivInfo.first.first == MOVE_ENTITY) {
 
             auto entities = _coord.getEntities();
             for (const auto &entity : entities) {

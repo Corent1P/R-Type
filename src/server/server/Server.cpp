@@ -40,17 +40,17 @@ void RType::Server::handleReceive(const boost::system::error_code& error, std::s
         return;
     }
     std::basic_string<unsigned char> command(_recvBuffer.data(), bytesTransferred);
-    auto receivInfo = Decoder::getCommandInfo(command);
+    PACKET receivInfo = Decoder::getCommandInfo(command);
     std::shared_ptr<ClientServer> connectedClient = getConnectedClient();
 
     if (!connectedClient) {
         std::unique_lock<std::mutex> lock(_mtx);
         connectedClient = createClient();
     }
-    if (receivInfo.first == CONNEXION) {
+    if (receivInfo.first.first == CONNEXION) {
         std::unique_lock<std::mutex> lock(_mtx);
         handleConnection(connectedClient);
-    } else if (receivInfo.first == DISCONNEXION) {
+    } else if (receivInfo.first.first == DISCONNEXION) {
         std::unique_lock<std::mutex> lock(_mtx);
         handleDisconnection(connectedClient);
     } else {
@@ -101,7 +101,7 @@ void RType::Server::handleConnection(std::shared_ptr<ClientServer> connectedClie
 
     connectedClient->setEntity(player);
 
-    sendToAllClient(Encoder::newEntity(E_PLAYER, connectedClient->getEntity()->getId(), position->getPositionX(), position->getPositionY()));
+    sendToAllClient(Encoder::newEntity(0, E_PLAYER, connectedClient->getEntity()->getId(), position->getPositionX(), position->getPositionY()));
     sendAllEntity(connectedClient);
     createMob(); //TODO: remove this when the tests are finished
 }
@@ -110,19 +110,19 @@ void RType::Server::handleDisconnection(std::shared_ptr<ClientServer> connectedC
 {
     for (std::size_t i = 0; i < _clients.size(); i++) {
         if (_clients[i] == connectedClient) {
-            sendToAllClient(Encoder::deleteEntity(_clients[i]->getEntity()->getId()));
+            sendToAllClient(Encoder::deleteEntity(0, _clients[i]->getEntity()->getId()));
             _coord.deleteEntity(_clients[i]->getEntity());
             _clients.erase(std::next(_clients.begin(), i));
         }
     }
 }
 
-void RType::Server::handleCommand(std::pair<RType::PacketType, std::vector<long>> receivInfo, std::shared_ptr<ClientServer> connectedClient)
+void RType::Server::handleCommand(PACKET receivInfo, std::shared_ptr<ClientServer> connectedClient)
 {
     std::unique_lock<std::mutex> lock(_mtx);
     std::shared_ptr<ICommand> com = _commandFactory.createCommand(receivInfo);
     if (!com) {
-        connectedClient->sendMessage(_socket, Encoder::header(0, RType::ERROR));
+        connectedClient->sendMessage(_socket, Encoder::header(0, 0, RType::ERROR));
         std::cout << "unvalid command sent by client" << std::endl;
     } else {
         com->execute(connectedClient,
@@ -178,7 +178,7 @@ void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)
 {
     for (auto entity: _coord.getEntities()) {
         if (client->getEntity()->getId() != entity->getId() && (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER || entity->getComponent<EntityTypeComponent>()->getEntityType() == E_MOB)) {
-            client->sendMessage(_socket, Encoder::newEntity(entity->getComponent<EntityTypeComponent>()->getEntityType(), entity->getId(), entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY()));
+            client->sendMessage(_socket, Encoder::newEntity(0, entity->getComponent<EntityTypeComponent>()->getEntityType(), entity->getId(), entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY()));
         }
     }
 }
@@ -194,5 +194,5 @@ void RType::Server::createMob(void)
     mob->pushComponent(std::make_shared<RType::VelocityComponent>(3));
 
     mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(STRAIGHT_LEFT));
-    sendToAllClient(Encoder::newEntity(E_MOB, mob->getId(), position->getPositionX(), position->getPositionY()));
+    sendToAllClient(Encoder::newEntity(0, E_MOB, mob->getId(), position->getPositionX(), position->getPositionY()));
 }

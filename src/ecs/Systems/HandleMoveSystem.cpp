@@ -57,7 +57,7 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
                     || entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::UP_N_DOWN_LEFT)
                     && entity->getComponent<RType::PositionComponent>()->getPositionX() < -300) {
                         if (_sendMessageToAllClient) {
-                            _sendMessageToAllClient(Encoder::deleteEntity(entity->getId()));
+                            _sendMessageToAllClient(Encoder::deleteEntity(0, entity->getId()));
                             _deleteEntity(entity);
                         }
                         continue;
@@ -67,7 +67,7 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
                     || entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::UP_N_DOWN_RIGHT)
                     && entity->getComponent<RType::PositionComponent>()->getPositionX() > 2200) {
                         if (_sendMessageToAllClient) {
-                            _sendMessageToAllClient(Encoder::deleteEntity(entity->getId()));
+                            _sendMessageToAllClient(Encoder::deleteEntity(0, entity->getId()));
                             _deleteEntity(entity);
                         }
                         continue;
@@ -76,11 +76,11 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
             }
 
             if (_client && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER && (movePosition.first != 0 ||  movePosition.second != 0)) {
-                _client->send(Encoder::movePlayer(movePosition.first * 10, movePosition.second * 10));
+                _client->send(Encoder::movePlayer(0, movePosition.first * 10, movePosition.second * 10));
             }
 
             if (_sendMessageToAllClient) {
-                _sendMessageToAllClient(Encoder::moveEntity(entity->getId(), entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY(), 0));
+                _sendMessageToAllClient(Encoder::moveEntity(0, entity->getId(), entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY(), 0));
             }
         }
     }

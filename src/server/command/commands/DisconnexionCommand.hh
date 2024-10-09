@@ -19,7 +19,7 @@ namespace RType {
              *
              * @param data is a vector arguments that contains the data of the Command
              */
-            DisconnexionCommand(const std::vector<long> &arguments);
+            DisconnexionCommand(const COMMAND_ARGS &arguments);
 
             /**
              * @brief Execute the command

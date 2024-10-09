@@ -37,7 +37,7 @@ namespace RType {
              *
              * @return std::string the data of the object
              */
-            virtual std::vector<long> getData(void) const = 0;
+            virtual COMMAND_ARGS getData(void) const = 0;
 
             /**
              * @brief execute the command

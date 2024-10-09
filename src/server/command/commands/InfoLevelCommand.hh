@@ -19,7 +19,7 @@ namespace RType {
              *
              * @param data is a vector arguments that contains the data of the Command
              */
-            InfoLevelCommand(const std::vector<long> &arguments);
+            InfoLevelCommand(const COMMAND_ARGS &arguments);
 
             /**
              * @brief Execute the command

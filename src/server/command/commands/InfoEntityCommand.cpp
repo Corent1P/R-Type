@@ -7,7 +7,7 @@
 
 #include "InfoEntityCommand.hh"
 
-RType::InfoEntityCommand::InfoEntityCommand(const std::vector<long> &arguments):
+RType::InfoEntityCommand::InfoEntityCommand(const COMMAND_ARGS &arguments):
     ACommand(arguments, INFO_ENTITY)
 {
     std::cout << "InfoEntity command created" << std::endl;

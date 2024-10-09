@@ -7,7 +7,7 @@
 
 #include "InfoLevelCommand.hh"
 
-RType::InfoLevelCommand::InfoLevelCommand(const std::vector<long> &arguments):
+RType::InfoLevelCommand::InfoLevelCommand(const COMMAND_ARGS &arguments):
     ACommand(arguments, INFO_LEVEL)
 {
     std::cout << "InfoLevel command created" << std::endl;

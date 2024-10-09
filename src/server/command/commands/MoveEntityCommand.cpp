@@ -7,7 +7,7 @@
 
 #include "MoveEntityCommand.hh"
 
-RType::MoveEntityCommand::MoveEntityCommand(const std::vector<long> &arguments):
+RType::MoveEntityCommand::MoveEntityCommand(const COMMAND_ARGS &arguments):
     ACommand(arguments, MOVE_ENTITY)
 {
     std::cout << "MoveEntityCommand command created" << std::endl;

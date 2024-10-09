@@ -19,7 +19,7 @@ namespace RType {
              *
              * @param data is a string argument that contains the data of the Command
              */
-            ConnexionCommand(const std::vector<long> &arguments);
+            ConnexionCommand(const COMMAND_ARGS &arguments);
 
             /**
              * @brief Execute the command
