@@ -15,7 +15,7 @@ RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, c
     createPlayer();
     createGameSystem();
     _stopLoop = false;
-    _receipter = std::jthread(&Game::loopReceive, this);
+    _receipter = std::thread(&Game::loopReceive, this);
     _initConnection = false;
 }
 
