@@ -22,7 +22,9 @@ namespace RType {
         S_MOVE,
         S_ANIMATION,
         S_PATTERN,
-        S_SHOOT
+        S_SHOOT,
+        S_COLISION,
+        S_ENTITY_MOB_SYSTEM,
     };
 
     class ISystem {

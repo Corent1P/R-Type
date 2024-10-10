@@ -19,8 +19,8 @@ namespace RType {
             void setIsConnected(bool isConnected);
             bool getIsConnected(void) const;
 
-            void setPortNumber(boost::asio::ip::port_type portNumber);
-            boost::asio::ip::port_type getPortNumber(void) const;
+            void setPortNumber(std::size_t portNumber);
+            std::size_t getPortNumber(void) const;
 
             void setAddress(boost::asio::ip::address address);
             boost::asio::ip::address getAddress(void) const;
@@ -37,7 +37,7 @@ namespace RType {
 
         private:
             udp::endpoint _endpoint;
-            boost::asio::ip::port_type _portNumber;
+            std::size_t _portNumber;
             boost::asio::ip::address _address;
             bool _isConnected;
             std::shared_ptr<RType::Entity> _entity;

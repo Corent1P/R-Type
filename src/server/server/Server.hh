@@ -39,7 +39,6 @@ namespace RType {
             void gameLoop(void);
             void initSystem(void);
             void sendAllEntity(std::shared_ptr<RType::ClientServer> client);
-            void createMob(void);
 
             bool _stopLoop;
             std::mutex _mtx;

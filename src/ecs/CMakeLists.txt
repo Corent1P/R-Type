@@ -21,6 +21,8 @@ set(SRC_COMPONENTS
     ./Components/DirectionPatternComponent.cpp
     ./Components/VelocityComponent.cpp
     ./Components/LevelComponent.cpp
+    ./Components/ScaleComponent.cpp
+    ./Components/IntRectComponent.cpp
 )
 
 set(SRC_SYSTEMS
@@ -31,6 +33,8 @@ set(SRC_SYSTEMS
     ./Systems/HandleAnimationSystem.cpp
     ./Systems/HandlePatternSystem.cpp
     ./Systems/HandleShootSystem.cpp
+    ./Systems/HandleColisionSystem.cpp
+    ./Systems/HandleEntitySpawnSystem.cpp
 )
 
 set(SRC_CLIENTS # To Remove

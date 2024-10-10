@@ -24,6 +24,8 @@
 #include "../ecs/Components/ActionComponent.hh"
 #include "../ecs/Components/DirectionPatternComponent.hh"
 #include "../ecs/Components/VelocityComponent.hh"
+#include "../ecs/Components/ScaleComponent.hh"
+#include "../ecs/Components/IntRectComponent.hh"
 
 #include "../ecs/Systems/HandleEventSystem.hpp"
 #include "../ecs/Systems/HandleDrawSystem.hpp"
@@ -32,6 +34,7 @@
 #include "../ecs/Systems/HandleAnimationSystem.hpp"
 #include "../ecs/Systems/HandlePatternSystem.hpp"
 #include "../ecs/Systems/HandleShootSystem.hpp"
+#include "../ecs/Systems/HandleColisionSystem.hpp"
 #include <thread>
 #include "../protocolHandler/Encoder.hh"
 #include "../protocolHandler/Decoder.hh"
@@ -65,7 +68,10 @@ namespace RType {
             void loopReceive();
             void createPlayer();
             void createPlayer(long serverId, long posX, long posY);
-            void createMob(long serverId, long posX, long posY);
+            void createMobOctopus(long serverId, long posX, long posY);
+            void createMobFly(long serverId, long posX, long posY);
+            void createMobSpaceShip(long serverId, long posX, long posY);
+
             void createBullet(long serverId, long posX, long posY);
             void createWindow();
             void createGameSystem();

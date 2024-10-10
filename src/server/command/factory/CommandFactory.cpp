@@ -7,12 +7,8 @@
 
 #include "CommandFactory.hh"
 
-// TODO: check if the throw error is catch or not
 RType::CommandFactory::CommandFactory()
 {
-    // TODO implement the commands
-    _constructors.insert({CONNEXION, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new ConnexionCommand(data));}});
-    _constructors.insert({DISCONNEXION, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new DisconnexionCommand(data));}});
     _constructors.insert({NEW_ENTITY, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new NewEntityCommand(data));}});
     _constructors.insert({DELETE_ENTITY, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new DeleteEntityCommand(data));}});
     _constructors.insert({MOVE_ENTITY, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new MoveEntityCommand(data));}});
@@ -31,6 +27,8 @@ std::shared_ptr<RType::ICommand> RType::CommandFactory::createCommand(const std:
 
         if (type == ERROR)
             throw Error("Unvalid Command sent from client");
+        if (_constructors.find(type) == _constructors.end())
+            throw Error("Command not found");
         return _constructors[type](command.second);
     } catch(const Error &err) {
         std::cerr << "Error during command creation : " << err.what() << std::endl;

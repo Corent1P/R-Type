@@ -35,12 +35,6 @@ namespace RType {
              */
             ~HandleDrawSystem();
             /**
-             * @brief a method to handle the System action on the right entity.
-             *
-             * @param entity entity required in order to process a action.
-             */
-            void effect(std::shared_ptr<RType::Entity> entity);
-            /**
              * @brief method looping on each entities in order to check if they have the mendatory Component in order to process the system effect.
              *        Also used to process a system effect if two distincts entites are involved in the procces.
              *
@@ -58,6 +52,8 @@ namespace RType {
         protected:
         private:
             std::vector<std::shared_ptr<RType::Entity>> _entities;
+
+            void drawHitBox(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &entity);
     };
 }
 

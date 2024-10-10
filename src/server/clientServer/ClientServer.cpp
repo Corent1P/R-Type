@@ -23,12 +23,12 @@ bool RType::ClientServer::getIsConnected(void) const
 	return _isConnected;
 }
 
-void RType::ClientServer::setPortNumber(boost::asio::ip::port_type portNumber)
+void RType::ClientServer::setPortNumber(std::size_t portNumber)
 {
 	_portNumber = portNumber;
 }
 
-boost::asio::ip::port_type RType::ClientServer::getPortNumber(void) const
+std::size_t RType::ClientServer::getPortNumber(void) const
 {
 	return _portNumber;
 }

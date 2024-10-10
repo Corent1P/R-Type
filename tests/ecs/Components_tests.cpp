@@ -53,7 +53,7 @@ Test(main, TestEntityTypeComponent) {
     std::string output = entityType.getOutput();
     std::string expected = "Entity Type Component (entity type: player)";
     cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
-    
+
     entityType.setEntityType(RType::E_BOSS);
     cr_assert_eq(entityType.getEntityType(), RType::E_BOSS, "Expected: %d, Got: %d", entityType.getEntityType(), RType::E_BOSS);
 
@@ -61,16 +61,16 @@ Test(main, TestEntityTypeComponent) {
     expected = "Entity Type Component (entity type: boss)";
     cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
 
-    entityType.setEntityType(RType::E_MOB);
+    entityType.setEntityType(RType::E_SMALL_SPACESHIP);
     output = entityType.getOutput();
-    expected = "Entity Type Component (entity type: mob)";
+    expected = "Entity Type Component (entity type: mob small spaceship)";
     cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
 
     entityType.setEntityType(RType::E_BUTTON);
     output = entityType.getOutput();
     expected = "Entity Type Component (entity type: button)";
     cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
-    
+
     entityType.setEntityType(RType::E_WINDOW);
     output = entityType.getOutput();
     expected = "Entity Type Component (entity type: window)";

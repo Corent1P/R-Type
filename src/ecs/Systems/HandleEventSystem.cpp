@@ -31,6 +31,8 @@ void RType::HandleEventSystem::effects(std::vector<std::shared_ptr<RType::Entity
                     && player->getComponent<RType::SpriteComponent>() != nullptr
                     && player->getComponent<RType::ActionComponent>() != nullptr
                     ) {
+                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+                            GET_WINDOW_POLL_EVENT->close();
                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !player->getComponent<RType::DirectionComponent>()->getDirections(LEFT)) {
                             player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, true);
                         } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && player->getComponent<RType::DirectionComponent>()->getDirections(LEFT)) {
