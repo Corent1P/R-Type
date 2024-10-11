@@ -8,3 +8,6 @@ CMakeToolchain
 
 [layout]
 cmake_layout
+
+[options]
+boost/*:header_only=True

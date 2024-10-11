@@ -20,13 +20,12 @@ set(SRC_SERVER
 
 add_executable(r-type_server ${SRC_SERVER})
 
-target_compile_options(r-type_server PRIVATE
-    -fPIC
-    -Wall
-    -Wextra
-    # -Werror
-    -g
-)
+if (NOT WIN32)
+    target_compile_options(r-type_server PRIVATE
+        -fPIC
+        -g
+    )
+endif()
 
 target_link_libraries(r-type_server PRIVATE
     ecs
