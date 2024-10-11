@@ -16,9 +16,13 @@ if(NOT MSVC)
     add_link_options(-fsanitize=address)
 endif()
 
-if(MSVC)
-    add_compile_options(/W4 /WX)
-else()
+if(WIN32)
+    add_compile_definitions(_WIN32_WINNT=0x0601)
+endif()
+
+if(NOT MSVC)
+#     add_compile_options(/W4 /WX)
+# else()
     add_compile_options(-Wall -Wextra -Werror -g)
 endif()
 
@@ -28,18 +32,14 @@ endif()
 #     include_directories(${"/opt/homebrew/lib"})
 # endif()
 
-add_subdirectory(src/ecs)
-add_subdirectory(src/protocolHandler)
-
 find_package(Boost REQUIRED)
 find_package(SFML 2.6.1 COMPONENTS system window graphics REQUIRED)
-# include_directories(${Boost_INCLUDE_DIRS})
-# include_directories(${SFML_INCLUDE_DIRS})
+
+add_subdirectory(src/ecs)
+add_subdirectory(src/protocolHandler)
 
 add_subdirectory(src/client)
 add_subdirectory(src/server)
 
-# target_include_directories(r-type_client PRIVATE ${Boost_INCLUDE_DIRS} ${SFML_INCLUDE_DIRS})
-# target_include_directories(r-type_server PRIVATE ${Boost_INCLUDE_DIRS} ${SFML_INCLUDE_DIRS})
 target_link_libraries(r-type_client PUBLIC boost::boost sfml::sfml)
 target_link_libraries(r-type_server PUBLIC boost::boost sfml::sfml)

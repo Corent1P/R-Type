@@ -52,5 +52,4 @@ if (NOT WIN32)
     )
 endif()
 
-find_package(SFML 2.6.1 COMPONENTS system window graphics network audio REQUIRED)
-target_link_libraries(ecs PUBLIC sfml::sfml)
+target_link_libraries(ecs PUBLIC boost::boost sfml::sfml)
