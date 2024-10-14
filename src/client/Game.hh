@@ -64,6 +64,8 @@ namespace RType {
             ~Game();
             void gameLoop();
             const Coordinator &getCoordinator() const;
+            bool getGameHasStarted(void) const;
+            void connectToServer(void);
         private:
             void loopReceive();
             void createPlayer();
