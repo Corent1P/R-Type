@@ -104,10 +104,12 @@ void RType::Game::loopReceive()
                     createMobSpaceShip(receivInfo.second[1], static_cast<short> (receivInfo.second[2]), static_cast<short> (receivInfo.second[3]));
                 if (receivInfo.second[0] == E_FLY)
                     createMobFly(receivInfo.second[1], static_cast<short> (receivInfo.second[2]), static_cast<short> (receivInfo.second[3]));
-                if (receivInfo.second[0] == E_BULLET)
+                if (receivInfo.second[0] == E_BULLET) {
                     createBullet(receivInfo.second[1], static_cast<short> (receivInfo.second[2]), static_cast<short> (receivInfo.second[3]));
+                    createEffect(static_cast<short> (receivInfo.second[2]), static_cast<short> (receivInfo.second[3]),  RType::E_BULLET_EFFECT, "./ressources/effects/flash.png", sf::IntRect(0, 0, 11, 19));
+                }
             } else {
-                std::unique_lock<std::mutex> lock(_mtx);
+                std::unique_lock<std::mutex> lock(_mtx); 
                 _initConnection = true;
                 auto entities = _coord.getEntities();
                 for (const auto &entity : entities) {
@@ -122,7 +124,34 @@ void RType::Game::loopReceive()
             for (const auto &entity : entities) {
                 std::unique_lock<std::mutex> lock(_mtx);
                 if (entity->getServerId() == receivInfo.second[0]) {
-                    _coord.deleteEntity(entity);
+                    switch (entity->getComponent<RType::EntityTypeComponent>()->getEntityType())
+                    {
+                    case RType::E_BULLET:
+                        createEffect(entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY(),
+                        RType::E_HIT_EFFECT, "./ressources/effects/hit.png", sf::IntRect(0, 0, 16, 16));
+                        _coord.deleteEntity(entity);
+                        break;
+                    case RType::E_OCTOPUS:
+                        createEffect(entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY(),
+                        RType::E_EXPLOSION_EFFECT, "./ressources/effects/explosion.png", sf::IntRect(0, 0, 32, 32));
+                        _coord.deleteEntity(entity);
+                        break;
+                    case RType::E_FLY:
+                        createEffect(entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY(),
+                        RType::E_EXPLOSION_EFFECT, "./ressources/effects/explosion.png", sf::IntRect(0, 0, 32, 32));
+                        _coord.deleteEntity(entity);
+                        break;
+                    case RType::E_SMALL_SPACESHIP:
+                        createEffect(entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY(),
+                        RType::E_EXPLOSION_EFFECT, "./ressources/effects/explosion.png", sf::IntRect(0, 0, 32, 32));
+                        _coord.deleteEntity(entity);
+                        break;
+                    case RType::E_PLAYER:
+                        _coord.deleteEntity(entity);
+                        break;
+                    default:
+                        break;
+                    }
                     break;
                 }
             }
@@ -359,6 +388,17 @@ std::shared_ptr<RType::TextureComponent> RType::Game::getTextureComponent(const 
     _texturesMap[path] = texture;
 
     return texture;
+}
+
+void RType::Game::createEffect(long posX, long posY, EntityType type, std::string path, sf::IntRect rect) {
+    
+    std::shared_ptr<RType::Entity> shotEffect = _coord.generateNewEntity();
+    shotEffect->pushComponent(std::make_shared<RType::EntityTypeComponent>(type));
+    std::shared_ptr<RType::PositionComponent> position = shotEffect->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY - 20));
+    std::shared_ptr<RType::TextureComponent> texture = shotEffect->pushComponent(std::make_shared<RType::TextureComponent>(path));
+    shotEffect->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(), sf::Vector2f(2, 2), rect));
+    shotEffect->pushComponent(std::make_shared<RType::VelocityComponent>(7));
+    shotEffect->pushComponent(std::make_shared<RType::ClockComponent>());
 }
 
 std::ostream &operator<<(std::ostream &s, const RType::Game &game)
