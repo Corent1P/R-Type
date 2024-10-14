@@ -53,7 +53,9 @@ void RType::HandleColisionSystem::effects(std::vector<std::shared_ptr<RType::Ent
                             std::cout << "Mob intersect Player" << std::endl;
                         if (GET_ENTITY_TYPE(entity) == RType::E_BULLET && EntityTypeComponent::isMob(GET_ENTITY_TYPE(otherEntity))) {
                             entitiesToDestroy.push_back(entity);
-                            entitiesToDestroy.push_back(otherEntity);
+                            otherEntity->getComponent<HealthComponent>()->setHealth(otherEntity->getComponent<HealthComponent>()->getHealth() - 1);
+                            if (otherEntity->getComponent<HealthComponent>()->getHealth() <= 0)
+                                entitiesToDestroy.push_back(otherEntity);
                             std::cout << "Bullet intersect mob" << std::endl;
                         }
                         if (EntityTypeComponent::isMob(GET_ENTITY_TYPE(entity)) && GET_ENTITY_TYPE(otherEntity) == RType::E_BULLET) {

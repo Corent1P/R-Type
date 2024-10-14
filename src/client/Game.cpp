@@ -224,7 +224,7 @@ void RType::Game::createMobOctopus(long serverId, long posX, long posY)
     std::shared_ptr<RType::Entity> mob = _coord.generateNewEntity(serverId);
 
     mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_OCTOPUS));
-    mob->pushComponent(std::make_shared<RType::HealthComponent>(5));
+    mob->pushComponent(std::make_shared<RType::HealthComponent>(3));
     std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
     std::shared_ptr<RType::ScaleComponent> scale = mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     std::shared_ptr<RType::IntRectComponent> intRect = mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 41, 46));
@@ -260,7 +260,7 @@ void RType::Game::createMobSpaceShip(long serverId, long posX, long posY)
     std::shared_ptr<RType::Entity> mob = _coord.generateNewEntity(serverId);
 
     mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_SMALL_SPACESHIP));
-    mob->pushComponent(std::make_shared<RType::HealthComponent>(5));
+    mob->pushComponent(std::make_shared<RType::HealthComponent>(2));
     std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
     std::shared_ptr<RType::ScaleComponent> scale = mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     std::shared_ptr<RType::IntRectComponent> intRect = mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 29, 29));
