@@ -65,13 +65,54 @@ namespace RType {
              * @param entity entity required in order to process a action.
              */
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
-        protected:
+
         private:
             /**
              * @brief a function to send a message to all clients connected (only for the server side)
              *
              */
             std::function<void(const std::basic_string<unsigned char> &message)> _sendMessageToAllClient;
+            /**
+             * @brief A vector containing all the entities that are colliding
+             *
+             */
+            std::vector<std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>>> _entitiesColiding;
+            /**
+             * @brief A vector containing all the entities that were colliding the loop before
+             *
+             */
+            std::vector<std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>>> _entitiesColidingBefore;
+            /**
+             * @brief A vector containing all the entities that are going to be destroyed
+             *
+             */
+            std::vector<std::shared_ptr<RType::Entity>> _entitiesToDestroy;
+
+            /**
+             * @brief a method to check if two entities are colliding
+             *
+             * @param entity1 the first entity
+             * @param entity2 the second entity
+             * @return if the entities are colliding
+             */
+            bool collides(std::shared_ptr<RType::Entity> entity1, std::shared_ptr<RType::Entity> entity2);
+            /**
+             * @brief a method to handle the colision between two entities
+             *
+             */
+            void handleEntityColision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &entitiesColliding);
+            /**
+             * @brief a method to handle the colision between all entities
+             *
+             */
+            void handleEntityColisions(void);
+            /**
+             * @brief a method to check if the colision was already here in the previous loop
+             *
+             * @param colidingPair the entities that are colliding
+             * @return if the colision is in the past
+             */
+            bool isInPastColision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &colidingPair);
     };
 }
 #endif /* !HANDLECOLISIONSYTEM_HPP_ */
