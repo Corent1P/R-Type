@@ -23,13 +23,14 @@ RType::HandleColisionSystem::~HandleColisionSystem()
 
 void RType::HandleColisionSystem::effects(std::vector<std::shared_ptr<RType::Entity>> entities) {
     _entitiesToDestroy.clear();
-    _entitiesColliding.clear();
+    _entitiesColidingBefore = _entitiesColiding;
+    _entitiesColiding.clear();
     for (const auto &entity: entities) {
         if (!verifyRequiredComponent(entity))
             continue;
         for (const auto &entity2: entities) {
             if (collides(entity, entity2)) {
-                _entitiesColliding.push_back({entity, entity2});
+                _entitiesColiding.push_back({entity, entity2});
             }
         }
     }
@@ -108,8 +109,18 @@ void RType::HandleColisionSystem::handleEntityColision(const std::pair<std::shar
 
 void RType::HandleColisionSystem::handleEntityColisions(void)
 {
-    for (const auto &colidingPair: _entitiesColliding) {
-        // TODO: handle the multi collision
+    for (const auto &colidingPair: _entitiesColiding) {
+        if (isInPastColision(colidingPair))
+            continue;
         handleEntityColision(colidingPair);
     }
+}
+
+bool RType::HandleColisionSystem::isInPastColision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &colidingPair)
+{
+    for (const auto &colidingPairBefore: _entitiesColidingBefore) {
+        if (colidingPair == colidingPairBefore)
+            return true;
+    }
+    return false;
 }
