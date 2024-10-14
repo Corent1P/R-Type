@@ -22,6 +22,16 @@ void RType::HandleShootSystem::effects(std::vector<std::shared_ptr<RType::Entity
             // auto playerGlobalBounds = entity->getComponent<SpriteComponent>()->getSprite()->getGlobalBounds();
             if (entity->getComponent<ActionComponent>()->getActions(RType::SHOOTING) == true) {
                 entity->getComponent<RType::ActionComponent>()->setActions(RType::SHOOTING, false);
+
+                // std::shared_ptr<RType::Entity> shotEffect = _addEntity();
+                // shotEffect->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BULLET_EFFECT));
+                // std::shared_ptr<RType::PositionComponent> position = shotEffect->pushComponent(std::make_shared<RType::PositionComponent>(playerGlobalBounds.width + playerGlobalBounds.left, (playerGlobalBounds.height / 2) + playerGlobalBounds.top));
+                // std::shared_ptr<RType::TextureComponent> texture = shotEffect->pushComponent(std::make_shared<RType::TextureComponent>("./ressources/effects/flash.png"));
+                // shotEffect->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(), sf::Vector2f(2, 2), sf::IntRect(0, 0, 11, 19)));
+                // // shotEffect->pushComponent(std::make_shared<RType::DirectionPatternComponent>(RType::STRAIGHT_RIGHT));
+                // shotEffect->pushComponent(std::make_shared<RType::VelocityComponent>(7));
+                // shotEffect->pushComponent(std::make_shared<RType::ClockComponent>());
+
                 // std::shared_ptr<RType::Entity> shot = _addEntity();
                 // shot->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BULLET));
                 // std::shared_ptr<RType::PositionComponent> position = shot->pushComponent(std::make_shared<RType::PositionComponent>(playerGlobalBounds.width + playerGlobalBounds.left, (playerGlobalBounds.height / 2) + playerGlobalBounds.top));
@@ -32,6 +42,11 @@ void RType::HandleShootSystem::effects(std::vector<std::shared_ptr<RType::Entity
                 // shot->pushComponent(std::make_shared<RType::ClockComponent>());
                 // std::cout << "shoot" << std::endl;
                 _client->send(Encoder::actionPlayer(true, false, false, false));
+            }
+        }
+        if (entity->getComponent<RType::ClockComponent>() != nullptr && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_BULLET_EFFECT) {
+            if (entity->getComponent<RType::ClockComponent>()->getClock(SHOOTING_EFFECT).getElapsedTime().asSeconds() >= 0.01) {
+                _deleteEntity(entity);
             }
         }
     }

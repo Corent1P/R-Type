@@ -71,7 +71,7 @@ namespace RType {
             void createMobOctopus(long serverId, long posX, long posY);
             void createMobFly(long serverId, long posX, long posY);
             void createMobSpaceShip(long serverId, long posX, long posY);
-
+            void createEffect(long posX, long posY, EntityType type, std::string path, sf::IntRect rect);
             void createBullet(long serverId, long posX, long posY);
             void createWindow();
             void createGameSystem();
