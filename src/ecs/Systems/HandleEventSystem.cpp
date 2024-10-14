@@ -33,27 +33,26 @@ void RType::HandleEventSystem::effects(std::vector<std::shared_ptr<RType::Entity
                     ) {
                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
                             GET_WINDOW_POLL_EVENT->close();
-                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !player->getComponent<RType::DirectionComponent>()->getDirections(LEFT)) {
-                            player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, true);
-                        } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && player->getComponent<RType::DirectionComponent>()->getDirections(LEFT)) {
-                            player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, false);
+                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && player->getComponent<RType::DirectionComponent>()->getDirections(LEFT) == 0) {
+                            player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, 100);
+                        } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && player->getComponent<RType::DirectionComponent>()->getDirections(LEFT) != 0) {
+                            player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, 0);
                         }
-                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !player->getComponent<RType::DirectionComponent>()->getDirections(RIGHT)) {
-                            player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, true);
-                        } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && player->getComponent<RType::DirectionComponent>()->getDirections(RIGHT)) {
-                            player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, false);
+                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && player->getComponent<RType::DirectionComponent>()->getDirections(RIGHT) == 0) {
+                            player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, 100);
+                        } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && player->getComponent<RType::DirectionComponent>()->getDirections(RIGHT) != 0) {
+                            player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, 0);
                         }
-                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !player->getComponent<RType::DirectionComponent>()->getDirections(UP)) {
-                            player->getComponent<RType::DirectionComponent>()->setDirections(UP, true);
-                        } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && player->getComponent<RType::DirectionComponent>()->getDirections(UP)) {
-                            player->getComponent<RType::DirectionComponent>()->setDirections(UP, false);
+                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && player->getComponent<RType::DirectionComponent>()->getDirections(UP) == 0) {
+                            player->getComponent<RType::DirectionComponent>()->setDirections(UP, 100);
+                        } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && player->getComponent<RType::DirectionComponent>()->getDirections(UP) != 0) {
+                            player->getComponent<RType::DirectionComponent>()->setDirections(UP, 0);
                         }
-                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !player->getComponent<RType::DirectionComponent>()->getDirections(DOWN)) {
-                            player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, true);
-                        } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && player->getComponent<RType::DirectionComponent>()->getDirections(DOWN)) {
-                            player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, false);
+                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && player->getComponent<RType::DirectionComponent>()->getDirections(DOWN) == 0) {
+                            player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, 100);
+                        } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && player->getComponent<RType::DirectionComponent>()->getDirections(DOWN) != 0) {
+                            player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, 0);
                         }
-
                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !_isShooting) {
                             _isShooting = true;
                             player->getComponent<RType::ActionComponent>()->setActions(RType::SHOOTING, true);
@@ -74,27 +73,28 @@ void RType::HandleEventSystem::effects(std::vector<std::shared_ptr<RType::Entity
                                 }
                             }
                            if (y > 10.0) {
-                                player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, true);
+                                player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, y);
                            } else {
-                                player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, false);
+                                player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, 0);
                            }
                            if (y < -10.0) {
-                                player->getComponent<RType::DirectionComponent>()->setDirections(UP, true);
+                                player->getComponent<RType::DirectionComponent>()->setDirections(UP, abs(y));
                            } else {
-                                player->getComponent<RType::DirectionComponent>()->setDirections(UP, false);
+                                player->getComponent<RType::DirectionComponent>()->setDirections(UP, 0);
                            }
                            if (x < -10.0) {
-                                player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, true);
+                                player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, abs(x));
                            } else {
-                                player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, false);
+                                player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, 0);
                            }
                            if (x > 10.0) {
-                                player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, true);
+                                player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, x);
                            } else {
-                                player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, false);
+                                player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, 0);
                            }
 
                         }
+                        std::cout << "player -> " << player->getComponent<RType::DirectionComponent>()->getDirections(RIGHT)  << " " << player->getComponent<RType::DirectionComponent>()->getDirections(LEFT)  << " " << player->getComponent<RType::DirectionComponent>()->getDirections(DOWN)  << " " << player->getComponent<RType::DirectionComponent>()->getDirections(UP) << std::endl;
                     }
                 }
             }
