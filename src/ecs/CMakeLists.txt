@@ -47,4 +47,11 @@ target_compile_options(ecs PRIVATE
 )
 
 find_package(SFML COMPONENTS system window graphics network audio REQUIRED)
-target_link_libraries(ecs sfml-system sfml-window sfml-graphics sfml-network sfml-audio)
+target_link_libraries(ecs PRIVATE
+    JsonCpp::JsonCpp
+    sfml-system
+    sfml-window
+    sfml-graphics
+    sfml-network
+    sfml-audio
+)
