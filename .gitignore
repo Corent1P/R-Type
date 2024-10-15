@@ -57,6 +57,8 @@ _deps
 # vcpkg
 build/
 vcpkg_installed/
+vcpkg-configuration.json
+vcpkg-manifest-install.log
 
 # Criterion
 *.gcda
