@@ -73,7 +73,7 @@ namespace RType {
             void createMobSpaceShip(long serverId, long posX, long posY);
             void createEffect(long posX, long posY, EntityType type, std::string path, sf::IntRect rect);
             void createBullet(long serverId, long posX, long posY);
-            void createItem();
+            void createItem(long serverId, long posX, long posY);
             void createWindow();
             void createGameSystem();
             void createParallaxBackground(std::shared_ptr<RType::Entity> window);
