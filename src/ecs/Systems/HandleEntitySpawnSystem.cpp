@@ -27,9 +27,6 @@ void RType::HandleEntitySpawnSystem::effect(std::shared_ptr<RType::Entity> entit
         createEntity(1920, _y_spawn, E_FLY);
         createEntity(1920, _y_spawn + 100, E_OCTOPUS);
         createEntity(1920, _y_spawn - 100, E_SMALL_SPACESHIP);
-        // createMobFly(1920, _y_spawn);
-        // createMobOctopus(1920, _y_spawn + 100);
-        // createMobSpaceShip(1920, _y_spawn - 100);
         entity->getComponent<RType::ClockComponent>()->getClock(RType::SPAWN_CLOCK).restart();
         _y_spawn += 100 * _sign;
         if (_y_spawn <= 100 || _y_spawn >= 700)
