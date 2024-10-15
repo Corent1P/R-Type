@@ -25,6 +25,7 @@ namespace RType {
         E_BULLET_EFFECT,
         E_HIT_EFFECT,
         E_EXPLOSION_EFFECT,
+        E_ITEM,
     };
 
     enum WeaponType {
@@ -42,6 +43,8 @@ namespace RType {
     enum PowerUpType {
         NOPOWERUP,
         SHIELD,
+        IMPROVED_WEAPON,
+        CHARGED_WEAPON,
     };
 
     class EntityTypeComponent: public RType::IComponent {

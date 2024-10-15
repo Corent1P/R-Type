@@ -102,6 +102,10 @@ void RType::HandleColisionSystem::handleEntityColision(const std::pair<std::shar
             _entitiesToDestroy.push_back(entity2);
         std::cout << "Bullet intersect mob" << std::endl;
     }
+    if (entityType1 == RType::E_PLAYER && entityType2 == RType::E_ITEM) {
+        _entitiesToDestroy.push_back(entity2);
+        std::cout << "Item intersect player" << std::endl;
+    }
     if (EntityTypeComponent::isMob(entityType1) && entityType2 == RType::E_BULLET) {
         std::cout << "Mob intersect Bullet" << std::endl;
     }

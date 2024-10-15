@@ -14,6 +14,8 @@ RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, c
     createWindow();
     createPlayer();
     createGameSystem();
+    //Test items:
+    createItem();
     _stopLoop = false;
     _receipter = std::thread(&Game::loopReceive, this);
     _initConnection = false;
@@ -144,6 +146,9 @@ void RType::Game::loopReceive()
                     case RType::E_SMALL_SPACESHIP:
                         createEffect(entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY(),
                         RType::E_EXPLOSION_EFFECT, "./ressources/effects/explosion.png", sf::IntRect(0, 0, 32, 32));
+                        _coord.deleteEntity(entity);
+                        break;
+                    case RType::E_ITEM:
                         _coord.deleteEntity(entity);
                         break;
                     case RType::E_PLAYER:
@@ -281,7 +286,7 @@ void RType::Game::createBullet(long serverId, long posX, long posY)
 
     std::shared_ptr<RType::PositionComponent> position = bullet->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
     std::shared_ptr<RType::ScaleComponent> scale = bullet->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
-    std::shared_ptr<RType::IntRectComponent> intRect = bullet->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 19, 6));
+    std::shared_ptr<RType::IntRectComponent> intRect = bullet->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 19, 6)); //(0, 0, 288, 192
     std::shared_ptr<RType::TextureComponent> texture = getTextureComponent("./ressources/shoot-spritesheet.png");
     bullet->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(),
     sf::Vector2f(scale->getScaleX(), scale->getScaleY()),
@@ -390,8 +395,8 @@ std::shared_ptr<RType::TextureComponent> RType::Game::getTextureComponent(const 
     return texture;
 }
 
-void RType::Game::createEffect(long posX, long posY, EntityType type, std::string path, sf::IntRect rect) {
-    
+void RType::Game::createEffect(long posX, long posY, EntityType type, std::string path, sf::IntRect rect)
+{    
     std::shared_ptr<RType::Entity> shotEffect = _coord.generateNewEntity();
     shotEffect->pushComponent(std::make_shared<RType::EntityTypeComponent>(type));
     std::shared_ptr<RType::PositionComponent> position = shotEffect->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY - 20));
@@ -399,6 +404,24 @@ void RType::Game::createEffect(long posX, long posY, EntityType type, std::strin
     shotEffect->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(), sf::Vector2f(2, 2), rect));
     shotEffect->pushComponent(std::make_shared<RType::VelocityComponent>(7));
     shotEffect->pushComponent(std::make_shared<RType::ClockComponent>());
+}
+
+void RType::Game::createItem()
+{
+    std::shared_ptr<RType::Entity> item = _coord.generateNewEntity();
+
+    item->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_ITEM));
+    item->pushComponent(std::make_shared<RType::HealthComponent>(5));
+    std::shared_ptr<RType::PositionComponent> position = item->pushComponent(std::make_shared<RType::PositionComponent>(1000, 500));
+    std::shared_ptr<RType::ScaleComponent> scale = item->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
+    std::shared_ptr<RType::IntRectComponent> intRect = item->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 32, 32));
+    std::shared_ptr<RType::TextureComponent> texture = getTextureComponent("./ressources/ball-1.png");
+    item->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(),
+    sf::Vector2f(scale->getScaleX(), scale->getScaleY()),
+    sf::IntRect(intRect->getIntRectLeft(),intRect->getIntRectTop(), intRect->getIntRectWidth(), intRect->getIntRectHeight())));
+    item->pushComponent(std::make_shared<RType::DirectionPatternComponent>(STRAIGHT_LEFT));
+    item->pushComponent(std::make_shared<VelocityComponent>(SPACESHIP_SPEED));
+    item->pushComponent(std::make_shared<ClockComponent>());
 }
 
 std::ostream &operator<<(std::ostream &s, const RType::Game &game)
