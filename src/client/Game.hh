@@ -7,8 +7,11 @@
 
 #pragma once
 
+#include <SFML/Graphics/Rect.hpp>
 #include <unordered_map>
 #include <vector>
+#include <json/json.h>
+
 #include "./communication/Client.hh"
 
 #include "../ecs/Coordinator.hh"
@@ -44,10 +47,27 @@
 #define FRAME_TIME_LOGIC 1.0 / 60.0
 #define RENDER_FRAME_TIME 1.0 / MAX_FPS
 
-
 #define CREATE_TEXTURE std::make_shared<RType::TextureComponent>
 #define CREATE_ENTITY_TYPE std::make_shared<RType::EntityTypeComponent>
 #define CREATE_POS_COMPONENT std::make_shared<RType::PositionComponent>
+#define CREATE_SPRITE_COMPONENT std::make_shared<RType::SpriteComponent>
+#define GET_POSITION_X getComponent<RType::PositionComponent>()->getPositionX()
+#define GET_POSITION_Y getComponent<RType::PositionComponent>()->getPositionY()
+
+#define POS_COMPONENT std::shared_ptr<RType::PositionComponent>
+#define SCALE_COMPONENT std::shared_ptr<RType::ScaleComponent>
+#define RECT_COMPONENT std::shared_ptr<RType::IntRectComponent>
+#define TEXTURE_COMPONENT std::shared_ptr<RType::TextureComponent>
+
+#define PUSH_POS_E(x, y) pushComponent(std::make_shared<RType::PositionComponent>(x, y))
+#define PUSH_TYPE_E(type) pushComponent(std::make_shared<RType::EntityTypeComponent>(type))
+#define PUSH_SCALE_E(x, y) pushComponent(std::make_shared<RType::ScaleComponent>(x, y))
+#define PUSH_RECT_E(x, y, w, h) pushComponent(std::make_shared<RType::IntRectComponent>(x, y, w, h))
+#define PUSH_TEXTURE_E(path) pushComponent(std::make_shared<RType::TextureComponent>(path))
+#define PUSH_HEALTH_E(hp) pushComponent(std::make_shared<RType::HealthComponent>(hp))
+#define PUSH_VELOCITY_E(speed) pushComponent(std::make_shared<RType::VelocityComponent>(speed))
+#define PUSH_PATTERN_E(pattern) pushComponent(std::make_shared<RType::DirectionPatternComponent>(pattern))
+#define PUSH_CLOCK_E() pushComponent(std::make_shared<RType::ClockComponent>())
 
 namespace RType {
 
@@ -69,12 +89,10 @@ namespace RType {
         private:
             void loopReceive();
             void createPlayer();
-            void createPlayer(long serverId, long posX, long posY);
-            void createMobOctopus(long serverId, long posX, long posY);
-            void createMobFly(long serverId, long posX, long posY);
-            void createMobSpaceShip(long serverId, long posX, long posY);
-            void createEffect(long posX, long posY, EntityType type, std::string path, sf::IntRect rect);
-            void createBullet(long serverId, long posX, long posY);
+            void createEntity(const RType::EntityType &type, const int &posX,
+                              const int &posY);
+            void createEntity(const long &serverId, const RType::EntityType &type,
+                              const int &posX, const int &posY);
             void createWindow();
             void createGameSystem();
             void createParallaxBackground(std::shared_ptr<RType::Entity> window);
@@ -90,7 +108,6 @@ namespace RType {
             std::thread _receipter;
             bool _initConnection;
             std::unordered_map<std::string, std::shared_ptr<RType::TextureComponent>> _texturesMap;
-
     };
 }
 
