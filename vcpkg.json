@@ -1,6 +1,13 @@
 {
   "dependencies": [
-    "sfml",
-    "boost"
-  ]
+    {
+      "name": "boost",
+      "version>=": "1.83.0"
+    },
+    {
+      "name": "sfml",
+      "version>=": "2.6.1"
+    }
+  ],
+  "builtin-baseline": "369cb5c76ab32408b87fa3f7557e0660b375e582"
 }

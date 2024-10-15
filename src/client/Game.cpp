@@ -10,7 +10,6 @@
 RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, const std::string &port):
     _client(ioContext, host, port)
 {
-    _client.send(Encoder::connexion());
     createWindow();
     createPlayer();
     createGameSystem();
@@ -110,6 +109,8 @@ void RType::Game::loopReceive()
                     createEffect(static_cast<short> (receivInfo.second[2]), static_cast<short> (receivInfo.second[3]),  RType::E_BULLET_EFFECT, "./ressources/effects/flash.png", sf::IntRect(0, 0, 11, 19));
                 }
             } else {
+                if (receivInfo.second[0] != E_PLAYER)
+                    continue;
                 std::unique_lock<std::mutex> lock(_mtx);
                 _initConnection = true;
                 auto entities = _coord.getEntities();
@@ -393,8 +394,8 @@ std::shared_ptr<RType::TextureComponent> RType::Game::getTextureComponent(const 
     return texture;
 }
 
-void RType::Game::createEffect(long posX, long posY, EntityType type, std::string path, sf::IntRect rect) {
-    
+void RType::Game::createEffect(long posX, long posY, EntityType type, std::string path, sf::IntRect rect)
+{
     std::shared_ptr<RType::Entity> shotEffect = _coord.generateNewEntity();
     shotEffect->pushComponent(std::make_shared<RType::EntityTypeComponent>(type));
     std::shared_ptr<RType::PositionComponent> position = shotEffect->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY - 20));
@@ -402,6 +403,16 @@ void RType::Game::createEffect(long posX, long posY, EntityType type, std::strin
     shotEffect->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(), sf::Vector2f(2, 2), rect));
     shotEffect->pushComponent(std::make_shared<RType::VelocityComponent>(7));
     shotEffect->pushComponent(std::make_shared<RType::ClockComponent>());
+}
+
+bool RType::Game::getGameHasStarted(void) const
+{
+    return _initConnection;
+}
+
+void RType::Game::connectToServer(void)
+{
+    _client.send(Encoder::connexion());
 }
 
 std::ostream &operator<<(std::ostream &s, const RType::Game &game)
