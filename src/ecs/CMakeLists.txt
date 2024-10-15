@@ -23,6 +23,7 @@ set(SRC_COMPONENTS
     ./Components/LevelComponent.cpp
     ./Components/ScaleComponent.cpp
     ./Components/IntRectComponent.cpp
+    ./Components/DamageComponent.cpp
 )
 
 set(SRC_SYSTEMS

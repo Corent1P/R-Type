@@ -28,7 +28,8 @@ void RType::ActionPlayerCommand::execute(std::shared_ptr<ClientServer> client, F
     bullet->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     bullet->pushComponent(std::make_shared<RType::VelocityComponent>(21));
     bullet->pushComponent(std::make_shared<RType::ClockComponent>());
-
+    bullet->pushComponent(std::make_shared<RType::DamageComponent>(client->getEntity()->getComponent<DamageComponent>()->getDamage()));
+    std::cout << "bullet damage:" << bullet->getComponent<DamageComponent>()->getDamage() <<std::endl;     
     std::cout << "ActionPlayerCommand " << bullet->getId() << std::endl;
 
     sendToAll(Encoder::newEntity(E_BULLET, bullet->getId(), position->getPositionX(), position->getPositionY()));

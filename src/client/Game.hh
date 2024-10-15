@@ -26,6 +26,8 @@
 #include "../ecs/Components/VelocityComponent.hh"
 #include "../ecs/Components/ScaleComponent.hh"
 #include "../ecs/Components/IntRectComponent.hh"
+#include "../ecs/Components/DamageComponent.hh"
+
 
 #include "../ecs/Systems/HandleEventSystem.hpp"
 #include "../ecs/Systems/HandleDrawSystem.hpp"

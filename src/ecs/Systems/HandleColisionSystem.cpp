@@ -97,17 +97,41 @@ void RType::HandleColisionSystem::handleEntityColision(const std::pair<std::shar
         std::cout << "Mob intersect Player" << std::endl;
     if (entityType1 == RType::E_BULLET && EntityTypeComponent::isMob(entityType2)) {
         _entitiesToDestroy.push_back(entity1);
-        entity2->getComponent<HealthComponent>()->setHealth(entity2->getComponent<HealthComponent>()->getHealth() - 1);
+        entity2->getComponent<HealthComponent>()->setHealth(entity2->getComponent<HealthComponent>()->getHealth() - entity1->getComponent<DamageComponent>()->getDamage());
         if (entity2->getComponent<HealthComponent>()->getHealth() <= 0)
             _entitiesToDestroy.push_back(entity2);
         std::cout << "Bullet intersect mob" << std::endl;
     }
     if (entityType1 == RType::E_PLAYER && entityType2 == RType::E_ITEM) {
         _entitiesToDestroy.push_back(entity2);
+        handleItemEffect(entity1, entity2);
         std::cout << "Item intersect player" << std::endl;
     }
     if (EntityTypeComponent::isMob(entityType1) && entityType2 == RType::E_BULLET) {
         std::cout << "Mob intersect Bullet" << std::endl;
+    }
+}
+
+void RType::HandleColisionSystem::handleItemEffect(std::shared_ptr<RType::Entity> entity1, std::shared_ptr<RType::Entity> entity2)
+{
+    // const auto &entity2 = colidingPair.second;
+
+    // switch (entity2->getComponent<EntityTypeComponent>()->getPowerUpType())
+    // {
+    // case RType::PowerUpType::IMPROVED_WEAPON:
+    //     if (entity1->getComponent<RType::DamageComponent>()->getDamage() <= 5){
+    //         entity1->getComponent<RType::DamageComponent>()->setDamage(entity1->getComponent<RType::DamageComponent>()->getDamage() + 1);
+    //     }
+    // case RType::PowerUpType::SHIELD:
+    //     // entity2->getComponent<
+    //     break;
+    // default:
+    //     break;
+    // }
+    entity2->getComponent<EntityTypeComponent>()->getEntityType();
+    if (entity1->getComponent<RType::DamageComponent>()->getDamage() <= 5){
+        std::cout << "imporve weapon" << std::endl;
+        entity1->getComponent<RType::DamageComponent>()->setDamage(entity1->getComponent<RType::DamageComponent>()->getDamage() + 1);
     }
 }
 

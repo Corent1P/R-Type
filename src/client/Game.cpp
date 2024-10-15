@@ -196,6 +196,7 @@ void RType::Game::createPlayer()
     player->pushComponent(std::make_shared<RType::ClockComponent>());
     player->pushComponent(std::make_shared<RType::ActionComponent>());
     player->pushComponent(std::make_shared<VelocityComponent>(10));
+    player->pushComponent(std::make_shared<RType::DamageComponent>(1));
 }
 
 void RType::Game::createPlayer(long serverId, long posX, long posY)
@@ -213,6 +214,8 @@ void RType::Game::createPlayer(long serverId, long posX, long posY)
     sf::Vector2f(scale->getScaleX(), scale->getScaleY()),
     sf::IntRect(intRect->getIntRectLeft(),intRect->getIntRectTop(), intRect->getIntRectWidth(), intRect->getIntRectHeight())));
     player->pushComponent(std::make_shared<RType::ClockComponent>());
+    player->pushComponent(std::make_shared<VelocityComponent>(10));
+    player->pushComponent(std::make_shared<RType::DamageComponent>(1));
 }
 
 void RType::Game::createWindow()
@@ -282,6 +285,13 @@ void RType::Game::createMobSpaceShip(long serverId, long posX, long posY)
 
 void RType::Game::createBullet(long serverId, long posX, long posY)
 {
+
+    int damage = 0;
+    // for (auto &player: _coord.getEntities()) {
+    //     if (player->getComponent<EntityTypeComponent>() != nullptr && player->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER) {
+    //         damage = player->getComponent<DamageComponent>()->getDamage();
+    //     }
+    // }
     std::shared_ptr<RType::Entity> bullet = _coord.generateNewEntity(serverId);
 
     bullet->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BULLET));
@@ -296,6 +306,7 @@ void RType::Game::createBullet(long serverId, long posX, long posY)
     bullet->pushComponent(std::make_shared<RType::DirectionPatternComponent>(RType::STRAIGHT_RIGHT));
     bullet->pushComponent(std::make_shared<RType::VelocityComponent>(7));
     bullet->pushComponent(std::make_shared<RType::ClockComponent>());
+    bullet->pushComponent(std::make_shared<RType::DamageComponent>(damage));
 }
 
 void RType::Game::createGameSystem()
