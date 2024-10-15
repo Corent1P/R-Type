@@ -7,8 +7,8 @@
 
 #include "HandleShootSystem.hpp"
 
-RType::HandleShootSystem::HandleShootSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::shared_ptr<RType::Client> client):
-    ASystem(S_SHOOT, addEntity, deleteEntity), _client(client)
+RType::HandleShootSystem::HandleShootSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToServer):
+    ASystem(S_SHOOT, addEntity, deleteEntity), _sendMessageToServer(sendMessageToServer)
 {
 }
 
@@ -41,7 +41,7 @@ void RType::HandleShootSystem::effects(std::vector<std::shared_ptr<RType::Entity
                 // shot->pushComponent(std::make_shared<RType::VelocityComponent>(7));
                 // shot->pushComponent(std::make_shared<RType::ClockComponent>());
                 // std::cout << "shoot" << std::endl;
-                _client->send(Encoder::actionPlayer(true, false, false, false));
+                _sendMessageToServer(Encoder::actionPlayer(true, false, false, false));
             }
         }
         if (entity->getComponent<RType::ClockComponent>() != nullptr && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_BULLET_EFFECT) {

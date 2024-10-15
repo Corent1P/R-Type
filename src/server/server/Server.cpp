@@ -168,6 +168,7 @@ void RType::Server::initSystem(void)
     _coord.generateNewSystem(std::make_shared<HandleMoveSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        nullptr,
         std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
     ));
 
