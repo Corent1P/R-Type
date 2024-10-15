@@ -7,7 +7,8 @@
     {
       "name": "sfml",
       "version>=": "2.6.1"
-    }
+    },
+    "jsoncpp"
   ],
   "builtin-baseline": "369cb5c76ab32408b87fa3f7557e0660b375e582"
 }
