@@ -11,10 +11,17 @@ RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, c
 {
     _client = std::make_shared<RType::Client> (ioContext, host, port);
     _client->send(Encoder::connexion());
+    _stopLoop = false;
+
+    _font = std::make_shared<sf::Font>();
+    if (!_font->loadFromFile("ressources/font/planetKosmos.ttf")) {
+        throw ClientError("Font not load");
+    }
+
     createWindow();
+    createMenu();
     createPlayer();
     createGameSystem();
-    _stopLoop = false;
     _receipter = std::thread(&Game::loopReceive, this);
     _initConnection = false;
 }
@@ -35,6 +42,10 @@ const RType::Coordinator &RType::Game::getCoordinator() const
 void RType::Game::gameLoop()
 {
     std::shared_ptr<RType::ISystem> drawSystem = nullptr;
+    std::shared_ptr<RType::ISystem> drawTextSystem = nullptr;
+    std::shared_ptr<RType::ISystem> clearSystem = nullptr;
+    std::shared_ptr<RType::ISystem> displaySystem = nullptr;
+
     std::shared_ptr<RType::Entity> clockEntity = nullptr;
     std::shared_ptr<RType::SFWindowComponent> windowComponent = nullptr;
     float logicTime = 0.0;
@@ -42,10 +53,14 @@ void RType::Game::gameLoop()
     float deltaTime = 0.0;
 
     for (auto sys : _coord.getSystems()) {
-        if (sys->getType() == SystemType::S_DRAW) {
+        if (sys->getType() == SystemType::S_DRAW)
             drawSystem = sys;
-            break;
-        }
+        if (sys->getType() == SystemType::S_DRAWTEXT)
+            drawTextSystem = sys;
+        if (sys->getType() == SystemType::S_DISPLAY)
+            displaySystem = sys;
+        if (sys->getType() == SystemType::S_CLEAR)
+            clearSystem = sys;
     }
 
     for (auto entity: _coord.getEntities()) {
@@ -62,16 +77,28 @@ void RType::Game::gameLoop()
         while (logicTime >= FRAME_TIME_LOGIC) {
             std::unique_lock<std::mutex> lock(_mtx);
             for (auto sys : _coord.getSystems())
-                if (sys->getType() != SystemType::S_DRAW)
+                if (sys->getType() != SystemType::S_DRAW && sys->getType() != SystemType::S_DRAWTEXT && sys->getType() != SystemType::S_CLEAR && sys->getType() != SystemType::S_DISPLAY)
                     sys->effects(_coord.getEntities());
             logicTime -= FRAME_TIME_LOGIC;
         }
 
         renderTime += deltaTime;
         if (renderTime >= RENDER_FRAME_TIME) {
+            if (clearSystem != nullptr) {
+                std::unique_lock<std::mutex> lock(_mtx);
+                clearSystem->effects(_coord.getEntities());
+            }
             if (drawSystem != nullptr) {
                 std::unique_lock<std::mutex> lock(_mtx);
                 drawSystem->effects(_coord.getEntities());
+            }
+            if (drawTextSystem != nullptr) {
+                std::unique_lock<std::mutex> lock(_mtx);
+                drawTextSystem->effects(_coord.getEntities());
+            }
+            if (displaySystem != nullptr) {
+                std::unique_lock<std::mutex> lock(_mtx);
+                displaySystem->effects(_coord.getEntities());
             }
             renderTime = 0.0;
             std::unique_lock<std::mutex> lock(_mtx);
@@ -160,6 +187,10 @@ void RType::Game::createPlayer()
     player->pushComponent(std::make_shared<RType::ClockComponent>());
     player->pushComponent(std::make_shared<RType::ActionComponent>());
     player->pushComponent(std::make_shared<VelocityComponent>(10));
+    auto mappingInput = player->pushComponent(std::make_shared<MappingInputComponent>());
+    player->pushComponent(std::make_shared<RType::MenuComponent>(GAME));
+    createMappingInputButton(mappingInput);
+
 }
 
 void RType::Game::createPlayer(long serverId, long posX, long posY)
@@ -177,6 +208,7 @@ void RType::Game::createPlayer(long serverId, long posX, long posY)
     sf::Vector2f(scale->getScaleX(), scale->getScaleY()),
     sf::IntRect(intRect->getIntRectLeft(),intRect->getIntRectTop(), intRect->getIntRectWidth(), intRect->getIntRectHeight())));
     player->pushComponent(std::make_shared<RType::ClockComponent>());
+    player->pushComponent(std::make_shared<RType::MenuComponent>(GAME));
 }
 
 void RType::Game::createWindow()
@@ -187,7 +219,79 @@ void RType::Game::createWindow()
     window->pushComponent(std::make_shared<RType::SFWindowComponent>(1920, 1080));
     window->pushComponent(std::make_shared<RType::EventComponent>());
     window->pushComponent(std::make_shared<RType::ClockComponent>());
+    window->pushComponent(std::make_shared<RType::MenuComponent>(HOME));
+
     createParallaxBackground(window);
+}
+
+void RType::Game::createMenu()
+{
+    std::shared_ptr<RType::Entity> buttonPlayButton = createButton(200, 400, "PLAY");
+
+    buttonPlayButton->pushComponent(std::make_shared<RType::MenuComponent>(HOME));
+    buttonPlayButton->pushComponent(std::make_shared<RType::ClickEffectComponent> (
+        std::bind(&RType::Game::clickEffectPlayButton, this, std::placeholders::_1)
+    ));
+
+    std::shared_ptr<RType::Entity> buttonMappingInput =  createButton(800, 400, "MAPPING INPUTS");
+    buttonMappingInput->pushComponent(std::make_shared<RType::MenuComponent>(HOME));
+    buttonMappingInput->pushComponent(std::make_shared<RType::ClickEffectComponent> (
+        std::bind(&RType::Game::clickEffectMappingInputButton, this, std::placeholders::_1)
+    ));
+}
+
+void RType::Game::createMappingInputButton(std::shared_ptr<RType::MappingInputComponent> mappingInput)
+{
+    std::shared_ptr<RType::Entity> buttonLeft =  createButton(500, 300, "Left: " + MappingInputComponent::getKeyName(mappingInput->getMappingInput(INPUT_LEFT)));
+    buttonLeft->pushComponent(std::make_shared<RType::MenuComponent>(MAPPING_INPUT));
+    buttonLeft->pushComponent(std::make_shared<RType::ClickEffectComponent> (
+        std::bind(&RType::Game::clickEffectModifyInputButton, this, std::placeholders::_1)
+    ));
+
+    std::shared_ptr<RType::Entity> buttonRight =  createButton(500, 350, "Right: " + MappingInputComponent::getKeyName(mappingInput->getMappingInput(INPUT_RIGHT)));
+    buttonRight->pushComponent(std::make_shared<RType::MenuComponent>(MAPPING_INPUT));
+    buttonRight->pushComponent(std::make_shared<RType::ClickEffectComponent> (
+        std::bind(&RType::Game::clickEffectModifyInputButton, this, std::placeholders::_1)
+    ));
+
+
+    std::shared_ptr<RType::Entity> buttonUp =  createButton(500, 400, "Up: " + MappingInputComponent::getKeyName(mappingInput->getMappingInput(INPUT_UP)));
+    buttonUp->pushComponent(std::make_shared<RType::MenuComponent>(MAPPING_INPUT));
+    buttonUp->pushComponent(std::make_shared<RType::ClickEffectComponent> (
+        std::bind(&RType::Game::clickEffectModifyInputButton, this, std::placeholders::_1)
+    ));
+
+
+    std::shared_ptr<RType::Entity> buttonDown =  createButton(500, 450, "Down: " + MappingInputComponent::getKeyName(mappingInput->getMappingInput(INPUT_DOWN)));
+    buttonDown->pushComponent(std::make_shared<RType::MenuComponent>(MAPPING_INPUT));
+    buttonDown->pushComponent(std::make_shared<RType::ClickEffectComponent> (
+        std::bind(&RType::Game::clickEffectModifyInputButton, this, std::placeholders::_1)
+    ));
+
+
+    std::shared_ptr<RType::Entity> buttonShoot =  createButton(500, 500, "Shoot: " + MappingInputComponent::getKeyName(mappingInput->getMappingInput(INPUT_SHOOT)));
+    buttonShoot->pushComponent(std::make_shared<RType::MenuComponent>(MAPPING_INPUT));
+    buttonShoot->pushComponent(std::make_shared<RType::ClickEffectComponent> (
+        std::bind(&RType::Game::clickEffectModifyInputButton, this, std::placeholders::_1)
+    ));
+
+    std::shared_ptr<RType::Entity> buttonReturn =  createButton(0, 0,  "RETURN");
+    buttonReturn->pushComponent(std::make_shared<RType::MenuComponent>(MAPPING_INPUT));
+    buttonReturn->pushComponent(std::make_shared<RType::ClickEffectComponent> (
+        std::bind(&RType::Game::clickEffectHomeButton, this, std::placeholders::_1)
+    ));
+}
+
+std::shared_ptr<RType::Entity> RType::Game::createButton(int x, int y, std::string text)
+{
+    std::shared_ptr<RType::Entity> button = _coord.generateNewEntity();
+
+    button->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BUTTON));
+    std::shared_ptr<TextComponent> textComponent = button->pushComponent(std::make_shared<RType::TextComponent>(text, 60, _font));
+    sf::FloatRect size = textComponent->getText()->getGlobalBounds();
+    button->pushComponent(std::make_shared<RType::PositionComponent>(x, y));
+    button->pushComponent(std::make_shared<RType::IntRectComponent>(size.left, size.top, size.width, size.height));
+    return button;
 }
 
 void RType::Game::createMobOctopus(long serverId, long posX, long posY)
@@ -206,6 +310,8 @@ void RType::Game::createMobOctopus(long serverId, long posX, long posY)
     mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(UP_N_DOWN_LEFT));
     mob->pushComponent(std::make_shared<VelocityComponent>(OCTOPUS_SPEED));
     mob->pushComponent(std::make_shared<ClockComponent>());
+    mob->pushComponent(std::make_shared<RType::MenuComponent>(GAME));
+
 }
 
 void RType::Game::createMobFly(long serverId, long posX, long posY)
@@ -224,6 +330,7 @@ void RType::Game::createMobFly(long serverId, long posX, long posY)
     mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(UP_N_DOWN_LEFT));
     mob->pushComponent(std::make_shared<VelocityComponent>(FLY_SPEED));
     mob->pushComponent(std::make_shared<ClockComponent>());
+    mob->pushComponent(std::make_shared<RType::MenuComponent>(GAME));
 }
 
 void RType::Game::createMobSpaceShip(long serverId, long posX, long posY)
@@ -242,6 +349,8 @@ void RType::Game::createMobSpaceShip(long serverId, long posX, long posY)
     mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(STRAIGHT_LEFT));
     mob->pushComponent(std::make_shared<VelocityComponent>(SPACESHIP_SPEED));
     mob->pushComponent(std::make_shared<ClockComponent>());
+    mob->pushComponent(std::make_shared<RType::MenuComponent>(GAME));
+
 }
 
 void RType::Game::createBullet(long serverId, long posX, long posY)
@@ -260,6 +369,8 @@ void RType::Game::createBullet(long serverId, long posX, long posY)
     bullet->pushComponent(std::make_shared<RType::DirectionPatternComponent>(RType::STRAIGHT_RIGHT));
     bullet->pushComponent(std::make_shared<RType::VelocityComponent>(7));
     bullet->pushComponent(std::make_shared<RType::ClockComponent>());
+    bullet->pushComponent(std::make_shared<RType::MenuComponent>(GAME));
+
 }
 
 void RType::Game::createGameSystem()
@@ -302,7 +413,22 @@ void RType::Game::createGameSystem()
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
     ));
 
+    _coord.generateNewSystem(std::make_shared<HandleClearSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+    ));
+
     _coord.generateNewSystem(std::make_shared<HandleDrawSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+    ));
+
+    _coord.generateNewSystem(std::make_shared<HandleDrawTextSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+    ));
+
+    _coord.generateNewSystem(std::make_shared<HandleDisplaySystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
     ));
@@ -347,6 +473,7 @@ void RType::Game::createParallaxEntity(const std::string &path, const int &posX,
     backgrounds->pushComponent(std::make_shared<RType::DirectionPatternComponent>(STRAIGHT_LEFT));
     backgrounds->pushComponent(std::make_shared<VelocityComponent>((index + 1)));
     backgrounds->pushComponent(std::make_shared<LevelComponent>(level));
+    backgrounds->pushComponent(std::make_shared<RType::MenuComponent>(GAME));
 }
 
 std::shared_ptr<RType::TextureComponent> RType::Game::getTextureComponent(const std::string &path)
@@ -360,6 +487,34 @@ std::shared_ptr<RType::TextureComponent> RType::Game::getTextureComponent(const 
 
     return texture;
 }
+
+void RType::Game::clickEffectPlayButton(std::shared_ptr<Entity> window)
+{
+    window->getComponent<MenuComponent>()->setMenu(LOADING);
+    window->getComponent<MenuComponent>()->setMenu(GAME);
+}
+
+void RType::Game::clickEffectExitButton(std::shared_ptr<Entity> window)
+{
+    window->getComponent<RType::SFWindowComponent>()->getWindow()->close();
+}
+
+void RType::Game::clickEffectHomeButton(std::shared_ptr<Entity> window)
+{
+    window->getComponent<MenuComponent>()->setMenu(HOME);
+}
+
+void RType::Game::clickEffectMappingInputButton(std::shared_ptr<Entity> window)
+{
+    window->getComponent<MenuComponent>()->setMenu(MAPPING_INPUT);
+}
+
+void RType::Game::clickEffectModifyInputButton(std::shared_ptr<Entity> player)
+{
+    (void) player;
+    // player->getComponent<MappingInputComponent>()->setMappingInput(INPUT_SHOOT, sf::Keyboard::X);
+}
+
 
 std::ostream &operator<<(std::ostream &s, const RType::Game &game)
 {

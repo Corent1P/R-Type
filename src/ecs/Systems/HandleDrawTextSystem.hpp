@@ -5,37 +5,38 @@
 ** system about all components drawing
 */
 
-#ifndef HANDLEDRAWSYSTEM_HPP_
-#define HANDLEDRAWSYSTEM_HPP_
+#ifndef HANDLEDRAWTEXTSYSTEM_HPP_
+#define HANDLEDRAWTEXTSYSTEM_HPP_
 #include "../ASystem.hh"
 #include "../Components/SFWindowComponent.hh"
-#include "../Components/SpriteComponent.hh"
+#include "../Components/TextComponent.hh"
 #include "../Components/PositionComponent.hh"
 #include "../Components/EntityTypeComponent.hh"
 #include "../Components/LevelComponent.hh"
 #include "../Components/MenuComponent.hh"
 
 #define GET_WINDOW_FOR_DRAW w->getComponent<RType::SFWindowComponent>()
+#define SET_TEXT_POSITION entity->getComponent<RType::TextComponent>()->getText()->setPosition(entity->getComponent<PositionComponent>()->getPositions())
 
 namespace RType {
     /**
-     * @brief a system handling Sprite Drawing.
-     * 
+     * @brief a system handling Text Drawing.
+     *
      */
-    class HandleDrawSystem: public ASystem {
+    class HandleDrawTextSystem: public ASystem {
         public:
             /**
-             * @brief Construct a new Handle Draw System object.
+             * @brief Construct a new Handle Draw Text System object.
              *
              * @param addEntity method used to add a new Entity to the coordinator.
              * @param deleteEntity method used to delete a Entity from the coordinator.
              */
-            HandleDrawSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
+            HandleDrawTextSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
             /**
-             * @brief Destroy the Handle Draw System object.
+             * @brief Destroy the Handle Draw Text System object.
              *
              */
-            ~HandleDrawSystem();
+            ~HandleDrawTextSystem();
             /**
              * @brief method looping on each entities in order to check if they have the mendatory Component in order to process the system effect.
              *        Also used to process a system effect if two distincts entites are involved in the procces.
@@ -54,9 +55,7 @@ namespace RType {
         protected:
         private:
             std::vector<std::shared_ptr<RType::Entity>> _entities;
-
-            void drawHitBox(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &entity);
     };
 }
 
-#endif /* !HANDLEDRAWSYSTEM_HPP_ */
+#endif /* !HANDLEDRAWTEXTSYSTEM_HPP_ */

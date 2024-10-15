@@ -23,11 +23,18 @@ set(SRC_COMPONENTS
     ./Components/LevelComponent.cpp
     ./Components/ScaleComponent.cpp
     ./Components/IntRectComponent.cpp
+    ./Components/MappingInputComponent.cpp
+    ./Components/TextComponent.cpp
+    ./Components/ClickEffectComponent.cpp
+    ./Components/MenuComponent.cpp
 )
 
 set(SRC_SYSTEMS
     ./Systems/HandleEventSystem.cpp
+    ./Systems/HandleClearSystem.cpp
     ./Systems/HandleDrawSystem.cpp
+    ./Systems/HandleDrawTextSystem.cpp
+    ./Systems/HandleDisplaySystem.cpp
     ./Systems/HandleMoveSystem.cpp
     ./Systems/HandleMoveSpriteSystem.cpp
     ./Systems/HandleAnimationSystem.cpp

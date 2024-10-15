@@ -9,18 +9,23 @@
 #define HANDLEEVENTSYTEM_HPP_
 
 #include "../ASystem.hh"
-#include ".././Components/SFWindowComponent.hh"
-#include ".././Components/EventComponent.hh"
-#include ".././Components/DirectionComponent.hh"
-#include ".././Components/EntityTypeComponent.hh"
-#include ".././Components/SpriteComponent.hh"
-#include ".././Components/ActionComponent.hh"
-#include ".././Components/ClockComponent.hh"
+#include "../Components/SFWindowComponent.hh"
+#include "../Components/EventComponent.hh"
+#include "../Components/DirectionComponent.hh"
+#include "../Components/EntityTypeComponent.hh"
+#include "../Components/SpriteComponent.hh"
+#include "../Components/ActionComponent.hh"
+#include "../Components/ClockComponent.hh"
+#include "../Components/MappingInputComponent.hh"
+#include "../Components/ClickEffectComponent.hh"
+#include "../Components/IntRectComponent.hh"
+#include "../Components/PositionComponent.hh"
 
 #define GET_WINDOW_SET_ISOPEN entity->getComponent<RType::SFWindowComponent>()
 #define GET_WINDOW_POLL_EVENT e->getComponent<RType::SFWindowComponent>()->getWindow()
 #define EVENT_TYPE e->getComponent<RType::EventComponent>()->getEvent().type
 #define GET_ENTITY_SPRITE player->getComponent<SpriteComponent>()->getSprite()
+#define CLICK_ON_BUTTON player->getComponent<RType::ClickEffectComponent>()->getClickEffect()(e)
 
 namespace RType {
     /**
