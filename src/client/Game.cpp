@@ -81,6 +81,7 @@ void RType::Game::gameLoop()
                 break;
             }
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
 }
 
@@ -109,7 +110,7 @@ void RType::Game::loopReceive()
                     createEffect(static_cast<short> (receivInfo.second[2]), static_cast<short> (receivInfo.second[3]),  RType::E_BULLET_EFFECT, "./ressources/effects/flash.png", sf::IntRect(0, 0, 11, 19));
                 }
             } else {
-                std::unique_lock<std::mutex> lock(_mtx); 
+                std::unique_lock<std::mutex> lock(_mtx);
                 _initConnection = true;
                 auto entities = _coord.getEntities();
                 for (const auto &entity : entities) {
@@ -120,10 +121,12 @@ void RType::Game::loopReceive()
         }
         if (receivInfo.first == DELETE_ENTITY) {
 
+            std::unique_lock<std::mutex> lock(_mtx);
             auto entities = _coord.getEntities();
             for (const auto &entity : entities) {
-                std::unique_lock<std::mutex> lock(_mtx);
                 if (entity->getServerId() == receivInfo.second[0]) {
+                    if (entity->getComponent<RType::EntityTypeComponent>() == nullptr)
+                        continue;
                     switch (entity->getComponent<RType::EntityTypeComponent>()->getEntityType())
                     {
                     case RType::E_BULLET:
@@ -158,9 +161,9 @@ void RType::Game::loopReceive()
         }
         if (receivInfo.first == MOVE_ENTITY) {
 
+            std::unique_lock<std::mutex> lock(_mtx);
             auto entities = _coord.getEntities();
             for (const auto &entity : entities) {
-                std::unique_lock<std::mutex> lock(_mtx);
                 if (entity->getServerId() == receivInfo.second[0] && entity->getComponent<RType::PositionComponent>() && entity->getComponent<RType::SpriteComponent>()) {
                     entity->getComponent<RType::PositionComponent>()->setPositions(static_cast<short>(receivInfo.second[1]), static_cast<short> (receivInfo.second[2]));
                     entity->getComponent<RType::SpriteComponent>()->getSprite()->setPosition(static_cast<short>(receivInfo.second[1]), static_cast<short> (receivInfo.second[2]));

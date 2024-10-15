@@ -154,6 +154,7 @@ void RType::Server::gameLoop(void)
                 sys->effects(_coord.getEntities());
             logicTime -= FRAME_SERVER_TIME_LOGIC;
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
 }
 
