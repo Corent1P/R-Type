@@ -1,0 +1,18 @@
+{
+    "name": "small space ship",
+    "health": 2,
+    "sprite":"./ressources/enemy-sheet.png",
+    "scale": {
+        "x": 2.0,
+        "y": 2.0
+    },
+    "rect" : {
+        "x": 0,
+        "y": 0,
+        "width": 29,
+        "height": 29
+    },
+    // STRAIGHT_LEFT
+    "pattern": 3,
+    "speed": 3
+}
