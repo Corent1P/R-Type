@@ -30,6 +30,7 @@ namespace RType {
             void createMobOctopus(int x, int y);
             void createMobFly(int x, int y);
             void createMobSpaceShip(int x, int y);
+            void createItem(int x, int y);
 
             std::function<void(const std::basic_string<unsigned char> &message)> _sendToAllClient;
             int _y_spawn = 700;
