@@ -49,7 +49,6 @@ namespace RType {
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
         protected:
         private:
-            std::vector<std::shared_ptr<RType::Entity>> _entities;
     };
 }
 
