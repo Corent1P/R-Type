@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** R-Type
 ** File description:
-** MoveCommand
+** MovePlayerCommand
 */
 
 #pragma once
@@ -12,14 +12,14 @@ namespace RType {
     /**
      * @brief A class that represents a Move command. Inherits from ACommand abstract class (cf. ACommand)
      */
-    class MoveCommand : public ACommand {
+    class MovePlayerCommand : public ACommand {
         public:
             /**
-             * @brief Construct a new MoveCommand object
+             * @brief Construct a new MovePlayerCommand object
              *
              * @param data is a string argument that contains the data of the Command
              */
-            MoveCommand(std::string data);
+            MovePlayerCommand(const std::vector<long> &arguments);
 
             /**
              * @brief Execute the command
@@ -27,6 +27,6 @@ namespace RType {
              * @param socket the socket to send the response
              * @param client the client that sent the command
              */
-            void execute(udp::socket &socket, std::shared_ptr<Client> client);
+            void execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll, Coordinator &coord) override;
     };
 }

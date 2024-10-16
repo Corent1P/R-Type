@@ -7,17 +7,17 @@
 
 #include "ACommand.hh"
 
-RType::ACommand::ACommand(const std::string &data, CommandType type):
+RType::ACommand::ACommand(const std::vector<long> &data, PacketType type):
     _data(data), _type(type)
 {
 }
 
-std::string RType::ACommand::getData(void) const
+std::vector<long> RType::ACommand::getData(void) const
 {
 	return _data;
 }
 
-RType::CommandType RType::ACommand::getType(void) const
+RType::PacketType RType::ACommand::getType(void) const
 {
 	return _type;
 }

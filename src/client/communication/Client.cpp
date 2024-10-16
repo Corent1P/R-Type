@@ -10,31 +10,18 @@
 RType::Client::Client(boost::asio::io_context &ioContext, const std::string &host, const std::string &port):
     _ioContext(ioContext), _socket(ioContext, udp::endpoint(udp::v4(), 0))
 {
-    try {
-        udp::resolver resolver(_ioContext);
-		udp::resolver::query query(udp::v4(), host, port);
-        boost::system::error_code ec;
-		udp::resolver::results_type results = resolver.resolve(query, ec);
-        if (ec || results.empty())
-            throw ClientError("Unvalid connection");
-		_endpoint = *results;
-    } catch(std::exception &err) {
-        throw err;
-    }
+    udp::resolver resolver(_ioContext);
+    udp::resolver::query query(udp::v4(), host, port);
+    boost::system::error_code ec;
+    udp::resolver::results_type results = resolver.resolve(query, ec);
+    if (ec || results.empty())
+        throw ClientError("Unvalid connection");
+    _endpoint = *results;
 }
 
 RType::Client::~Client()
 {
     _socket.close();
-}
-
-void RType::Client::send(const std::string &message)
-{
-    boost::system::error_code ec;
-
-    _socket.send_to(boost::asio::buffer(message, message.size()), _endpoint, 0, ec);
-    if (ec)
-        throw ClientError("Unable to send the message: " + ec.message());
 }
 
 void RType::Client::send(const std::basic_string<unsigned char> &message)

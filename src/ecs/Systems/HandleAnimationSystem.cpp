@@ -7,8 +7,8 @@
 
 #include "HandleAnimationSystem.hpp"
 
-RType::HandleAnimationSystem::HandleAnimationSystem():
-    ASystem(ANIMATION)
+RType::HandleAnimationSystem::HandleAnimationSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
+    ASystem(S_ANIMATION, addEntity, deleteEntity)
 {
 }
 
@@ -18,19 +18,25 @@ RType::HandleAnimationSystem::~HandleAnimationSystem()
 
 void RType::HandleAnimationSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
-    if (verifyRequiredComponent(entity)) {
-        // if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == PLAYER){
-            sf::IntRect rect = entity->getComponent<RType::SpriteComponent>()->getSprite()->getTextureRect();  //need to create a component ?
-            int maxSpritWidth = entity->getComponent<RType::SpriteComponent>()->getSprite()->getTexture()->getSize().x;
-            if (entity->getComponent<RType::ClockComponent>()->getClock().getElapsedTime().asSeconds() > 0.3f) {
-                if (rect.left == (maxSpritWidth - rect.width))
-                    rect.left = 0;
-                else
-                    rect.left += rect.width;
-                entity->getComponent<RType::SpriteComponent>()->getSprite()->setTextureRect(rect);
-                entity->getComponent<RType::ClockComponent>()->getClock().restart();
+    sf::IntRect rect = entity->getComponent<RType::SpriteComponent>()->getSprite()->getTextureRect();  //need to create a component ?
+    int maxSpritWidth = entity->getComponent<RType::SpriteComponent>()->getSprite()->getTexture()->getSize().x;
+    if (entity->getComponent<RType::ClockComponent>()->getClock(RType::ClockType::ANIMATION_CLOCK).getElapsedTime().asSeconds() > 0.1f) {
+        if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_HIT_EFFECT || entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_EXPLOSION_EFFECT) {
+            if (rect.left != (maxSpritWidth - rect.width)) {
+                rect.left += rect.width;
             }
-        // }
+            else {
+                _deleteEntity(entity);
+                return;
+            }
+        }
+        else if (rect.left == (maxSpritWidth - rect.width)) {
+            rect.left = 0;
+        }
+        else
+            rect.left += rect.width;
+        entity->getComponent<RType::SpriteComponent>()->getSprite()->setTextureRect(rect);
+        entity->getComponent<RType::ClockComponent>()->getClock(RType::ClockType::ANIMATION_CLOCK).restart();
     }
 }
 

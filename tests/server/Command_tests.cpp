@@ -11,42 +11,41 @@
 
 Test(testCommand, TestCommandCreation)
 {
-    RType::MoveCommand moveCommand("Hello");
-    cr_assert_str_eq(moveCommand.getData().c_str(), "Hello");
-    cr_assert_eq(moveCommand.getType(), RType::MOVE);
-
-    RType::ShootCommand shootCommand("Hello");
-    cr_assert_str_eq(shootCommand.getData().c_str(), "Hello");
-    cr_assert_eq(shootCommand.getType(), RType::SHOOT);
-
-    RType::StartCommand startCommand("Hello");
-    cr_assert_str_eq(startCommand.getData().c_str(), "Hello");
-    cr_assert_eq(startCommand.getType(), RType::START);
+    auto encoderMove = RType::Encoder::movePlayer(45, 6);
+    RType::MovePlayerCommand moveCommand(RType::Decoder::movePlayer(encoderMove));
+    cr_assert_eq(moveCommand.getData()[0], 45);
+    cr_assert_eq(moveCommand.getData()[1], 6);
+    cr_assert_eq(moveCommand.getType(), RType::MOVE_PLAYER);
 }
 
 Test(testCommand, TestCommandFactorySuccess)
 {
     RType::CommandFactory factory;
 
-    std::shared_ptr<RType::ICommand> moveCommand = factory.createCommand("Move 45");
-    cr_assert_str_eq(moveCommand->getData().c_str(), "45");
-    cr_assert_eq(moveCommand->getType(), RType::MOVE);
-    std::shared_ptr<RType::ICommand> shootCommand = factory.createCommand("Shoot 1");
-    cr_assert_str_eq(shootCommand->getData().c_str(), "1");
-    cr_assert_eq(shootCommand->getType(), RType::SHOOT);
-    std::shared_ptr<RType::ICommand> startCommand = factory.createCommand("Start game");
-    cr_assert_str_eq(startCommand->getData().c_str(), "game");
-    cr_assert_eq(startCommand->getType(), RType::START);
+    auto encoderMove = RType::Encoder::movePlayer(45, 6);
+    std::shared_ptr<RType::ICommand> moveCommand = factory.createCommand(RType::Decoder::getCommandInfo(encoderMove));
+    cr_assert_eq(moveCommand->getData()[0], 45);
+    cr_assert_eq(moveCommand->getData()[1], 6);
+    cr_assert_eq(moveCommand->getType(), RType::MOVE_PLAYER);
+
+    auto encoderActionPlayer = RType::Encoder::actionPlayer(true, false, false, false);
+    std::shared_ptr<RType::ICommand> actionCommand = factory.createCommand(RType::Decoder::getCommandInfo(encoderActionPlayer));
+    cr_assert_eq(actionCommand->getData()[0], true);
+    cr_assert_eq(actionCommand->getData()[1], false);
+    cr_assert_eq(actionCommand->getType(), RType::ACTION_PLAYER);
 }
 
 Test(testCommand, TestCommandFactoryFailure)
 {
     RType::CommandFactory factory;
 
-    std::shared_ptr<RType::ICommand> invalidCommand1 = factory.createCommand("");
-    cr_assert_eq(invalidCommand1, nullptr);
-    std::shared_ptr<RType::ICommand> invalidCommand2 = factory.createCommand("Move");
-    cr_assert_eq(invalidCommand2, nullptr);
-    std::shared_ptr<RType::ICommand> invalidCommand3 = factory.createCommand("invalid test");
-    cr_assert_eq(invalidCommand3, nullptr);
+    auto encoderConnection = RType::Encoder::connexion();
+    std::shared_ptr<RType::ICommand> connectionCommand = factory.createCommand(RType::Decoder::getCommandInfo(encoderConnection));
+    cr_assert_eq(connectionCommand, nullptr);
+
+    auto encoderDisconnection = RType::Encoder::disconnexion();
+    std::shared_ptr<RType::ICommand> disconnectionCommand = factory.createCommand(RType::Decoder::getCommandInfo(encoderDisconnection));
+    cr_assert_eq(disconnectionCommand, nullptr);
+
+    // TODO: test if the factory returns nullptr when the command is not found
 }

@@ -24,11 +24,11 @@ Test(main, TestHeaderDecoder) {
 }
 
 Test(main, TestNewEntityPacketDecoder) {
-    U_STRING packet = RType::Encoder::newEntity(1, 2, 3, 4);
+    U_STRING packet = RType::Encoder::newEntity(1, 65000, 3, 4);
     COMMAND_ARGS args = RType::Decoder::newEntity(packet);
 
     cr_assert_eq(args[0], 1, "Expected: 1, Got: %lu", args[0]);
-    cr_assert_eq(args[1], 2, "Expected: 2, Got: %lu", args[1]);
+    cr_assert_eq(args[1], 65000, "Expected: 65000, Got: %lu", args[1]);
     cr_assert_eq(args[2], 3, "Expected: 3, Got: %lu", args[2]);
     cr_assert_eq(args[3], 4, "Expected: 4, Got: %lu", args[3]);
 }
