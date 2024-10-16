@@ -64,6 +64,8 @@ namespace RType {
             ~Game();
             void gameLoop();
             const Coordinator &getCoordinator() const;
+            bool getGameHasStarted(void) const;
+            void connectToServer(void);
         private:
             void loopReceive();
             void createPlayer();
@@ -71,7 +73,7 @@ namespace RType {
             void createMobOctopus(long serverId, long posX, long posY);
             void createMobFly(long serverId, long posX, long posY);
             void createMobSpaceShip(long serverId, long posX, long posY);
-
+            void createEffect(long posX, long posY, EntityType type, std::string path, sf::IntRect rect);
             void createBullet(long serverId, long posX, long posY);
             void createWindow();
             void createGameSystem();
@@ -83,7 +85,7 @@ namespace RType {
 
             std::mutex _mtx;
             RType::Coordinator _coord;
-            std::shared_ptr<RType::Client> _client;
+            RType::Client _client;
             bool _stopLoop;
             std::thread _receipter;
             bool _initConnection;

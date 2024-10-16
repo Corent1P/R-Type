@@ -28,10 +28,9 @@ void RType::HandleEntitySpawnSystem::effect(std::shared_ptr<RType::Entity> entit
         createMobOctopus(1920, _y_spawn + 100);
         createMobSpaceShip(1920, _y_spawn - 100);
         entity->getComponent<RType::ClockComponent>()->getClock(RType::SPAWN_CLOCK).restart();
-        if (_y_spawn > 100)
-            _y_spawn -= 100;
-        else
-            _y_spawn = 700;
+        _y_spawn += 100 * _sign;
+        if (_y_spawn <= 100 || _y_spawn >= 700)
+            _sign *= -1;
     }
 }
 
@@ -47,7 +46,7 @@ void RType::HandleEntitySpawnSystem::createMobOctopus(int posX, int posY)
     std::shared_ptr<RType::Entity> mob = _addEntity();
 
     mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_OCTOPUS));
-    mob->pushComponent(std::make_shared<RType::HealthComponent>(5));
+    mob->pushComponent(std::make_shared<RType::HealthComponent>(3));
     auto position = mob->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
     mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 41, 46));
@@ -77,7 +76,7 @@ void RType::HandleEntitySpawnSystem::createMobSpaceShip(int posX, int posY)
     std::shared_ptr<RType::Entity> mob = _addEntity();
 
     mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_SMALL_SPACESHIP));
-    mob->pushComponent(std::make_shared<RType::HealthComponent>(5));
+    mob->pushComponent(std::make_shared<RType::HealthComponent>(2));
     auto position = mob->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
     mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 29, 29));

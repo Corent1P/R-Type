@@ -4,7 +4,6 @@ set(SRC_ECS
     ./ISystem.cpp
     ./ASystem.cpp
     ./EcsError.cpp
-    ../client/Game.cpp
 )
 
 set(SRC_COMPONENTS
@@ -37,13 +36,7 @@ set(SRC_SYSTEMS
     ./Systems/HandleEntitySpawnSystem.cpp
 )
 
-set(SRC_CLIENTS # To Remove
-    ../client/communication/Client.cpp
-    ../client/ClientError.cpp
-
-)
-
-add_library(ecs ${SRC_ECS} ${SRC_COMPONENTS} ${SRC_SYSTEMS} ${SRC_CLIENTS} )
+add_library(ecs ${SRC_ECS} ${SRC_COMPONENTS} ${SRC_SYSTEMS} )
 
 if (NOT WIN32)
     target_compile_options(ecs PRIVATE

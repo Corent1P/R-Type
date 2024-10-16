@@ -33,5 +33,6 @@ namespace RType {
 
             std::function<void(const std::basic_string<unsigned char> &message)> _sendToAllClient;
             int _y_spawn = 700;
+            short _sign = -1;
     };
 }

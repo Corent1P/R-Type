@@ -22,6 +22,9 @@ namespace RType {
         E_LAYER,
         E_BULLET,
         E_POWER_UP,
+        E_BULLET_EFFECT,
+        E_HIT_EFFECT,
+        E_EXPLOSION_EFFECT,
     };
 
     enum WeaponType {

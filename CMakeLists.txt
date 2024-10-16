@@ -26,6 +26,12 @@ if(NOT MSVC)
     add_compile_options(-Wall -Wextra -Werror -g)
 endif()
 
+set(CMAKE_CXX_CLANG_TIDY
+  clang-tidy;
+  -header-filter=.;
+  -checks=*,modernize-*,-*,boost-*;)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+
 # set(CMAKE_OSX_SYSROOT "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk")
 
 # if (CMAKE_SYSTEM MATCHES MacOSX)
