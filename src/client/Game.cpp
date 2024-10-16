@@ -7,10 +7,9 @@
 
 #include "Game.hh"
 
-RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, const std::string &port)
+RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, const std::string &port):
+    _client(ioContext, host, port)
 {
-    _client = std::make_shared<RType::Client> (ioContext, host, port);
-    _client->send(Encoder::connexion());
     createWindow();
     createPlayer();
     createGameSystem();
@@ -21,7 +20,7 @@ RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, c
 
 RType::Game::~Game()
 {
-    _client->send(Encoder::disconnexion());
+    _client.send(Encoder::disconnexion());
     if (_receipter.joinable()) {
         _receipter.join();
     }
@@ -76,18 +75,19 @@ void RType::Game::gameLoop()
             renderTime = 0.0;
             std::unique_lock<std::mutex> lock(_mtx);
             if (windowComponent != nullptr && !windowComponent->getIsOpen()) {
-                _client->cancel();
+                _client.cancel();
                 _stopLoop = true;
                 break;
             }
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
 }
 
 void RType::Game::loopReceive()
 {
     while (!_stopLoop) {
-        std::basic_string<unsigned char> command = _client->receive();
+        std::basic_string<unsigned char> command = _client.receive();
         auto receivInfo = Decoder::getCommandInfo(command);
         if (receivInfo.first == MOVE_PLAYER)
             std::cout << "Message received = " << receivInfo.first << " move with coordinates " << receivInfo.second[0] << ":" << receivInfo.second[1] << std::endl;
@@ -109,7 +109,9 @@ void RType::Game::loopReceive()
                     createEffect(static_cast<short> (receivInfo.second[2]), static_cast<short> (receivInfo.second[3]),  RType::E_BULLET_EFFECT, "./ressources/effects/flash.png", sf::IntRect(0, 0, 11, 19));
                 }
             } else {
-                std::unique_lock<std::mutex> lock(_mtx); 
+                if (receivInfo.second[0] != E_PLAYER)
+                    continue;
+                std::unique_lock<std::mutex> lock(_mtx);
                 _initConnection = true;
                 auto entities = _coord.getEntities();
                 for (const auto &entity : entities) {
@@ -120,10 +122,12 @@ void RType::Game::loopReceive()
         }
         if (receivInfo.first == DELETE_ENTITY) {
 
+            std::unique_lock<std::mutex> lock(_mtx);
             auto entities = _coord.getEntities();
             for (const auto &entity : entities) {
-                std::unique_lock<std::mutex> lock(_mtx);
                 if (entity->getServerId() == receivInfo.second[0]) {
+                    if (entity->getComponent<RType::EntityTypeComponent>() == nullptr)
+                        continue;
                     switch (entity->getComponent<RType::EntityTypeComponent>()->getEntityType())
                     {
                     case RType::E_BULLET:
@@ -158,9 +162,9 @@ void RType::Game::loopReceive()
         }
         if (receivInfo.first == MOVE_ENTITY) {
 
+            std::unique_lock<std::mutex> lock(_mtx);
             auto entities = _coord.getEntities();
             for (const auto &entity : entities) {
-                std::unique_lock<std::mutex> lock(_mtx);
                 if (entity->getServerId() == receivInfo.second[0] && entity->getComponent<RType::PositionComponent>() && entity->getComponent<RType::SpriteComponent>()) {
                     entity->getComponent<RType::PositionComponent>()->setPositions(static_cast<short>(receivInfo.second[1]), static_cast<short> (receivInfo.second[2]));
                     entity->getComponent<RType::SpriteComponent>()->getSprite()->setPosition(static_cast<short>(receivInfo.second[1]), static_cast<short> (receivInfo.second[2]));
@@ -307,7 +311,7 @@ void RType::Game::createGameSystem()
     _coord.generateNewSystem(std::make_shared<HandleMoveSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
-        _client
+        std::bind(&RType::Client::send, &_client, std::placeholders::_1)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleMoveSpriteSystem>(
@@ -318,7 +322,7 @@ void RType::Game::createGameSystem()
     _coord.generateNewSystem(std::make_shared<HandleShootSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
-        _client
+        std::bind(&RType::Client::send, &_client, std::placeholders::_1)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleColisionSystem>(
@@ -390,8 +394,8 @@ std::shared_ptr<RType::TextureComponent> RType::Game::getTextureComponent(const 
     return texture;
 }
 
-void RType::Game::createEffect(long posX, long posY, EntityType type, std::string path, sf::IntRect rect) {
-    
+void RType::Game::createEffect(long posX, long posY, EntityType type, std::string path, sf::IntRect rect)
+{
     std::shared_ptr<RType::Entity> shotEffect = _coord.generateNewEntity();
     shotEffect->pushComponent(std::make_shared<RType::EntityTypeComponent>(type));
     std::shared_ptr<RType::PositionComponent> position = shotEffect->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY - 20));
@@ -399,6 +403,16 @@ void RType::Game::createEffect(long posX, long posY, EntityType type, std::strin
     shotEffect->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(), sf::Vector2f(2, 2), rect));
     shotEffect->pushComponent(std::make_shared<RType::VelocityComponent>(7));
     shotEffect->pushComponent(std::make_shared<RType::ClockComponent>());
+}
+
+bool RType::Game::getGameHasStarted(void) const
+{
+    return _initConnection;
+}
+
+void RType::Game::connectToServer(void)
+{
+    _client.send(Encoder::connexion());
 }
 
 std::ostream &operator<<(std::ostream &s, const RType::Game &game)

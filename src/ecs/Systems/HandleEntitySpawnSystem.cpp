@@ -23,15 +23,14 @@ RType::HandleEntitySpawnSystem::~HandleEntitySpawnSystem()
 
 void RType::HandleEntitySpawnSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
-    if (entity->getComponent<RType::ClockComponent>()->getClock(RType::SPAWN_CLOCK).getElapsedTime().asSeconds() > 1) {
+    if (entity->getComponent<RType::ClockComponent>()->getClock(RType::SPAWN_CLOCK).getElapsedTime().asSeconds() > 2) {
         createMobFly(1920, _y_spawn);
         createMobOctopus(1920, _y_spawn + 100);
         createMobSpaceShip(1920, _y_spawn - 100);
         entity->getComponent<RType::ClockComponent>()->getClock(RType::SPAWN_CLOCK).restart();
-        if (_y_spawn > 100)
-            _y_spawn -= 100;
-        else
-            _y_spawn = 700;
+        _y_spawn += 100 * _sign;
+        if (_y_spawn <= 100 || _y_spawn >= 700)
+            _sign *= -1;
     }
 }
 

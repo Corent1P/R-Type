@@ -33,25 +33,10 @@ namespace RType {
              *
              * @param addEntity method used to add a new Entity to the coordinator.
              * @param deleteEntity method used to delete a Entity from the coordinator.
-             */
-            HandleMoveSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
-            /**
-             * @brief Construct a new Handle Move System object
-             *
-             * @param addEntity method used to add a new Entity to the coordinator.
-             * @param deleteEntity method used to delete a Entity from the coordinator.
-             * @param client class that send information from client to server.
-             */
-            HandleMoveSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::shared_ptr<RType::Client> client);
-            /**
-             * @brief Construct a new Handle Move System object
-             *
-             * @param addEntity method used to add a new Entity to the coordinator.
-             * @param deleteEntity method used to delete a Entity from the coordinator.
-             * @param client class that send information from client to server.
+             * @param sendMessageToServer method that send information from client to server.
              * @param sendMessageToAllClient methods that send to all clients the message in parameter.
              */
-            HandleMoveSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient);
+            HandleMoveSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToServer = nullptr, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient = nullptr);
             /**
              * @brief Destroy the Handle Move System object
              *
@@ -74,7 +59,7 @@ namespace RType {
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
         protected:
         private:
-            std::shared_ptr<RType::Client> _client;
+            std::function<void(const std::basic_string<unsigned char> &message)> _sendMessageToServer;
             std::function<void(const std::basic_string<unsigned char> &message)> _sendMessageToAllClient;
     };
 }

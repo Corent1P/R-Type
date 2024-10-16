@@ -64,6 +64,8 @@ namespace RType {
             ~Game();
             void gameLoop();
             const Coordinator &getCoordinator() const;
+            bool getGameHasStarted(void) const;
+            void connectToServer(void);
         private:
             void loopReceive();
             void createPlayer();
@@ -83,7 +85,7 @@ namespace RType {
 
             std::mutex _mtx;
             RType::Coordinator _coord;
-            std::shared_ptr<RType::Client> _client;
+            RType::Client _client;
             bool _stopLoop;
             std::thread _receipter;
             bool _initConnection;
