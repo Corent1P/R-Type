@@ -36,7 +36,7 @@ namespace RType {
             case GAME_END:
                 return std::make_pair(GAME_END, COMMAND_ARGS());
             default:
-                return std::make_pair(ERROR, COMMAND_ARGS());
+                return std::make_pair(PACKET_ERROR, COMMAND_ARGS());
         }
     }
 

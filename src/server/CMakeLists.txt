@@ -30,8 +30,5 @@ endif()
 target_link_libraries(r-type_server PRIVATE
     ecs
     Boost::boost
-    sfml-system
-    sfml-window
-    sfml-graphics
     protocolHandler
 )

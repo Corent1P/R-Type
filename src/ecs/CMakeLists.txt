@@ -4,6 +4,7 @@ set(SRC_ECS
     ./ISystem.cpp
     ./ASystem.cpp
     ./EcsError.cpp
+    ../client/Game.cpp
 )
 
 set(SRC_COMPONENTS
@@ -35,7 +36,7 @@ set(SRC_SYSTEMS
     ./Systems/HandleColisionSystem.cpp
     ./Systems/HandleEntitySpawnSystem.cpp
 )
-
+# set(SFML_DIR "../../vcpkg_installed/x64-windows/share/sfml")
 add_library(ecs ${SRC_ECS} ${SRC_COMPONENTS} ${SRC_SYSTEMS} )
 
 if (NOT WIN32)
@@ -45,4 +46,6 @@ if (NOT WIN32)
     )
 endif()
 
-target_link_libraries(ecs PUBLIC boost::boost sfml::sfml)
+find_package(Boost REQUIRED)
+find_package(SFML COMPONENTS system window graphics network audio REQUIRED)
+target_link_libraries(ecs PUBLIC Boost::boost sfml-system sfml-window sfml-graphics sfml-network sfml-audio)

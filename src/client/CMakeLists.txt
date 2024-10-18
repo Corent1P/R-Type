@@ -7,6 +7,8 @@ set(SRC_CLIENT
 
 add_executable(r-type_client ${SRC_CLIENT})
 
+file(COPY ${CMAKE_SOURCE_DIR}/ressources DESTINATION .)
+
 if (NOT WIN32)
     target_compile_options(r-type_client PRIVATE
         -fPIC
@@ -14,8 +16,11 @@ if (NOT WIN32)
     )
 endif()
 
-target_link_libraries(r-type_client PUBLIC ecs protocolHandler boost::boost sfml::sfml
-    # sfml-system
-    # sfml-window
-    # sfml-graphics
+target_link_libraries(r-type_client PRIVATE
+    ecs
+    protocolHandler
+    Boost::boost
+    sfml-system
+    sfml-window
+    sfml-graphics
 )
