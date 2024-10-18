@@ -1,11 +1,18 @@
 {
-    "version": 2,
+    "version": 6,
     "configurePresets": [
       {
         "name": "default",
         "inherits": "vcpkg",
         "environment": {
           "VCPKG_PATH": "$env{VCPKG_ROOT}"
+        }
+      },
+      {
+        "name": "windows",
+        "inherits": "Winvcpkg",
+        "environment": {
+          "VCPKG_ROOT": "C:\\vcpkg"
         }
       }
     ]

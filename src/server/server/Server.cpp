@@ -123,7 +123,7 @@ void RType::Server::handleCommand(std::pair<RType::PacketType, std::vector<long>
     std::unique_lock<std::mutex> lock(_mtx);
     std::shared_ptr<ICommand> com = _commandFactory.createCommand(receivInfo);
     if (!com) {
-        connectedClient->sendMessage(_socket, Encoder::header(0, RType::ERROR));
+        connectedClient->sendMessage(_socket, Encoder::header(0, RType::PACKET_ERROR));
         std::cout << "unvalid command sent by client" << std::endl;
     } else {
         com->execute(connectedClient,
