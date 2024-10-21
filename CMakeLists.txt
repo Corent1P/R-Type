@@ -41,12 +41,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 #     include_directories(${"/opt/homebrew/lib"})
 # endif()
 
-add_subdirectory(src/ecs)
 add_subdirectory(src/protocolHandler)
 
+find_package(jsoncpp CONFIG REQUIRED)
 find_package(Boost REQUIRED)
 find_package(SFML 2.6.1 COMPONENTS system window graphics REQUIRED)
 
+add_subdirectory(src/ecs)
 add_subdirectory(src/client)
 add_subdirectory(src/server)
 

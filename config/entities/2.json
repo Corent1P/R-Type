@@ -1,0 +1,14 @@
+{
+    "name": "player",
+    "sprite":"./ressources/player-sheet.png",
+    "scale": {
+        "x": 2.0,
+        "y": 2.0
+    },
+    "rect" : {
+        "x": 0,
+        "y": 0,
+        "width": 26,
+        "height": 21
+    }
+}
