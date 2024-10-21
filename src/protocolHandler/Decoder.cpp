@@ -48,17 +48,17 @@ namespace RType {
 
     PacketType Decoder::getType(U_STRING &packet)
     {
-        return static_cast<PacketType>(packet[2] & 0x3F);
+        return static_cast<PacketType>(packet[1] & 0x3F);
     }
 
     std::size_t Decoder::getSize(U_STRING &packet)
     {
-        return ((packet[1] << 8) | (packet[2] & 0xC0)) >> 6;
+        return ((packet[0] << 8) | (packet[1] & 0xC0)) >> 6;
     }
 
     std::uint8_t Decoder::getPacketNumber(U_STRING &packet)
     {
-        return packet[0];
+        return packet[2];
     }
 
     HEADER Decoder::decryptHeader(U_STRING &packet)
@@ -139,10 +139,10 @@ namespace RType {
 
     COMMAND_ARGS Decoder::ACKMissing(U_STRING &packet)
     {
-        COMMAND_ARGS args(PACKET_MAX);
+        COMMAND_ARGS args(PACKET_PER_TICK);
         std::uint8_t nbMissing = 0;
 
-        for (std::size_t i = 0; i < PACKET_MAX; i++) {
+        for (std::size_t i = 0; i < PACKET_PER_TICK; i++) {
             if ((packet[i / 8 + 3] & (1 << (i % 8))) != 0) {
                 args[nbMissing] = i;
                 nbMissing++;
