@@ -3,7 +3,8 @@
     "boost",
     "boost-build",
     "sfml",
-    "vcpkg-cmake"
+    "vcpkg-cmake",
+    "jsoncpp"
   ],
   "overrides": [
     {
