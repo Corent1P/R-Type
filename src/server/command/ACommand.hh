@@ -36,7 +36,7 @@ namespace RType {
              *
              * @return PacketType the type of the Command (cf. PacketType)
              */
-            PacketType getType(void) const;
+            PacketType getType(void) const override;
 
         protected:
             /**

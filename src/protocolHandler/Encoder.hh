@@ -19,7 +19,7 @@ namespace RType {
     * @brief Enum to define the type of the packet
     */
     enum PacketType {
-        ERROR = -1,
+        PACKET_ERROR = -1,
         CONNEXION = 0,
         DISCONNEXION = 1,
         NEW_ENTITY = 2,
@@ -30,7 +30,7 @@ namespace RType {
         MOVE_PLAYER = 7,
         ACTION_PLAYER = 8,
         GAME_START = 9,
-        GAME_END = 10,
+        GAME_END = 10
     };
 
     /**

@@ -92,12 +92,12 @@ void RType::Game::loopReceive()
 {
     std::basic_string<unsigned char> command;
     COMMAND_INFO receiveInfo;
+
     while (!_stopLoop) {
         command = _client.receive();
         receiveInfo = Decoder::getCommandInfo(command);
         if (receiveInfo.first == MOVE_PLAYER)
             std::cout << "Message received = " << receiveInfo.first << " move with coordinates " << receiveInfo.second[0] << ":" << receiveInfo.second[1] << std::endl;
-
         if (receiveInfo.first == NEW_ENTITY) {
             if (_initConnection) {
                 std::unique_lock<std::mutex> lock(_mtx);
@@ -322,11 +322,6 @@ void RType::Game::createGameSystem()
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
         std::bind(&RType::Client::send, &_client, std::placeholders::_1)
-    ));
-
-    _coord.generateNewSystem(std::make_shared<HandleColisionSystem>(
-        std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleAnimationSystem>(

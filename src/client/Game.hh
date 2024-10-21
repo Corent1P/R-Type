@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <vector>
 #include <json/json.h>
+#include <string>
 
 #include "./communication/Client.hh"
 

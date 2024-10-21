@@ -4,6 +4,7 @@ set(SRC_ECS
     ./ISystem.cpp
     ./ASystem.cpp
     ./EcsError.cpp
+    ../client/Game.cpp
 )
 
 set(SRC_COMPONENTS
@@ -35,20 +36,21 @@ set(SRC_SYSTEMS
     ./Systems/HandleColisionSystem.cpp
     ./Systems/HandleEntitySpawnSystem.cpp
 )
-
+# set(SFML_DIR "../../vcpkg_installed/x64-windows/share/sfml")
 add_library(ecs ${SRC_ECS} ${SRC_COMPONENTS} ${SRC_SYSTEMS} )
 
-target_compile_options(ecs PRIVATE
-    -fPIC
-    -Wall
-    -Wextra
-    -Werror
-    -g
-)
+if (NOT WIN32)
+    target_compile_options(ecs PRIVATE
+        -fPIC
+        -g
+    )
+endif()
 
+find_package(Boost REQUIRED)
 find_package(SFML COMPONENTS system window graphics network audio REQUIRED)
 target_link_libraries(ecs PRIVATE
     JsonCpp::JsonCpp
+    Boost::boost
     sfml-system
     sfml-window
     sfml-graphics
