@@ -9,6 +9,7 @@
 
 #include <unordered_map>
 #include <vector>
+#include <string>
 #include "./communication/Client.hh"
 
 #include "../ecs/Coordinator.hh"

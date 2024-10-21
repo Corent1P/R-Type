@@ -5,8 +5,7 @@
 ** Interface for Components
 */
 
-#ifndef ICOMPONENT_HPP_
-#define ICOMPONENT_HPP_
+#pragma once
 
 #include "Include.hh"
 
@@ -17,5 +16,3 @@ namespace RType {
             virtual std::string getOutput() const = 0;
     };
 }
-
-#endif /* !ICOMPONENT_HPP_ */

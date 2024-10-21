@@ -89,7 +89,7 @@ void RType::Game::loopReceive()
     while (!_stopLoop) {
         std::basic_string<unsigned char> command = _client.receive();
         auto receivInfo = Decoder::getCommandInfo(command);
-        if (receivInfo.first == MOVE_PLAYER)
+        if (receivInfo.first == PacketType::MOVE_PLAYER)
             std::cout << "Message received = " << receivInfo.first << " move with coordinates " << receivInfo.second[0] << ":" << receivInfo.second[1] << std::endl;
 
         if (receivInfo.first == NEW_ENTITY) {
