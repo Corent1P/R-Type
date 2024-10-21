@@ -38,7 +38,7 @@ jobs:
               run: |
                   git clone https://github.com/microsoft/vcpkg.git
                   cd vcpkg && ./bootstrap-vcpkg.sh
-                  echo "export VCPKG_ROOT=$PWD" >> $GITHUB_ENV
+                  echo "export VCPKG_ROOT=$PWD/vcpkg/" >> $GITHUB_ENV
                   echo "export PATH=$VCPKG_ROOT:$PATH" >> $GITHUB_ENV
 
             - name: Install dependencies
