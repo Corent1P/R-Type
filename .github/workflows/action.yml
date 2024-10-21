@@ -33,25 +33,22 @@ jobs:
                   ${{ runner.os }}-vcpkg-
 
             - name: Install vcpkg
+              if: steps.vcpkg.outputs.cache-hit == 'true'
               id: vcpkg
               run: |
-                  if ! command -v vcpkg 2>&1 >/dev/null
-                  then
-                      git clone https://github.com/microsoft/vcpkg.git
-                      ./vcpkg/bootstrap-vcpkg.sh
-                      echo "VCPKG_ROOT=${{github.workspace}}/vcpkg/" >> $GITHUB_ENV
-                  fi
-
+                  git clone https://github.com/microsoft/vcpkg.git
+                  ./vcpkg/bootstrap-vcpkg.sh
 
             - name: Install dependencies
               id: package
               run: |
+                  echo "VCPKG_ROOT=${{github.workspace}}/vcpkg/" >> $GITHUB_ENV
                   sudo apt-get update -y && sudo apt-get install -y clang-tidy wget
                   sudo wget -qO /usr/local/bin/ninja.gz https://github.com/ninja-build/ninja/releases/latest/download/ninja-linux.zip
                   sudo gunzip /usr/local/bin/ninja.gz
                   sudo chmod a+x /usr/local/bin/ninja
                   sudo apt-get install -y libx11-dev libx11-xcb-dev libfontenc-dev libice-dev libsm-dev libxau-dev libxaw7-dev cmake build-essential
-                  sudo apt-get install -y autoconf automake autoconf-archive
+                  sudo apt-get install -y autoconf automake autoconf-archive libjsoncpp-dev libbz2-dev libdivsufsort-dev libssl-dev libmpfr-dev
 
             - name: Compilation with CMake
               id: build
