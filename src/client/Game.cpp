@@ -24,7 +24,7 @@ RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, c
 
 RType::Game::~Game()
 {
-    _client.send(Encoder::disconnexion());
+    _client.send(Encoder::disconnexion(0));
     if (_receipter.joinable()) {
         _receipter.join();
     }
@@ -393,7 +393,7 @@ bool RType::Game::getGameHasStarted(void) const
 
 void RType::Game::connectToServer(void)
 {
-    _client.send(Encoder::connexion());
+    _client.send(Encoder::connexion(0));
 }
 std::ostream &operator<<(std::ostream &s, const RType::Game &game)
 {
