@@ -72,5 +72,5 @@ void RType::HandleEntitySpawnSystem::createEntity(int posX, int posY, EntityType
         entity->PUSH_VELOCITY_E(SERVER_SPEED(entityInfo["speed"].asInt()));
     if (entityInfo["pattern"].asBool() == true)
         entity->PUSH_PATTERN_E(static_cast<RType::PatternType>(entityInfo["pattern"].asInt()));
-    _sendToAllClient(Encoder::newEntity(0, type, entity->getId(), position->getPositionX(), position->getPositionY()));
+    _sendToAllClient(Encoder::newEntity(type, entity->getId(), position->getPositionX(), position->getPositionY()));
 }
