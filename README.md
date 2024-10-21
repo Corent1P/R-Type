@@ -131,6 +131,11 @@ To start the client, you only have to execute the following command:
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
+## Versions
+
+- 1.0: Position and movement handling in server side
+- 2.0: Shoot and ennemy spawn handling in server side
+
 ## Contact
 
 Piqueto Corentin - corentin.piquet@epitech.eu

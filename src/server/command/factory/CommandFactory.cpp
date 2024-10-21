@@ -25,7 +25,7 @@ std::shared_ptr<RType::ICommand> RType::CommandFactory::createCommand(const std:
     try {
         PacketType type = (PacketType)command.first;
 
-        if (type == ERROR)
+        if (type == PACKET_ERROR)
             throw Error("Unvalid Command sent from client");
         if (_constructors.find(type) == _constructors.end())
             throw Error("Command not found");

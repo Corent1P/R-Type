@@ -123,7 +123,7 @@ void RType::Server::handleCommand(std::pair<RType::PacketType, std::vector<long>
     std::unique_lock<std::mutex> lock(_mtx);
     std::shared_ptr<ICommand> com = _commandFactory.createCommand(receivInfo);
     if (!com) {
-        connectedClient->sendMessage(_socket, Encoder::header(0, RType::ERROR));
+        connectedClient->sendMessage(_socket, Encoder::header(0, RType::PACKET_ERROR));
         std::cout << "unvalid command sent by client" << std::endl;
     } else {
         com->execute(connectedClient,
@@ -154,6 +154,7 @@ void RType::Server::gameLoop(void)
                 sys->effects(_coord.getEntities());
             logicTime -= FRAME_SERVER_TIME_LOGIC;
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
 }
 
@@ -167,6 +168,7 @@ void RType::Server::initSystem(void)
     _coord.generateNewSystem(std::make_shared<HandleMoveSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        nullptr,
         std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
     ));
 

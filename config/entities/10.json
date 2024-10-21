@@ -1,0 +1,17 @@
+{
+    "name": "bullet",
+    "sprite":"./ressources/shoot-spritesheet.png",
+    "scale": {
+        "x": 2.0,
+        "y": 2.0
+    },
+    "rect" : {
+        "x": 0,
+        "y": 0,
+        "width": 19,
+        "height": 6
+    },
+    // STRAIGHT_RIGHT
+    "pattern": 4,
+    "speed": 7
+}
