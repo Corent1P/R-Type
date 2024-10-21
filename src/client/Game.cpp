@@ -133,25 +133,28 @@ void RType::Game::loopReceive()
                     case RType::E_BULLET:
                         createEffect(entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY(),
                         RType::E_HIT_EFFECT, "./ressources/effects/hit.png", sf::IntRect(0, 0, 16, 16));
-                        _coord.deleteEntity(entity);
+                        _coord.deleteEntity(entity, false);
                         break;
                     case RType::E_OCTOPUS:
                         createEffect(entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY(),
                         RType::E_EXPLOSION_EFFECT, "./ressources/effects/explosion.png", sf::IntRect(0, 0, 32, 32));
-                        _coord.deleteEntity(entity);
+                        _coord.deleteEntity(entity, false);
                         break;
                     case RType::E_FLY:
                         createEffect(entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY(),
                         RType::E_EXPLOSION_EFFECT, "./ressources/effects/explosion.png", sf::IntRect(0, 0, 32, 32));
-                        _coord.deleteEntity(entity);
+                        _coord.deleteEntity(entity, false);
                         break;
                     case RType::E_SMALL_SPACESHIP:
                         createEffect(entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY(),
                         RType::E_EXPLOSION_EFFECT, "./ressources/effects/explosion.png", sf::IntRect(0, 0, 32, 32));
-                        _coord.deleteEntity(entity);
+                        _coord.deleteEntity(entity, false);
                         break;
                     case RType::E_PLAYER:
-                        _coord.deleteEntity(entity);
+                        _coord.deleteEntity(entity, false);
+                        break;
+                    case RType::E_ALLIES:
+                        _coord.deleteEntity(entity, false);
                         break;
                     default:
                         break;
@@ -300,44 +303,39 @@ void RType::Game::createGameSystem()
     std::unique_lock<std::mutex> lock(_mtx);
     _coord.generateNewSystem(std::make_shared<HandleEventSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandlePatternSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleMoveSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
         std::bind(&RType::Client::send, &_client, std::placeholders::_1)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleMoveSpriteSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleShootSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
         std::bind(&RType::Client::send, &_client, std::placeholders::_1)
-    ));
-
-    _coord.generateNewSystem(std::make_shared<HandleColisionSystem>(
-        std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleAnimationSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleDrawSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 }
 
