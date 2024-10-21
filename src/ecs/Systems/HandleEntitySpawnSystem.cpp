@@ -23,7 +23,7 @@ RType::HandleEntitySpawnSystem::~HandleEntitySpawnSystem()
 
 void RType::HandleEntitySpawnSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
-    if (entity->getComponent<RType::ClockComponent>()->getClock(RType::SPAWN_CLOCK).getElapsedTime().asSeconds() > 1) {
+    if (entity->getComponent<RType::ClockComponent>()->getClock(RType::SPAWN_CLOCK).getElapsedTime().asSeconds() > 2) {
         createEntity(1920, _y_spawn, E_FLY);
         createEntity(1920, _y_spawn + 100, E_OCTOPUS);
         createEntity(1920, _y_spawn - 100, E_SMALL_SPACESHIP);
