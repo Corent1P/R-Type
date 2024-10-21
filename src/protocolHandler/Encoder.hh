@@ -16,6 +16,7 @@
 
 #define U_STRING std::basic_string<unsigned char>
 #define PACKET_PER_TICK 64
+#define MAX_PACKETS 256
 
 namespace RType {
 

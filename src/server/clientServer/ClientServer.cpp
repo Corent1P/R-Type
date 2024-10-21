@@ -11,6 +11,9 @@ RType::ClientServer::ClientServer(boost::asio::ip::udp::endpoint endpoint):
 	_endpoint(endpoint), _portNumber(_endpoint.port()), _address(_endpoint.address()), _isConnected(true), _entity(nullptr)
 {
 	std::cout << "ClientServer created with adress " << _address << ":" << _portNumber << std::endl;
+	for (int i = 0; i < MAX_PACKETS; i++) {
+		_packetsSent[i] = std::basic_string<unsigned char>({0});
+	}
 }
 
 void RType::ClientServer::setIsConnected(bool isConnected)
@@ -52,6 +55,19 @@ void RType::ClientServer::sendMessage(udp::socket &socket, const std::string &me
 	);
 }
 
+// void displayPackets(std::array<U_STRING, MAX_PACKETS> &packets)
+// {
+// 	for (std::size_t i = 0; i < MAX_PACKETS; i++) {
+// 		std::cout << "[" << i << " = ";
+// 		if (packets[i].size() > 0)
+// 			for (const auto &byte: packets[i])
+// 				std::cout << (int)byte << " ";
+// 		else
+// 			std::cout << "empty";
+// 		std::cout << "]" << std::endl;
+// 	}
+// }
+
 void RType::ClientServer::sendMessage(udp::socket &socket, const std::basic_string<unsigned char> &message)
 {
 	socket.async_send_to(boost::asio::buffer(message), _endpoint,
@@ -59,6 +75,9 @@ void RType::ClientServer::sendMessage(udp::socket &socket, const std::basic_stri
             sendCallback(message, error, bytes_transferred);
         }
 	);
+	_packetsSent[_packetId] = message;
+	_packetId = (_packetId + 1) % MAX_PACKETS;
+	// displayPackets(_packetsSent);
 }
 
 void RType::ClientServer::sendCallback(const std::string &, const boost::system::error_code &error, std::size_t bytesTransferred)
@@ -72,7 +91,7 @@ void RType::ClientServer::sendCallback(const std::string &, const boost::system:
     // }
 }
 
-void RType::ClientServer::sendCallback(const std::basic_string<unsigned char> &, const boost::system::error_code &error, std::size_t bytesTransferred)
+void RType::ClientServer::sendCallback(const U_STRING &, const boost::system::error_code &error, std::size_t bytesTransferred)
 {
 	(void)error;
 	(void)bytesTransferred;

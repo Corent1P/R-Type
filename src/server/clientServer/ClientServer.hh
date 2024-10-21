@@ -139,6 +139,17 @@ namespace RType {
              */
             std::shared_ptr<RType::Entity> _entity;
             /**
+             * @brief the id of the last packet sent
+             *
+             */
+            std::size_t _packetId = 0;
+            /**
+             * @brief the array to store the sent messages
+             *
+             */
+            std::array<U_STRING, MAX_PACKETS> _packetsSent;
+
+            /**
              * @brief the callback method after the sending of messages
              *
              * @param message string message
@@ -154,6 +165,6 @@ namespace RType {
              * @param error the error code
              * @param bytes_transferred the number of bytes transferred
              */
-            void sendCallback(const std::basic_string<unsigned char> &message, const boost::system::error_code &error, std::size_t bytes_transferred);
+            void sendCallback(const U_STRING &message, const boost::system::error_code &error, std::size_t bytes_transferred);
     };
 }
