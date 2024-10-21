@@ -28,5 +28,5 @@ void RType::ActionPlayerCommand::execute(std::shared_ptr<ClientServer> client, F
     bullet->pushComponent(std::make_shared<RType::VelocityComponent>(21));
     bullet->pushComponent(std::make_shared<RType::ClockComponent>());
 
-    sendToAll(Encoder::newEntity(E_BULLET, bullet->getId(), position->getPositionX(), position->getPositionY()));
+    sendToAll(Encoder::newEntity(0, E_BULLET, bullet->getId(), position->getPositionX(), position->getPositionY()));
 }
