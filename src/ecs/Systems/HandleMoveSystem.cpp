@@ -69,11 +69,12 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
                 _sendMessageToServer(Encoder::movePlayer(movePosition.first * 10, movePosition.second * 10));
             }
 
-            if (_sendMessageToAllClient) {
+            if (_sendMessageToAllClient && _toSend % 3 == 0) {
                 _sendMessageToAllClient(Encoder::moveEntity(entity->getId(), entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY(), 0));
             }
         }
     }
+    _toSend = (_toSend + 1) % 3;
 }
 
 bool RType::HandleMoveSystem::verifyRequiredComponent(std::shared_ptr<RType::Entity> entity)

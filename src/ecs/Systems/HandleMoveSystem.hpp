@@ -61,6 +61,7 @@ namespace RType {
         private:
             std::function<void(const std::basic_string<unsigned char> &message)> _sendMessageToServer;
             std::function<void(const std::basic_string<unsigned char> &message)> _sendMessageToAllClient;
+            short _toSend = 0;
     };
 }
 #endif /* !HANDLEMOVESYTEM_HPP_ */
