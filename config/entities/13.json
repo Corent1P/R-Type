@@ -1,0 +1,14 @@
+{
+    "name": "hit effect",
+    "sprite":"./ressources/effects/hit.png",
+    "scale": {
+        "x": 2.0,
+        "y": 2.0
+    },
+    "rect" : {
+        "x": 0,
+        "y": 0,
+        "width": 16,
+        "height": 16
+    }
+}
