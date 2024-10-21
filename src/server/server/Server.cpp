@@ -103,7 +103,7 @@ void RType::Server::handleConnection(std::shared_ptr<ClientServer> connectedClie
 
     connectedClient->setEntity(player);
 
-    sendToAllClient(Encoder::newEntity(0, E_PLAYER, connectedClient->getEntity()->getId(), position->getPositionX(), position->getPositionY()));
+    sendToAllClient(Encoder::newEntity(E_PLAYER, connectedClient->getEntity()->getId(), position->getPositionX(), position->getPositionY()));
     sendAllEntity(connectedClient);
 }
 
@@ -111,7 +111,7 @@ void RType::Server::handleDisconnection(std::shared_ptr<ClientServer> connectedC
 {
     for (std::size_t i = 0; i < _clients.size(); i++) {
         if (_clients[i] == connectedClient) {
-            sendToAllClient(Encoder::deleteEntity(0, _clients[i]->getEntity()->getId()));
+            sendToAllClient(Encoder::deleteEntity(_clients[i]->getEntity()->getId()));
             _coord.deleteEntity(_clients[i]->getEntity());
             _clients.erase(std::next(_clients.begin(), i));
         }
@@ -123,7 +123,7 @@ void RType::Server::handleCommand(PACKET receivInfo, std::shared_ptr<ClientServe
     std::unique_lock<std::mutex> lock(_mtx);
     std::shared_ptr<ICommand> com = _commandFactory.createCommand(receivInfo);
     if (!com) {
-        connectedClient->sendMessage(_socket, Encoder::header(0, 0, RType::PACKET_ERROR));
+        connectedClient->sendMessage(_socket, Encoder::header(0, RType::PACKET_ERROR));
         std::cout << "unvalid command sent by client" << std::endl;
     } else {
         com->execute(connectedClient,
@@ -193,7 +193,7 @@ void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)
 {
     for (auto entity: _coord.getEntities()) {
         if (client->getEntity()->getId() != entity->getId() && (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER || EntityTypeComponent::isMob(entity->getComponent<EntityTypeComponent>()->getEntityType()))) {
-            client->sendMessage(_socket, Encoder::newEntity(0, entity->getComponent<EntityTypeComponent>()->getEntityType(), entity->getId(), entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY()));
+            client->sendMessage(_socket, Encoder::newEntity(entity->getComponent<EntityTypeComponent>()->getEntityType(), entity->getId(), entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY()));
         }
     }
 }
