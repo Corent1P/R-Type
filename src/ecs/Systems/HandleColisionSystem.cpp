@@ -37,7 +37,7 @@ void RType::HandleColisionSystem::effects(std::vector<std::shared_ptr<RType::Ent
     handleEntityColisions();
     for (const auto &entity: _entitiesToDestroy) {
         if (_sendMessageToAllClient) {
-            _sendMessageToAllClient(Encoder::deleteEntity(0, entity->getId()));
+            _sendMessageToAllClient(Encoder::deleteEntity(entity->getId()));
             _deleteEntity(entity);
         }
     }

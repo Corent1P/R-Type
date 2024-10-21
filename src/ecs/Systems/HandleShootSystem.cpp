@@ -41,7 +41,7 @@ void RType::HandleShootSystem::effects(std::vector<std::shared_ptr<RType::Entity
                 // shot->pushComponent(std::make_shared<RType::VelocityComponent>(7));
                 // shot->pushComponent(std::make_shared<RType::ClockComponent>());
                 // std::cout << "shoot" << std::endl;
-                _sendMessageToServer(Encoder::actionPlayer(0, true, false, false, false));
+                _sendMessageToServer(Encoder::actionPlayer(true, false, false, false));
             }
         }
         if (entity->getComponent<RType::ClockComponent>() != nullptr && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_BULLET_EFFECT) {
