@@ -10,14 +10,12 @@
 RType::MovePlayerCommand::MovePlayerCommand(const COMMAND_ARGS &data):
     ACommand(data, MOVE_PLAYER)
 {
-    std::cout << "Move command created" << std::endl;
 }
 
 void RType::MovePlayerCommand::execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll, Coordinator &coord)
 {
     (void)sendToClient;
     (void)coord;
-    std::cout << "execution of move command" << std::endl;
     std::pair<double, double> position = {client->getEntity()->getComponent<PositionComponent>()->getPositions().x, client->getEntity()->getComponent<PositionComponent>()->getPositions().y};
     position.first += ((double)_data[0]) / 10.;
     position.second += ((double)_data[1]) / 10.;

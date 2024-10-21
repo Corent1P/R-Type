@@ -7,8 +7,12 @@
 
 #pragma once
 
+#include <SFML/Graphics/Rect.hpp>
 #include <unordered_map>
 #include <vector>
+#include <json/json.h>
+#include <string>
+
 #include "./communication/Client.hh"
 
 #include "../ecs/Coordinator.hh"
@@ -24,6 +28,8 @@
 #include "../ecs/Components/ActionComponent.hh"
 #include "../ecs/Components/DirectionPatternComponent.hh"
 #include "../ecs/Components/VelocityComponent.hh"
+#include "../ecs/Components/ScaleComponent.hh"
+#include "../ecs/Components/IntRectComponent.hh"
 
 #include "../ecs/Systems/HandleEventSystem.hpp"
 #include "../ecs/Systems/HandleDrawSystem.hpp"
@@ -32,6 +38,7 @@
 #include "../ecs/Systems/HandleAnimationSystem.hpp"
 #include "../ecs/Systems/HandlePatternSystem.hpp"
 #include "../ecs/Systems/HandleShootSystem.hpp"
+#include "../ecs/Systems/HandleColisionSystem.hpp"
 #include <thread>
 #include "../protocolHandler/Encoder.hh"
 #include "../protocolHandler/Decoder.hh"
@@ -41,10 +48,27 @@
 #define FRAME_TIME_LOGIC 1.0 / 60.0
 #define RENDER_FRAME_TIME 1.0 / MAX_FPS
 
-
 #define CREATE_TEXTURE std::make_shared<RType::TextureComponent>
 #define CREATE_ENTITY_TYPE std::make_shared<RType::EntityTypeComponent>
 #define CREATE_POS_COMPONENT std::make_shared<RType::PositionComponent>
+#define CREATE_SPRITE_COMPONENT std::make_shared<RType::SpriteComponent>
+#define GET_POSITION_X getComponent<RType::PositionComponent>()->getPositionX()
+#define GET_POSITION_Y getComponent<RType::PositionComponent>()->getPositionY()
+
+#define POS_COMPONENT std::shared_ptr<RType::PositionComponent>
+#define SCALE_COMPONENT std::shared_ptr<RType::ScaleComponent>
+#define RECT_COMPONENT std::shared_ptr<RType::IntRectComponent>
+#define TEXTURE_COMPONENT std::shared_ptr<RType::TextureComponent>
+
+#define PUSH_POS_E(x, y) pushComponent(std::make_shared<RType::PositionComponent>(x, y))
+#define PUSH_TYPE_E(type) pushComponent(std::make_shared<RType::EntityTypeComponent>(type))
+#define PUSH_SCALE_E(x, y) pushComponent(std::make_shared<RType::ScaleComponent>(x, y))
+#define PUSH_RECT_E(x, y, w, h) pushComponent(std::make_shared<RType::IntRectComponent>(x, y, w, h))
+#define PUSH_TEXTURE_E(path) pushComponent(std::make_shared<RType::TextureComponent>(path))
+#define PUSH_HEALTH_E(hp) pushComponent(std::make_shared<RType::HealthComponent>(hp))
+#define PUSH_VELOCITY_E(speed) pushComponent(std::make_shared<RType::VelocityComponent>(speed))
+#define PUSH_PATTERN_E(pattern) pushComponent(std::make_shared<RType::DirectionPatternComponent>(pattern))
+#define PUSH_CLOCK_E() pushComponent(std::make_shared<RType::ClockComponent>())
 
 namespace RType {
 
@@ -61,12 +85,15 @@ namespace RType {
             ~Game();
             void gameLoop();
             const Coordinator &getCoordinator() const;
+            bool getGameHasStarted(void) const;
+            void connectToServer(void);
         private:
             void loopReceive();
             void createPlayer();
-            void createPlayer(long serverId, long posX, long posY);
-            void createMob(long serverId, long posX, long posY);
-            void createBullet(long serverId, long posX, long posY);
+            void createEntity(const RType::EntityType &type, const int &posX,
+                              const int &posY);
+            void createEntity(const long &serverId, const RType::EntityType &type,
+                              const int &posX, const int &posY);
             void createWindow();
             void createGameSystem();
             void createParallaxBackground(std::shared_ptr<RType::Entity> window);
@@ -74,15 +101,14 @@ namespace RType {
                 const int &winMaxX, const int &winMaxY, const int &index, const int &level);
             std::shared_ptr<RType::TextureComponent> getTextureComponent(const std::string &path);
             std::size_t getMaxClientId(void);
-        
+
             std::mutex _mtx;
             RType::Coordinator _coord;
-            std::shared_ptr<RType::Client> _client;
+            RType::Client _client;
             bool _stopLoop;
-            std::jthread _receipter;
+            std::thread _receipter;
             bool _initConnection;
             std::unordered_map<std::string, std::shared_ptr<RType::TextureComponent>> _texturesMap;
-
     };
 }
 

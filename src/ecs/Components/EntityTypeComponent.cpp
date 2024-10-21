@@ -56,6 +56,11 @@ RType::EnemyType RType::EntityTypeComponent::getEnemyType() const
 	return _enemyType;
 }
 
+bool RType::EntityTypeComponent::isMob(EntityType entityType)
+{
+    return entityType == E_SMALL_SPACESHIP || entityType == E_FLY || entityType == E_OCTOPUS;
+}
+
 std::string RType::EntityTypeComponent::getOutput() const
 {
     std::string entityType("");
@@ -67,8 +72,14 @@ std::string RType::EntityTypeComponent::getOutput() const
         case E_PLAYER:
             entityType = "player";
             break;
-        case E_MOB:
-            entityType = "mob";
+        case E_SMALL_SPACESHIP:
+            entityType = "mob small spaceship";
+            break;
+        case E_OCTOPUS:
+            entityType = "mob octopus";
+            break;
+        case E_FLY:
+            entityType = "mob fly";
             break;
         case E_BOSS:
             entityType = "boss";
@@ -90,4 +101,5 @@ std::string RType::EntityTypeComponent::getOutput() const
             break;
         }
     std::string output("Entity Type Component (entity type: " + entityType + ")");
-    return (output);}
+    return (output);
+}

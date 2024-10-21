@@ -17,6 +17,8 @@ namespace RType {
         SHOOTING_CLOCK,
         CHARGED_SHOT_CLOCK,
         LOGIC_CLOCK,
+        SPAWN_CLOCK,
+        SHOOTING_EFFECT,
     };
 
     class ClockComponent: public RType::IComponent {

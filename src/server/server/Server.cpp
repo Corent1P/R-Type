@@ -12,7 +12,7 @@ RType::Server::Server(boost::asio::io_context &ioContext, int port):
 {
     std::cout << "Server listening on port " << port << std::endl;
     initSystem();
-    _gameLoop = std::jthread(&Server::gameLoop, this);
+    _gameLoop = std::thread(&Server::gameLoop, this);
     startReceive();
 }
 
@@ -96,6 +96,8 @@ void RType::Server::handleConnection(std::shared_ptr<ClientServer> connectedClie
 
     player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_PLAYER));
     std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(10, 10));
+    player->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 26, 21));
+    player->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     player->pushComponent(std::make_shared<RType::HealthComponent>(25));
     player->pushComponent(std::make_shared<RType::ClockComponent>());
 
@@ -103,7 +105,6 @@ void RType::Server::handleConnection(std::shared_ptr<ClientServer> connectedClie
 
     sendToAllClient(Encoder::newEntity(0, E_PLAYER, connectedClient->getEntity()->getId(), position->getPositionX(), position->getPositionY()));
     sendAllEntity(connectedClient);
-    createMob(); //TODO: remove this when the tests are finished
 }
 
 void RType::Server::handleDisconnection(std::shared_ptr<ClientServer> connectedClient)
@@ -122,7 +123,7 @@ void RType::Server::handleCommand(PACKET receivInfo, std::shared_ptr<ClientServe
     std::unique_lock<std::mutex> lock(_mtx);
     std::shared_ptr<ICommand> com = _commandFactory.createCommand(receivInfo);
     if (!com) {
-        connectedClient->sendMessage(_socket, Encoder::header(0, 0, RType::ERROR));
+        connectedClient->sendMessage(_socket, Encoder::header(0, 0, RType::PACKET_ERROR));
         std::cout << "unvalid command sent by client" << std::endl;
     } else {
         com->execute(connectedClient,
@@ -153,6 +154,7 @@ void RType::Server::gameLoop(void)
                 sys->effects(_coord.getEntities());
             logicTime -= FRAME_SERVER_TIME_LOGIC;
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
 }
 
@@ -166,6 +168,19 @@ void RType::Server::initSystem(void)
     _coord.generateNewSystem(std::make_shared<HandleMoveSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        nullptr,
+        std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
+    ));
+
+    _coord.generateNewSystem(std::make_shared<HandleColisionSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
+    ));
+
+    _coord.generateNewSystem(std::make_shared<HandleEntitySpawnSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
         std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
     ));
 
@@ -177,22 +192,8 @@ void RType::Server::initSystem(void)
 void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)
 {
     for (auto entity: _coord.getEntities()) {
-        if (client->getEntity()->getId() != entity->getId() && (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER || entity->getComponent<EntityTypeComponent>()->getEntityType() == E_MOB)) {
+        if (client->getEntity()->getId() != entity->getId() && (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER || EntityTypeComponent::isMob(entity->getComponent<EntityTypeComponent>()->getEntityType()))) {
             client->sendMessage(_socket, Encoder::newEntity(0, entity->getComponent<EntityTypeComponent>()->getEntityType(), entity->getId(), entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY()));
         }
     }
-}
-
-void RType::Server::createMob(void)
-{
-    std::shared_ptr<RType::Entity> mob = _coord.generateNewEntity();
-
-    mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_MOB));
-    std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(2000, 700));
-    mob->pushComponent(std::make_shared<RType::HealthComponent>(25));
-    mob->pushComponent(std::make_shared<RType::ClockComponent>());
-    mob->pushComponent(std::make_shared<RType::VelocityComponent>(3));
-
-    mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(STRAIGHT_LEFT));
-    sendToAllClient(Encoder::newEntity(0, E_MOB, mob->getId(), position->getPositionX(), position->getPositionY()));
 }

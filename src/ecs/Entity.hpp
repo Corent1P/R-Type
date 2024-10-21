@@ -10,6 +10,8 @@
 
 #include "IComponent.hh"
 
+#define GET_ENTITY_TYPE(x) x->getComponent<RType::EntityTypeComponent>()->getEntityType()
+
 namespace RType {
 
     class Entity {

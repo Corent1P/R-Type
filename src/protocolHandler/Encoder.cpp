@@ -132,7 +132,7 @@ namespace RType {
 
     U_STRING Encoder::error(std::uint8_t packetNumber)
     {
-        return header(packetNumber, 0, ERROR);
+        return header(packetNumber, 0, PACKET_ERROR);
     }
 
     U_STRING Encoder::ACKMissing(std::uint8_t packetNumber,

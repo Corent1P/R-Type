@@ -37,7 +37,7 @@ namespace RType {
         INFO_ENTITY = 10,
         MOVE_PLAYER = 11,
         ACTION_PLAYER = 12,
-        ERROR = 13,
+        PACKET_ERROR = 13,
     };
 
     /**

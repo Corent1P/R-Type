@@ -39,7 +39,7 @@ namespace RType {
                 return std::make_pair(decryptHeader(packet), movePlayer(packet));
             case ACTION_PLAYER:
                 return std::make_pair(decryptHeader(packet), actionPlayer(packet));
-            case ERROR:
+            case PACKET_ERROR:
                 return std::make_pair(decryptHeader(packet), COMMAND_ARGS());
             default:
                 return std::make_pair(UNKNOWN_HEADER, COMMAND_ARGS());

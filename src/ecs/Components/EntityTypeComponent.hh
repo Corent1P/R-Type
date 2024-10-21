@@ -14,12 +14,17 @@ namespace RType {
         E_WINDOW,
         E_PLAYER,
         E_ALLIES,
-        E_MOB,
+        E_SMALL_SPACESHIP,
+        E_OCTOPUS,
+        E_FLY,
         E_BOSS,
         E_BUTTON,
         E_LAYER,
         E_BULLET,
         E_POWER_UP,
+        E_BULLET_EFFECT,
+        E_HIT_EFFECT,
+        E_EXPLOSION_EFFECT,
     };
 
     enum WeaponType {
@@ -52,6 +57,7 @@ namespace RType {
             void setEnemyType(EnemyType powerUpType);
             EnemyType getEnemyType() const;
             std::string getOutput() const;
+            static bool isMob(EntityType);
         private:
             EntityType _entityType;
             WeaponType _weaponType;

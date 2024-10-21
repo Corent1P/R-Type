@@ -21,6 +21,8 @@ set(SRC_COMPONENTS
     ./Components/DirectionPatternComponent.cpp
     ./Components/VelocityComponent.cpp
     ./Components/LevelComponent.cpp
+    ./Components/ScaleComponent.cpp
+    ./Components/IntRectComponent.cpp
 )
 
 set(SRC_SYSTEMS
@@ -31,23 +33,27 @@ set(SRC_SYSTEMS
     ./Systems/HandleAnimationSystem.cpp
     ./Systems/HandlePatternSystem.cpp
     ./Systems/HandleShootSystem.cpp
+    ./Systems/HandleColisionSystem.cpp
+    ./Systems/HandleEntitySpawnSystem.cpp
 )
+# set(SFML_DIR "../../vcpkg_installed/x64-windows/share/sfml")
+add_library(ecs ${SRC_ECS} ${SRC_COMPONENTS} ${SRC_SYSTEMS} )
 
-set(SRC_CLIENTS # To Remove
-    ../client/communication/Client.cpp
-    ../client/ClientError.cpp
+if (NOT WIN32)
+    target_compile_options(ecs PRIVATE
+        -fPIC
+        -g
+    )
+endif()
 
-)
-
-add_library(ecs ${SRC_ECS} ${SRC_COMPONENTS} ${SRC_SYSTEMS} ${SRC_CLIENTS} )
-
-target_compile_options(ecs PRIVATE
-    -fPIC
-    -Wall
-    -Wextra
-    -Werror
-    -g
-)
-
+find_package(Boost REQUIRED)
 find_package(SFML COMPONENTS system window graphics network audio REQUIRED)
-target_link_libraries(ecs sfml-system sfml-window sfml-graphics sfml-network sfml-audio)
+target_link_libraries(ecs PRIVATE
+    JsonCpp::JsonCpp
+    Boost::boost
+    sfml-system
+    sfml-window
+    sfml-graphics
+    sfml-network
+    sfml-audio
+)

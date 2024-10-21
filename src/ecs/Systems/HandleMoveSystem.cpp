@@ -7,18 +7,8 @@
 
 #include "HandleMoveSystem.hpp"
 
-RType::HandleMoveSystem::HandleMoveSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
-    ASystem(S_MOVE, addEntity, deleteEntity), _client(nullptr), _sendMessageToAllClient(nullptr)
-{
-}
-
-RType::HandleMoveSystem::HandleMoveSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient):
-    ASystem(S_MOVE, addEntity, deleteEntity), _client(nullptr), _sendMessageToAllClient(sendMessageToAllClient)
-{
-}
-
-RType::HandleMoveSystem::HandleMoveSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::shared_ptr<RType::Client> client):
-    ASystem(S_MOVE, addEntity, deleteEntity), _client(client), _sendMessageToAllClient(nullptr)
+RType::HandleMoveSystem::HandleMoveSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToServer, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient):
+    ASystem(S_MOVE, addEntity, deleteEntity), _sendMessageToServer(sendMessageToServer), _sendMessageToAllClient(sendMessageToAllClient)
 {
 }
 
@@ -75,8 +65,8 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
                 }
             }
 
-            if (_client && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER && (movePosition.first != 0 ||  movePosition.second != 0)) {
-                _client->send(Encoder::movePlayer(0, movePosition.first * 10, movePosition.second * 10));
+            if (_sendMessageToServer && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER && (movePosition.first != 0 ||  movePosition.second != 0)) {
+                _sendMessageToServer(Encoder::movePlayer(0, movePosition.first * 10, movePosition.second * 10));
             }
 
             if (_sendMessageToAllClient) {
