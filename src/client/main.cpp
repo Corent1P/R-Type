@@ -42,7 +42,7 @@ int main(int ac, char **av)
         std::cout << game;
         while (!game.getGameHasStarted()) {
             game.connectToServer();
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            std::this_thread::sleep_for(std::chrono::milliseconds(400));
         }
         game.gameLoop();
     }  catch (const std::exception &e) {
