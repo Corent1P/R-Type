@@ -27,7 +27,7 @@ jobs:
               uses: actions/cache@v3
               with:
                 path: |
-                  vcpkg
+                  ${{github.workspace}}/vcpkg
                   ${{github.workspace}}/build
                 key: ${{ runner.os }}-vcpkg-${{ hashFiles('**/vcpkg.json') }}
                 restore-keys: |
@@ -37,14 +37,16 @@ jobs:
               id: vcpkg
               run: |
                   git clone https://github.com/microsoft/vcpkg.git
-                  cd vcpkg && ./bootstrap-vcpkg.sh
-                  echo "$PWD" >> $GITHUB_PATH
+                  ./vcpkg/bootstrap-vcpkg.sh
+                  echo "VCPKG_ROOT=${{github.workspace}}/vcpkg/" >> $GITHUB_ENV
+
 
             - name: Install dependencies
               id: package
               run: |
                   sudo apt-get update -y && sudo apt-get install -y clang-tidy
-                  sudo apt-get install -y libx11-dev libx11-xcb-dev libfontenc-dev libice-dev libsm-dev libxau-dev libxaw7-dev
+                  sudo apt-get install -y libx11-dev libx11-xcb-dev libfontenc-dev libice-dev libsm-dev libxau-dev libxaw7-dev cmake build-essential
+                  sudo apt-get install autoconf automake autoconf-archive
 
             - name: Compilation with CMake
               id: build
