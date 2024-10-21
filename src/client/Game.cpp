@@ -43,6 +43,7 @@ void RType::Game::gameLoop()
     float logicTime = 0.0;
     float renderTime = 0.0;
     float deltaTime = 0.0;
+    int indexNackCommand = 0;
 
     for (auto sys : _coord.getSystems()) {
         if (sys->getType() == SystemType::S_DRAW) {
@@ -77,6 +78,9 @@ void RType::Game::gameLoop()
                 drawSystem->effects(_coord.getEntities());
             }
             renderTime = 0.0;
+            if (indexNackCommand % MAX_FPS_INT == 0)
+                _client.askForLostPackets();
+            indexNackCommand = (indexNackCommand + 1) % MAX_FPS_INT;
             std::unique_lock<std::mutex> lock(_mtx);
             if (windowComponent != nullptr && !windowComponent->getIsOpen()) {
                 _client.cancel();
@@ -96,6 +100,7 @@ void RType::Game::loopReceive()
     while (!_stopLoop) {
         command = _client.receive();
         receiveInfo = Decoder::getCommandInfo(command);
+        _client.logCommand(receiveInfo);
         if (receiveInfo.first.first == NEW_ENTITY) {
             if (_initConnection) {
                 std::unique_lock<std::mutex> lock(_mtx);
@@ -395,6 +400,7 @@ void RType::Game::connectToServer(void)
 {
     _client.send(Encoder::connexion());
 }
+
 std::ostream &operator<<(std::ostream &s, const RType::Game &game)
 {
     s << game.getCoordinator();

@@ -56,22 +56,23 @@ void RType::ClientServer::sendMessage(udp::socket &socket, const std::string &me
     );
 }
 
-// void displayPackets(std::array<U_STRING, MAX_PACKETS> &packets)
-// {
-// 	for (std::size_t i = 0; i < MAX_PACKETS; i++) {
-// 		std::cout << "[" << i << " = ";
-// 		if (packets[i].size() > 0)
-// 			for (const auto &byte: packets[i])
-// 				std::cout << (int)byte << " ";
-// 		else
-// 			std::cout << "empty";
-// 		std::cout << "]" << std::endl;
-// 	}
-// }
+// !debug to remove
+void displayPackets(std::array<U_STRING, MAX_PACKETS> &packets)
+{
+	for (std::size_t i = 0; i < MAX_PACKETS; i++) {
+		std::cout << "[" << i << " = ";
+		if (packets[i].size() > 0)
+			for (const auto &byte: packets[i])
+				std::cout << (int)byte << " ";
+		else
+			std::cout << "empty";
+		std::cout << "]" << std::endl;
+	}
+}
 
 void RType::ClientServer::sendMessage(udp::socket &socket, const std::basic_string<unsigned char> &message)
 {
-    socket.async_send_to(boost::asio::buffer(Encoder::addPacketNumber(message, 0)), _endpoint,
+    socket.async_send_to(boost::asio::buffer(Encoder::addPacketNumber(message, _packetId)), _endpoint,
         [this, message](const boost::system::error_code &error, std::size_t bytes_transferred) {
             sendCallback(message, error, bytes_transferred);
         }

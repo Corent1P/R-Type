@@ -45,3 +45,13 @@ void RType::Client::cancel(void)
 {
     std::cout << "cancel Socket" << std::endl;
 }
+
+void RType::Client::logCommand(const PACKET &command)
+{
+    _packetsReceived.push_back(command.first.second);
+}
+
+void RType::Client::askForLostPackets(void)
+{
+    send(Encoder::ACKMissing(_packetsReceived));
+}
