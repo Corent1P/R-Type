@@ -9,15 +9,17 @@
 #include "Decoder.hh"
 #include <array>
 #include <bitset>
+#include <algorithm>
 #include <cstdint>
 #include <vector>
 
 namespace RType {
-    U_STRING Encoder::addPacketNumber(const U_STRING &packet, std::uint8_t number)
+    U_STRING Encoder::addPacketNumber(const U_STRING &packet, std::uint16_t number)
     {
         U_STRING encodedWithNumber = packet;
 
-        encodedWithNumber[2] = number;
+        encodedWithNumber[2] = number >> 8;
+        encodedWithNumber[3] = number & 0xff;
         return encodedWithNumber;
     }
 
@@ -28,6 +30,7 @@ namespace RType {
 
         encoded += header >> 8;
         encoded += header & 0xff;
+        encoded += '\0';
         encoded += '\0';
         return encoded;
     }
@@ -142,15 +145,32 @@ namespace RType {
         return header(0, PACKET_ERROR);
     }
 
-    U_STRING Encoder::ACKMissing(std::vector<std::uint8_t> &packets)
+    U_STRING Encoder::ACKMissing(std::vector<std::uint16_t> packets)
     {
         U_STRING encoded;
         std::vector<std::uint8_t> chars(MAX_PACKETS / 8, 0);
+        std::size_t smallest_suite = 0;
+        std::size_t biggest_packet = packets[packets.size() - 1];
+        std::size_t last_packet = 0;
 
-        for (std::uint8_t packet : packets)
+        std::sort(packets.begin(), packets.end());
+        while (smallest_suite == packets[0]) {
+            smallest_suite++;
+            packets.erase(packets.begin());
+        }
+        encoded += smallest_suite >> 8;
+        encoded += smallest_suite & 0xff;
+        for (auto packet : packets) {
+            packet -= smallest_suite;
+            if (packet == biggest_packet)
+                break;
             chars[packet / 8] += 1 << (packet % 8);
-        for (std::size_t i = 0; i < MAX_PACKETS / 8; i++)
-            encoded += chars[i];
+        }
+        chars.resize((biggest_packet - smallest_suite) / 8 + 1);
+        for (auto char_ : chars)
+            encoded += char_;
+        encoded += biggest_packet >> 8;
+        encoded += biggest_packet & 0xff;
         return header(encoded.size(), ACK_MISSING) + encoded;
     }
 }

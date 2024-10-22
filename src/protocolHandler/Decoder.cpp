@@ -58,7 +58,7 @@ namespace RType {
 
     std::uint8_t Decoder::getPacketNumber(const U_STRING &packet)
     {
-        return packet[2];
+        return ((packet[2] << 8) | packet[3]);
     }
 
     HEADER Decoder::decryptHeader(U_STRING &packet)
@@ -70,10 +70,10 @@ namespace RType {
     {
         COMMAND_ARGS args(4);
 
-        args[0] = packet[3];
-        args[1] = (packet[4] << 8) + packet[5];
-        args[2] = (packet[6] << 8) + packet[7];
-        args[3] = (packet[8] << 8) + packet[9];
+        args[0] = packet[4];
+        args[1] = (packet[5] << 8) + packet[6];
+        args[2] = (packet[7] << 8) + packet[8];
+        args[3] = (packet[9] << 8) + packet[10];
         return args;
     }
 
@@ -81,7 +81,7 @@ namespace RType {
     {
         COMMAND_ARGS args(1);
 
-        args[0] = (packet[3] << 8) + packet[4];
+        args[0] = (packet[4] << 8) + packet[5];
         return args;
     }
 
@@ -89,10 +89,10 @@ namespace RType {
     {
         COMMAND_ARGS args(4);
 
-        args[0] = (packet[3] << 8) + packet[4];
-        args[1] = (packet[5] << 8) + packet[6];
-        args[2] = (packet[7] << 8) + packet[8];
-        args[3] = packet[9];
+        args[0] = (packet[4] << 8) + packet[5];
+        args[1] = (packet[6] << 8) + packet[7];
+        args[2] = (packet[8] << 8) + packet[9];
+        args[3] = packet[10];
         return args;
     }
 
@@ -100,7 +100,7 @@ namespace RType {
     {
         COMMAND_ARGS args(1);
 
-        args[0] = packet[3];
+        args[0] = packet[4];
         return args;
     }
 
@@ -108,12 +108,12 @@ namespace RType {
     {
         COMMAND_ARGS args(6);
 
-        args[0] = (packet[3] << 8) + packet[4];
-        args[1] = packet[5];
-        args[2] = (packet[6] << 8) | packet[7];
-        args[3] = (packet[8] << 8) | packet[9];
-        args[4] = packet[10];
-        args[5] = packet[11];
+        args[0] = (packet[4] << 8) + packet[5];
+        args[1] = packet[6];
+        args[2] = (packet[7] << 8) | packet[8];
+        args[3] = (packet[9] << 8) | packet[10];
+        args[4] = packet[11];
+        args[5] = packet[12];
         return args;
     }
 
@@ -121,8 +121,8 @@ namespace RType {
     {
         COMMAND_ARGS args(2);
 
-        args[0] = static_cast<std::int8_t>(packet[3]);
-        args[1] = static_cast<std::int8_t>(packet[4]);
+        args[0] = static_cast<std::int8_t>(packet[4]);
+        args[1] = static_cast<std::int8_t>(packet[5]);
         return args;
     }
 
@@ -130,25 +130,32 @@ namespace RType {
     {
         COMMAND_ARGS args(4);
 
-        args[0] = (packet[3] >> 3) & 1;
-        args[1] = (packet[3] >> 2) & 1;
-        args[2] = (packet[3] >> 1) & 1;
-        args[3] = packet[3] & 1;
+        args[0] = (packet[4] >> 3) & 1;
+        args[1] = (packet[4] >> 2) & 1;
+        args[2] = (packet[4] >> 1) & 1;
+        args[3] = packet[4] & 1;
         return args;
     }
 
     COMMAND_ARGS Decoder::ACKMissing(U_STRING &packet)
     {
         COMMAND_ARGS args(MAX_PACKETS);
-        std::uint8_t nbMissing = 0;
+        std::size_t smallest_suite = (packet[4] << 8) + packet[5];
+        std::size_t nbFound = smallest_suite;
+        std::size_t biggest_packet = (packet[packet.size() - 2] << 8) +
+                                      packet[packet.size() - 1];
 
-        for (std::size_t i = 0; i < MAX_PACKETS; i++) {
-            if ((packet[i / 8 + 3] & (1 << (i % 8))) != 0) {
-                args[nbMissing] = i;
-                nbMissing++;
+        for (std::size_t i = 0; i < smallest_suite; i++) {
+            args[i] = i;
+        }
+        for (std::size_t i = 0; i + smallest_suite < biggest_packet; i++) {
+            if ((packet[i / 8 + 6] & (1 << (i % 8))) != 0) {
+                args[nbFound] = i + smallest_suite;
+                nbFound++;
             }
         }
-        args.resize(nbMissing);
+        args[nbFound] = (packet[packet.size() - 2] << 8) + packet[packet.size() - 1];
+        args.resize(nbFound + 1);
         return args;
     }
 }

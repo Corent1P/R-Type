@@ -16,7 +16,7 @@
 
 
 #define U_STRING std::basic_string<unsigned char>
-#define MAX_PACKETS 256
+#define MAX_PACKETS 512
 
 namespace RType {
 
@@ -55,7 +55,7 @@ namespace RType {
         *
         * @return U_STRING Packet with the number added
         */
-        static U_STRING addPacketNumber(const U_STRING &packet, std::uint8_t number);
+        static U_STRING addPacketNumber(const U_STRING &packet, std::uint16_t number);
 
         /**
         * @brief Encode the header of the packet
@@ -190,6 +190,6 @@ namespace RType {
         *
         * @return U_STRING Encoded ACK packet
         */
-        static U_STRING ACKMissing(std::vector<std::uint8_t> &packets);
+        static U_STRING ACKMissing(std::vector<std::uint16_t> packets);
     };
 }
