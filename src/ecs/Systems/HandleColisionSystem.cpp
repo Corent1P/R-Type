@@ -87,23 +87,23 @@ void RType::HandleColisionSystem::handleEntityColision(const std::pair<std::shar
     EntityType entityType1 = GET_ENTITY_TYPE(entity1);
     EntityType entityType2 = GET_ENTITY_TYPE(entity2);
 
-    if (entityType1 == RType::E_PLAYER && entityType2 == RType::E_BULLET)
-        std::cout << "Player intersect bullet" << std::endl;
-    if (entityType1 == RType::E_BULLET && entityType2 == RType::E_PLAYER)
-        std::cout << "Bullet intersect player" << std::endl;
-    if (entityType1 == RType::E_PLAYER && EntityTypeComponent::isMob(entityType2))
-        std::cout << "Player intersect mob" << std::endl;
-    if (EntityTypeComponent::isMob(entityType1) && entityType2 == RType::E_PLAYER)
-        std::cout << "Mob intersect Player" << std::endl;
-    if (entityType1 == RType::E_BULLET && EntityTypeComponent::isMob(entityType2)) {
+    if (entityType1 == RType::E_ENNEMY_BULLET && entityType2 == RType::E_PLAYER) {
         _entitiesToDestroy.push_back(entity1);
         entity2->getComponent<HealthComponent>()->setHealth(entity2->getComponent<HealthComponent>()->getHealth() - 1);
         if (entity2->getComponent<HealthComponent>()->getHealth() <= 0)
             _entitiesToDestroy.push_back(entity2);
-        std::cout << "Bullet intersect mob" << std::endl;
-    }
-    if (EntityTypeComponent::isMob(entityType1) && entityType2 == RType::E_BULLET) {
-        std::cout << "Mob intersect Bullet" << std::endl;
+    } else if (entityType1 == RType::E_PLAYER && EntityTypeComponent::isMob(entityType2)) {
+        entity1->getComponent<HealthComponent>()->setHealth(entity1->getComponent<HealthComponent>()->getHealth() - 1);
+        if (entity1->getComponent<HealthComponent>()->getHealth() <= 0)
+            _entitiesToDestroy.push_back(entity1);
+        entity2->getComponent<HealthComponent>()->setHealth(entity2->getComponent<HealthComponent>()->getHealth() - 1);
+        if (entity2->getComponent<HealthComponent>()->getHealth() <= 0)
+            _entitiesToDestroy.push_back(entity2);
+    } else if (entityType1 == RType::E_BULLET && EntityTypeComponent::isMob(entityType2)) {
+        _entitiesToDestroy.push_back(entity1);
+        entity2->getComponent<HealthComponent>()->setHealth(entity2->getComponent<HealthComponent>()->getHealth() - 1);
+        if (entity2->getComponent<HealthComponent>()->getHealth() <= 0)
+            _entitiesToDestroy.push_back(entity2);
     }
 }
 

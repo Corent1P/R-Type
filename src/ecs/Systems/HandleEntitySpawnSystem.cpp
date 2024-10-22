@@ -72,5 +72,12 @@ void RType::HandleEntitySpawnSystem::createEntity(int posX, int posY, EntityType
         entity->PUSH_VELOCITY_E(SERVER_SPEED(entityInfo["speed"].asInt()));
     if (entityInfo["pattern"].asBool() == true)
         entity->PUSH_PATTERN_E(static_cast<RType::PatternType>(entityInfo["pattern"].asInt()));
+    if (entityInfo["isShooting"].asBool() == true) {
+        auto action = entity->PUSH_ACTION_E();
+        action->setActions(SHOOTING, true);
+    }
+    if (entityInfo["intervalShoot"].asBool() == true) {
+        entity->PUSH_INTERVALSHOOT_E(entityInfo["intervalShoot"].asFloat());
+    }
     _sendToAllClient(Encoder::newEntity(type, entity->getId(), position->getPositionX(), position->getPositionY()));
 }

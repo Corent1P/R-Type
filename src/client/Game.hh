@@ -36,6 +36,7 @@
 #include "../ecs/Components/MappingInputComponent.hh"
 #include "../ecs/Components/MenuComponent.hh"
 #include "../ecs/Components/ClickEffectComponent.hh"
+#include "../ecs/Components/ShootIntervalComponent.hh"
 
 #include "../ecs/Systems/HandleEventSystem.hpp"
 #include "../ecs/Systems/HandleClearSystem.hpp"
@@ -72,6 +73,7 @@
 #define TEXTURE_COMPONENT std::shared_ptr<RType::TextureComponent>
 
 #define PUSH_POS_E(x, y) pushComponent(std::make_shared<RType::PositionComponent>(x, y))
+#define PUSH_ACTION_E() pushComponent(std::make_shared<RType::ActionComponent>())
 #define PUSH_TYPE_E(type) pushComponent(std::make_shared<RType::EntityTypeComponent>(type))
 #define PUSH_SCALE_E(x, y) pushComponent(std::make_shared<RType::ScaleComponent>(x, y))
 #define PUSH_RECT_E(x, y, w, h) pushComponent(std::make_shared<RType::IntRectComponent>(x, y, w, h))
@@ -81,7 +83,7 @@
 #define PUSH_PATTERN_E(pattern) pushComponent(std::make_shared<RType::DirectionPatternComponent>(pattern))
 #define PUSH_CLOCK_E() pushComponent(std::make_shared<RType::ClockComponent>())
 #define PUSH_MENU_COMPONENT_E(menu) pushComponent(std::make_shared<RType::MenuComponent>(menu))
-
+#define PUSH_INTERVALSHOOT_E(interval) pushComponent(std::make_shared<RType::ShootIntervalComponent>(interval))
 namespace RType {
 
     enum Backgrounds{

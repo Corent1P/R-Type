@@ -14,5 +14,7 @@
     },
     // STRAIGHT_LEFT
     "pattern": 3,
-    "speed": 3
+    "speed": 3,
+    "isShooting": true,
+    "intervalShoot": 0.5
 }

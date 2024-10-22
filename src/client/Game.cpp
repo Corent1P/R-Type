@@ -169,6 +169,11 @@ void RType::Game::loopReceive()
                                      entity->GET_POSITION_Y);
                         _coord.deleteEntity(entity);
                         break;
+                    case RType::E_ENNEMY_BULLET:
+                        createEntity(E_HIT_EFFECT, entity->GET_POSITION_X,
+                                     entity->GET_POSITION_Y);
+                        _coord.deleteEntity(entity);
+                        break;
                     case RType::E_OCTOPUS:
                         createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X,
                                      entity->GET_POSITION_Y);
@@ -379,6 +384,13 @@ void RType::Game::createEntity(const RType::EntityType &type, const int &posX,
         entity->PUSH_VELOCITY_E(entityInfo["speed"].asInt());
     if (entityInfo["pattern"].asBool() == true)
         entity->PUSH_PATTERN_E(static_cast<RType::PatternType>(entityInfo["pattern"].asInt()));
+    if (entityInfo["isShooting"].asBool() == true) {
+        auto action = entity->PUSH_ACTION_E();
+        action->setActions(SHOOTING, true);
+    }
+    if (entityInfo["intervalShoot"].asBool() == true) {
+        entity->PUSH_INTERVALSHOOT_E(entityInfo["intervalShoot"].asFloat());
+    }
     entity->PUSH_MENU_COMPONENT_E(GAME);
     file.close();
 }
@@ -424,6 +436,13 @@ void RType::Game::createEntity(const long &serverId, const RType::EntityType &ty
         entity->PUSH_VELOCITY_E(entityInfo["speed"].asInt());
     if (entityInfo["pattern"].asBool() == true)
         entity->PUSH_PATTERN_E(static_cast<RType::PatternType>(entityInfo["pattern"].asInt()));
+    if (entityInfo["isShooting"].asBool() == true) {
+        auto action = entity->PUSH_ACTION_E();
+        action->setActions(SHOOTING, true);
+    }
+    if (entityInfo["intervalShoot"].asBool() == true) {
+        entity->PUSH_INTERVALSHOOT_E(entityInfo["intervalShoot"].asFloat());
+    }
     entity->PUSH_MENU_COMPONENT_E(GAME);
     file.close();
 }

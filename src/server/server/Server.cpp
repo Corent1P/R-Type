@@ -172,6 +172,13 @@ void RType::Server::initSystem(void)
         std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
     ));
 
+    _coord.generateNewSystem(std::make_shared<HandleShootSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        nullptr,
+        std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
+    ));
+
     _coord.generateNewSystem(std::make_shared<HandleColisionSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
