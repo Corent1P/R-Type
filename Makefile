@@ -58,6 +58,7 @@ SRC_COMMAND	=	./src/server/command/ACommand.cpp	\
 				./src/server/command/commands/MoveEntityCommand.cpp	\
 				./src/server/command/commands/MovePlayerCommand.cpp	\
 				./src/server/command/commands/NewEntityCommand.cpp	\
+				./src/server/command/commands/AckMissingCommand.cpp	\
 
 UNIT_TEST_CLIENT_FILE	=	tests/client/Client_tests.cpp
 
@@ -72,7 +73,7 @@ UNIT_TEST_SERVER_FILE	=	tests/server/Server_tests.cpp
 
 UNIT_TEST_COMMAND_FILE	=	tests/server/Command_tests.cpp
 
-UNIT_TEST_FLAGS	=	-std=c++20  --coverage -lcriterion -lsfml-graphics -lsfml-window -lsfml-system
+UNIT_TEST_FLAGS	=	-std=c++20  --coverage -lcriterion -lsfml-graphics -lsfml-window -lsfml-system -ljsoncpp
 
 clean:
 	rm -rf *.gcda
