@@ -21,11 +21,13 @@ namespace RType {
         E_BUTTON,
         E_LAYER,
         E_BULLET,
-        E_POWER_UP,
         E_BULLET_EFFECT,
         E_HIT_EFFECT,
         E_EXPLOSION_EFFECT,
-        E_ITEM,
+        E_ITEM_WEAPON,
+        E_ITEM_SHIELD,
+        E_ITEM_HEAL,
+        E_SHIELD,
     };
 
     enum WeaponType {
@@ -40,13 +42,6 @@ namespace RType {
         FLY,
     };
 
-    enum PowerUpType {
-        NOPOWERUP,
-        SHIELD,
-        IMPROVED_WEAPON,
-        CHARGED_WEAPON,
-    };
-
     class EntityTypeComponent: public RType::IComponent {
         public:
             EntityTypeComponent(EntityType entityType);
@@ -55,16 +50,14 @@ namespace RType {
             EntityType getEntityType() const;
             void setWeaponType(WeaponType weaponType);
             WeaponType getWeaponType() const;
-            void setPowerUpType(PowerUpType powerUpType);
-            PowerUpType getPowerUpType() const;
             void setEnemyType(EnemyType powerUpType);
             EnemyType getEnemyType() const;
             std::string getOutput() const;
             static bool isMob(EntityType);
+            static bool isItem(EntityType);
         private:
             EntityType _entityType;
             WeaponType _weaponType;
-            PowerUpType _powerUpType;
             EnemyType _enemyType;
     };
 }

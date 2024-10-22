@@ -51,7 +51,10 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
             }
             if(entity->getComponent<DirectionPatternComponent>() != nullptr) {
                 auto pattern = entity->getComponent<RType::DirectionPatternComponent>()->getPattern();
-                entity->getComponent<RType::PositionComponent>()->setPositions(position.x + (pattern.x * speed / 5.), position.y + (pattern.y * speed / 5.));
+                if (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_SHIELD) {
+                    entity->getComponent<RType::PositionComponent>()->setPositions(pattern.x, pattern.y);
+                } else
+                    entity->getComponent<RType::PositionComponent>()->setPositions(position.x + (pattern.x * speed / 5.), position.y + (pattern.y * speed / 5.));
                 if (entity->getComponent<EntityTypeComponent>()->getEntityType() != RType::E_LAYER) {
                     if ((entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::STRAIGHT_LEFT
                     || entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::UP_N_DOWN_LEFT)
@@ -75,8 +78,14 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
                 }
             }
 
-            if (_client && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER && (movePosition.first != 0 ||  movePosition.second != 0)) {
-                _client->send(Encoder::movePlayer(movePosition.first * 10, movePosition.second * 10));
+            if (_client && (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER || entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_SHIELD) && (movePosition.first != 0 ||  movePosition.second != 0)) {
+                switch(entity->getComponent<RType::EntityTypeComponent>()->getEntityType()) {
+                    case RType::E_PLAYER:
+                        _client->send(Encoder::movePlayer(movePosition.first * 10, movePosition.second * 10));
+                        break;
+                    default:
+                        break;
+                }
             }
 
             if (_sendMessageToAllClient) {

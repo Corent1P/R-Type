@@ -101,7 +101,7 @@ void RType::Server::handleConnection(std::shared_ptr<ClientServer> connectedClie
     player->pushComponent(std::make_shared<RType::HealthComponent>(25));
     player->pushComponent(std::make_shared<RType::ClockComponent>());
     player->pushComponent(std::make_shared<RType::DamageComponent>(1));
-
+    player->pushComponent(std::make_shared<RType::PowerUpComponent>());
     connectedClient->setEntity(player);
 
     sendToAllClient(Encoder::newEntity(E_PLAYER, connectedClient->getEntity()->getId(), position->getPositionX(), position->getPositionY()));

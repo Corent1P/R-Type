@@ -108,9 +108,15 @@ void RType::Game::loopReceive()
                     createBullet(receivInfo.second[1], static_cast<short> (receivInfo.second[2]), static_cast<short> (receivInfo.second[3]));
                     createEffect(static_cast<short> (receivInfo.second[2]), static_cast<short> (receivInfo.second[3]),  RType::E_BULLET_EFFECT, "./ressources/effects/flash.png", sf::IntRect(0, 0, 11, 19));
                 }
-                if (receivInfo.second[0] == E_ITEM) {
-                    createItem(receivInfo.second[1], static_cast<short> (receivInfo.second[2]), static_cast<short> (receivInfo.second[3]));
-                    // createEffect(static_cast<short> (receivInfo.second[2]), static_cast<short> (receivInfo.second[3]),  RType::E_BULLET_EFFECT, "./ressources/effects/flash.png", sf::IntRect(0, 0, 11, 19));
+                if (receivInfo.second[0] == E_ITEM_WEAPON) {
+                    createItemWeapon(receivInfo.second[1], static_cast<short> (receivInfo.second[2]), static_cast<short> (receivInfo.second[3]));
+                }
+                if (receivInfo.second[0] == E_ITEM_SHIELD) {
+                    createItemShield(receivInfo.second[1], static_cast<short> (receivInfo.second[2]), static_cast<short> (receivInfo.second[3]));
+                }
+                if (receivInfo.second[0] == E_SHIELD) {
+                    std::cout << "shield to create on client" <<std::endl;
+                    createEffectiveShield(receivInfo.second[1], static_cast<short> (receivInfo.second[2]), static_cast<short> (receivInfo.second[3]));
                 }
             } else {
                 std::unique_lock<std::mutex> lock(_mtx); 
@@ -150,10 +156,16 @@ void RType::Game::loopReceive()
                         RType::E_EXPLOSION_EFFECT, "./ressources/effects/explosion.png", sf::IntRect(0, 0, 32, 32));
                         _coord.deleteEntity(entity);
                         break;
-                    case RType::E_ITEM:
+                    case RType::E_ITEM_WEAPON:
+                        _coord.deleteEntity(entity);
+                        break;
+                    case RType::E_ITEM_SHIELD:
                         _coord.deleteEntity(entity);
                         break;
                     case RType::E_PLAYER:
+                        _coord.deleteEntity(entity);
+                        break;
+                    case RType::E_SHIELD:
                         _coord.deleteEntity(entity);
                         break;
                     default:
@@ -197,6 +209,7 @@ void RType::Game::createPlayer()
     player->pushComponent(std::make_shared<RType::ActionComponent>());
     player->pushComponent(std::make_shared<VelocityComponent>(10));
     player->pushComponent(std::make_shared<RType::DamageComponent>(1));
+    player->pushComponent(std::make_shared<RType::PowerUpComponent>());
 }
 
 void RType::Game::createPlayer(long serverId, long posX, long posY)
@@ -216,6 +229,7 @@ void RType::Game::createPlayer(long serverId, long posX, long posY)
     player->pushComponent(std::make_shared<RType::ClockComponent>());
     player->pushComponent(std::make_shared<VelocityComponent>(10));
     player->pushComponent(std::make_shared<RType::DamageComponent>(1));
+    player->pushComponent(std::make_shared<RType::PowerUpComponent>());
 }
 
 void RType::Game::createWindow()
@@ -235,6 +249,7 @@ void RType::Game::createMobOctopus(long serverId, long posX, long posY)
 
     mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_OCTOPUS));
     mob->pushComponent(std::make_shared<RType::HealthComponent>(3));
+    mob->pushComponent(std::make_shared<RType::DamageComponent>(2));
     std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
     std::shared_ptr<RType::ScaleComponent> scale = mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     std::shared_ptr<RType::IntRectComponent> intRect = mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 41, 46));
@@ -253,6 +268,7 @@ void RType::Game::createMobFly(long serverId, long posX, long posY)
 
     mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_FLY));
     mob->pushComponent(std::make_shared<RType::HealthComponent>(5));
+    mob->pushComponent(std::make_shared<RType::DamageComponent>(2));
     std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
     std::shared_ptr<RType::ScaleComponent> scale = mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     std::shared_ptr<RType::IntRectComponent> intRect = mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 65, 74));
@@ -271,6 +287,7 @@ void RType::Game::createMobSpaceShip(long serverId, long posX, long posY)
 
     mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_SMALL_SPACESHIP));
     mob->pushComponent(std::make_shared<RType::HealthComponent>(2));
+    mob->pushComponent(std::make_shared<RType::DamageComponent>(2));
     std::shared_ptr<RType::PositionComponent> position = mob->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
     std::shared_ptr<RType::ScaleComponent> scale = mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     std::shared_ptr<RType::IntRectComponent> intRect = mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 29, 29));
@@ -419,11 +436,11 @@ void RType::Game::createEffect(long posX, long posY, EntityType type, std::strin
     shotEffect->pushComponent(std::make_shared<RType::ClockComponent>());
 }
 
-void RType::Game::createItem(long serverId, long posX, long posY)
+void RType::Game::createItemWeapon(long serverId, long posX, long posY)
 {
     std::shared_ptr<RType::Entity> item = _coord.generateNewEntity(serverId);
 
-    item->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_ITEM));
+    item->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_ITEM_WEAPON));
     std::shared_ptr<RType::PositionComponent> position = item->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
     std::shared_ptr<RType::ScaleComponent> scale = item->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     std::shared_ptr<RType::IntRectComponent> intRect = item->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 32, 32));
@@ -433,6 +450,41 @@ void RType::Game::createItem(long serverId, long posX, long posY)
     sf::IntRect(intRect->getIntRectLeft(),intRect->getIntRectTop(), intRect->getIntRectWidth(), intRect->getIntRectHeight())));
     item->pushComponent(std::make_shared<RType::DirectionPatternComponent>(STRAIGHT_LEFT));
     item->pushComponent(std::make_shared<VelocityComponent>(SPACESHIP_SPEED));
+    item->pushComponent(std::make_shared<ClockComponent>());
+}
+
+void RType::Game::createItemShield(long serverId, long posX, long posY)
+{
+    std::shared_ptr<RType::Entity> item = _coord.generateNewEntity(serverId);
+
+    item->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_ITEM_SHIELD));
+    std::shared_ptr<RType::PositionComponent> position = item->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
+    std::shared_ptr<RType::ScaleComponent> scale = item->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
+    std::shared_ptr<RType::IntRectComponent> intRect = item->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 32, 32));
+    std::shared_ptr<RType::TextureComponent> texture = getTextureComponent("./ressources/forcefield.png");
+    item->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(),
+    sf::Vector2f(scale->getScaleX(), scale->getScaleY()),
+    sf::IntRect(intRect->getIntRectLeft(),intRect->getIntRectTop(), intRect->getIntRectWidth(), intRect->getIntRectHeight())));
+    item->pushComponent(std::make_shared<RType::DirectionPatternComponent>(STRAIGHT_LEFT));
+    item->pushComponent(std::make_shared<VelocityComponent>(SPACESHIP_SPEED));
+    item->pushComponent(std::make_shared<ClockComponent>());
+}
+
+void RType::Game::createEffectiveShield(long serverId, long posX, long posY)
+{
+    std::shared_ptr<RType::Entity> item = _coord.generateNewEntity(serverId);
+    
+    item->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_SHIELD));
+    item->pushComponent(std::make_shared<RType::HealthComponent>(4));
+    std::shared_ptr<RType::PositionComponent> position = item->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
+    std::shared_ptr<RType::ScaleComponent> scale = item->pushComponent(std::make_shared<RType::ScaleComponent>(3.0, 3.0));
+    std::shared_ptr<RType::IntRectComponent> intRect = item->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 32, 32));
+    std::shared_ptr<RType::TextureComponent> texture = getTextureComponent("./ressources/forcefield.png");
+    item->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(),
+    sf::Vector2f(scale->getScaleX(), scale->getScaleY()),
+    sf::IntRect(intRect->getIntRectLeft(),intRect->getIntRectTop(), intRect->getIntRectWidth(), intRect->getIntRectHeight())));
+    item->pushComponent(std::make_shared<RType::DirectionPatternComponent>(FOLLOW_PLAYER));
+    item->pushComponent(std::make_shared<VelocityComponent>(10));
     item->pushComponent(std::make_shared<ClockComponent>());
 }
 

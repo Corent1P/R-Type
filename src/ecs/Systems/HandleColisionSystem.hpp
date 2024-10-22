@@ -106,12 +106,20 @@ namespace RType {
              *
              */
             void handleEntityColisions(void);
+
+            void handleShield(void);
             /**
              * @brief a method handling a item effect on a player
-             * @param colidingPair the player entity to interact with.
+             * @param entity1 the player entity to interact with.
              * @param entity2 the item entity to interact with.
              */
             void handleItemEffect(std::shared_ptr<RType::Entity> entity1, std::shared_ptr<RType::Entity> entity2);
+            /**
+             * @brief a method creating a shield for the player
+             * @param entity1 the player entity to interact with.
+             * 
+             */
+            void createShield(std::shared_ptr<RType::Entity> entity1);
             /**
              * @brief a method to check if the colision was already here in the previous loop
              *

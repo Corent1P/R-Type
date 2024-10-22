@@ -24,6 +24,7 @@ set(SRC_COMPONENTS
     ./Components/ScaleComponent.cpp
     ./Components/IntRectComponent.cpp
     ./Components/DamageComponent.cpp
+    ./Components/PowerUpComponent.cpp
 )
 
 set(SRC_SYSTEMS

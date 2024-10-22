@@ -36,6 +36,14 @@ void RType::HandleColisionSystem::effects(std::vector<std::shared_ptr<RType::Ent
     }
     handleEntityColisions();
     for (const auto &entity: _entitiesToDestroy) {
+        if (entity->getComponent<EntityTypeComponent>() != nullptr && entity->getComponent<EntityTypeComponent>()->getEntityType() == E_SHIELD) {
+            std::cout << "Shield in destroy vector" << std::endl;
+            for (const auto &player: entities) {
+                if (player->getComponent<EntityTypeComponent>() != nullptr && player->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER) {
+                    player->getComponent<PowerUpComponent>()->setPowerUpsIsActive(RType::SHIELD, false);
+                }
+            }
+        }
         if (_sendMessageToAllClient) {
             _sendMessageToAllClient(Encoder::deleteEntity(entity->getId()));
             _deleteEntity(entity);
@@ -102,10 +110,18 @@ void RType::HandleColisionSystem::handleEntityColision(const std::pair<std::shar
             _entitiesToDestroy.push_back(entity2);
         std::cout << "Bullet intersect mob" << std::endl;
     }
-    if (entityType1 == RType::E_PLAYER && entityType2 == RType::E_ITEM) {
-        _entitiesToDestroy.push_back(entity2);
-        handleItemEffect(entity1, entity2);
+    if (entityType1 == RType::E_PLAYER && EntityTypeComponent::isItem(entityType2)) {
         std::cout << "Item intersect player" << std::endl;
+        handleItemEffect(entity1, entity2);
+        _entitiesToDestroy.push_back(entity2);
+    }
+    if (entityType1 == RType::E_SHIELD && EntityTypeComponent::isMob(entityType2)) {
+        entity1->getComponent<HealthComponent>()->setHealth(entity1->getComponent<HealthComponent>()->getHealth() - entity2->getComponent<DamageComponent>()->getDamage());
+        std::cout << "Mob intersect Shield hp: "<< entity1->getComponent<HealthComponent>()->getHealth() << std::endl;
+        if (entity1->getComponent<HealthComponent>()->getHealth() <= 0) {
+            std::cout << "Shield need to be destroyed" << std::endl;
+            _entitiesToDestroy.push_back(entity1);
+        }
     }
     if (EntityTypeComponent::isMob(entityType1) && entityType2 == RType::E_BULLET) {
         std::cout << "Mob intersect Bullet" << std::endl;
@@ -114,25 +130,26 @@ void RType::HandleColisionSystem::handleEntityColision(const std::pair<std::shar
 
 void RType::HandleColisionSystem::handleItemEffect(std::shared_ptr<RType::Entity> entity1, std::shared_ptr<RType::Entity> entity2)
 {
-    // const auto &entity2 = colidingPair.second;
-
-    // switch (entity2->getComponent<EntityTypeComponent>()->getPowerUpType())
-    // {
-    // case RType::PowerUpType::IMPROVED_WEAPON:
-    //     if (entity1->getComponent<RType::DamageComponent>()->getDamage() <= 5){
-    //         entity1->getComponent<RType::DamageComponent>()->setDamage(entity1->getComponent<RType::DamageComponent>()->getDamage() + 1);
-    //     }
-    // case RType::PowerUpType::SHIELD:
-    //     // entity2->getComponent<
-    //     break;
-    // default:
-    //     break;
-    // }
-    entity2->getComponent<EntityTypeComponent>()->getEntityType();
-    if (entity1->getComponent<RType::DamageComponent>()->getDamage() <= 5){
-        std::cout << "imporve weapon" << std::endl;
-        entity1->getComponent<RType::DamageComponent>()->setDamage(entity1->getComponent<RType::DamageComponent>()->getDamage() + 1);
+    switch(entity2->getComponent<EntityTypeComponent>()->getEntityType())
+    {
+        case RType::E_ITEM_WEAPON:
+            if (entity1->getComponent<RType::DamageComponent>()->getDamage() <= 5){
+                std::cout << "improve weapon" << std::endl;
+                entity1->getComponent<RType::DamageComponent>()->setDamage(entity1->getComponent<RType::DamageComponent>()->getDamage() + 1);
+            }
+            break;
+        case RType::E_ITEM_SHIELD:
+            if (entity1->getComponent<PowerUpComponent>() != nullptr && entity1->getComponent<PowerUpComponent>()->getPowerUps(RType::SHIELD) == false) {
+                if (entity1->getComponent<PowerUpComponent>()->getPowerUpsIsActive(RType::SHIELD) == false) {
+                    entity1->getComponent<PowerUpComponent>()->setPowerUps(RType::SHIELD, true);
+                    entity1->getComponent<PowerUpComponent>()->setPowerUpsIsActive(RType::SHIELD, true);
+                }
+            }
+            break;
+        default:
+        break;
     }
+    std::cout << entity1->getComponent<PowerUpComponent>()->getPowerUpsIsActive(RType::SHIELD) << std::endl;
 }
 
 void RType::HandleColisionSystem::handleEntityColisions(void)
@@ -142,6 +159,19 @@ void RType::HandleColisionSystem::handleEntityColisions(void)
             continue;
         handleEntityColision(colidingPair);
     }
+}
+void RType::HandleColisionSystem::createShield(std::shared_ptr<RType::Entity> entity1)
+{
+    std::shared_ptr<RType::Entity> shield = _addEntity();
+    shield->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_SHIELD));
+    shield->pushComponent(std::make_shared<RType::HealthComponent>(4));
+    auto position = shield->pushComponent(std::make_shared<RType::PositionComponent>(entity1->getComponent<RType::PositionComponent>()->getPositionX(), entity1->getComponent<RType::PositionComponent>()->getPositionY()));
+    shield->pushComponent(std::make_shared<RType::ScaleComponent>(4.0, 4.0));
+    shield->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 32, 32));
+    shield->pushComponent(std::make_shared<RType::DirectionComponent>(NOMOVE));
+    shield->pushComponent(std::make_shared<VelocityComponent>(SERVER_SPEED(SPACESHIP_SPEED)));
+    shield->pushComponent(std::make_shared<ClockComponent>());
+    _sendMessageToAllClient(Encoder::newEntity(E_SHIELD, shield->getId(), position->getPositionX(), position->getPositionY()));
 }
 
 bool RType::HandleColisionSystem::isInPastColision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &colidingPair)

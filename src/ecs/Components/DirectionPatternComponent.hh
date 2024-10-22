@@ -21,6 +21,7 @@ namespace RType {
         UP_N_DOWN_RIGHT,
         LEFT_N_RIGHT,
         UP_THEN_DOWN,
+        FOLLOW_PLAYER,
     };
 
     class DirectionPatternComponent: public RType::IComponent {

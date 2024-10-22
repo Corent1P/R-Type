@@ -36,16 +36,6 @@ RType::WeaponType RType::EntityTypeComponent::getWeaponType() const
     return(_weaponType);
 }
 
-void RType::EntityTypeComponent::setPowerUpType(PowerUpType powerUpType)
-{
-    _powerUpType = powerUpType;
-}
-
-RType::PowerUpType RType::EntityTypeComponent::getPowerUpType() const
-{
-    return(_powerUpType);
-}
-
 void RType::EntityTypeComponent::setEnemyType(EnemyType enemyType)
 {
 	_enemyType = enemyType;
@@ -59,6 +49,11 @@ RType::EnemyType RType::EntityTypeComponent::getEnemyType() const
 bool RType::EntityTypeComponent::isMob(EntityType entityType)
 {
     return entityType == E_SMALL_SPACESHIP || entityType == E_FLY || entityType == E_OCTOPUS;
+}
+
+bool RType::EntityTypeComponent::isItem(EntityType entityType)
+{
+    return entityType == E_ITEM_WEAPON || entityType == E_ITEM_HEAL || entityType == E_ITEM_SHIELD;
 }
 
 std::string RType::EntityTypeComponent::getOutput() const
@@ -93,8 +88,17 @@ std::string RType::EntityTypeComponent::getOutput() const
         case E_BULLET:
             entityType = "bullet";
             break;
-        case E_POWER_UP:
-            entityType = "power up";
+        case E_ITEM_WEAPON:
+            entityType = "item weapon";
+            break;
+        case E_ITEM_SHIELD:
+            entityType = "item shield";
+            break;
+        case E_ITEM_HEAL:
+            entityType = "item heal";
+            break;
+        case E_SHIELD:
+            entityType = "item shield";
             break;
         default:
             entityType = "unknown";
