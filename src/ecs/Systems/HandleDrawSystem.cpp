@@ -21,11 +21,12 @@ void RType::HandleDrawSystem::effects(std::vector<std::shared_ptr<RType::Entity>
 {
     for (const auto &w: entities) {
         if (GET_WINDOW_FOR_DRAW != nullptr) {
-            GET_WINDOW_FOR_DRAW->getWindow()->clear();
-            for (const auto &entity: entities)
-                if (verifyRequiredComponent(entity, w))
+            for (const auto &entity: entities) {
+                if (verifyRequiredComponent(entity) && *entity->GET_MENU == *w->GET_MENU) {
+                    // drawHitBox(w, entity);
                     GET_WINDOW_FOR_DRAW->getWindow()->draw(*(entity->getComponent<RType::SpriteComponent>()->getSprite()));
-            GET_WINDOW_FOR_DRAW->getWindow()->display();
+                }
+            }
             return;
         }
     }

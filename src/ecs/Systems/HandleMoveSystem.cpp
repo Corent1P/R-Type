@@ -25,17 +25,17 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
             sf::Vector2 position = entity->getComponent<PositionComponent>()->getPositions();
 
             if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_PLAYER) {
-                if (entity->getComponent<RType::DirectionComponent>()->getDirections(LEFT) == true) {
-                    movePosition.first -= speed;
+                if (entity->getComponent<RType::DirectionComponent>()->getDirections(LEFT) != 0) {
+                    movePosition.first -= speed * (entity->getComponent<RType::DirectionComponent>()->getDirections(LEFT) / 100.);
                 }
-                if (entity->getComponent<RType::DirectionComponent>()->getDirections(RIGHT) == true) {
-                    movePosition.first += speed;
+                if (entity->getComponent<RType::DirectionComponent>()->getDirections(RIGHT) != 0) {
+                    movePosition.first += speed *(entity->getComponent<RType::DirectionComponent>()->getDirections(RIGHT) / 100.);
                 }
-                if (entity->getComponent<RType::DirectionComponent>()->getDirections(UP) == true) {
-                    movePosition.second -= speed;
+                if (entity->getComponent<RType::DirectionComponent>()->getDirections(UP) != 0) {
+                    movePosition.second -= speed * (entity->getComponent<RType::DirectionComponent>()->getDirections(UP) / 100.);
                 }
-                if (entity->getComponent<RType::DirectionComponent>()->getDirections(DOWN) == true) {
-                    movePosition.second += speed;
+                if (entity->getComponent<RType::DirectionComponent>()->getDirections(DOWN) != 0) {
+                    movePosition.second += speed * (entity->getComponent<RType::DirectionComponent>()->getDirections(DOWN) / 100.);
                 }
                 entity->getComponent<RType::PositionComponent>()->setPositions(position.x + movePosition.first, position.y + movePosition.second);
             }

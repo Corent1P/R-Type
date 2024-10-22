@@ -11,22 +11,22 @@ RType::DirectionComponent::DirectionComponent()
 {
     _direction = RType::NOMOVE;
 
-    _directions.push_back( true);
-    _directions.push_back(false);
-    _directions.push_back(false);
-    _directions.push_back(false);
-    _directions.push_back(false);
+    _directions.push_back(0);
+    _directions.push_back(0);
+    _directions.push_back(0);
+    _directions.push_back(0);
+    _directions.push_back(0);
 }
 
 RType::DirectionComponent::DirectionComponent(Direction direction)
 {
     _direction = direction;
 
-    _directions.push_back( true);
-    _directions.push_back(false);
-    _directions.push_back(false);
-    _directions.push_back(false);
-    _directions.push_back(false);
+    _directions.push_back(0);
+    _directions.push_back(0);
+    _directions.push_back(0);
+    _directions.push_back(0);
+    _directions.push_back(0);
 
 }
 
@@ -45,11 +45,11 @@ RType::Direction RType::DirectionComponent::getDirection() const
     return (_direction);
 }
 
-void RType::DirectionComponent::setDirections(Direction direction, bool newBool) {
-    _directions.at(direction) = newBool;
+void RType::DirectionComponent::setDirections(Direction direction, int newValue) {
+    _directions.at(direction) = newValue;
 }
 
-bool RType::DirectionComponent::getDirections(Direction direction) const
+int RType::DirectionComponent::getDirections(Direction direction) const
 {
     return (_directions.at(direction));
 }
