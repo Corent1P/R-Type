@@ -25,12 +25,12 @@ namespace RType {
             ~DirectionComponent();
             void setDirection(Direction entityType);
             Direction getDirection() const;
-            void setDirections(Direction direction, bool newBool);
-            bool getDirections(Direction direction) const;
+            void setDirections(Direction direction, int newValue);
+            int getDirections(Direction direction) const;
             std::string getOutput() const;
         private:
             Direction _direction;
-            std::vector<bool> _directions;
+            std::vector<int> _directions;
     };
 }
 #endif /* !DIRECTIONCOMPONENT_HPP_ */

@@ -40,10 +40,6 @@ int main(int ac, char **av)
         boost::asio::io_context ioContext;
         RType::Game game(ioContext, av[1], av[2]);
         std::cout << game;
-        while (!game.getGameHasStarted()) {
-            game.connectToServer();
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        }
         game.gameLoop();
     }  catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;

@@ -42,8 +42,7 @@ void RType::HandlePatternSystem::effect(std::shared_ptr<RType::Entity> entity)
 
 bool RType::HandlePatternSystem::verifyRequiredComponent(std::shared_ptr<RType::Entity> entity)
 {
-    if (entity->getComponent<RType::DirectionPatternComponent>() == nullptr
-    ) {
+    if (entity->getComponent<RType::DirectionPatternComponent>() == nullptr) {
         return false;
     }
     return (true);
