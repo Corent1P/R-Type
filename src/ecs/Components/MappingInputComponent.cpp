@@ -10,14 +10,16 @@
 RType::MappingInputComponent::MappingInputComponent()
 {
     initInput();
+    _inputToDefined = INPUT_UNDEFINED;
 }
 
-void RType::MappingInputComponent::setMappingInput(MappingInput key, sf::Keyboard::Key newKey)
+void RType::MappingInputComponent::setMappingInput(sf::Keyboard::Key newKey)
 {
     if (newKey != sf::Keyboard::Key::Unknown) {
-        // clearInput(newKey);
+        clearInput(newKey);
     }
-	_inputs[key] = newKey;
+	_inputs[_inputToDefined] = newKey;
+    _inputToDefined = INPUT_UNDEFINED;
 }
 
 sf::Keyboard::Key RType::MappingInputComponent::getMappingInput(MappingInput key) const
@@ -28,6 +30,16 @@ sf::Keyboard::Key RType::MappingInputComponent::getMappingInput(MappingInput key
 const std::unordered_map<RType::MappingInput, sf::Keyboard::Key>& RType::MappingInputComponent::getMappingInputs() const
 {
 	return _inputs;
+}
+
+void RType::MappingInputComponent::setInputToDefined(MappingInput key)
+{
+	_inputToDefined = key;
+}
+
+const RType::MappingInput& RType::MappingInputComponent::getInputToDefined(void)
+{
+	return _inputToDefined;
 }
 
 void RType::MappingInputComponent::initInput(void)
@@ -41,9 +53,10 @@ void RType::MappingInputComponent::initInput(void)
 
 void RType::MappingInputComponent::clearInput(sf::Keyboard::Key key)
 {
-    for (auto it = _inputs.begin(); it != _inputs.end(); ++it)
+    for (auto it = _inputs.begin(); it != _inputs.end(); ++it) {
         if (it->second == key)
             _inputs[it->first] = sf::Keyboard::Key::Unknown;
+    }
 }
 
 std::string RType::MappingInputComponent::getKeyName(sf::Keyboard::Key key)
@@ -160,4 +173,3 @@ std::string RType::MappingInputComponent::getOutput() const
     std::string output("Mapping input Component ()");
     return (output);
 }
-

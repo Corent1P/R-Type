@@ -10,9 +10,12 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <unordered_map>
 #include <vector>
-#include <json/json.h>
 #include <string>
-
+#include <charconv>
+#include <cstdlib>
+#include <fstream>
+#include <json/json.h>
+#include <json/reader.h>
 #include "./communication/Client.hh"
 
 #include "../ecs/Coordinator.hh"
@@ -61,6 +64,8 @@
 #define GET_POSITION_X getComponent<RType::PositionComponent>()->getPositionX()
 #define GET_POSITION_Y getComponent<RType::PositionComponent>()->getPositionY()
 
+#define SET_BUTTON_TYPE(type) getComponent<EntityTypeComponent>()->setButtonType(type)
+
 #define POS_COMPONENT std::shared_ptr<RType::PositionComponent>
 #define SCALE_COMPONENT std::shared_ptr<RType::ScaleComponent>
 #define RECT_COMPONENT std::shared_ptr<RType::IntRectComponent>
@@ -105,15 +110,11 @@ namespace RType {
             void createMenu();
             void createMappingInputButton(std::shared_ptr<RType::MappingInputComponent> mappingInput);
             std::shared_ptr<RType::Entity> createButton(int x, int y, std::string text);
+            std::shared_ptr<RType::Entity> createText(int x, int y, std::string text);
             void createGameSystem();
             void createParallaxBackground(std::shared_ptr<RType::Entity> window);
             void createParallaxEntity(const std::string &path, const int &posX, const int &posY,
                 const int &winMaxX, const int &winMaxY, const int &index, const int &level);
-            void clickEffectPlayButton(std::shared_ptr<Entity> window);
-            void clickEffectExitButton(std::shared_ptr<Entity> window);
-            void clickEffectHomeButton(std::shared_ptr<Entity> window);
-            void clickEffectMappingInputButton(std::shared_ptr<Entity> window);
-            void clickEffectModifyInputButton(std::shared_ptr<Entity> player);
 
             std::shared_ptr<RType::TextureComponent> getTextureComponent(const std::string &path);
             std::size_t getMaxClientId(void);

@@ -18,6 +18,12 @@ RType::TextComponent::~TextComponent()
 {
 }
 
+void RType::TextComponent::setTextWithoutVariable(std::string text)
+{
+	_textWithoutVariable = text;
+}
+
+
 void RType::TextComponent::setText(std::string text, std::size_t fontSize)
 {
 	_text->setString(text);
@@ -34,4 +40,9 @@ std::string RType::TextComponent::getOutput() const
 {
     std::string output("Text Component (text: " + _text->getString() + ")");
     return (output);
+}
+
+const std::string& RType::TextComponent::getTextWithoutVariable() const
+{
+	return _textWithoutVariable;
 }

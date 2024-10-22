@@ -52,9 +52,19 @@ namespace RType {
              * @return false
              */
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
+            /**
+             * @brief update the text in case of mapping input
+             *
+             * @param button
+             * @param window
+             */
+            void updateText(std::shared_ptr<RType::Entity> button, std::shared_ptr<RType::Entity> window);
         protected:
         private:
+            const std::string& getDotString(void);
             std::vector<std::shared_ptr<RType::Entity>> _entities;
+            std::string _dotString;
+            std::size_t _dotCounter;
     };
 }
 

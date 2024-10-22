@@ -7,7 +7,9 @@
 
 #ifndef TYPECOMPONENT_HPP_
 #define TYPECOMPONENT_HPP_
-#include "../IComponent.hh"
+
+#include "MappingInputComponent.hh"
+
 namespace RType {
     enum EntityType {
         E_OTHER,
@@ -56,6 +58,8 @@ namespace RType {
             PowerUpType getPowerUpType() const;
             void setEnemyType(EnemyType powerUpType);
             EnemyType getEnemyType() const;
+            void setButtonType(MappingInput buttonType);
+            MappingInput getButtonType() const;
             std::string getOutput() const;
             static bool isMob(EntityType);
         private:
@@ -63,6 +67,8 @@ namespace RType {
             WeaponType _weaponType;
             PowerUpType _powerUpType;
             EnemyType _enemyType;
+            MappingInput _buttonType;
+
     };
 }
 #endif /* !TYPECOMPONENT_HPP_ */

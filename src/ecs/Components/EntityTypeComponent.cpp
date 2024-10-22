@@ -10,6 +10,7 @@
 RType::EntityTypeComponent::EntityTypeComponent(EntityType entityType):
     _entityType(entityType)
 {
+    _buttonType = INPUT_UNDEFINED;
 }
 
 RType::EntityTypeComponent::~EntityTypeComponent()
@@ -54,6 +55,16 @@ void RType::EntityTypeComponent::setEnemyType(EnemyType enemyType)
 RType::EnemyType RType::EntityTypeComponent::getEnemyType() const
 {
 	return _enemyType;
+}
+
+void RType::EntityTypeComponent::setButtonType(MappingInput buttonType)
+{
+	_buttonType = buttonType;
+}
+
+RType::MappingInput RType::EntityTypeComponent::getButtonType() const
+{
+	return _buttonType;
 }
 
 bool RType::EntityTypeComponent::isMob(EntityType entityType)

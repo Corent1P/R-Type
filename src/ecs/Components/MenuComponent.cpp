@@ -26,6 +26,11 @@ RType::Menu RType::MenuComponent::getMenu() const
 	return _menu;
 }
 
+bool RType::MenuComponent::operator==(const MenuComponent &other) const
+{
+	return _menu == other.getMenu() || _menu == EVERYWHERE || other.getMenu() == EVERYWHERE;
+}
+
 std::string RType::MenuComponent::getOutput() const
 {
     std::string output("Menu Component (menu: " + std::to_string(_menu) + ")");

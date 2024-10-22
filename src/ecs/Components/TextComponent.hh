@@ -16,11 +16,16 @@ namespace RType {
         public:
             TextComponent(std::string text, std::size_t fontSize, std::shared_ptr<sf::Font> font);
             ~TextComponent();
-            void setText(std::string text, std::size_t fontSize);
+            void setText(std::string text, std::size_t fontSize = 60);
+
             std::shared_ptr<sf::Text> getText() const;
+            const std::string& getTextWithoutVariable() const;
+            void setTextWithoutVariable(std::string text);
+
             std::string getOutput() const;
         private:
             std::shared_ptr<sf::Text> _text;
+            std::string _textWithoutVariable;
 ;
     };
 }
