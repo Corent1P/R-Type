@@ -457,6 +457,7 @@ void RType::Game::createWindow()
     window->pushComponent(std::make_shared<RType::SFWindowComponent>(1920, 1080));
     window->pushComponent(std::make_shared<RType::EventComponent>());
     window->pushComponent(std::make_shared<RType::ClockComponent>());
+    window->pushComponent(std::make_shared<RType::LevelComponent>(4));
     createParallaxBackground(window);
 
     window->PUSH_MENU_COMPONENT_E(HOME);

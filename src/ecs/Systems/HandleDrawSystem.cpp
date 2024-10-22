@@ -34,15 +34,17 @@ void RType::HandleDrawSystem::effects(std::vector<std::shared_ptr<RType::Entity>
 
 bool RType::HandleDrawSystem::verifyRequiredComponent(std::shared_ptr<RType::Entity> entity)
 {
-    if (entity->getComponent<RType::PositionComponent>() == nullptr
-    ||entity->getComponent<RType::SpriteComponent>() == nullptr) {
-        return false;
-    }
-    if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_LAYER
-        && entity->getComponent<RType::LevelComponent>()->getLevel() != 1)
-        return false;
+    return !(!entity->getComponent<RType::PositionComponent>() || !entity->getComponent<RType::SpriteComponent>());
+}
 
-    return (true);
+bool RType::HandleDrawSystem::verifyRequiredComponent(std::shared_ptr<RType::Entity> entity, std::shared_ptr<RType::Entity> window)
+{
+    if (!entity->getComponent<RType::PositionComponent>() || !entity->getComponent<RType::SpriteComponent>())
+        return false;
+    if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_LAYER &&
+        entity->getComponent<RType::LevelComponent>()->getLevel() != window->getComponent<RType::LevelComponent>()->getLevel())
+        return false;
+    return true;
 }
 
 void RType::HandleDrawSystem::drawHitBox(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &entity)
