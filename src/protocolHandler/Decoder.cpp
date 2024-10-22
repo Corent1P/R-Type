@@ -139,10 +139,10 @@ namespace RType {
 
     COMMAND_ARGS Decoder::ACKMissing(U_STRING &packet)
     {
-        COMMAND_ARGS args(PACKET_PER_TICK);
+        COMMAND_ARGS args(MAX_PACKETS);
         std::uint8_t nbMissing = 0;
 
-        for (std::size_t i = 0; i < PACKET_PER_TICK; i++) {
+        for (std::size_t i = 0; i < MAX_PACKETS; i++) {
             if ((packet[i / 8 + 3] & (1 << (i % 8))) != 0) {
                 args[nbMissing] = i;
                 nbMissing++;

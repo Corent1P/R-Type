@@ -145,11 +145,11 @@ namespace RType {
     U_STRING Encoder::ACKMissing(std::vector<std::uint8_t> &packets)
     {
         U_STRING encoded;
-        std::vector<std::uint8_t> chars(PACKET_PER_TICK / 8, 0);
+        std::vector<std::uint8_t> chars(MAX_PACKETS / 8, 0);
 
         for (std::uint8_t packet : packets)
             chars[packet / 8] += 1 << (packet % 8);
-        for (std::size_t i = 0; i < PACKET_PER_TICK / 8; i++)
+        for (std::size_t i = 0; i < MAX_PACKETS / 8; i++)
             encoded += chars[i];
         return header(encoded.size(), ACK_MISSING) + encoded;
     }
