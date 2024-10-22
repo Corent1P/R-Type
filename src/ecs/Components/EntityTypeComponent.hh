@@ -27,6 +27,7 @@ namespace RType {
         E_BULLET_EFFECT,
         E_HIT_EFFECT,
         E_EXPLOSION_EFFECT,
+        E_TEXT,
     };
 
     enum WeaponType {
@@ -68,7 +69,6 @@ namespace RType {
             PowerUpType _powerUpType;
             EnemyType _enemyType;
             MappingInput _buttonType;
-
     };
 }
 #endif /* !TYPECOMPONENT_HPP_ */

@@ -331,12 +331,12 @@ std::shared_ptr<RType::Entity> RType::Game::createButton(int x, int y, std::stri
 
 std::shared_ptr<RType::Entity> RType::Game::createText(int x, int y, std::string text)
 {
-    std::shared_ptr<RType::Entity> button = _coord.generateNewEntity();
+    std::shared_ptr<RType::Entity> textEntity = _coord.generateNewEntity();
 
-    button->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BUTTON));
-    std::shared_ptr<TextComponent> textComponent = button->pushComponent(std::make_shared<RType::TextComponent>(text, 60, _font));
-    button->pushComponent(std::make_shared<RType::PositionComponent>(x, y));
-    return button;
+    textEntity->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_TEXT));
+    std::shared_ptr<TextComponent> textComponent = textEntity->pushComponent(std::make_shared<RType::TextComponent>(text, 60, _font));
+    textEntity->pushComponent(std::make_shared<RType::PositionComponent>(x, y));
+    return textEntity;
 }
 
 void RType::Game::createEntity(const RType::EntityType &type, const int &posX,

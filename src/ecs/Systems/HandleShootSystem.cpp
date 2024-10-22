@@ -45,7 +45,7 @@ void RType::HandleShootSystem::effects(std::vector<std::shared_ptr<RType::Entity
             }
         }
         if (entity->getComponent<RType::ClockComponent>() != nullptr && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_BULLET_EFFECT) {
-            if (entity->getComponent<RType::ClockComponent>()->getClock(SHOOTING_EFFECT).getElapsedTime().asSeconds() >= 0.01) {
+            if (entity->getComponent<RType::ClockComponent>()->getClock(SHOOTING_EFFECT).getElapsedTime().asSeconds() >= 0.05) {
                 _deleteEntity(entity);
             }
         }
