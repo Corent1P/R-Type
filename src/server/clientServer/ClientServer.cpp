@@ -123,3 +123,15 @@ void RType::ClientServer::setEntity(std::shared_ptr<RType::Entity> entity)
 {
     _entity = entity;
 }
+
+const std::array<U_STRING, MAX_PACKETS> &RType::ClientServer::getPacketsSent(void) const
+{
+    return _packetsSent;
+}
+
+void RType::ClientServer::resetPacketsSent(void)
+{
+    for (int i = 0; i < MAX_PACKETS; i++) {
+        _packetsSent[i] = std::basic_string<unsigned char>({0});
+    }
+}

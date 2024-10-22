@@ -28,5 +28,15 @@ namespace RType {
              * @param client the client that sent the command
              */
             void execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll, Coordinator &coord) override;
+
+        private:
+            /**
+             * @brief Get the lost packet with its id
+             *
+             * @param client the client that sent the command
+             * @param packetId the id of the packet
+             * @return U_STRING the lost packet
+             */
+            int getIndexLostPacketWithId(std::array<U_STRING, MAX_PACKETS> &sentPackets, u_int8_t packetId);
     };
 }

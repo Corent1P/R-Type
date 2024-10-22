@@ -54,4 +54,5 @@ void RType::Client::logCommand(const PACKET &command)
 void RType::Client::askForLostPackets(void)
 {
     send(Encoder::ACKMissing(_packetsReceived));
+    _packetsReceived.clear();
 }

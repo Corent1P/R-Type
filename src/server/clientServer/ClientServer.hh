@@ -112,6 +112,19 @@ namespace RType {
              */
             bool operator==(const ClientServer &other) const;
 
+            /**
+             * @brief Get the packets sent
+             *
+             * @return the array of packets sent
+             */
+            const std::array<U_STRING, MAX_PACKETS> &getPacketsSent(void) const;
+
+            /**
+             * @brief Reset the packets sent array
+             *
+             */
+            void resetPacketsSent(void);
+
         private:
             /**
              * @brief The endpoint of the client
