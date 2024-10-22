@@ -60,6 +60,12 @@ namespace RType {
              */
             std::shared_ptr<RType::ClientServer> createClient(void);
             /**
+             * @brief Remove a client
+             *
+             * @param client the client to remove
+             */
+            void removeClient(std::shared_ptr<RType::ClientServer> client);
+            /**
              * @brief Get the connected client
              *
              * @return std::shared_ptr<RType::ClientServer> the connected client

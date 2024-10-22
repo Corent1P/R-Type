@@ -44,13 +44,19 @@ void RType::Server::handleReceive(const boost::system::error_code& error, std::s
     std::shared_ptr<ClientServer> connectedClient = getConnectedClient();
 
     if (!connectedClient) {
-        std::unique_lock<std::mutex> lock(_mtx);
         connectedClient = createClient();
+        if (receivInfo.first == CONNEXION) {
+            std::unique_lock<std::mutex> lock(_mtx);
+            handleConnection(connectedClient);
+        } else {
+            std::unique_lock<std::mutex> lock(_mtx);
+            connectedClient->sendMessage(_socket, Encoder::header(0, RType::PACKET_ERROR));
+            removeClient(connectedClient);
+            startReceive();
+            return;
+        }
     }
-    if (receivInfo.first == CONNEXION) {
-        std::unique_lock<std::mutex> lock(_mtx);
-        handleConnection(connectedClient);
-    } else if (receivInfo.first == DISCONNEXION) {
+    if (receivInfo.first == DISCONNEXION) {
         std::unique_lock<std::mutex> lock(_mtx);
         handleDisconnection(connectedClient);
     } else {
@@ -76,8 +82,20 @@ std::shared_ptr<RType::ClientServer> RType::Server::createClient(void)
     return newClient;
 }
 
+void RType::Server::removeClient(std::shared_ptr<ClientServer> client)
+{
+    for (std::size_t i = 0; i < _clients.size(); i++) {
+        if (_clients[i]->getPortNumber() == client->getPortNumber() && _clients[i]->getAddress() == client->getAddress()) {
+            _clients.erase(std::next(_clients.begin(), i));
+            std::cout << "remove client" << std::endl;
+            break;
+        }
+    }
+}
+
 std::shared_ptr<RType::ClientServer> RType::Server::getConnectedClient(void)
 {
+    std::unique_lock<std::mutex> lock(_mtx);
     for (auto client: _clients)
         if (client->getAddress() == _remoteEndpoint.address() && client->getPortNumber() == _remoteEndpoint.port() && client->getIsConnected())
             return client;
