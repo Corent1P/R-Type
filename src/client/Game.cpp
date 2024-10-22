@@ -105,13 +105,13 @@ void RType::Game::loopReceive()
             if (_initConnection) {
                 std::unique_lock<std::mutex> lock(_mtx);
                 createEntity(receiveInfo.second[1],
-                             static_cast<RType::EntityType>(receiveInfo.second[0]),
-                             static_cast<short> (receiveInfo.second[2]),
-                             static_cast<short> (receiveInfo.second[3]));
+                    static_cast<RType::EntityType>(receiveInfo.second[0]),
+                    static_cast<short> (receiveInfo.second[2]),
+                    static_cast<short> (receiveInfo.second[3]));
                 if (receiveInfo.second[0] == E_BULLET)
-                createEntity(E_BULLET_EFFECT,
-                             static_cast<short> (receiveInfo.second[2]),
-                             static_cast<short> (receiveInfo.second[3]));
+                    createEntity(E_BULLET_EFFECT,
+                        static_cast<short> (receiveInfo.second[2]),
+                        static_cast<short> (receiveInfo.second[3]));
             } else {
                 if (receiveInfo.second[0] != E_PLAYER)
                     continue;

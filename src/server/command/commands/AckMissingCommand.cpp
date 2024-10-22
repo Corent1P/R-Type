@@ -25,7 +25,9 @@ void RType::AckMissingCommand::execute(std::shared_ptr<ClientServer> client, FUN
     (void)sendToAll;
     (void)coord;
     std::vector<U_STRING> packetsSent = client->getPacketsSent();
+    // int clientId = client->getEntity()->getId();
 
+    // std::cout << "client " << clientId << " nack command informations :" << std::endl;
     // std::cout << "packet sents = [";
     // for (std::size_t i = 0; i < packetsSent.size(); i++)
     //     std::cout << (int)Decoder::getPacketNumber(packetsSent[i]) << ", ";
