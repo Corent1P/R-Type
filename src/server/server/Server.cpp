@@ -215,3 +215,11 @@ void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)
         }
     }
 }
+
+void RType::Server::stop(void)
+{
+    _stopLoop = true;
+    for (auto client: _clients) {
+        client->sendMessage(_socket, Encoder::disconnexion());
+    }
+}
