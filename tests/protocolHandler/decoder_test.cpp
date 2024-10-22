@@ -125,12 +125,15 @@ Test(main, TestGameEndPacketDecoder) {
 }
 
 Test(main, TestACKMissing) {
-    std::vector<std::uint8_t> packets = {0, 1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59};
+    std::vector<std::uint16_t> packets = {0, 1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 511};
     U_STRING packetHeader = RType::Encoder::ACKMissing(packets);
     packetHeader = RType::Encoder::addPacketNumber(packetHeader, 12);
     COMMAND_ARGS args = RType::Decoder::ACKMissing(packetHeader);
 
     cr_assert_eq(args.size(), packets.size(), "Size Expected: %lu, Got: %lu", packets.size(), args.size());
+    for (auto elem : packets) {
+        std::cout << elem << std::endl;
+    }
     for (std::size_t i = 0; i < packets.size(); i++) {
         cr_assert_eq(args[i], packets[i], "Expected at index %lu : %d, Got: %d", i, packets[i], args[i]);
     }
