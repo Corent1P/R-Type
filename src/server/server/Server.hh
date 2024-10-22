@@ -30,6 +30,11 @@ namespace RType {
              *
              */
             ~Server();
+            /**
+             * @brief Stop the server
+             *
+             */
+            void stop(void);
 
         private:
             // Communication handling
