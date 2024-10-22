@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.25)
 project(main)
 
 cmake_policy(SET CMP0091 NEW)
@@ -27,7 +27,7 @@ endif()
 if(NOT MSVC)
 #     add_compile_options(/W4 /WX)
 # else()
-    add_compile_options(-Wall -Wextra -Werror -g)
+    add_compile_options(-Wall -Wextra -Werror -g -ljsoncpp)
 endif()
 
 set(CMAKE_CXX_CLANG_TIDY
@@ -45,8 +45,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 add_subdirectory(src/protocolHandler)
 
 find_package(jsoncpp CONFIG REQUIRED)
-message(STATUS "jsoncpp found: ${jsoncpp_DIR}")
-message(STATUS "jsoncpp include dir: ${jsoncpp_INCLUDE_DIR}")
 find_package(Boost REQUIRED)
 find_package(SFML 2.6.1 COMPONENTS system window graphics REQUIRED)
 

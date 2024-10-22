@@ -22,37 +22,43 @@ jobs:
               with:
                   fetch-depth: 0
 
-            - name: Cache vcpkg
-              uses: actions/cache@v3
-              with:
-                path: |
-                  ${{github.workspace}}/vcpkg
-                  ${{github.workspace}}/build
-                key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '*/vcpkg.json') }}
-                restore-keys: |
-                  ${{ runner.os }}-vcpkg-
+            # - name: Cache vcpkg
+            #   uses: actions/cache@v3
+            #   with:
+            #     path: |
+            #       ${{github.workspace}}/vcpkg
+            #       ${{github.workspace}}/build
+            #     key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '*/vcpkg.json') }}
+            #     restore-keys: |
+            #       ${{ runner.os }}-vcpkg-
+
+
+            - name: Install dependencies
+              id: package
+              run: |
+                  sudo apt-get update -y && sudo apt-get install -y clang-tidy wget
+                  sudo wget -qO /usr/local/bin/ninja.gz https://github.com/ninja-build/ninja/releases/latest/download/ninja-linux.zip
+                  sudo gunzip /usr/local/bin/ninja.gz
+                  sudo chmod a+x /usr/local/bin/ninja
+                  sudo apt-get install -y libx11-dev libx11-xcb-dev xorg-dev libfontenc-dev libice-dev libsm-dev libxau-dev libxaw7-dev build-essential pkg-config
+                  sudo apt-get install -y autoconf automake autoconf-archive libbz2-dev libdivsufsort-dev libssl-dev libmpfr-dev
+                  sudo apt remove -y cmake
+                  sudo apt install -y cmake
+                  cmake --version
+                  echo "VCPKG_ROOT=${{github.workspace}}/vcpkg/" >> $GITHUB_ENV
 
             - name: Install vcpkg
+              # if: steps.vcpkg.outputs.cache-hit == 'true'
               id: vcpkg
               run: |
                   git clone https://github.com/microsoft/vcpkg.git
                   ./vcpkg/bootstrap-vcpkg.sh
 
-            - name: Install dependencies
-              id: package
-              run: |
-                  echo "VCPKG_ROOT=${{github.workspace}}/vcpkg/" >> $GITHUB_ENV
-                  sudo apt-get update -y && sudo apt-get install -y clang-tidy wget
-                  sudo wget -qO /usr/local/bin/ninja.gz https://github.com/ninja-build/ninja/releases/latest/download/ninja-linux.zip
-                  sudo gunzip /usr/local/bin/ninja.gz
-                  sudo chmod a+x /usr/local/bin/ninja
-                  sudo apt-get install -y libx11-dev libx11-xcb-dev libfontenc-dev libice-dev libsm-dev libxau-dev libxaw7-dev cmake build-essential
-                  sudo apt-get install -y autoconf automake autoconf-archive libjsoncpp-dev libbz2-dev libdivsufsort-dev libssl-dev libmpfr-dev
-
             - name: Compilation with CMake
               id: build
               if: steps.package.outcome == 'success'
               run: |
+                  ./vcpkg/vcpkg x-update-baseline --add-initial-baseline
                   ./build.sh
                   make unit_tests
 
