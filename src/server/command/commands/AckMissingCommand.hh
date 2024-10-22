@@ -37,6 +37,14 @@ namespace RType {
              * @param packetId the id of the packet
              * @return U_STRING the lost packet
              */
-            int getIndexLostPacketWithId(std::array<U_STRING, MAX_PACKETS> &sentPackets, u_int8_t packetId);
+            int getIndexLostPacketWithId(std::vector<U_STRING> &sentPackets, u_int8_t packetId);
+            /**
+             * @brief Check if a value is in a vector
+             *
+             * @param tab the vector to check
+             * @param value the value to check
+             * @return true if the value is in the vector, false otherwise
+             */
+            bool inVector(const std::vector<int32_t> &tab, u_int8_t value);
     };
 }

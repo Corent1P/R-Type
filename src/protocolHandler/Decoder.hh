@@ -45,7 +45,7 @@ namespace RType {
         *
         * @return PacketType Type of the packet
         */
-        static PacketType getType(U_STRING &packet);
+        static PacketType getType(const U_STRING &packet);
 
         /**
         * @brief Decode the header of the packet to get the size of the packet received
@@ -63,7 +63,7 @@ namespace RType {
         *
         * @return std::uint8_t Number of the packet
         */
-        static std::uint8_t getPacketNumber(U_STRING &packet);
+        static std::uint8_t getPacketNumber(const U_STRING &packet);
 
         /**
         * @brief Decrypt the header of the packet

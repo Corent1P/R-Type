@@ -46,7 +46,7 @@ namespace RType {
         }
     }
 
-    PacketType Decoder::getType(U_STRING &packet)
+    PacketType Decoder::getType(const U_STRING &packet)
     {
         return static_cast<PacketType>(packet[1] & 0x3F);
     }
@@ -56,7 +56,7 @@ namespace RType {
         return ((packet[0] << 8) | (packet[1] & 0xC0)) >> 6;
     }
 
-    std::uint8_t Decoder::getPacketNumber(U_STRING &packet)
+    std::uint8_t Decoder::getPacketNumber(const U_STRING &packet)
     {
         return packet[2];
     }

@@ -12,28 +12,39 @@ RType::AckMissingCommand::AckMissingCommand(const COMMAND_ARGS &arguments):
 {
 }
 
+bool RType::AckMissingCommand::inVector(const std::vector<int32_t> &tab, u_int8_t value)
+{
+    for (std::size_t i = 0; i < tab.size(); i++)
+        if (tab[i] == value)
+            return true;
+    return false;
+}
+
 void RType::AckMissingCommand::execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll, Coordinator &coord)
 {
     (void)sendToAll;
     (void)coord;
-    std::array<U_STRING, MAX_PACKETS> packetsSent = client->getPacketsSent();
-    int indexLostCommand;
+    std::vector<U_STRING> packetsSent = client->getPacketsSent();
 
-    std::cout << "ack command:" << std::endl;
-    for (std::size_t i = 0; i < _data.size(); i++) {
-        if (_data[i] == 0) {
-            indexLostCommand = getIndexLostPacketWithId(packetsSent, _data[i]);
-            std::cout << "indexLostCommand = " << indexLostCommand << std::endl;
-            if (indexLostCommand != -1)
-                sendToClient(packetsSent[indexLostCommand]);
-        }
-    }
+    // std::cout << "packet sents = [";
+    // for (std::size_t i = 0; i < packetsSent.size(); i++)
+    //     std::cout << (int)Decoder::getPacketNumber(packetsSent[i]) << ", ";
+    // std::cout << "]" << std::endl;
+
+    // std::cout << "packet clients received = [";
+    // for (std::size_t i = 0; i < _data.size(); i++)
+    //     std::cout << _data[i] << ", ";
+    // std::cout << "]" << std::endl;
+
+    for (std::size_t i = 0; i < packetsSent.size(); i++)
+        if (!inVector(_data, Decoder::getPacketNumber(packetsSent[i])))
+            sendToClient(packetsSent[i]);
     client->resetPacketsSent();
 }
 
-int RType::AckMissingCommand::getIndexLostPacketWithId(std::array<U_STRING, MAX_PACKETS> &sentPackets, u_int8_t packetId)
+int RType::AckMissingCommand::getIndexLostPacketWithId(std::vector<U_STRING> &sentPackets, u_int8_t packetId)
 {
-    for (int i = 0; i < MAX_PACKETS; i++)
+    for (std::size_t i = 0; i < sentPackets.size(); i++)
         if (Decoder::getPacketNumber(sentPackets[i]) == packetId)
             return i;
     return -1;

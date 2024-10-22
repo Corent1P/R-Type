@@ -117,7 +117,7 @@ namespace RType {
              *
              * @return the array of packets sent
              */
-            const std::array<U_STRING, MAX_PACKETS> &getPacketsSent(void) const;
+            const std::vector<U_STRING> &getPacketsSent(void) const;
 
             /**
              * @brief Reset the packets sent array
@@ -157,10 +157,10 @@ namespace RType {
              */
             std::size_t _packetId = 0;
             /**
-             * @brief the array to store the sent messages
+             * @brief the vector to store the sent messages
              *
              */
-            std::array<U_STRING, MAX_PACKETS> _packetsSent;
+            std::vector<U_STRING> _packetsSent;
 
             /**
              * @brief the callback method after the sending of messages

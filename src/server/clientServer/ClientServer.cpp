@@ -12,9 +12,6 @@ RType::ClientServer::ClientServer(boost::asio::ip::udp::endpoint endpoint):
     _endpoint(endpoint), _portNumber(_endpoint.port()), _address(_endpoint.address()), _isConnected(true), _entity(nullptr)
 {
 	std::cout << "ClientServer created with adress " << _address << ":" << _portNumber << std::endl;
-	for (int i = 0; i < MAX_PACKETS; i++) {
-		_packetsSent[i] = std::basic_string<unsigned char>({0});
-	}
 }
 
 void RType::ClientServer::setIsConnected(bool isConnected)
@@ -70,15 +67,31 @@ void displayPackets(std::array<U_STRING, MAX_PACKETS> &packets)
 	}
 }
 
+bool importantType(RType::PacketType type)
+{
+    return type == RType::CONNEXION ||
+        type == RType::DISCONNEXION ||
+        type == RType::ACK_MISSING || //not implemented yet
+        type == RType::GAME_START ||
+        type == RType::GAME_END ||
+        type == RType::INFO_LEVEL || //not implemented yet
+        type == RType::NEW_ENTITY ||
+        type == RType::DELETE_ENTITY ||
+        type == RType::CONNEXION_CONFIRM; //not implemented yet
+}
+
 void RType::ClientServer::sendMessage(udp::socket &socket, const std::basic_string<unsigned char> &message)
 {
-    socket.async_send_to(boost::asio::buffer(Encoder::addPacketNumber(message, _packetId)), _endpoint,
-        [this, message](const boost::system::error_code &error, std::size_t bytes_transferred) {
-            sendCallback(message, error, bytes_transferred);
+    U_STRING messageNumbered = Encoder::addPacketNumber(message, _packetId);
+    socket.async_send_to(boost::asio::buffer(messageNumbered), _endpoint,
+        [this, messageNumbered](const boost::system::error_code &error, std::size_t bytes_transferred) {
+            sendCallback(messageNumbered, error, bytes_transferred);
         }
 	);
-	_packetsSent[_packetId] = message;
-	_packetId = (_packetId + 1) % MAX_PACKETS;
+    PacketType type = Decoder::getType(messageNumbered);
+    if (importantType(type))
+        _packetsSent.push_back(messageNumbered);
+    _packetId = (_packetId + 1) % MAX_PACKETS;
 	// displayPackets(_packetsSent);
 }
 
@@ -124,14 +137,12 @@ void RType::ClientServer::setEntity(std::shared_ptr<RType::Entity> entity)
     _entity = entity;
 }
 
-const std::array<U_STRING, MAX_PACKETS> &RType::ClientServer::getPacketsSent(void) const
+const std::vector<U_STRING> &RType::ClientServer::getPacketsSent(void) const
 {
     return _packetsSent;
 }
 
 void RType::ClientServer::resetPacketsSent(void)
 {
-    for (int i = 0; i < MAX_PACKETS; i++) {
-        _packetsSent[i] = std::basic_string<unsigned char>({0});
-    }
+    _packetsSent.clear();
 }
