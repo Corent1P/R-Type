@@ -196,7 +196,6 @@ void RType::Game::loopReceive()
             }
         }
         if (receiveInfo.first == MOVE_ENTITY) {
-
             std::unique_lock<std::mutex> lock(_mtx);
             auto entities = _coord.getEntities();
             for (const auto &entity : entities) {
@@ -206,6 +205,10 @@ void RType::Game::loopReceive()
                     break;
                 }
             }
+        }
+        if (receiveInfo.first == DISCONNEXION) {
+            std::unique_lock<std::mutex> lock(_mtx);
+            _stopLoop = true;
         }
     }
 }
@@ -471,7 +474,8 @@ void RType::Game::createGameSystem()
     std::unique_lock<std::mutex> lock(_mtx);
     _coord.generateNewSystem(std::make_shared<HandleEventSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Game::disconnexion, this)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandlePatternSystem>(
@@ -482,7 +486,7 @@ void RType::Game::createGameSystem()
     _coord.generateNewSystem(std::make_shared<HandleMoveSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
-        std::bind(&RType::Client::send, &_client, std::placeholders::_1)
+        std::bind(&RType::Game::trySendMessageToServer, this, std::placeholders::_1)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleMoveSpriteSystem>(
@@ -493,7 +497,7 @@ void RType::Game::createGameSystem()
     _coord.generateNewSystem(std::make_shared<HandleShootSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
-        std::bind(&RType::Client::send, &_client, std::placeholders::_1)
+        std::bind(&RType::Game::trySendMessageToServer, this, std::placeholders::_1)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleAnimationSystem>(
@@ -585,8 +589,21 @@ void RType::Game::connectToServer(void)
 {
     _client.send(Encoder::connexion());
 }
+
+void RType::Game::trySendMessageToServer(const std::basic_string<unsigned char> &message)
+{
+    if (_initConnection)
+        _client.send(message);
+}
+
 std::ostream &operator<<(std::ostream &s, const RType::Game &game)
 {
     s << game.getCoordinator();
     return s;
+}
+
+void RType::Game::disconnexion(void)
+{
+    // trySendMessageToServer(Encoder::disconnexion());
+    // _initConnection = false;
 }
