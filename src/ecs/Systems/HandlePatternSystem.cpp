@@ -51,12 +51,10 @@ void RType::HandlePatternSystem::effects(std::vector<std::shared_ptr<RType::Enti
 {
     for (const auto &entity: entities) {
         if (entity->getComponent<EntityTypeComponent>() != nullptr && (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER || entity->getComponent<EntityTypeComponent>()->getEntityType() == E_ALLIES))
-        {
             handlePatternFollowEntities(entities, entity);
-        } else
-            if (verifyRequiredComponent(entity)) {
+        else
+            if (verifyRequiredComponent(entity))
                 effect(entity);
-            }
     }
 }
 void RType::HandlePatternSystem::effect(std::shared_ptr<RType::Entity> entity)

@@ -133,7 +133,7 @@ void RType::HandleColisionSystem::handleItemEffect(std::shared_ptr<RType::Entity
     switch(entity2->getComponent<EntityTypeComponent>()->getEntityType())
     {
         case RType::E_ITEM_WEAPON:
-            if (entity1->getComponent<RType::EntityTypeComponent>()->getWeaponType() <= 2) {
+            if (entity1->getComponent<RType::EntityTypeComponent>()->getWeaponType() < 3) {
                 std::cout << "improve weapon lvl: " << entity1->getComponent<RType::EntityTypeComponent>()->getWeaponType() << std::endl;
                 entity1->getComponent<RType::EntityTypeComponent>()->setWeaponType(RType::WeaponType(entity1->getComponent<RType::EntityTypeComponent>()->getWeaponType() + 1));
                 entity1->getComponent<RType::DamageComponent>()->setDamage(entity1->getComponent<RType::DamageComponent>()->getDamage() + 1);

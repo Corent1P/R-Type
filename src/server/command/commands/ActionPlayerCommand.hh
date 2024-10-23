@@ -28,5 +28,20 @@ namespace RType {
              * @param client the client that sent the command
              */
             void execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll, Coordinator &coord) override;
+        private:
+            /**
+             * @brief Get the bullet position
+             *
+             * @param client the client that sent the command
+             * @return sf::Vector2f the position of the bullet
+             */
+            sf::Vector2f getBulletPosition(std::shared_ptr<ClientServer> client);
+            /**
+             * @brief Get the bullet size
+             *
+             * @param entityType the type of the bullet
+             * @return sf::Vector2f the size of the bullet
+             */
+            sf::Vector2f getBulletSize(WeaponType weaponType);
     };
 }

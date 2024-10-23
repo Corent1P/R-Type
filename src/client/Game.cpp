@@ -138,10 +138,10 @@ void RType::Game::loopReceive()
                              static_cast<RType::EntityType>(receiveInfo.second[0]),
                              static_cast<short> (receiveInfo.second[2]),
                              static_cast<short> (receiveInfo.second[3]));
-                if (receiveInfo.second[0] == E_BULLET)
-                createEntity(E_BULLET_EFFECT,
-                             static_cast<short> (receiveInfo.second[2]),
-                             static_cast<short> (receiveInfo.second[3]));
+                if (EntityTypeComponent::isWeapon((EntityType)receiveInfo.second[0])) {
+                    sf::Vector2f position = getBulletPosition((int)receiveInfo.second[0], (int)receiveInfo.second[2], (int)receiveInfo.second[3]);
+                    createEntity(E_BULLET_EFFECT, position.x, position.y - 20);
+                }
             } else {
                 if (receiveInfo.second[0] != E_PLAYER)
                     continue;
@@ -386,7 +386,7 @@ void RType::Game::createEntity(const RType::EntityType &type, const int &posX,
         entity->PUSH_TYPE_E(E_ALLIES);
     else
         entity->PUSH_TYPE_E(type);
-    POS_COMPONENT position = entity->PUSH_POS_E(posX, posY - 20);
+    POS_COMPONENT position = entity->PUSH_POS_E(posX, posY);
     SCALE_COMPONENT scale = entity->PUSH_SCALE_E(entityInfo["scale"]["x"].asFloat(),
                                                  entityInfo["scale"]["y"].asFloat());
     RECT_COMPONENT intRect = entity->PUSH_RECT_E(entityInfo["rect"]["x"].asInt(),
@@ -658,4 +658,21 @@ std::shared_ptr<RType::Entity> RType::Game::getPlayerEntity(void)
             return entity;
     }
     return nullptr;
+}
+
+sf::Vector2f RType::Game::getBulletPosition(int type, int posX, int posY)
+{
+    // !Data to get dynamically
+    switch (type) {
+        case RType::E_BULLET:
+            return sf::Vector2f(posX, posY + (6 * 2) / 2);
+        case RType::E_BULLET_2:
+            return sf::Vector2f(posX, posY + (192 * 0.5) / 2);
+        case RType::E_BULLET_3:
+            return sf::Vector2f(posX, posY + (32 * 2.) / 2);
+        case RType::E_BULLET_4:
+            return sf::Vector2f(posX, posY + (32 * 2.) / 2);
+        default:
+            return sf::Vector2f(0, 0);
+    }
 }

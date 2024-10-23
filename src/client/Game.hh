@@ -66,6 +66,10 @@
 #define CREATE_SPRITE_COMPONENT std::make_shared<RType::SpriteComponent>
 #define GET_POSITION_X getComponent<RType::PositionComponent>()->getPositionX()
 #define GET_POSITION_Y getComponent<RType::PositionComponent>()->getPositionY()
+#define GET_RECT_WIDTH getComponent<RType::IntRectComponent>()->getIntRectWidth()
+#define GET_RECT_HEIGHT getComponent<RType::IntRectComponent>()->getIntRectHeight()
+#define GET_SCALE_X getComponent<RType::ScaleComponent>()->getScaleX()
+#define GET_SCALE_Y getComponent<RType::ScaleComponent>()->getScaleY()
 
 #define SET_BUTTON_TYPE(type) getComponent<EntityTypeComponent>()->setButtonType(type)
 
@@ -123,6 +127,8 @@ namespace RType {
 
             std::shared_ptr<RType::TextureComponent> getTextureComponent(const std::string &path);
             std::size_t getMaxClientId(void);
+
+            sf::Vector2f getBulletPosition(int type, int posX, int posY);
 
             void trySendMessageToServer(const std::basic_string<unsigned char> &message);
             void disconnexion(void);
