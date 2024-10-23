@@ -83,7 +83,7 @@ bool RType::HandleColisionSystem::collides(std::shared_ptr<RType::Entity> entity
 
     return (position1.x + (width1 * scale1.x) > position2.x
         && position1.x < position2.x + (width2 * scale2.x)
-        && position1.y + (height1 * scale2.y) > position2.y
+        && position1.y + (height1 * scale1.y) > position2.y
         && position1.y < position2.y + (height2 * scale2.y)
     );
 }

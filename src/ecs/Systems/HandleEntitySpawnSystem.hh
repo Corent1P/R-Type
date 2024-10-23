@@ -48,7 +48,7 @@ namespace RType {
 
         private:
             void createEntity(int posX, int posY, EntityType type);
-            void createShied(std::shared_ptr<RType::Entity> entity);
+            void createShield(std::shared_ptr<RType::Entity> entity);
 
             std::function<void(const std::basic_string<unsigned char> &message)> _sendToAllClient;
             int _y_spawn = 700;

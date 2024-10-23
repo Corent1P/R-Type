@@ -29,8 +29,7 @@ void RType::HandleEntitySpawnSystem::effects(std::vector<std::shared_ptr<RType::
         } else if (entity->getComponent<EntityTypeComponent>() != nullptr && entity->getComponent<EntityTypeComponent>()->getEntityType() == RType::E_PLAYER) {
             if (entity->getComponent<PowerUpComponent>() != nullptr && entity->getComponent<PowerUpComponent>()->getPowerUps(RType::SHIELD) == true) {
                 entity->getComponent<PowerUpComponent>()->setPowerUps(RType::SHIELD, false);
-                createShied(entity);
-                break;
+                createShield(entity);
             }
         }
     }
@@ -38,9 +37,9 @@ void RType::HandleEntitySpawnSystem::effects(std::vector<std::shared_ptr<RType::
 void RType::HandleEntitySpawnSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
     if (entity->getComponent<RType::ClockComponent>()->getClock(RType::SPAWN_CLOCK).getElapsedTime().asSeconds() > 2) {
-        //createEntity(1920, _y_spawn, E_FLY);
-        createEntity(1920, _y_spawn + 100, E_OCTOPUS);
-        //createEntity(1920, _y_spawn - 100, E_SMALL_SPACESHIP);
+        // createEntity(1920, _y_spawn, E_FLY);
+        // createEntity(1920, _y_spawn + 100, E_OCTOPUS);
+        createEntity(1920, _y_spawn - 100, E_SMALL_SPACESHIP);
         createEntity(1920, _y_spawn, RType::E_ITEM_WEAPON);
         createEntity(1920, _y_spawn + 100, RType::E_ITEM_SHIELD);
         entity->getComponent<RType::ClockComponent>()->getClock(RType::SPAWN_CLOCK).restart();
@@ -93,7 +92,7 @@ void RType::HandleEntitySpawnSystem::createEntity(int posX, int posY, EntityType
     _sendToAllClient(Encoder::newEntity(type, entity->getId(), position->getPositionX(), position->getPositionY()));
 }
 
-void RType::HandleEntitySpawnSystem::createShied(std::shared_ptr<RType::Entity> entity) {
+void RType::HandleEntitySpawnSystem::createShield(std::shared_ptr<RType::Entity> entity) {
     std::cout << "create a new shield entity" << std::endl;
     std::shared_ptr<RType::Entity> shield = _addEntity();
     shield->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_SHIELD));

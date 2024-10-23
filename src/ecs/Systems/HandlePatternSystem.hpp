@@ -60,6 +60,8 @@ namespace RType {
         protected:
         private:
             std::vector<std::shared_ptr<RType::Entity>> _entities;
+
+            void handlePatternFollowEntities(std::vector<std::shared_ptr<RType::Entity>> &entities, const std::shared_ptr<RType::Entity> &entity);
     };
 }
 

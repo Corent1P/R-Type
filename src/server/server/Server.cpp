@@ -223,4 +223,5 @@ void RType::Server::stop(void)
     for (auto client: _clients) {
         client->sendMessage(_socket, Encoder::disconnexion());
     }
+    std::cout << "Server stopped" << std::endl;
 }
