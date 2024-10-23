@@ -10,5 +10,6 @@
         "y": 0,
         "width": 32,
         "height": 32
-    }
+    },
+    "sound": "./ressources/sounds/explosion.ogg"
 }

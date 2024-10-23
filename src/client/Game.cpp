@@ -379,6 +379,8 @@ void RType::Game::createEntity(const RType::EntityType &type, const int &posX,
         entity->PUSH_VELOCITY_E(entityInfo["speed"].asInt());
     if (entityInfo["pattern"].asBool() == true)
         entity->PUSH_PATTERN_E(static_cast<RType::PatternType>(entityInfo["pattern"].asInt()));
+    if (!entityInfo["sound"].asString().empty())
+        entity->PUSH_SOUND_E(entityInfo["sound"].asString());
     entity->PUSH_MENU_COMPONENT_E(GAME);
     file.close();
 }
@@ -424,6 +426,8 @@ void RType::Game::createEntity(const long &serverId, const RType::EntityType &ty
         entity->PUSH_VELOCITY_E(entityInfo["speed"].asInt());
     if (entityInfo["pattern"].asBool() == true)
         entity->PUSH_PATTERN_E(static_cast<RType::PatternType>(entityInfo["pattern"].asInt()));
+    if (!entityInfo["sound"].asString().empty())
+        entity->PUSH_SOUND_E(entityInfo["sound"].asString());
     entity->PUSH_MENU_COMPONENT_E(GAME);
     file.close();
 }

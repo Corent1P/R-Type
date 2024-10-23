@@ -36,6 +36,7 @@
 #include "../ecs/Components/MappingInputComponent.hh"
 #include "../ecs/Components/MenuComponent.hh"
 #include "../ecs/Components/ClickEffectComponent.hh"
+#include "../ecs/Components/SoundComponent.hh"
 
 #include "../ecs/Systems/HandleEventSystem.hpp"
 #include "../ecs/Systems/HandleClearSystem.hpp"
@@ -70,6 +71,7 @@
 #define SCALE_COMPONENT std::shared_ptr<RType::ScaleComponent>
 #define RECT_COMPONENT std::shared_ptr<RType::IntRectComponent>
 #define TEXTURE_COMPONENT std::shared_ptr<RType::TextureComponent>
+#define SOUND_COMPONENT std::shared_ptr<RType::SoundComponent>
 
 #define PUSH_POS_E(x, y) pushComponent(std::make_shared<RType::PositionComponent>(x, y))
 #define PUSH_TYPE_E(type) pushComponent(std::make_shared<RType::EntityTypeComponent>(type))
@@ -81,6 +83,7 @@
 #define PUSH_PATTERN_E(pattern) pushComponent(std::make_shared<RType::DirectionPatternComponent>(pattern))
 #define PUSH_CLOCK_E() pushComponent(std::make_shared<RType::ClockComponent>())
 #define PUSH_MENU_COMPONENT_E(menu) pushComponent(std::make_shared<RType::MenuComponent>(menu))
+#define PUSH_SOUND_E(path) pushComponent(std::make_shared<RType::SoundComponent>(path));
 
 namespace RType {
 

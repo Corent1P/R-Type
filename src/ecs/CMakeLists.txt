@@ -27,6 +27,7 @@ set(SRC_COMPONENTS
     ./Components/TextComponent.cpp
     ./Components/ClickEffectComponent.cpp
     ./Components/MenuComponent.cpp
+    ./Components/SoundComponent.cpp
 )
 
 set(SRC_SYSTEMS
