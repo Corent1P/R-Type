@@ -69,6 +69,6 @@ namespace RType {
             boost::asio::io_context &_ioContext;
             udp::endpoint _endpoint;
             udp::socket _socket;
-            std::vector<u_int8_t> _packetsReceived;
+            std::vector<u_int16_t> _packetsReceived;
     };
 }

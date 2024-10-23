@@ -151,7 +151,7 @@ namespace RType {
         std::vector<std::uint8_t> chars(MAX_PACKETS / 8, 0);
         std::size_t smallest_suite = 0;
         std::size_t biggest_packet = packets[packets.size() - 1];
-        std::size_t last_packet = 0;
+        // std::size_t last_packet = 0;
 
         std::sort(packets.begin(), packets.end());
         while (smallest_suite == packets[0]) {
