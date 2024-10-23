@@ -102,6 +102,7 @@ void RType::HandleEntitySpawnSystem::createShied(std::shared_ptr<RType::Entity> 
     shield->pushComponent(std::make_shared<RType::ScaleComponent>(3.0, 3.0));
     shield->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 32, 32));
     shield->pushComponent(std::make_shared<RType::DirectionPatternComponent>(FOLLOW_PLAYER));
+    shield->getComponent<RType::DirectionPatternComponent>()->setEntityToFollow(entity->getId());
     shield->pushComponent(std::make_shared<VelocityComponent>(SERVER_SPEED(10)));
     shield->pushComponent(std::make_shared<ClockComponent>());
     shield->pushComponent(std::make_shared<MenuComponent>(GAME));

@@ -33,10 +33,13 @@ namespace RType {
             PatternType getPatternType() const;
             void setPattern(sf::Vector2f pattern);
             sf::Vector2f getPattern() const;
+            void setEntityToFollow(uint16_t entityToFollow);
+            uint16_t getEntityToFollow() const;
             std::string getOutput() const;
         private:
             PatternType _patternType;
             sf::Vector2f _pattern;
+            uint16_t _entityToFollow;
     };
 }
 #endif /* !DIRECTIONPATTERNCOMPONENT_HPP_ */

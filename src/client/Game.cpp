@@ -142,7 +142,6 @@ void RType::Game::loopReceive()
                 createEntity(E_BULLET_EFFECT,
                              static_cast<short> (receiveInfo.second[2]),
                              static_cast<short> (receiveInfo.second[3]));
-
             } else {
                 if (receiveInfo.second[0] != E_PLAYER)
                     continue;

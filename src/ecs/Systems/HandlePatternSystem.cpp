@@ -18,22 +18,17 @@ RType::HandlePatternSystem::~HandlePatternSystem()
 void RType::HandlePatternSystem::effects(std::vector<std::shared_ptr<RType::Entity>> entities)
 {
     for (const auto &entity: entities) {
-        if (entity->getComponent<EntityTypeComponent>() != nullptr && entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER)
+        if (entity->getComponent<EntityTypeComponent>() != nullptr && (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER ||entity->getComponent<EntityTypeComponent>()->getEntityType() == E_ALLIES))
         {
             for(const auto &entity2: entities) {
                 if (verifyRequiredComponent(entity2)) {
-                    // if (entity2->getComponent<EntityTypeComponent>() != nullptr && entity2->getComponent<EntityTypeComponent>()->getEntityType() == E_SHIELD) {
-                    //     std::cout << "set pattern for Enity Shield" << std::endl;
-                    //     entity2->getComponent<DirectionPatternComponent>()->setPattern(sf::Vector2f(entity->getComponent<PositionComponent>()->getPositionX(), entity->getComponent<PositionComponent>()->getPositionY()));
-                    // }
-                    if (entity2->getComponent<DirectionPatternComponent>()->getPatternType() == FOLLOW_PLAYER) {
-                        //std::cout << "set pattern for Enity Shield" << std::endl;
+                    if (entity2->getComponent<DirectionPatternComponent>()->getPatternType() == FOLLOW_PLAYER && entity2->getComponent<DirectionPatternComponent>()->getEntityToFollow() == entity->getId()) {
                         entity2->getComponent<DirectionPatternComponent>()->setPattern(sf::Vector2f(
                         entity->getComponent<PositionComponent>()->getPositionX() - (entity2->getComponent<IntRectComponent>()->getIntRectWidth() - entity->getComponent<IntRectComponent>()->getIntRectWidth()),
                         entity->getComponent<PositionComponent>()->getPositionY() - ((entity2->getComponent<IntRectComponent>()->getIntRectHeight() - entity->getComponent<IntRectComponent>()->getIntRectHeight()))));
                     }
                 }
-            }        
+            }
         } else
             if (verifyRequiredComponent(entity)) {
                 effect(entity);

@@ -138,6 +138,10 @@ void RType::HandleColisionSystem::handleItemEffect(std::shared_ptr<RType::Entity
                 entity1->getComponent<RType::DamageComponent>()->setDamage(entity1->getComponent<RType::DamageComponent>()->getDamage() + 1);
             }
             break;
+        case RType::E_ITEM_HEAL:
+            std::cout << "player health + 1" << std::endl;
+            entity1->getComponent<RType::HealthComponent>()->setHealth(entity1->getComponent<RType::HealthComponent>()->getHealth() + 1);
+            break;
         case RType::E_ITEM_SHIELD:
             if (entity1->getComponent<PowerUpComponent>() != nullptr && entity1->getComponent<PowerUpComponent>()->getPowerUps(RType::SHIELD) == false) {
                 if (entity1->getComponent<PowerUpComponent>()->getPowerUpsIsActive(RType::SHIELD) == false) {
@@ -146,6 +150,7 @@ void RType::HandleColisionSystem::handleItemEffect(std::shared_ptr<RType::Entity
                 }
             }
             break;
+
         default:
         break;
     }
