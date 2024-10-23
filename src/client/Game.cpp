@@ -442,6 +442,12 @@ void RType::Game::createEntity(const long &serverId, const RType::EntityType &ty
         entity->PUSH_PATTERN_E(static_cast<RType::PatternType>(entityInfo["pattern"].asInt()));
     entity->PUSH_MENU_COMPONENT_E(GAME);
     file.close();
+    if (type == E_SHIELD) {
+        std::shared_ptr<RType::Entity> playerEntity = getPlayerEntity();
+        if (playerEntity == nullptr)
+            return;
+        entity->getComponent<RType::DirectionPatternComponent>()->setEntityToFollow(playerEntity->getId());
+    }
 }
 
 void RType::Game::createPlayer()
@@ -625,4 +631,16 @@ void RType::Game::disconnexion(void)
 {
     // trySendMessageToServer(Encoder::disconnexion());
     // _initConnection = false;
+}
+
+std::shared_ptr<RType::Entity> RType::Game::getPlayerEntity(void)
+{
+    auto entities = _coord.getEntities();
+    for (const auto &entity : entities) {
+        if (!entity->getComponent<RType::EntityTypeComponent>())
+            continue;
+        if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER)
+            return entity;
+    }
+    return nullptr;
 }

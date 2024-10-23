@@ -211,7 +211,10 @@ void RType::Server::initSystem(void)
 void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)
 {
     for (auto entity: _coord.getEntities()) {
-        if (client->getEntity()->getId() != entity->getId() && (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER || EntityTypeComponent::isMob(entity->getComponent<EntityTypeComponent>()->getEntityType()))) {
+        if (client->getEntity()->getId() != entity->getId() &&
+            (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER ||
+            EntityTypeComponent::isMob(entity->getComponent<EntityTypeComponent>()->getEntityType()) ||
+            EntityTypeComponent::isItem(entity->getComponent<EntityTypeComponent>()->getEntityType()))) {
             client->sendMessage(_socket, Encoder::newEntity(entity->getComponent<EntityTypeComponent>()->getEntityType(), entity->getId(), entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY()));
         }
     }

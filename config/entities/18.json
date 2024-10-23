@@ -13,6 +13,6 @@
         "height": 32
     },
     // UP_N_DOWN_LEFT
-    // "pattern": 9,
+    "pattern": 9,
     "speed": 10
 }

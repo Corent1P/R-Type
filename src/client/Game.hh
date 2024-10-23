@@ -119,6 +119,7 @@ namespace RType {
             void createParallaxBackground(std::shared_ptr<RType::Entity> window);
             void createParallaxEntity(const std::string &path, const int &posX, const int &posY,
                 const int &winMaxX, const int &winMaxY, const int &index, const int &level);
+            std::shared_ptr<RType::Entity> getPlayerEntity(void);
 
             std::shared_ptr<RType::TextureComponent> getTextureComponent(const std::string &path);
             std::size_t getMaxClientId(void);
