@@ -205,6 +205,7 @@ void RType::Server::initSystem(void)
     std::shared_ptr<RType::Entity> window = _coord.generateNewEntity();
     window->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_WINDOW));
     window->pushComponent(std::make_shared<RType::ClockComponent>());
+    window->pushComponent(std::make_shared<RType::ParseLevelInfoComponent>(1));
 }
 
 void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)
