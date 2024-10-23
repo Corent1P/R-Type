@@ -115,12 +115,12 @@ namespace RType {
             void createParallaxBackground(std::shared_ptr<RType::Entity> window);
             void createParallaxEntity(const std::string &path, const int &posX, const int &posY,
                 const int &winMaxX, const int &winMaxY, const int &index, const int &level);
-
             std::shared_ptr<RType::TextureComponent> getTextureComponent(const std::string &path);
             std::size_t getMaxClientId(void);
-
             void trySendMessageToServer(const std::basic_string<unsigned char> &message);
             void disconnexion(void);
+            void createEntityMap(void);
+
             std::mutex _mtx;
             RType::Coordinator _coord;
             RType::Client _client;
@@ -128,6 +128,7 @@ namespace RType {
             std::thread _receipter;
             bool _initConnection;
             std::unordered_map<std::string, std::shared_ptr<RType::TextureComponent>> _texturesMap;
+            std::unordered_map<EntityType, std::string> _entityTypeMap;
             std::shared_ptr<sf::Font> _font;
     };
 }
