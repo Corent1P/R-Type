@@ -121,6 +121,8 @@ namespace RType {
             std::shared_ptr<RType::TextureComponent> getTextureComponent(const std::string &path);
             std::size_t getMaxClientId(void);
 
+            void trySendMessageToServer(const std::basic_string<unsigned char> &message);
+            void disconnexion(void);
             std::mutex _mtx;
             RType::Coordinator _coord;
             RType::Client _client;
