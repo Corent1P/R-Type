@@ -39,6 +39,7 @@ unit_tests_server
 unit_tests_ecs
 unit_tests_protocolHandler
 unit_tests_command
+tests_binary
 
 # CMake
 CMakeLists.txt.user
@@ -67,3 +68,4 @@ vcpkg-manifest-install.log
 path/
 .vscode
 vgcore*
+perf.data
