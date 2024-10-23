@@ -78,8 +78,9 @@ void RType::Game::gameLoop()
                 drawSystem->effects(_coord.getEntities());
             }
             renderTime = 0.0;
-            if (indexNackCommand % NACK_PROTOCOL_TIME)
+            if (indexNackCommand % NACK_PROTOCOL_TIME == 0) {
                 _client.askForLostPackets();
+            }
             indexNackCommand = (indexNackCommand + 1) % NACK_PROTOCOL_TIME;
             std::unique_lock<std::mutex> lock(_mtx);
             if (windowComponent != nullptr && !windowComponent->getIsOpen()) {
