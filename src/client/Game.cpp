@@ -21,6 +21,7 @@ RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, c
     createMenu();
     createPlayer();
     createGameSystem();
+    createEntityMap();
     _receipter = std::thread(&Game::loopReceive, this);
     _initConnection = false;
 }
@@ -349,10 +350,8 @@ void RType::Game::createEntity(const RType::EntityType &type, const int &posX,
     Json::Value entityInfo;
     std::ifstream file;
     std::shared_ptr<RType::Entity> entity = _coord.generateNewEntity();
-    std::string filepath("./config/entities/");
+    std::string filepath("./config/entities/" + _entityTypeMap[type] + ".json");
 
-    filepath += std::to_string(type);
-    filepath += ".json";
     file.open(filepath);
     if (!file.is_open() || !reader.parse(file, entityInfo)) {
         std::cerr << "Error while reading or parsing the json: " << filepath << std::endl;
@@ -394,10 +393,8 @@ void RType::Game::createEntity(const long &serverId, const RType::EntityType &ty
     Json::Value entityInfo;
     std::ifstream file;
     std::shared_ptr<RType::Entity> entity = _coord.generateNewEntity(serverId);
-    std::string filepath("./config/entities/");
+    std::string filepath("./config/entities/" + _entityTypeMap[type] + ".json");
 
-    filepath += std::to_string(type);
-    filepath += ".json";
     file.open(filepath);
     if (!file.is_open() || !reader.parse(file, entityInfo)) {
         std::cerr << "Error while reading or parsing the json: " << filepath << std::endl;
@@ -606,4 +603,24 @@ void RType::Game::disconnexion(void)
 {
     // trySendMessageToServer(Encoder::disconnexion());
     // _initConnection = false;
+}
+
+void RType::Game::createEntityMap(void)
+{
+    _entityTypeMap[E_OTHER] = "other";
+    _entityTypeMap[E_WINDOW] = "window";
+    _entityTypeMap[E_PLAYER] = "player";
+    _entityTypeMap[E_ALLIES] = "player";
+    _entityTypeMap[E_SMALL_SPACESHIP] = "small_spaceship";
+    _entityTypeMap[E_OCTOPUS] = "octopus";
+    _entityTypeMap[E_FLY] = "fly";
+    _entityTypeMap[E_BOSS] = "boss";
+    _entityTypeMap[E_BUTTON] = "button";
+    _entityTypeMap[E_LAYER] = "layer";
+    _entityTypeMap[E_BULLET] = "bullet";
+    _entityTypeMap[E_POWER_UP] = "power_up";
+    _entityTypeMap[E_BULLET_EFFECT] = "bullet_effect";
+    _entityTypeMap[E_HIT_EFFECT] = "hit_effect";
+    _entityTypeMap[E_EXPLOSION_EFFECT] = "explosion_effect";
+    _entityTypeMap[E_TEXT] = "text";
 }

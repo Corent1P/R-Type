@@ -46,8 +46,10 @@ namespace RType {
         private:
             static int luaTrampolineCreateEntity(lua_State *luaState);
             void createEntity(lua_State *LuaState);
+            void createEntityMap(void);
 
             std::function<void(const std::basic_string<unsigned char> &message)> _sendToAllClient;
+            std::unordered_map<EntityType, std::string> _entityTypeMap;
             int _prevTime;
     };
 }
