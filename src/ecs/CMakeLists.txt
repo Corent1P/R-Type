@@ -27,6 +27,7 @@ set(SRC_COMPONENTS
     ./Components/TextComponent.cpp
     ./Components/ClickEffectComponent.cpp
     ./Components/MenuComponent.cpp
+    ./Components/ParseLevelInfoComponent.cpp
 )
 
 set(SRC_SYSTEMS
@@ -54,8 +55,13 @@ if (NOT WIN32)
 endif()
 
 find_package(Boost REQUIRED)
+find_package(Lua REQUIRED)
 find_package(SFML COMPONENTS system window graphics network audio REQUIRED)
+
+target_include_directories(ecs PRIVATE ${LUA_INCLUDE_DIR})
+
 target_link_libraries(ecs PRIVATE
+    ${LUA_LIBRARIES}
     JsonCpp::JsonCpp
     Boost::boost
     sfml-system
