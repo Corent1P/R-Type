@@ -22,6 +22,7 @@
 #include "../Components/PositionComponent.hh"
 #include "../Components/TextComponent.hh"
 #include "../Components/MenuComponent.hh"
+#include "../Components/SFWindowComponent.hh"
 
 #define GET_WINDOW_SET_ISOPEN entity->getComponent<RType::SFWindowComponent>()
 #define GET_WINDOW_POLL_EVENT e->getComponent<RType::SFWindowComponent>()->getWindow()
@@ -41,8 +42,9 @@ namespace RType {
              *
              * @param addEntity method used to add a new Entity to the coordinator.
              * @param deleteEntity method used to delete a Entity from the coordinator.
+             * @param disconnexion method used to disconnect the client from the server.
              */
-            HandleEventSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
+            HandleEventSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::function<void(void)> disconnexion = nullptr);
             /**
              * @brief Destroy the Handle Event System object.
              *
@@ -99,6 +101,8 @@ namespace RType {
              *
              */
             bool _isShooting;
+
+            std::function<void(void)> _disconnexion;
     };
 }
 #endif /* !HANDLEEVENTSYTEM_HPP_ */

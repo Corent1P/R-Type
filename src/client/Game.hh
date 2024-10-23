@@ -110,9 +110,6 @@ namespace RType {
                               const int &posY);
             void createEntity(const long &serverId, const RType::EntityType &type,
                               const int &posX, const int &posY);
-            // void createItemWeapon(long serverId, long posX, long posY);
-            // void createItemShield(long serverId, long posX, long posY);
-            // void createEffectiveShield(long serverId, long posX, long posY);
             void createWindow();
             void createMenu();
             void createMappingInputButton(std::shared_ptr<RType::MappingInputComponent> mappingInput);
@@ -126,6 +123,8 @@ namespace RType {
             std::shared_ptr<RType::TextureComponent> getTextureComponent(const std::string &path);
             std::size_t getMaxClientId(void);
 
+            void trySendMessageToServer(const std::basic_string<unsigned char> &message);
+            void disconnexion(void);
             std::mutex _mtx;
             RType::Coordinator _coord;
             RType::Client _client;
