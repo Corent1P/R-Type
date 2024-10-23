@@ -149,7 +149,6 @@ void RType::HandleColisionSystem::handleItemEffect(std::shared_ptr<RType::Entity
         default:
         break;
     }
-    std::cout << entity1->getComponent<PowerUpComponent>()->getPowerUpsIsActive(RType::SHIELD) << std::endl;
 }
 
 void RType::HandleColisionSystem::handleEntityColisions(void)
@@ -159,19 +158,6 @@ void RType::HandleColisionSystem::handleEntityColisions(void)
             continue;
         handleEntityColision(colidingPair);
     }
-}
-void RType::HandleColisionSystem::createShield(std::shared_ptr<RType::Entity> entity1)
-{
-    std::shared_ptr<RType::Entity> shield = _addEntity();
-    shield->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_SHIELD));
-    shield->pushComponent(std::make_shared<RType::HealthComponent>(4));
-    auto position = shield->pushComponent(std::make_shared<RType::PositionComponent>(entity1->getComponent<RType::PositionComponent>()->getPositionX(), entity1->getComponent<RType::PositionComponent>()->getPositionY()));
-    shield->pushComponent(std::make_shared<RType::ScaleComponent>(4.0, 4.0));
-    shield->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 32, 32));
-    shield->pushComponent(std::make_shared<RType::DirectionComponent>(NOMOVE));
-    shield->pushComponent(std::make_shared<VelocityComponent>(SERVER_SPEED(SPACESHIP_SPEED)));
-    shield->pushComponent(std::make_shared<ClockComponent>());
-    _sendMessageToAllClient(Encoder::newEntity(E_SHIELD, shield->getId(), position->getPositionX(), position->getPositionY()));
 }
 
 bool RType::HandleColisionSystem::isInPastColision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &colidingPair)

@@ -10,7 +10,6 @@
 RType::ActionPlayerCommand::ActionPlayerCommand(const std::vector<long> &data):
     ACommand(data, ACTION_PLAYER)
 {
-    std::cout << "Action command created" << std::endl;
 }
 
 void RType::ActionPlayerCommand::execute(std::shared_ptr<ClientServer> client, FUNCTION_SEND sendToClient, FUNCTION_SEND sendToAll, Coordinator &coord)
@@ -29,8 +28,8 @@ void RType::ActionPlayerCommand::execute(std::shared_ptr<ClientServer> client, F
     bullet->pushComponent(std::make_shared<RType::VelocityComponent>(21));
     bullet->pushComponent(std::make_shared<RType::ClockComponent>());
     bullet->pushComponent(std::make_shared<RType::DamageComponent>(client->getEntity()->getComponent<DamageComponent>()->getDamage()));
-    std::cout << "bullet damage:" << bullet->getComponent<DamageComponent>()->getDamage() <<std::endl;     
-    std::cout << "ActionPlayerCommand " << bullet->getId() << std::endl;
+    std::cout << "bullet damage:" << bullet->getComponent<DamageComponent>()->getDamage() <<std::endl;
+    bullet->pushComponent(std::make_shared<RType::MenuComponent>(GAME));
 
     sendToAll(Encoder::newEntity(E_BULLET, bullet->getId(), position->getPositionX(), position->getPositionY()));
 }

@@ -37,17 +37,16 @@ void RType::HandleEntitySpawnSystem::effects(std::vector<std::shared_ptr<RType::
 }
 void RType::HandleEntitySpawnSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
-    if (entity->getComponent<RType::ClockComponent>()->getClock(RType::SPAWN_CLOCK).getElapsedTime().asSeconds() > 1) {
-        //createMobFly(1920, _y_spawn);
-        createMobOctopus(1920, _y_spawn + 100);
-        //createMobSpaceShip(1920, _y_spawn - 100);
-        createItemWeapon(1920, _y_spawn);
-        createItemShield(1920, _y_spawn + 100);
+    if (entity->getComponent<RType::ClockComponent>()->getClock(RType::SPAWN_CLOCK).getElapsedTime().asSeconds() > 2) {
+        //createEntity(1920, _y_spawn, E_FLY);
+        createEntity(1920, _y_spawn + 100, E_OCTOPUS);
+        //createEntity(1920, _y_spawn - 100, E_SMALL_SPACESHIP);
+        createEntity(1920, _y_spawn, RType::E_ITEM_WEAPON);
+        createEntity(1920, _y_spawn + 100, RType::E_ITEM_SHIELD);
         entity->getComponent<RType::ClockComponent>()->getClock(RType::SPAWN_CLOCK).restart();
-        if (_y_spawn > 100)
-            _y_spawn -= 100;
-        else
-            _y_spawn = 700;
+        _y_spawn += 100 * _sign;
+        if (_y_spawn <= 100 || _y_spawn >= 700)
+            _sign *= -1;
     }
 }
 
@@ -58,83 +57,40 @@ bool RType::HandleEntitySpawnSystem::verifyRequiredComponent(std::shared_ptr<RTy
     return false;
 }
 
-void RType::HandleEntitySpawnSystem::createMobOctopus(int posX, int posY)
+void RType::HandleEntitySpawnSystem::createEntity(int posX, int posY, EntityType type)
 {
-    std::shared_ptr<RType::Entity> mob = _addEntity();
+    Json::Reader reader;
+    Json::Value entityInfo;
+    std::ifstream file;
+    std::shared_ptr<RType::Entity> entity = _addEntity();
+    std::string filepath("./config/entities/");
 
-    mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_OCTOPUS));
-    mob->pushComponent(std::make_shared<RType::HealthComponent>(3));
-    mob->pushComponent(std::make_shared<RType::DamageComponent>(2));
-    auto position = mob->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
-    mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
-    mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 41, 46));
-    mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(UP_N_DOWN_LEFT));
-    mob->pushComponent(std::make_shared<VelocityComponent>(SERVER_SPEED(OCTOPUS_SPEED)));
-    mob->pushComponent(std::make_shared<ClockComponent>());
-    _sendToAllClient(Encoder::newEntity(E_OCTOPUS, mob->getId(), position->getPositionX(), position->getPositionY()));
-}
-
-void RType::HandleEntitySpawnSystem::createMobFly(int posX, int posY)
-{
-    std::shared_ptr<RType::Entity> mob = _addEntity();
-
-    mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_FLY));
-    mob->pushComponent(std::make_shared<RType::HealthComponent>(5));
-    mob->pushComponent(std::make_shared<RType::DamageComponent>(2));
-    auto position = mob->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
-    mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
-    mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 65, 74));
-    mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(UP_N_DOWN_LEFT));
-    mob->pushComponent(std::make_shared<VelocityComponent>(SERVER_SPEED(FLY_SPEED)));
-    mob->pushComponent(std::make_shared<ClockComponent>());
-    _sendToAllClient(Encoder::newEntity(E_FLY, mob->getId(), position->getPositionX(), position->getPositionY()));
-}
-
-void RType::HandleEntitySpawnSystem::createMobSpaceShip(int posX, int posY)
-{
-    std::shared_ptr<RType::Entity> mob = _addEntity();
-
-    mob->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_SMALL_SPACESHIP));
-    mob->pushComponent(std::make_shared<RType::HealthComponent>(2));
-    mob->pushComponent(std::make_shared<RType::DamageComponent>(2));
-    auto position = mob->pushComponent(std::make_shared<RType::PositionComponent>(posX, posY));
-    mob->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
-    mob->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 29, 29));
-    mob->pushComponent(std::make_shared<RType::DirectionPatternComponent>(STRAIGHT_LEFT));
-    mob->pushComponent(std::make_shared<VelocityComponent>(SERVER_SPEED(SPACESHIP_SPEED)));
-    mob->pushComponent(std::make_shared<ClockComponent>());
-    _sendToAllClient(Encoder::newEntity(E_SMALL_SPACESHIP, mob->getId(), position->getPositionX(), position->getPositionY()));
-}
-
-void RType::HandleEntitySpawnSystem::createItemWeapon(int x, int y)
-{
-    std::cout << "create item with pos " << x << ":" << y << std::endl;
-    std::shared_ptr<RType::Entity> item = _addEntity();
-
-    item->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_ITEM_WEAPON));
-    auto position = item->pushComponent(std::make_shared<RType::PositionComponent>(x, y));
-    item->pushComponent(std::make_shared<RType::ScaleComponent>(1.0, 1.0));
-    item->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 32, 32));
-    item->pushComponent(std::make_shared<RType::DirectionPatternComponent>(STRAIGHT_LEFT));
-    item->pushComponent(std::make_shared<VelocityComponent>(SERVER_SPEED(SPACESHIP_SPEED)));
-    item->pushComponent(std::make_shared<ClockComponent>());
-    _sendToAllClient(Encoder::newEntity(E_ITEM_WEAPON, item->getId(), position->getPositionX(), position->getPositionY()));
-}
-
-
-void RType::HandleEntitySpawnSystem::createItemShield(int x, int y)
-{
-    std::cout << "create item with pos " << x << ":" << y << std::endl;
-    std::shared_ptr<RType::Entity> item = _addEntity();
-
-    item->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_ITEM_SHIELD));
-    auto position = item->pushComponent(std::make_shared<RType::PositionComponent>(x, y));
-    item->pushComponent(std::make_shared<RType::ScaleComponent>(1.0, 1.0));
-    item->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 32, 32));
-    item->pushComponent(std::make_shared<RType::DirectionPatternComponent>(STRAIGHT_LEFT));
-    item->pushComponent(std::make_shared<VelocityComponent>(SERVER_SPEED(SPACESHIP_SPEED)));
-    item->pushComponent(std::make_shared<ClockComponent>());
-    _sendToAllClient(Encoder::newEntity(E_ITEM_SHIELD, item->getId(), position->getPositionX(), position->getPositionY()));
+    filepath += std::to_string(type);
+    filepath += ".json";
+    file.open(filepath);
+    if (!file.is_open() || !reader.parse(file, entityInfo)) {
+        std::cerr << "Error while reading or parsing the json: " << filepath << std::endl;
+        return;
+    }
+    file.close();
+    entity->PUSH_TYPE_E(type);
+    POS_COMPONENT position = entity->PUSH_POS_E(posX, posY);
+    entity->PUSH_SCALE_E(entityInfo["scale"]["x"].asFloat(),
+                         entityInfo["scale"]["y"].asFloat());
+    entity->PUSH_RECT_E(entityInfo["rect"]["x"].asInt(),
+                        entityInfo["rect"]["y"].asInt(),
+                        entityInfo["rect"]["width"].asInt(),
+                        entityInfo["rect"]["height"].asInt());
+    entity->PUSH_CLOCK_E();
+    if (entityInfo["health"].asBool() == true)
+        entity->PUSH_HEALTH_E(entityInfo["health"].asInt());
+    if (entityInfo["damage"].asBool() == true)
+        entity->PUSH_DAMAGE_E(entityInfo["damage"].asInt());
+    if (entityInfo["speed"].asBool() == true)
+        entity->PUSH_VELOCITY_E(SERVER_SPEED(entityInfo["speed"].asInt()));
+    if (entityInfo["pattern"].asBool() == true)
+        entity->PUSH_PATTERN_E(static_cast<RType::PatternType>(entityInfo["pattern"].asInt()));
+    _sendToAllClient(Encoder::newEntity(type, entity->getId(), position->getPositionX(), position->getPositionY()));
 }
 
 void RType::HandleEntitySpawnSystem::createShied(std::shared_ptr<RType::Entity> entity) {
@@ -148,5 +104,6 @@ void RType::HandleEntitySpawnSystem::createShied(std::shared_ptr<RType::Entity> 
     shield->pushComponent(std::make_shared<RType::DirectionPatternComponent>(FOLLOW_PLAYER));
     shield->pushComponent(std::make_shared<VelocityComponent>(SERVER_SPEED(10)));
     shield->pushComponent(std::make_shared<ClockComponent>());
+    shield->pushComponent(std::make_shared<MenuComponent>(GAME));
     _sendToAllClient(Encoder::newEntity(E_SHIELD, shield->getId(), position->getPositionX(), position->getPositionY()));
 }

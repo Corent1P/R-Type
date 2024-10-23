@@ -23,9 +23,8 @@ namespace RType {
              * @brief send a message to the endpoint
              *
              * @deprecated
-             * @param message (std::string) the message to send
+             * @param message (const std::basic_string<unsigned char> ) the message to send
              */
-            void send(const std::string &message);
             void send(const std::basic_string<unsigned char> &message);
             void cancel(void);
             std::basic_string<unsigned char> receive(void);

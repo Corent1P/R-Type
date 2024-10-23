@@ -7,7 +7,9 @@
 
 #ifndef TYPECOMPONENT_HPP_
 #define TYPECOMPONENT_HPP_
-#include "../IComponent.hh"
+
+#include "MappingInputComponent.hh"
+
 namespace RType {
     enum EntityType {
         E_OTHER,
@@ -24,6 +26,7 @@ namespace RType {
         E_BULLET_EFFECT,
         E_HIT_EFFECT,
         E_EXPLOSION_EFFECT,
+        E_TEXT,
         E_ITEM_WEAPON,
         E_ITEM_SHIELD,
         E_ITEM_HEAL,
@@ -52,6 +55,8 @@ namespace RType {
             WeaponType getWeaponType() const;
             void setEnemyType(EnemyType powerUpType);
             EnemyType getEnemyType() const;
+            void setButtonType(MappingInput buttonType);
+            MappingInput getButtonType() const;
             std::string getOutput() const;
             static bool isMob(EntityType);
             static bool isItem(EntityType);
@@ -59,6 +64,7 @@ namespace RType {
             EntityType _entityType;
             WeaponType _weaponType;
             EnemyType _enemyType;
+            MappingInput _buttonType;
     };
 }
 #endif /* !TYPECOMPONENT_HPP_ */

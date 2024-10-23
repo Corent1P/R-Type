@@ -8,13 +8,15 @@
 #ifndef HANDLEDRAWSYSTEM_HPP_
 #define HANDLEDRAWSYSTEM_HPP_
 #include "../ASystem.hh"
-#include ".././Components/SFWindowComponent.hh"
-#include ".././Components/SpriteComponent.hh"
-#include ".././Components/PositionComponent.hh"
-#include ".././Components/EntityTypeComponent.hh"
-#include ".././Components/LevelComponent.hh"
+#include "../Components/SFWindowComponent.hh"
+#include "../Components/SpriteComponent.hh"
+#include "../Components/PositionComponent.hh"
+#include "../Components/EntityTypeComponent.hh"
+#include "../Components/LevelComponent.hh"
+#include "../Components/MenuComponent.hh"
 
 #define GET_WINDOW_FOR_DRAW w->getComponent<RType::SFWindowComponent>()
+
 namespace RType {
     /**
      * @brief a system handling Sprite Drawing.
@@ -44,11 +46,20 @@ namespace RType {
             /**
              * @brief a method to verify if a entity has the right components to process the system effect.
              *
-             * @param entity
+             * @param entity the entity to check
              * @return true
              * @return false
              */
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
+            /**
+             * @brief a method to verify if a entity has the right components to process the system effect.
+             *
+             * @param entity the entity to check
+             * @param window the window entity
+             * @return true
+             * @return false
+             */
+            bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity, std::shared_ptr<RType::Entity> window);
         protected:
         private:
             std::vector<std::shared_ptr<RType::Entity>> _entities;

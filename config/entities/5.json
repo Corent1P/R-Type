@@ -1,0 +1,19 @@
+{
+    "name": "octopus",
+    "health": 3,
+    "damage": 2,
+    "sprite":"./ressources/octopus-sheet.png",
+    "scale": {
+        "x": 2.0,
+        "y": 2.0
+    },
+    "rect" : {
+        "x": 0,
+        "y": 0,
+        "width": 41,
+        "height": 46
+    },
+    // UP_N_DOWN_LEFT
+    "pattern": 5,
+    "speed": 1
+}

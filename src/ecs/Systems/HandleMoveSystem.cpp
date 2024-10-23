@@ -7,18 +7,8 @@
 
 #include "HandleMoveSystem.hpp"
 
-RType::HandleMoveSystem::HandleMoveSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
-    ASystem(S_MOVE, addEntity, deleteEntity), _client(nullptr), _sendMessageToAllClient(nullptr)
-{
-}
-
-RType::HandleMoveSystem::HandleMoveSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient):
-    ASystem(S_MOVE, addEntity, deleteEntity), _client(nullptr), _sendMessageToAllClient(sendMessageToAllClient)
-{
-}
-
-RType::HandleMoveSystem::HandleMoveSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::shared_ptr<RType::Client> client):
-    ASystem(S_MOVE, addEntity, deleteEntity), _client(client), _sendMessageToAllClient(nullptr)
+RType::HandleMoveSystem::HandleMoveSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToServer, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient):
+    ASystem(S_MOVE, addEntity, deleteEntity), _sendMessageToServer(sendMessageToServer), _sendMessageToAllClient(sendMessageToAllClient)
 {
 }
 
@@ -35,17 +25,17 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
             sf::Vector2 position = entity->getComponent<PositionComponent>()->getPositions();
 
             if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_PLAYER) {
-                if (entity->getComponent<RType::DirectionComponent>()->getDirections(LEFT) == true) {
-                    movePosition.first -= speed;
+                if (entity->getComponent<RType::DirectionComponent>()->getDirections(LEFT) != 0) {
+                    movePosition.first -= speed * (entity->getComponent<RType::DirectionComponent>()->getDirections(LEFT) / 100.);
                 }
-                if (entity->getComponent<RType::DirectionComponent>()->getDirections(RIGHT) == true) {
-                    movePosition.first += speed;
+                if (entity->getComponent<RType::DirectionComponent>()->getDirections(RIGHT) != 0) {
+                    movePosition.first += speed *(entity->getComponent<RType::DirectionComponent>()->getDirections(RIGHT) / 100.);
                 }
-                if (entity->getComponent<RType::DirectionComponent>()->getDirections(UP) == true) {
-                    movePosition.second -= speed;
+                if (entity->getComponent<RType::DirectionComponent>()->getDirections(UP) != 0) {
+                    movePosition.second -= speed * (entity->getComponent<RType::DirectionComponent>()->getDirections(UP) / 100.);
                 }
-                if (entity->getComponent<RType::DirectionComponent>()->getDirections(DOWN) == true) {
-                    movePosition.second += speed;
+                if (entity->getComponent<RType::DirectionComponent>()->getDirections(DOWN) != 0) {
+                    movePosition.second += speed * (entity->getComponent<RType::DirectionComponent>()->getDirections(DOWN) / 100.);
                 }
                 entity->getComponent<RType::PositionComponent>()->setPositions(position.x + movePosition.first, position.y + movePosition.second);
             }
@@ -78,14 +68,8 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
                 }
             }
 
-            if (_client && (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER || entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_SHIELD) && (movePosition.first != 0 ||  movePosition.second != 0)) {
-                switch(entity->getComponent<RType::EntityTypeComponent>()->getEntityType()) {
-                    case RType::E_PLAYER:
-                        _client->send(Encoder::movePlayer(movePosition.first * 10, movePosition.second * 10));
-                        break;
-                    default:
-                        break;
-                }
+            if (_sendMessageToServer && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER && (movePosition.first != 0 ||  movePosition.second != 0)) {
+                _sendMessageToServer(Encoder::movePlayer(movePosition.first * 10, movePosition.second * 10));
             }
 
             if (_sendMessageToAllClient) {

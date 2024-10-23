@@ -44,13 +44,19 @@ void RType::Server::handleReceive(const boost::system::error_code& error, std::s
     std::shared_ptr<ClientServer> connectedClient = getConnectedClient();
 
     if (!connectedClient) {
-        std::unique_lock<std::mutex> lock(_mtx);
         connectedClient = createClient();
+        if (receivInfo.first == CONNEXION) {
+            std::unique_lock<std::mutex> lock(_mtx);
+            handleConnection(connectedClient);
+        } else {
+            std::unique_lock<std::mutex> lock(_mtx);
+            connectedClient->sendMessage(_socket, Encoder::header(0, RType::PACKET_ERROR));
+            removeClient(connectedClient);
+            startReceive();
+            return;
+        }
     }
-    if (receivInfo.first == CONNEXION) {
-        std::unique_lock<std::mutex> lock(_mtx);
-        handleConnection(connectedClient);
-    } else if (receivInfo.first == DISCONNEXION) {
+    if (receivInfo.first == DISCONNEXION) {
         std::unique_lock<std::mutex> lock(_mtx);
         handleDisconnection(connectedClient);
     } else {
@@ -76,8 +82,20 @@ std::shared_ptr<RType::ClientServer> RType::Server::createClient(void)
     return newClient;
 }
 
+void RType::Server::removeClient(std::shared_ptr<ClientServer> client)
+{
+    for (std::size_t i = 0; i < _clients.size(); i++) {
+        if (_clients[i]->getPortNumber() == client->getPortNumber() && _clients[i]->getAddress() == client->getAddress()) {
+            _clients.erase(std::next(_clients.begin(), i));
+            std::cout << "remove client" << std::endl;
+            break;
+        }
+    }
+}
+
 std::shared_ptr<RType::ClientServer> RType::Server::getConnectedClient(void)
 {
+    std::unique_lock<std::mutex> lock(_mtx);
     for (auto client: _clients)
         if (client->getAddress() == _remoteEndpoint.address() && client->getPortNumber() == _remoteEndpoint.port() && client->getIsConnected())
             return client;
@@ -124,7 +142,7 @@ void RType::Server::handleCommand(std::pair<RType::PacketType, std::vector<long>
     std::unique_lock<std::mutex> lock(_mtx);
     std::shared_ptr<ICommand> com = _commandFactory.createCommand(receivInfo);
     if (!com) {
-        connectedClient->sendMessage(_socket, Encoder::header(0, RType::ERROR));
+        connectedClient->sendMessage(_socket, Encoder::header(0, RType::PACKET_ERROR));
         std::cout << "unvalid command sent by client" << std::endl;
     } else {
         com->execute(connectedClient,
@@ -155,6 +173,7 @@ void RType::Server::gameLoop(void)
                 sys->effects(_coord.getEntities());
             logicTime -= FRAME_SERVER_TIME_LOGIC;
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
 }
 
@@ -168,6 +187,7 @@ void RType::Server::initSystem(void)
     _coord.generateNewSystem(std::make_shared<HandleMoveSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        nullptr,
         std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
     ));
 
@@ -194,5 +214,13 @@ void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)
         if (client->getEntity()->getId() != entity->getId() && (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER || EntityTypeComponent::isMob(entity->getComponent<EntityTypeComponent>()->getEntityType()))) {
             client->sendMessage(_socket, Encoder::newEntity(entity->getComponent<EntityTypeComponent>()->getEntityType(), entity->getId(), entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY()));
         }
+    }
+}
+
+void RType::Server::stop(void)
+{
+    _stopLoop = true;
+    for (auto client: _clients) {
+        client->sendMessage(_socket, Encoder::disconnexion());
     }
 }

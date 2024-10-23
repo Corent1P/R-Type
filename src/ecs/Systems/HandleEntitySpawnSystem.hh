@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include <fstream>
+#include <json/json.h>
+#include <iostream>
 #include "../ASystem.hh"
 #include "../Components/ClockComponent.hh"
 #include "../Components/EntityTypeComponent.hh"
@@ -17,6 +20,19 @@
 #include "../Components/DirectionComponent.hh"
 #include "../Components/DirectionPatternComponent.hh"
 #include "../Components/ScaleComponent.hh"
+#include "../Components/MenuComponent.hh"
+
+#define POS_COMPONENT std::shared_ptr<RType::PositionComponent>
+
+#define PUSH_TYPE_E(type) pushComponent(std::make_shared<RType::EntityTypeComponent>(type))
+#define PUSH_POS_E(x, y) pushComponent(std::make_shared<RType::PositionComponent>(x, y))
+#define PUSH_SCALE_E(x, y) pushComponent(std::make_shared<RType::ScaleComponent>(x, y))
+#define PUSH_RECT_E(x, y, w, h) pushComponent(std::make_shared<RType::IntRectComponent>(x, y, w, h))
+#define PUSH_CLOCK_E() pushComponent(std::make_shared<RType::ClockComponent>())
+#define PUSH_HEALTH_E(hp) pushComponent(std::make_shared<RType::HealthComponent>(hp))
+#define PUSH_DAMAGE_E(dmg) pushComponent(std::make_shared<RType::DamageComponent>(dmg))
+#define PUSH_VELOCITY_E(speed) pushComponent(std::make_shared<RType::VelocityComponent>(speed))
+#define PUSH_PATTERN_E(pattern) pushComponent(std::make_shared<RType::DirectionPatternComponent>(pattern))
 #include "../Components/PowerUpComponent.hh"
 #include "../Components/DamageComponent.hh"
 
@@ -31,14 +47,11 @@ namespace RType {
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
 
         private:
-            void createMobOctopus(int x, int y);
-            void createMobFly(int x, int y);
-            void createMobSpaceShip(int x, int y);
-            void createItemWeapon(int x, int y);
-            void createItemShield(int x, int y);
+            void createEntity(int posX, int posY, EntityType type);
             void createShied(std::shared_ptr<RType::Entity> entity);
 
             std::function<void(const std::basic_string<unsigned char> &message)> _sendToAllClient;
             int _y_spawn = 700;
+            short _sign = -1;
     };
 }
