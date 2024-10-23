@@ -48,12 +48,12 @@ void RType::Server::handleReceive(const boost::system::error_code& error, std::s
         if (receivInfo.first == CONNEXION) {
             std::unique_lock<std::mutex> lock(_mtx);
             handleConnection(connectedClient);
+            return startReceive();
         } else {
             std::unique_lock<std::mutex> lock(_mtx);
             connectedClient->sendMessage(_socket, Encoder::header(0, RType::PACKET_ERROR));
             removeClient(connectedClient);
-            startReceive();
-            return;
+            return startReceive();
         }
     }
     if (receivInfo.first == DISCONNEXION) {
