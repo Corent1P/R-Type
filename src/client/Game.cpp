@@ -592,11 +592,8 @@ void RType::Game::connectToServer(void)
 
 void RType::Game::trySendMessageToServer(const std::basic_string<unsigned char> &message)
 {
-    if (_initConnection) {
-        std::cout << "send disconnexion" << std::endl;
+    if (_initConnection)
         _client.send(message);
-    } else
-        std::cout << "else not send" << std::endl;
 }
 
 std::ostream &operator<<(std::ostream &s, const RType::Game &game)
