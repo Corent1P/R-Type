@@ -42,7 +42,7 @@ set(SRC_SYSTEMS
     ./Systems/HandleAnimationSystem.cpp
     ./Systems/HandlePatternSystem.cpp
     ./Systems/HandleShootSystem.cpp
-    ./Systems/HandleColisionSystem.cpp
+    ./Systems/HandleCollisionSystem.cpp
     ./Systems/HandleEntitySpawnSystem.cpp
 )
 # set(SFML_DIR "../../vcpkg_installed/x64-windows/share/sfml")

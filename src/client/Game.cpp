@@ -129,94 +129,99 @@ void RType::Game::loopReceive()
     while (!_stopLoop) {
         command = _client.receive();
         receiveInfo = Decoder::getCommandInfo(command);
-        if (receiveInfo.first == MOVE_PLAYER)
-            std::cout << "Message received = " << receiveInfo.first << " move with coordinates " << receiveInfo.second[0] << ":" << receiveInfo.second[1] << std::endl;
-        if (receiveInfo.first == NEW_ENTITY) {
-            if (_initConnection) {
-                std::unique_lock<std::mutex> lock(_mtx);
-                createEntity(receiveInfo.second[1],
-                             static_cast<RType::EntityType>(receiveInfo.second[0]),
-                             static_cast<short> (receiveInfo.second[2]),
-                             static_cast<short> (receiveInfo.second[3]));
-                if (receiveInfo.second[0] == E_BULLET)
-                createEntity(E_BULLET_EFFECT,
-                             static_cast<short> (receiveInfo.second[2]),
-                             static_cast<short> (receiveInfo.second[3]));
-            } else {
-                if (receiveInfo.second[0] != E_PLAYER)
-                    continue;
-                std::unique_lock<std::mutex> lock(_mtx);
-                _initConnection = true;
-                auto entities = _coord.getEntities();
-                for (const auto &entity : entities) {
-                    if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER)
-                        entity->setServerId(receiveInfo.second[1]);
-                }
-            }
-        }
-        if (receiveInfo.first == DELETE_ENTITY) {
 
-            std::unique_lock<std::mutex> lock(_mtx);
-            auto entities = _coord.getEntities();
-            for (const auto &entity : entities) {
-                if (entity->getServerId() == receiveInfo.second[0]) {
-                    if (entity->getComponent<RType::EntityTypeComponent>() == nullptr)
+        std::unique_lock<std::mutex> lock(_mtx);
+        auto entities = _coord.getEntities();
+
+        switch (receiveInfo.first) {
+            case NEW_ENTITY:
+                if (_initConnection) {
+                    createEntity(receiveInfo.second[1],
+                                 static_cast<RType::EntityType>(receiveInfo.second[0]),
+                                 static_cast<short>(receiveInfo.second[2]),
+                                 static_cast<short>(receiveInfo.second[3]));
+                    if (receiveInfo.second[0] == E_BULLET)
+                        createEntity(E_BULLET_EFFECT,
+                                     static_cast<short>(receiveInfo.second[2]),
+                                     static_cast<short>(receiveInfo.second[3]));
+                } else {
+                    if (receiveInfo.second[0] != E_PLAYER)
                         continue;
-                    switch (entity->getComponent<RType::EntityTypeComponent>()->getEntityType())
-                    {
-                    case RType::E_BULLET:
-                        createEntity(E_HIT_EFFECT, entity->GET_POSITION_X,
-                                     entity->GET_POSITION_Y);
-                        _coord.deleteEntity(entity);
-                        break;
-                    case RType::E_ENNEMY_BULLET:
-                        createEntity(E_HIT_EFFECT, entity->GET_POSITION_X,
-                                     entity->GET_POSITION_Y);
-                        _coord.deleteEntity(entity);
-                        break;
-                    case RType::E_OCTOPUS:
-                        createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X,
-                                     entity->GET_POSITION_Y);
-                        _coord.deleteEntity(entity);
-                        break;
-                    case RType::E_FLY:
-                        createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X,
-                                     entity->GET_POSITION_Y);
-                        _coord.deleteEntity(entity);
-                        break;
-                    case RType::E_SMALL_SPACESHIP:
-                        createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X,
-                                     entity->GET_POSITION_Y);
-                        _coord.deleteEntity(entity);
-                        break;
-                        break;
-                    case RType::E_PLAYER:
-                        _coord.deleteEntity(entity);
-                        break;
-                    default:
+                    _initConnection = true;
+                    for (const auto &entity : entities) {
+                        if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER)
+                            entity->setServerId(receiveInfo.second[1]);
+                    }
+                }
+                break;
+
+            case DELETE_ENTITY:
+                for (const auto &entity : entities) {
+                    if (entity->getServerId() == receiveInfo.second[0]) {
+                        if (entity->getComponent<RType::EntityTypeComponent>() == nullptr)
+                            continue;
+                        switch (entity->getComponent<RType::EntityTypeComponent>()->getEntityType()) {
+                            case RType::E_BULLET:
+                            case RType::E_ENNEMY_BULLET:
+                                createEntity(E_HIT_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
+                                _coord.deleteEntity(entity);
+                                break;
+                            case RType::E_OCTOPUS:
+                            case RType::E_FLY:
+                            case RType::E_SMALL_SPACESHIP:
+                                createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
+                                _coord.deleteEntity(entity);
+                                break;
+                            case RType::E_PLAYER:
+                                if (entity->getComponent<ActionComponent>())
+                                    std::cout << "§!§!§ YOU ARE DEAD §!§!§" << std::endl;
+                                _coord.deleteEntity(entity);
+                                break;
+                            default:
+                                break;
+                        }
                         break;
                     }
-                    break;
                 }
-            }
-        }
-        if (receiveInfo.first == MOVE_ENTITY) {
-            std::unique_lock<std::mutex> lock(_mtx);
-            auto entities = _coord.getEntities();
-            for (const auto &entity : entities) {
-                if (entity->getServerId() == receiveInfo.second[0] && entity->getComponent<RType::PositionComponent>() && entity->getComponent<RType::SpriteComponent>()) {
-                    entity->getComponent<RType::PositionComponent>()->setPositions(static_cast<short>(receiveInfo.second[1]), static_cast<short> (receiveInfo.second[2]));
-                    entity->getComponent<RType::SpriteComponent>()->getSprite()->setPosition(static_cast<short>(receiveInfo.second[1]), static_cast<short> (receiveInfo.second[2]));
-                    break;
+                break;
+
+            case MOVE_ENTITY:
+                for (const auto &entity : entities) {
+                    if (entity->getServerId() == receiveInfo.second[0] &&
+                        entity->getComponent<RType::PositionComponent>() &&
+                        entity->getComponent<RType::SpriteComponent>()) {
+                        entity->getComponent<RType::PositionComponent>()->setPositions(
+                            static_cast<short>(receiveInfo.second[1]), static_cast<short>(receiveInfo.second[2]));
+                        entity->getComponent<RType::SpriteComponent>()->getSprite()->setPosition(
+                            static_cast<short>(receiveInfo.second[1]), static_cast<short>(receiveInfo.second[2]));
+                        break;
+                    }
                 }
-            }
-        }
-        if (receiveInfo.first == DISCONNEXION) {
-            std::unique_lock<std::mutex> lock(_mtx);
-            _stopLoop = true;
+                break;
+
+            case DISCONNEXION:
+                _stopLoop = true;
+                break;
+
+            case INFO_ENTITY:
+                for (const auto &entity : entities) {
+                    if (entity->getServerId() == receiveInfo.second[0]) {
+                        if (entity->getComponent<RType::PositionComponent>())
+                            entity->getComponent<RType::PositionComponent>()->setPositions(
+                                static_cast<short>(receiveInfo.second[2]), static_cast<short>(receiveInfo.second[3]));
+                        if (entity->getComponent<RType::HealthComponent>()) {
+                            entity->getComponent<RType::HealthComponent>()->setHealth(receiveInfo.second[5]);
+                        }
+                        break;
+                    }
+                }
+
+            default:
+                break;
         }
     }
 }
+
 
 void RType::Game::createMenu()
 {

@@ -2,26 +2,26 @@
 ** EPITECH PROJECT, 2024
 ** R-Type
 ** File description:
-** handle entity Colision methods
+** handle entity Collision methods
 */
 
-#include "HandleColisionSystem.hpp"
+#include "HandleCollisionSystem.hpp"
 
-RType::HandleColisionSystem::HandleColisionSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
+RType::HandleCollisionSystem::HandleCollisionSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
     ASystem(S_COLISION, addEntity, deleteEntity), _sendMessageToAllClient(nullptr)
 {
 }
 
-RType::HandleColisionSystem::HandleColisionSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient):
+RType::HandleCollisionSystem::HandleCollisionSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient):
     ASystem(S_COLISION, addEntity, deleteEntity), _sendMessageToAllClient(sendMessageToAllClient)
 {
 }
 
-RType::HandleColisionSystem::~HandleColisionSystem()
+RType::HandleCollisionSystem::~HandleCollisionSystem()
 {
 }
 
-void RType::HandleColisionSystem::effects(std::vector<std::shared_ptr<RType::Entity>> entities) {
+void RType::HandleCollisionSystem::effects(std::vector<std::shared_ptr<RType::Entity>> entities) {
     _entitiesToDestroy.clear();
     _entitiesColidingBefore = _entitiesColiding;
     _entitiesColiding.clear();
@@ -34,7 +34,7 @@ void RType::HandleColisionSystem::effects(std::vector<std::shared_ptr<RType::Ent
             }
         }
     }
-    handleEntityColisions();
+    handleEntityCollisions();
     for (const auto &entity: _entitiesToDestroy) {
         if (_sendMessageToAllClient) {
             _sendMessageToAllClient(Encoder::deleteEntity(entity->getId()));
@@ -43,12 +43,12 @@ void RType::HandleColisionSystem::effects(std::vector<std::shared_ptr<RType::Ent
     }
 }
 
-void RType::HandleColisionSystem::effect(std::shared_ptr<RType::Entity> entity)
+void RType::HandleCollisionSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
     (void) entity;
 }
 
-bool RType::HandleColisionSystem::verifyRequiredComponent(std::shared_ptr<RType::Entity> entity)
+bool RType::HandleCollisionSystem::verifyRequiredComponent(std::shared_ptr<RType::Entity> entity)
 {
     if (entity->getComponent<RType::PositionComponent>() == nullptr
         || entity->getComponent<RType::IntRectComponent>() == nullptr
@@ -58,7 +58,7 @@ bool RType::HandleColisionSystem::verifyRequiredComponent(std::shared_ptr<RType:
     return (true);
 }
 
-bool RType::HandleColisionSystem::collides(std::shared_ptr<RType::Entity> entity1, std::shared_ptr<RType::Entity> entity2)
+bool RType::HandleCollisionSystem::collides(std::shared_ptr<RType::Entity> entity1, std::shared_ptr<RType::Entity> entity2)
 {
     if (entity1->getId() == entity2->getId())
         return false;
@@ -80,47 +80,53 @@ bool RType::HandleColisionSystem::collides(std::shared_ptr<RType::Entity> entity
     );
 }
 
-void RType::HandleColisionSystem::handleEntityColision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &colidingPair)
+void RType::HandleCollisionSystem::handleEntityCollision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &colidingPair)
 {
     const auto &entity1 = colidingPair.first;
     const auto &entity2 = colidingPair.second;
     EntityType entityType1 = GET_ENTITY_TYPE(entity1);
     EntityType entityType2 = GET_ENTITY_TYPE(entity2);
 
-    if (entityType1 == RType::E_ENNEMY_BULLET && entityType2 == RType::E_PLAYER) {
-        _entitiesToDestroy.push_back(entity1);
-        entity2->getComponent<HealthComponent>()->setHealth(entity2->getComponent<HealthComponent>()->getHealth() - 1);
-        if (entity2->getComponent<HealthComponent>()->getHealth() <= 0)
-            _entitiesToDestroy.push_back(entity2);
+    if (entityType1 == RType::E_PLAYER && entityType2 == RType::E_ENNEMY_BULLET) {
+        _entitiesToDestroy.push_back(entity2);
+        decreaseHealth(entity1, 1);
     } else if (entityType1 == RType::E_PLAYER && EntityTypeComponent::isMob(entityType2)) {
-        entity1->getComponent<HealthComponent>()->setHealth(entity1->getComponent<HealthComponent>()->getHealth() - 1);
-        if (entity1->getComponent<HealthComponent>()->getHealth() <= 0)
-            _entitiesToDestroy.push_back(entity1);
-        entity2->getComponent<HealthComponent>()->setHealth(entity2->getComponent<HealthComponent>()->getHealth() - 1);
-        if (entity2->getComponent<HealthComponent>()->getHealth() <= 0)
-            _entitiesToDestroy.push_back(entity2);
-    } else if (entityType1 == RType::E_BULLET && EntityTypeComponent::isMob(entityType2)) {
-        _entitiesToDestroy.push_back(entity1);
-        entity2->getComponent<HealthComponent>()->setHealth(entity2->getComponent<HealthComponent>()->getHealth() - 1);
-        if (entity2->getComponent<HealthComponent>()->getHealth() <= 0)
-            _entitiesToDestroy.push_back(entity2);
+        decreaseHealth(entity1, 1);
+        decreaseHealth(entity2, 1);
+    } else if (EntityTypeComponent::isMob(entityType1) && entityType2 == RType::E_BULLET) {
+        _entitiesToDestroy.push_back(entity2);
+        decreaseHealth(entity1, 1);
+
     }
 }
 
-void RType::HandleColisionSystem::handleEntityColisions(void)
+void RType::HandleCollisionSystem::handleEntityCollisions(void)
 {
     for (const auto &colidingPair: _entitiesColiding) {
-        if (isInPastColision(colidingPair))
+        if (isInPastCollision(colidingPair))
             continue;
-        handleEntityColision(colidingPair);
+        handleEntityCollision(colidingPair);
     }
 }
 
-bool RType::HandleColisionSystem::isInPastColision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &colidingPair)
+bool RType::HandleCollisionSystem::isInPastCollision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &colidingPair)
 {
     for (const auto &colidingPairBefore: _entitiesColidingBefore) {
         if (colidingPair == colidingPairBefore)
             return true;
     }
     return false;
+}
+
+void RType::HandleCollisionSystem::decreaseHealth(std::shared_ptr<RType::Entity> entity, int damage)
+{
+    auto healthComponent = entity->getComponent<HealthComponent>();
+    healthComponent->setHealth(healthComponent->getHealth() - damage);
+    if (healthComponent->getHealth() <= 0)
+        _entitiesToDestroy.push_back(entity);
+    else if (healthComponent->getHealth() > 0 && _sendMessageToAllClient && GET_ENTITY_TYPE(entity) == E_PLAYER) {
+        std::cout << "health: " << healthComponent->getHealth() << std::endl;
+        _sendMessageToAllClient(Encoder::infoEntity(entity->getId(), E_PLAYER,
+            entity->GET_POSITION_X,  entity->GET_POSITION_Y, 0, healthComponent->getHealth()));
+    }
 }

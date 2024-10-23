@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** R-Type
 ** File description:
-** system used to handle entity colision
+** system used to handle entity collision
 */
 
 #ifndef HANDLECOLISIONSYTEM_HPP_
@@ -24,28 +24,28 @@
 
 namespace RType {
 
-    class HandleColisionSystem: public  RType::ASystem {
+    class HandleCollisionSystem: public  RType::ASystem {
         public:
             /**
-             * @brief Construct a new Handle Colision System object
+             * @brief Construct a new Handle Collision System object
              *
              * @param addEntity The function to add an entity into the coordinator
              * @param deleteEntity The function to delete an entity from the coordinator
              */
-            HandleColisionSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
+            HandleCollisionSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity);
             /**
-             * @brief Construct a new Handle Colision System object
+             * @brief Construct a new Handle Collision System object
              *
              * @param addEntity The function to add an entity into the coordinator
              * @param deleteEntity The function to delete an entity from the coordinator
              * @param sendMessageToAllClient The function to send a message to all clients connected
              */
-            HandleColisionSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient);
+            HandleCollisionSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient);
             /**
-             * @brief Destroy the Handle Colision System object
+             * @brief Destroy the Handle Collision System object
              *
              */
-            ~HandleColisionSystem();
+            ~HandleCollisionSystem();
             /**
              * @brief method looping on each entities in order to check if they have the mendatory Component in order to process the system effect.
              *        Also used to process a system effect if two distincts entites are involved in the procces.
@@ -97,22 +97,24 @@ namespace RType {
              */
             bool collides(std::shared_ptr<RType::Entity> entity1, std::shared_ptr<RType::Entity> entity2);
             /**
-             * @brief a method to handle the colision between two entities
+             * @brief a method to handle the collision between two entities
              *
              */
-            void handleEntityColision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &entitiesColliding);
+            void handleEntityCollision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &entitiesColliding);
             /**
-             * @brief a method to handle the colision between all entities
+             * @brief a method to handle the collision between all entities
              *
              */
-            void handleEntityColisions(void);
+            void handleEntityCollisions(void);
             /**
-             * @brief a method to check if the colision was already here in the previous loop
+             * @brief a method to check if the collision was already here in the previous loop
              *
              * @param colidingPair the entities that are colliding
-             * @return if the colision is in the past
+             * @return if the collision is in the past
              */
-            bool isInPastColision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &colidingPair);
+            bool isInPastCollision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &colidingPair);
+
+            void decreaseHealth(std::shared_ptr<RType::Entity> entity, int damage);
     };
 }
 #endif /* !HANDLECOLISIONSYTEM_HPP_ */

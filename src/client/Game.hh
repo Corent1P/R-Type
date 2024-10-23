@@ -48,7 +48,7 @@
 #include "../ecs/Systems/HandleAnimationSystem.hpp"
 #include "../ecs/Systems/HandlePatternSystem.hpp"
 #include "../ecs/Systems/HandleShootSystem.hpp"
-#include "../ecs/Systems/HandleColisionSystem.hpp"
+#include "../ecs/Systems/HandleCollisionSystem.hpp"
 #include <thread>
 #include "../protocolHandler/Encoder.hh"
 #include "../protocolHandler/Decoder.hh"
