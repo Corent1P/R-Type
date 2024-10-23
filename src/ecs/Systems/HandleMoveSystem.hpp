@@ -61,6 +61,7 @@ namespace RType {
         private:
             std::function<void(const std::basic_string<unsigned char> &message)> _sendMessageToServer;
             std::function<void(const std::basic_string<unsigned char> &message)> _sendMessageToAllClient;
+            void setShieldPosition(std::vector<std::shared_ptr<RType::Entity>> entities, int playerId, sf::Vector2f position);
     };
 }
 #endif /* !HANDLEMOVESYTEM_HPP_ */

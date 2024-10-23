@@ -27,6 +27,8 @@ set(SRC_COMPONENTS
     ./Components/TextComponent.cpp
     ./Components/ClickEffectComponent.cpp
     ./Components/MenuComponent.cpp
+    ./Components/DamageComponent.cpp
+    ./Components/PowerUpComponent.cpp
 )
 
 set(SRC_SYSTEMS

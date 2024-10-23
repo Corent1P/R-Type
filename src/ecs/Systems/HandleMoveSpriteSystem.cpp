@@ -27,7 +27,6 @@ void RType::HandleMoveSpriteSystem::effects(std::vector<std::shared_ptr<RType::E
 
                     sf::Vector2 position = entity->getComponent<PositionComponent>()->getPositions();
                     entity->getComponent<RType::SpriteComponent>()->getSprite()->setPosition(position);
-
                     if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_PLAYER) {
                         if (entity->getComponent<RType::DirectionComponent>()->getDirections(LEFT) == true && spriteBounds.left <= 0) {
                             entity->getComponent<RType::SpriteComponent>()->getSprite()->setPosition(0, position.y);

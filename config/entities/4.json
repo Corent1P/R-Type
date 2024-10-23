@@ -1,6 +1,7 @@
 {
     "name": "small space ship",
     "health": 2,
+    "damage": 2,
     "sprite":"./ressources/enemy-sheet.png",
     "scale": {
         "x": 2.0,

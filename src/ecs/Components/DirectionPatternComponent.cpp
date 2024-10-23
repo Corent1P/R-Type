@@ -46,6 +46,14 @@ sf::Vector2f RType::DirectionPatternComponent::getPattern() const
     return (_pattern);
 }
 
+void RType::DirectionPatternComponent::setEntityToFollow(uint16_t entityToFollow) {
+    _entityToFollow = entityToFollow;
+}
+
+uint16_t RType::DirectionPatternComponent::getEntityToFollow() const {
+    return (_entityToFollow);
+}
+
 std::string RType::DirectionPatternComponent::getOutput() const
 {
     std::string pattern("");

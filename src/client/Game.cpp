@@ -169,6 +169,21 @@ void RType::Game::loopReceive()
                                      entity->GET_POSITION_Y);
                         _coord.deleteEntity(entity);
                         break;
+                    case RType::E_BULLET_2:
+                        createEntity(E_HIT_EFFECT, entity->GET_POSITION_X,
+                                     entity->GET_POSITION_Y);
+                        _coord.deleteEntity(entity);
+                        break;
+                    case RType::E_BULLET_3:
+                        createEntity(E_HIT_EFFECT, entity->GET_POSITION_X,
+                                     entity->GET_POSITION_Y);
+                        _coord.deleteEntity(entity);
+                        break;
+                    case RType::E_BULLET_4:
+                        createEntity(E_HIT_EFFECT, entity->GET_POSITION_X,
+                                     entity->GET_POSITION_Y);
+                        _coord.deleteEntity(entity);
+                        break;
                     case RType::E_OCTOPUS:
                         createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X,
                                      entity->GET_POSITION_Y);
@@ -184,8 +199,17 @@ void RType::Game::loopReceive()
                                      entity->GET_POSITION_Y);
                         _coord.deleteEntity(entity);
                         break;
+                    case RType::E_ITEM_WEAPON:
+                        _coord.deleteEntity(entity);
+                        break;
+                    case RType::E_ITEM_SHIELD:
+                        _coord.deleteEntity(entity);
+                        break;
                         break;
                     case RType::E_PLAYER:
+                        _coord.deleteEntity(entity);
+                        break;
+                    case RType::E_SHIELD:
                         _coord.deleteEntity(entity);
                         break;
                     default:
@@ -378,6 +402,8 @@ void RType::Game::createEntity(const RType::EntityType &type, const int &posX,
     entity->PUSH_CLOCK_E();
     if (entityInfo["health"].asBool() == true)
         entity->PUSH_HEALTH_E(entityInfo["health"].asInt());
+    if (entityInfo["damage"].asBool() == true)
+        entity->PUSH_DAMAGE_E(entityInfo["damage"].asInt());
     if (entityInfo["speed"].asBool() == true)
         entity->PUSH_VELOCITY_E(entityInfo["speed"].asInt());
     if (entityInfo["pattern"].asBool() == true)
@@ -423,12 +449,20 @@ void RType::Game::createEntity(const long &serverId, const RType::EntityType &ty
     entity->PUSH_CLOCK_E();
     if (entityInfo["health"].asBool() == true)
         entity->PUSH_HEALTH_E(entityInfo["health"].asInt());
+    if (entityInfo["damage"].asBool() == true)
+        entity->PUSH_DAMAGE_E(entityInfo["damage"].asInt());
     if (entityInfo["speed"].asBool() == true)
         entity->PUSH_VELOCITY_E(entityInfo["speed"].asInt());
     if (entityInfo["pattern"].asBool() == true)
         entity->PUSH_PATTERN_E(static_cast<RType::PatternType>(entityInfo["pattern"].asInt()));
     entity->PUSH_MENU_COMPONENT_E(GAME);
     file.close();
+    if (type == E_SHIELD) {
+        std::shared_ptr<RType::Entity> playerEntity = getPlayerEntity();
+        if (playerEntity == nullptr)
+            return;
+        entity->getComponent<RType::DirectionPatternComponent>()->setEntityToFollow(playerEntity->getId());
+    }
 }
 
 void RType::Game::createPlayer()
@@ -449,7 +483,12 @@ void RType::Game::createPlayer()
     player->pushComponent(std::make_shared<RType::ClockComponent>());
     player->pushComponent(std::make_shared<RType::ActionComponent>());
     player->pushComponent(std::make_shared<VelocityComponent>(10));
+    player->pushComponent(std::make_shared<RType::DamageComponent>(1));
+    player->pushComponent(std::make_shared<RType::PowerUpComponent>());
     player->PUSH_MENU_COMPONENT_E(GAME);
+    player->pushComponent(std::make_shared<VelocityComponent>(10));
+    player->pushComponent(std::make_shared<RType::DamageComponent>(1));
+    player->pushComponent(std::make_shared<RType::PowerUpComponent>());
 }
 
 void RType::Game::createWindow()
@@ -596,6 +635,7 @@ void RType::Game::trySendMessageToServer(const std::basic_string<unsigned char> 
         _client.send(message);
 }
 
+
 std::ostream &operator<<(std::ostream &s, const RType::Game &game)
 {
     s << game.getCoordinator();
@@ -606,4 +646,16 @@ void RType::Game::disconnexion(void)
 {
     // trySendMessageToServer(Encoder::disconnexion());
     // _initConnection = false;
+}
+
+std::shared_ptr<RType::Entity> RType::Game::getPlayerEntity(void)
+{
+    auto entities = _coord.getEntities();
+    for (const auto &entity : entities) {
+        if (!entity->getComponent<RType::EntityTypeComponent>())
+            continue;
+        if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER)
+            return entity;
+    }
+    return nullptr;
 }

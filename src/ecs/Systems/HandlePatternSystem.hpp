@@ -8,12 +8,14 @@
 #ifndef HANDLEPATTERNSYSTEM_HPP_
 #define HANDLEPATTERNSYSTEM_HPP_
 #include "../ASystem.hh"
-#include ".././Components/SFWindowComponent.hh"
-#include ".././Components/SpriteComponent.hh"
-#include ".././Components/PositionComponent.hh"
-#include ".././Components/ClockComponent.hh"
-#include ".././Components/EntityTypeComponent.hh"
-#include ".././Components/DirectionPatternComponent.hh"
+#include "../Components/SFWindowComponent.hh"
+#include "../Components/SpriteComponent.hh"
+#include "../Components/PositionComponent.hh"
+#include "../Components/ClockComponent.hh"
+#include "../Components/EntityTypeComponent.hh"
+#include "../Components/DirectionPatternComponent.hh"
+#include "../Components/IntRectComponent.hh"
+#include "../Components/ScaleComponent.hh"
 
 namespace RType {
     /**
@@ -35,6 +37,13 @@ namespace RType {
              */
             ~HandlePatternSystem();
             /**
+             * @brief method looping on each entities in order to check if they have the mendatory Component in order to process the system effect.
+             *        Also used to process a system effect if two distincts entites are involved in the procces.
+             *
+             * @param entities a vector that contains each entity stored in the coordinator.
+             */
+            void effects(std::vector<std::shared_ptr<RType::Entity>> entities);
+            /**
              * @brief a method to handle the System action on the right entity.
              *
              * @param entity entity required in order to process a action.
@@ -51,6 +60,8 @@ namespace RType {
         protected:
         private:
             std::vector<std::shared_ptr<RType::Entity>> _entities;
+
+            void handlePatternFollowEntities(std::vector<std::shared_ptr<RType::Entity>> &entities, const std::shared_ptr<RType::Entity> &entity);
     };
 }
 
