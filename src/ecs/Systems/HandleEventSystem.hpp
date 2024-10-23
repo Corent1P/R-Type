@@ -22,6 +22,7 @@
 #include "../Components/PositionComponent.hh"
 #include "../Components/TextComponent.hh"
 #include "../Components/MenuComponent.hh"
+#include "../Components/SFWindowComponent.hh"
 
 #define GET_WINDOW_SET_ISOPEN entity->getComponent<RType::SFWindowComponent>()
 #define GET_WINDOW_POLL_EVENT e->getComponent<RType::SFWindowComponent>()->getWindow()

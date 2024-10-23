@@ -165,8 +165,10 @@ void RType::HandleEventSystem::handleClickOnButton(std::shared_ptr<RType::Entity
                 int mouseX = mouseEvent.x;
                 int mouseY = mouseEvent.y;
 
-                if (mouseX >= boxX && mouseX <= (boxX + boxWidth) &&
-                    mouseY >= boxY && mouseY <= (boxY + boxHeight)) {
+                auto coord = window->getComponent<RType::SFWindowComponent>()->getWindow()->mapPixelToCoords({mouseX, mouseY});
+                sf::IntRect hitbox ({boxX, boxY}, {boxWidth, boxHeight});
+
+                if (hitbox.contains(sf::Vector2i(coord))) {
                     CLICK_ON_BUTTON;
                 }
             }

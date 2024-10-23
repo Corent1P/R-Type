@@ -62,6 +62,7 @@ namespace RType {
         protected:
         private:
             const std::string& getDotString(void);
+            void drawHitBox(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &entity);
             std::vector<std::shared_ptr<RType::Entity>> _entities;
             std::string _dotString;
             std::size_t _dotCounter;
