@@ -169,6 +169,21 @@ void RType::Game::loopReceive()
                                      entity->GET_POSITION_Y);
                         _coord.deleteEntity(entity);
                         break;
+                    case RType::E_BULLET_2:
+                        createEntity(E_HIT_EFFECT, entity->GET_POSITION_X,
+                                     entity->GET_POSITION_Y);
+                        _coord.deleteEntity(entity);
+                        break;
+                    case RType::E_BULLET_3:
+                        createEntity(E_HIT_EFFECT, entity->GET_POSITION_X,
+                                     entity->GET_POSITION_Y);
+                        _coord.deleteEntity(entity);
+                        break;
+                    case RType::E_BULLET_4:
+                        createEntity(E_HIT_EFFECT, entity->GET_POSITION_X,
+                                     entity->GET_POSITION_Y);
+                        _coord.deleteEntity(entity);
+                        break;
                     case RType::E_OCTOPUS:
                         createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X,
                                      entity->GET_POSITION_Y);

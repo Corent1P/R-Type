@@ -67,6 +67,12 @@ bool RType::EntityTypeComponent::isItem(EntityType entityType)
     return entityType == E_ITEM_WEAPON || entityType == E_ITEM_HEAL || entityType == E_ITEM_SHIELD;
 }
 
+bool RType::EntityTypeComponent::isWeapon(EntityType entityType)
+{
+    return entityType == E_BULLET || entityType == E_BULLET_2 || entityType == E_BULLET_3 || entityType == E_BULLET_4;
+}
+
+
 std::string RType::EntityTypeComponent::getOutput() const
 {
     std::string entityType("");

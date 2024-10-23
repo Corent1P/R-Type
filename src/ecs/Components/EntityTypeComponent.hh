@@ -31,12 +31,16 @@ namespace RType {
         E_ITEM_SHIELD,
         E_ITEM_HEAL,
         E_SHIELD,
+        E_BULLET_2,
+        E_BULLET_3,
+        E_BULLET_4,
     };
 
     enum WeaponType {
         LVL_1,
         LVL_2,
         LVL_3,
+        LVL_4,
     };
 
     enum EnemyType {
@@ -60,6 +64,7 @@ namespace RType {
             std::string getOutput() const;
             static bool isMob(EntityType);
             static bool isItem(EntityType);
+            static bool isWeapon(EntityType);
         private:
             EntityType _entityType;
             WeaponType _weaponType;

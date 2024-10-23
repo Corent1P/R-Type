@@ -103,11 +103,11 @@ void RType::HandleColisionSystem::handleEntityColision(const std::pair<std::shar
         std::cout << "Player intersect mob" << std::endl;
     if (EntityTypeComponent::isMob(entityType1) && entityType2 == RType::E_PLAYER)
         std::cout << "Mob intersect Player" << std::endl;
-    if (entityType1 == RType::E_BULLET && EntityTypeComponent::isMob(entityType2)) {
-        _entitiesToDestroy.push_back(entity1);
+    if (EntityTypeComponent::isWeapon(entityType1) && EntityTypeComponent::isMob(entityType2)) {
         entity2->getComponent<HealthComponent>()->setHealth(entity2->getComponent<HealthComponent>()->getHealth() - entity1->getComponent<DamageComponent>()->getDamage());
         if (entity2->getComponent<HealthComponent>()->getHealth() <= 0)
             _entitiesToDestroy.push_back(entity2);
+        _entitiesToDestroy.push_back(entity1);
         std::cout << "Bullet intersect mob" << std::endl;
     }
     if (entityType1 == RType::E_PLAYER && EntityTypeComponent::isItem(entityType2)) {
@@ -133,8 +133,9 @@ void RType::HandleColisionSystem::handleItemEffect(std::shared_ptr<RType::Entity
     switch(entity2->getComponent<EntityTypeComponent>()->getEntityType())
     {
         case RType::E_ITEM_WEAPON:
-            if (entity1->getComponent<RType::DamageComponent>()->getDamage() <= 5){
-                std::cout << "improve weapon" << std::endl;
+            if (entity1->getComponent<RType::EntityTypeComponent>()->getWeaponType() <= 2) {
+                std::cout << "improve weapon lvl: " << entity1->getComponent<RType::EntityTypeComponent>()->getWeaponType() << std::endl;
+                entity1->getComponent<RType::EntityTypeComponent>()->setWeaponType(RType::WeaponType(entity1->getComponent<RType::EntityTypeComponent>()->getWeaponType() + 1));
                 entity1->getComponent<RType::DamageComponent>()->setDamage(entity1->getComponent<RType::DamageComponent>()->getDamage() + 1);
             }
             break;
