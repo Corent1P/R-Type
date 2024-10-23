@@ -148,6 +148,9 @@ namespace RType {
         for (std::size_t i = 0; i < smallest_suite; i++) {
             args[i] = i;
         }
+        if (getSize(packet) == 2) {
+            return args;
+        }
         for (std::size_t i = 0; i + smallest_suite < biggest_packet; i++) {
             if ((packet[i / 8 + 6] & (1 << (i % 8))) != 0) {
                 args[nbFound] = i + smallest_suite;

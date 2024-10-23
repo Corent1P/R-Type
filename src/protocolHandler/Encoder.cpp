@@ -11,6 +11,7 @@
 #include <bitset>
 #include <algorithm>
 #include <cstdint>
+#include <ostream>
 #include <vector>
 
 namespace RType {
@@ -149,28 +150,34 @@ namespace RType {
     {
         U_STRING encoded;
         std::vector<std::uint8_t> chars(MAX_PACKETS / 8, 0);
-        std::size_t smallest_suite = 0;
-        std::size_t biggest_packet = packets[packets.size() - 1];
-        // std::size_t last_packet = 0;
+        std::size_t smallestSuite = 0;
+        std::size_t biggestPacket = 0;
+        std::size_t packetSize = 0;
 
+        if (packets.size() == 0)
+            return header(encoded.size(), ACK_MISSING);
+        biggestPacket = packets.back();
+        packetSize = packets.size();
         std::sort(packets.begin(), packets.end());
-        while (smallest_suite == packets[0]) {
-            smallest_suite++;
+        while (smallestSuite == packets[0]) {
+            smallestSuite++;
             packets.erase(packets.begin());
         }
-        encoded += smallest_suite >> 8;
-        encoded += smallest_suite & 0xff;
+        encoded += smallestSuite >> 8;
+        encoded += smallestSuite & 0xff;
+        if (smallestSuite == packetSize)
+            return header(encoded.size(), ACK_MISSING) + encoded;
         for (auto packet : packets) {
-            packet -= smallest_suite;
-            if (packet == biggest_packet)
+            packet -= smallestSuite;
+            if (packet == biggestPacket)
                 break;
             chars[packet / 8] += 1 << (packet % 8);
         }
-        chars.resize((biggest_packet - smallest_suite) / 8 + 1);
+        chars.resize(biggestPacket / 8 + 1);
         for (auto char_ : chars)
             encoded += char_;
-        encoded += biggest_packet >> 8;
-        encoded += biggest_packet & 0xff;
+        encoded += biggestPacket >> 8;
+        encoded += biggestPacket & 0xff;
         return header(encoded.size(), ACK_MISSING) + encoded;
     }
 }
