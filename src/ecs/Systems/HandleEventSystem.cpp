@@ -7,8 +7,8 @@
 
 #include "HandleEventSystem.hpp"
 
-RType::HandleEventSystem::HandleEventSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
-    ASystem(S_EVENT, addEntity, deleteEntity), _isShooting(false)
+RType::HandleEventSystem::HandleEventSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::function<void(void)> disconnexion):
+    ASystem(S_EVENT, addEntity, deleteEntity), _isShooting(false), _disconnexion(disconnexion)
 {
 }
 
@@ -25,8 +25,11 @@ void RType::HandleEventSystem::effects(std::vector<std::shared_ptr<RType::Entity
                     GET_WINDOW_POLL_EVENT->close();
                 }
                 modifyInput(entities, e);
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                    if (_disconnexion)
+                        _disconnexion();
                     e->getComponent<RType::MenuComponent>()->setMenu(HOME);
+                }
                 for (const auto &player: entities) {
                     handleInputPlayer(player, e, inputs);
                     handleClickOnButton(player, e);
