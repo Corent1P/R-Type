@@ -54,6 +54,10 @@ void RType::Game::gameLoop()
     float renderTime = 0.0;
     float deltaTime = 0.0;
 
+    int frameCount = 0;
+    float fpsTime = 0.0;
+    float fps = 0.0;
+
     for (auto sys : _coord.getSystems()) {
         if (sys->getType() == SystemType::S_DRAW)
             drawSystem = sys;
@@ -93,7 +97,9 @@ void RType::Game::gameLoop()
         }
 
         renderTime += deltaTime;
+        fpsTime += deltaTime;
         if (renderTime >= RENDER_FRAME_TIME) {
+            frameCount++;
             if (clearSystem != nullptr) {
                 std::unique_lock<std::mutex> lock(_mtx);
                 clearSystem->effects(_coord.getEntities());
@@ -118,6 +124,14 @@ void RType::Game::gameLoop()
                 break;
             }
         }
+
+        if (fpsTime >= 1.0) {
+            fps = frameCount / fpsTime;
+            std::cout << "FPS: " << fps << std::endl;
+            frameCount = 0;
+            fpsTime = 0.0;
+        }
+
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
 }
