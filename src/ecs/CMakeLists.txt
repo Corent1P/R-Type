@@ -28,6 +28,7 @@ set(SRC_COMPONENTS
     ./Components/ClickEffectComponent.cpp
     ./Components/MenuComponent.cpp
     ./Components/SoundComponent.cpp
+    ./Components/SoundBufferComponent.cpp
 )
 
 set(SRC_SYSTEMS
@@ -35,6 +36,7 @@ set(SRC_SYSTEMS
     ./Systems/HandleClearSystem.cpp
     ./Systems/HandleDrawSystem.cpp
     ./Systems/HandleDrawTextSystem.cpp
+    ./Systems/HandleSoundSystem.cpp
     ./Systems/HandleDisplaySystem.cpp
     ./Systems/HandleMoveSystem.cpp
     ./Systems/HandleMoveSpriteSystem.cpp

@@ -382,8 +382,10 @@ void RType::Game::createEntity(const RType::EntityType &type, const int &posX,
         entity->PUSH_VELOCITY_E(entityInfo["speed"].asInt());
     if (entityInfo["pattern"].asBool() == true)
         entity->PUSH_PATTERN_E(static_cast<RType::PatternType>(entityInfo["pattern"].asInt()));
-    if (!entityInfo["sound"].asString().empty())
-        entity->PUSH_SOUND_E(entityInfo["sound"].asString());
+    if (!entityInfo["sound"].asString().empty()) {
+        SOUND_BUFFER_COMPONENT soundBuffer = getSoundBufferComponent(entityInfo["sound"].asString());
+        entity->PUSH_SOUND_E(soundBuffer->getSoundBuffer());
+    }
     entity->PUSH_MENU_COMPONENT_E(GAME);
     file.close();
 }
@@ -429,8 +431,10 @@ void RType::Game::createEntity(const long &serverId, const RType::EntityType &ty
         entity->PUSH_VELOCITY_E(entityInfo["speed"].asInt());
     if (entityInfo["pattern"].asBool() == true)
         entity->PUSH_PATTERN_E(static_cast<RType::PatternType>(entityInfo["pattern"].asInt()));
-    if (!entityInfo["sound"].asString().empty())
-        entity->PUSH_SOUND_E(entityInfo["sound"].asString());
+    if (!entityInfo["sound"].asString().empty()) {
+        SOUND_BUFFER_COMPONENT soundBuffer = getSoundBufferComponent(entityInfo["sound"].asString());
+        entity->PUSH_SOUND_E(soundBuffer->getSoundBuffer());
+    }
     entity->PUSH_MENU_COMPONENT_E(GAME);
     file.close();
 }
@@ -482,6 +486,11 @@ void RType::Game::createGameSystem()
     ));
 
     _coord.generateNewSystem(std::make_shared<HandlePatternSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+    ));
+
+    _coord.generateNewSystem(std::make_shared<HandleSoundSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
     ));
@@ -581,6 +590,18 @@ std::shared_ptr<RType::TextureComponent> RType::Game::getTextureComponent(const 
     _texturesMap[path] = texture;
 
     return texture;
+}
+
+std::shared_ptr<RType::SoundBufferComponent> RType::Game::getSoundBufferComponent(const std::string &path)
+{
+    if (_soundBufferMap.find(path) != _soundBufferMap.end()) {
+        return _soundBufferMap[path];
+    }
+
+    auto soundBuffer = std::make_shared<RType::SoundBufferComponent>(path);
+    _soundBufferMap[path] = soundBuffer;
+
+    return soundBuffer;
 }
 
 bool RType::Game::getGameHasStarted(void) const

@@ -26,8 +26,6 @@ void RType::HandleDrawSystem::effects(std::vector<std::shared_ptr<RType::Entity>
                     // drawHitBox(w, entity);
                     GET_WINDOW_FOR_DRAW->getWindow()->draw(*(entity->getComponent<RType::SpriteComponent>()->getSprite()));
                 }
-                if (entity->getComponent<SoundComponent>())
-                    entity->getComponent<SoundComponent>()->getSound()->play();
             }
             return;
         }

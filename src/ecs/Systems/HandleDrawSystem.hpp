@@ -14,7 +14,6 @@
 #include "../Components/EntityTypeComponent.hh"
 #include "../Components/LevelComponent.hh"
 #include "../Components/MenuComponent.hh"
-#include "../Components/SoundComponent.hh"
 
 #define GET_WINDOW_FOR_DRAW w->getComponent<RType::SFWindowComponent>()
 
