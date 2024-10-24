@@ -1,5 +1,5 @@
 {
-    "sprite":"./ressources/effects/hit.png",
+    "sprite":"./ressources/effects/hit-sheet.png",
     "scale": {
         "x": 2.0,
         "y": 2.0

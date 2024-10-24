@@ -1,5 +1,5 @@
 {
-    "sprite":"./ressources/player-sheet.png",
+    "sprite":"./ressources/players/player-sheet.png",
     "scale": {
         "x": 2.0,
         "y": 2.0
