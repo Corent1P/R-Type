@@ -117,7 +117,7 @@ void RType::HandleEntitySpawnSystem::createEntityMap(void)
     _entityTypeMap[E_WINDOW] = "window";
     _entityTypeMap[E_PLAYER] = "player";
     _entityTypeMap[E_ALLIES] = "player";
-    _entityTypeMap[E_SMALL_SPACESHIP] = "small_spaceship";
+    _entityTypeMap[E_SMALL_SPACESHIP] = "space_ship_1";
     _entityTypeMap[E_OCTOPUS] = "octopus";
     _entityTypeMap[E_FLY] = "fly";
     _entityTypeMap[E_BOSS] = "boss";
