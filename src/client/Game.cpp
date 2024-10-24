@@ -159,39 +159,19 @@ void RType::Game::loopReceive()
 
             std::unique_lock<std::mutex> lock(_mtx);
             auto entities = _coord.getEntities();
+            EntityType type;
+
             for (const auto &entity : entities) {
                 if (entity->getServerId() == receiveInfo.second[0]) {
                     if (entity->getComponent<RType::EntityTypeComponent>() == nullptr)
                         continue;
-                    switch (entity->getComponent<RType::EntityTypeComponent>()->getEntityType())
-                    {
-                    case RType::E_BULLET:
-                        createEntity(E_HIT_EFFECT, entity->GET_POSITION_X,
-                                     entity->GET_POSITION_Y);
-                        _coord.deleteEntity(entity);
-                        break;
-                    case RType::E_OCTOPUS:
-                        createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X,
-                                     entity->GET_POSITION_Y);
-                        _coord.deleteEntity(entity);
-                        break;
-                    case RType::E_FLY:
-                        createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X,
-                                     entity->GET_POSITION_Y);
-                        _coord.deleteEntity(entity);
-                        break;
-                    case RType::E_SMALL_SPACESHIP:
-                        createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X,
-                                     entity->GET_POSITION_Y);
-                        _coord.deleteEntity(entity);
-                        break;
-                        break;
-                    case RType::E_PLAYER:
-                        _coord.deleteEntity(entity);
-                        break;
-                    default:
-                        break;
-                    }
+                    createEntity(E_HIT_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
+                    type = entity->getComponent<RType::EntityTypeComponent>()->getEntityType();
+                    if (type == E_BULLET)
+                        createEntity(E_HIT_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
+                    if (EntityTypeComponent::isMob(type) == true)
+                        createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
+                    _coord.deleteEntity(entity);
                     break;
                 }
             }
@@ -437,7 +417,7 @@ void RType::Game::createPlayer()
     std::shared_ptr<RType::ScaleComponent> scale = player->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     std::shared_ptr<RType::IntRectComponent> intRect = player->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 26, 21));
     player->pushComponent(std::make_shared<RType::HealthComponent>(25));
-    std::shared_ptr<RType::TextureComponent> texture = getTextureComponent("./ressources/player-sheet.png");
+    std::shared_ptr<RType::TextureComponent> texture = getTextureComponent("./ressources/players/player-sheet.png");
 
     player->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(),
     sf::Vector2f(scale->getScaleX(), scale->getScaleY()),
@@ -611,7 +591,7 @@ void RType::Game::createEntityMap(void)
     _entityTypeMap[E_WINDOW] = "window";
     _entityTypeMap[E_PLAYER] = "player";
     _entityTypeMap[E_ALLIES] = "player";
-    _entityTypeMap[E_SMALL_SPACESHIP] = "small_spaceship";
+    _entityTypeMap[E_SMALL_SPACESHIP] = "space_ship_1";
     _entityTypeMap[E_OCTOPUS] = "octopus";
     _entityTypeMap[E_FLY] = "fly";
     _entityTypeMap[E_BOSS] = "boss";
