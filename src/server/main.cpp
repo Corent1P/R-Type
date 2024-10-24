@@ -9,6 +9,13 @@
 #include <array>
 #include "server/Server.hh"
 
+void handleSignal(const boost::system::error_code &error, int signalNumber, boost::asio::io_context &ioContext)
+{
+    (void)signalNumber;
+    if (!error)
+        ioContext.stop();
+}
+
 int printHelp(int returnValue)
 {
     std::cout << "USAGE: ./r-type_server <port>" << std::endl;
@@ -37,7 +44,13 @@ int main(int ac, char **av)
             return printHelp(84);
         boost::asio::io_context ioContext;
         RType::Server server(ioContext, port);
+        boost::asio::signal_set signals(ioContext, SIGINT);
+
+        signals.async_wait([&](const boost::system::error_code &error, int signalNumber) {
+            handleSignal(error, signalNumber, ioContext);
+        });
         ioContext.run();
+        server.stop();
     } catch(std::exception &err) {
         std::cerr << "Error in server execution " << err.what() << std::endl;
     }

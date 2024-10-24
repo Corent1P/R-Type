@@ -196,7 +196,6 @@ void RType::Game::loopReceive()
             }
         }
         if (receiveInfo.first == MOVE_ENTITY) {
-
             std::unique_lock<std::mutex> lock(_mtx);
             auto entities = _coord.getEntities();
             for (const auto &entity : entities) {
@@ -206,6 +205,10 @@ void RType::Game::loopReceive()
                     break;
                 }
             }
+        }
+        if (receiveInfo.first == DISCONNEXION) {
+            std::unique_lock<std::mutex> lock(_mtx);
+            _stopLoop = true;
         }
     }
 }
