@@ -28,7 +28,8 @@ set(SRC_COMPONENTS
     ./Components/ClickEffectComponent.cpp
     ./Components/MenuComponent.cpp
     ./Components/ShootIntervalComponent.cpp
-
+    ./Components/DamageComponent.cpp
+    ./Components/PowerUpComponent.cpp
 )
 
 set(SRC_SYSTEMS

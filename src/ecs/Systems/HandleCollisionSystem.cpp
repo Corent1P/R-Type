@@ -36,6 +36,14 @@ void RType::HandleCollisionSystem::effects(std::vector<std::shared_ptr<RType::En
     }
     handleEntityCollisions();
     for (const auto &entity: _entitiesToDestroy) {
+        if (entity->getComponent<EntityTypeComponent>() != nullptr && entity->getComponent<EntityTypeComponent>()->getEntityType() == E_SHIELD) {
+            std::cout << "Shield in destroy vector" << std::endl;
+            for (const auto &player: entities) {
+                if (player->getComponent<EntityTypeComponent>() != nullptr && player->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER) {
+                    player->getComponent<PowerUpComponent>()->setPowerUpsIsActive(RType::SHIELD, false);
+                }
+            }
+        }
         if (_sendMessageToAllClient) {
             _sendMessageToAllClient(Encoder::deleteEntity(entity->getId()));
             _deleteEntity(entity);
@@ -75,7 +83,7 @@ bool RType::HandleCollisionSystem::collides(std::shared_ptr<RType::Entity> entit
 
     return (position1.x + (width1 * scale1.x) > position2.x
         && position1.x < position2.x + (width2 * scale2.x)
-        && position1.y + (height1 * scale2.y) > position2.y
+        && position1.y + (height1 * scale1.y) > position2.y
         && position1.y < position2.y + (height2 * scale2.y)
     );
 }
@@ -87,16 +95,53 @@ void RType::HandleCollisionSystem::handleEntityCollision(const std::pair<std::sh
     EntityType entityType1 = GET_ENTITY_TYPE(entity1);
     EntityType entityType2 = GET_ENTITY_TYPE(entity2);
 
-    if (entityType1 == RType::E_PLAYER && entityType2 == RType::E_ENNEMY_BULLET) {
-        _entitiesToDestroy.push_back(entity2);
-        decreaseHealth(entity1, 1);
-    } else if (entityType1 == RType::E_PLAYER && EntityTypeComponent::isMob(entityType2)) {
-        decreaseHealth(entity1, 1);
-        decreaseHealth(entity2, 1);
-    } else if (EntityTypeComponent::isMob(entityType1) && entityType2 == RType::E_BULLET) {
-        _entitiesToDestroy.push_back(entity2);
-        decreaseHealth(entity1, 1);
+    const auto &entityDamage1 = entity1->getComponent<DamageComponent>();
+    const auto &entityDamage2 = entity2->getComponent<DamageComponent>();
 
+    if (entityType1 == RType::E_PLAYER && entityType2 == RType::E_ENNEMY_BULLET && entityDamage2) {
+        _entitiesToDestroy.push_back(entity2);
+        decreaseHealth(entity1, entityDamage2->getDamage());
+    } else if (entityType1 == RType::E_PLAYER && EntityTypeComponent::isMob(entityType2) && entityDamage1 && entityDamage2) {
+        decreaseHealth(entity1, entityDamage2->getDamage());
+        decreaseHealth(entity2, entityDamage1->getDamage());
+    } else if (EntityTypeComponent::isMob(entityType1) && EntityTypeComponent::isWeapon(entityType2) && entityDamage2) {
+        _entitiesToDestroy.push_back(entity2);
+        decreaseHealth(entity1, entityDamage2->getDamage());
+
+    } else if (entityType1 == RType::E_PLAYER && EntityTypeComponent::isItem(entityType2)) {
+        handleItemEffect(entity1, entity2);
+        _entitiesToDestroy.push_back(entity2);
+    } else if (entityType1 == RType::E_SHIELD && EntityTypeComponent::isMob(entityType2) && entityDamage2) {
+        decreaseHealth(entity1, entityDamage2->getDamage());
+    }
+}
+
+void RType::HandleCollisionSystem::handleItemEffect(std::shared_ptr<RType::Entity> entity1, std::shared_ptr<RType::Entity> entity2)
+{
+    switch(entity2->getComponent<EntityTypeComponent>()->getEntityType())
+    {
+        case RType::E_ITEM_WEAPON:
+            if (entity1->getComponent<RType::EntityTypeComponent>()->getWeaponType() < 3) {
+                std::cout << "improve weapon lvl: " << entity1->getComponent<RType::EntityTypeComponent>()->getWeaponType() << std::endl;
+                entity1->getComponent<RType::EntityTypeComponent>()->setWeaponType(RType::WeaponType(entity1->getComponent<RType::EntityTypeComponent>()->getWeaponType() + 1));
+                entity1->getComponent<RType::DamageComponent>()->setDamage(entity1->getComponent<RType::DamageComponent>()->getDamage() + 1);
+            }
+            break;
+        case RType::E_ITEM_HEAL:
+            std::cout << "player health + 1" << std::endl;
+            entity1->getComponent<RType::HealthComponent>()->setHealth(entity1->getComponent<RType::HealthComponent>()->getHealth() + 1);
+            break;
+        case RType::E_ITEM_SHIELD:
+            if (entity1->getComponent<PowerUpComponent>() != nullptr && entity1->getComponent<PowerUpComponent>()->getPowerUps(RType::SHIELD) == false) {
+                if (entity1->getComponent<PowerUpComponent>()->getPowerUpsIsActive(RType::SHIELD) == false) {
+                    entity1->getComponent<PowerUpComponent>()->setPowerUps(RType::SHIELD, true);
+                    entity1->getComponent<PowerUpComponent>()->setPowerUpsIsActive(RType::SHIELD, true);
+                }
+            }
+            break;
+
+        default:
+        break;
     }
 }
 

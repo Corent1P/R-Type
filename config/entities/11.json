@@ -1,5 +1,6 @@
 {
     "name": "bullet",
+    "damage": 1,
     "sprite":"./ressources/shoot-spritesheet-ennemy.png",
     "scale": {
         "x": 2.0,

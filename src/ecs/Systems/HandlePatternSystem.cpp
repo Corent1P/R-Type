@@ -16,6 +16,47 @@ RType::HandlePatternSystem::~HandlePatternSystem()
 {
 }
 
+void RType::HandlePatternSystem::handlePatternFollowEntities(std::vector<std::shared_ptr<RType::Entity>> &entities, const std::shared_ptr<RType::Entity> &entity)
+{
+    float playerPositionX = entity->getComponent<RType::PositionComponent>()->getPositionX();
+    float playerPositionY = entity->getComponent<RType::PositionComponent>()->getPositionY();
+    float playerWidth = entity->getComponent<RType::IntRectComponent>()->getIntRectWidth();
+    float playerHeight = entity->getComponent<RType::IntRectComponent>()->getIntRectHeight();
+    float playerScaleX = entity->getComponent<RType::ScaleComponent>()->getScaleX();
+    float playerScaleY = entity->getComponent<RType::ScaleComponent>()->getScaleY();
+
+    float entityFollowingWidth;
+    float entityFollowingHeight;
+    float entityFollowingScaleX;
+    float entityFollowingScaleY;
+
+    for(const auto &entity2: entities) {
+        if (verifyRequiredComponent(entity2)) {
+            if (entity2->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::FOLLOW_PLAYER && entity2->getComponent<RType::DirectionPatternComponent>()->getEntityToFollow() == entity->getId()) {
+                entityFollowingWidth = entity2->getComponent<RType::IntRectComponent>()->getIntRectWidth();
+                entityFollowingHeight = entity2->getComponent<RType::IntRectComponent>()->getIntRectHeight();
+                entityFollowingScaleX = entity2->getComponent<RType::ScaleComponent>()->getScaleX();
+                entityFollowingScaleY = entity2->getComponent<RType::ScaleComponent>()->getScaleY();
+
+                entity2->getComponent<RType::DirectionPatternComponent>()->setPattern(sf::Vector2f(
+                    playerPositionX - (((entityFollowingWidth * entityFollowingScaleX) - (playerWidth * playerScaleX))) / 2.,
+                    playerPositionY - (((entityFollowingHeight * entityFollowingScaleY) - (playerHeight * playerScaleY))) / 2.
+                ));
+            }
+        }
+    }
+}
+
+void RType::HandlePatternSystem::effects(std::vector<std::shared_ptr<RType::Entity>> entities)
+{
+    for (const auto &entity: entities) {
+        if (entity->getComponent<EntityTypeComponent>() != nullptr && (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER || entity->getComponent<EntityTypeComponent>()->getEntityType() == E_ALLIES))
+            handlePatternFollowEntities(entities, entity);
+        else
+            if (verifyRequiredComponent(entity))
+                effect(entity);
+    }
+}
 void RType::HandlePatternSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
     if (verifyRequiredComponent(entity)) {

@@ -140,7 +140,7 @@ void RType::Game::loopReceive()
                                  static_cast<RType::EntityType>(receiveInfo.second[0]),
                                  static_cast<short>(receiveInfo.second[2]),
                                  static_cast<short>(receiveInfo.second[3]));
-                    if (receiveInfo.second[0] == E_BULLET)
+                    if (EntityTypeComponent::isWeapon((EntityType)receiveInfo.second[0]))
                         createEntity(E_BULLET_EFFECT,
                                      static_cast<short>(receiveInfo.second[2]),
                                      static_cast<short>(receiveInfo.second[3]));
@@ -162,6 +162,9 @@ void RType::Game::loopReceive()
                             continue;
                         switch (entity->getComponent<RType::EntityTypeComponent>()->getEntityType()) {
                             case RType::E_BULLET:
+                            case RType::E_BULLET_2:
+                            case RType::E_BULLET_3:
+                            case RType::E_BULLET_4:
                             case RType::E_ENNEMY_BULLET:
                                 createEntity(E_HIT_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
                                 _coord.deleteEntity(entity);
@@ -177,10 +180,15 @@ void RType::Game::loopReceive()
                                     std::cout << "§!§!§ YOU ARE DEAD §!§!§" << std::endl;
                                 _coord.deleteEntity(entity);
                                 break;
+                            case RType::E_ITEM_WEAPON:
+                            case RType::E_ITEM_SHIELD:
+                            case RType::E_SHIELD:
+                            case RType::E_ALLIES:
+                                _coord.deleteEntity(entity);
+                                break;
                             default:
                                 break;
                         }
-                        break;
                     }
                 }
                 break;
@@ -372,7 +380,7 @@ void RType::Game::createEntity(const RType::EntityType &type, const int &posX,
         entity->PUSH_TYPE_E(E_ALLIES);
     else
         entity->PUSH_TYPE_E(type);
-    POS_COMPONENT position = entity->PUSH_POS_E(posX, posY - 20);
+    POS_COMPONENT position = entity->PUSH_POS_E(posX, posY);
     SCALE_COMPONENT scale = entity->PUSH_SCALE_E(entityInfo["scale"]["x"].asFloat(),
                                                  entityInfo["scale"]["y"].asFloat());
     RECT_COMPONENT intRect = entity->PUSH_RECT_E(entityInfo["rect"]["x"].asInt(),
@@ -388,6 +396,8 @@ void RType::Game::createEntity(const RType::EntityType &type, const int &posX,
     entity->PUSH_CLOCK_E();
     if (entityInfo["health"].asBool() == true)
         entity->PUSH_HEALTH_E(entityInfo["health"].asInt());
+    if (entityInfo["damage"].asBool() == true)
+        entity->PUSH_DAMAGE_E(entityInfo["damage"].asInt());
     if (entityInfo["speed"].asBool() == true)
         entity->PUSH_VELOCITY_E(entityInfo["speed"].asInt());
     if (entityInfo["pattern"].asBool() == true)
@@ -440,6 +450,8 @@ void RType::Game::createEntity(const long &serverId, const RType::EntityType &ty
     entity->PUSH_CLOCK_E();
     if (entityInfo["health"].asBool() == true)
         entity->PUSH_HEALTH_E(entityInfo["health"].asInt());
+    if (entityInfo["damage"].asBool() == true)
+        entity->PUSH_DAMAGE_E(entityInfo["damage"].asInt());
     if (entityInfo["speed"].asBool() == true)
         entity->PUSH_VELOCITY_E(entityInfo["speed"].asInt());
     if (entityInfo["pattern"].asBool() == true)
@@ -453,6 +465,12 @@ void RType::Game::createEntity(const long &serverId, const RType::EntityType &ty
     }
     entity->PUSH_MENU_COMPONENT_E(GAME);
     file.close();
+    if (type == E_SHIELD) {
+        std::shared_ptr<RType::Entity> playerEntity = getPlayerEntity();
+        if (playerEntity == nullptr)
+            return;
+        entity->getComponent<RType::DirectionPatternComponent>()->setEntityToFollow(playerEntity->getId());
+    }
 }
 
 void RType::Game::createPlayer()
@@ -473,7 +491,12 @@ void RType::Game::createPlayer()
     player->pushComponent(std::make_shared<RType::ClockComponent>());
     player->pushComponent(std::make_shared<RType::ActionComponent>());
     player->pushComponent(std::make_shared<VelocityComponent>(10));
+    player->pushComponent(std::make_shared<RType::DamageComponent>(1));
+    player->pushComponent(std::make_shared<RType::PowerUpComponent>());
     player->PUSH_MENU_COMPONENT_E(GAME);
+    player->pushComponent(std::make_shared<VelocityComponent>(10));
+    player->pushComponent(std::make_shared<RType::DamageComponent>(1));
+    player->pushComponent(std::make_shared<RType::PowerUpComponent>());
 }
 
 void RType::Game::createWindow()
@@ -620,6 +643,7 @@ void RType::Game::trySendMessageToServer(const std::basic_string<unsigned char> 
         _client.send(message);
 }
 
+
 std::ostream &operator<<(std::ostream &s, const RType::Game &game)
 {
     s << game.getCoordinator();
@@ -630,4 +654,33 @@ void RType::Game::disconnexion(void)
 {
     // trySendMessageToServer(Encoder::disconnexion());
     // _initConnection = false;
+}
+
+std::shared_ptr<RType::Entity> RType::Game::getPlayerEntity(void)
+{
+    auto entities = _coord.getEntities();
+    for (const auto &entity : entities) {
+        if (!entity->getComponent<RType::EntityTypeComponent>())
+            continue;
+        if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER)
+            return entity;
+    }
+    return nullptr;
+}
+
+sf::Vector2f RType::Game::getBulletPosition(int type, int posX, int posY)
+{
+    // !Data to get dynamically
+    switch (type) {
+        case RType::E_BULLET:
+            return sf::Vector2f(posX, posY + (6 * 2) / 2);
+        case RType::E_BULLET_2:
+            return sf::Vector2f(posX, posY + (192 * 0.5) / 2);
+        case RType::E_BULLET_3:
+            return sf::Vector2f(posX, posY + (32 * 2.) / 2);
+        case RType::E_BULLET_4:
+            return sf::Vector2f(posX, posY + (32 * 2.) / 2);
+        default:
+            return sf::Vector2f(0, 0);
+    }
 }

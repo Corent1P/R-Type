@@ -1,0 +1,17 @@
+{
+    "name": "effectiveShield",
+    "health": 4,
+    "sprite":"./ressources/forcefield.png",
+    "scale": {
+        "x": 3.0,
+        "y": 3.0
+    },
+    "rect" : {
+        "x": 0,
+        "y": 0,
+        "width": 32,
+        "height": 32
+    },
+    "pattern": 9,
+    "speed": 10
+}

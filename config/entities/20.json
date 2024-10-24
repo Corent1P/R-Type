@@ -1,0 +1,18 @@
+{
+    "name": "bullet2",
+    "damage": 2,
+    "sprite":"./ressources/shoot2.png",
+    "scale": {
+        "x": 0.5,
+        "y": 0.5
+    },
+    "rect" : {
+        "x": 0,
+        "y": 0,
+        "width": 288,
+        "height": 192
+    },
+    // STRAIGHT_RIGHT
+    "pattern": 4,
+    "speed": 7
+}

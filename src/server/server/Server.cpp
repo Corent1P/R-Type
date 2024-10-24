@@ -113,12 +113,14 @@ void RType::Server::handleConnection(std::shared_ptr<ClientServer> connectedClie
     std::shared_ptr<RType::Entity> player = _coord.generateNewEntity();
 
     player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_PLAYER));
+    player->getComponent<RType::EntityTypeComponent>()->setWeaponType(RType::LVL_1);
     std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(10, 10));
     player->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 26, 21));
     player->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     player->pushComponent(std::make_shared<RType::HealthComponent>(25));
     player->pushComponent(std::make_shared<RType::ClockComponent>());
-
+    player->pushComponent(std::make_shared<RType::DamageComponent>(1));
+    player->pushComponent(std::make_shared<RType::PowerUpComponent>());
     connectedClient->setEntity(player);
 
     sendToAllClient(Encoder::newEntity(E_PLAYER, connectedClient->getEntity()->getId(), position->getPositionX(), position->getPositionY()));
@@ -217,7 +219,10 @@ void RType::Server::initSystem(void)
 void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)
 {
     for (auto entity: _coord.getEntities()) {
-        if (client->getEntity()->getId() != entity->getId() && (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER || EntityTypeComponent::isMob(entity->getComponent<EntityTypeComponent>()->getEntityType()))) {
+        if (client->getEntity()->getId() != entity->getId() &&
+            (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER ||
+            EntityTypeComponent::isMob(entity->getComponent<EntityTypeComponent>()->getEntityType()) ||
+            EntityTypeComponent::isItem(entity->getComponent<EntityTypeComponent>()->getEntityType()))) {
             client->sendMessage(_socket, Encoder::newEntity(entity->getComponent<EntityTypeComponent>()->getEntityType(), entity->getId(), entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY()));
         }
     }
@@ -229,4 +234,5 @@ void RType::Server::stop(void)
     for (auto client: _clients) {
         client->sendMessage(_socket, Encoder::disconnexion());
     }
+    std::cout << "Server stopped" << std::endl;
 }

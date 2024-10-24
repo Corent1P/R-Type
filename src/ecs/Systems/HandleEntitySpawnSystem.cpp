@@ -21,12 +21,27 @@ RType::HandleEntitySpawnSystem::~HandleEntitySpawnSystem()
 {
 }
 
+void RType::HandleEntitySpawnSystem::effects(std::vector<std::shared_ptr<RType::Entity>> entities) {
+    for (const auto &entity : entities) {
+        if (verifyRequiredComponent(entity)) {
+            effect(entity);
+            continue;
+        } else if (entity->getComponent<EntityTypeComponent>() != nullptr && entity->getComponent<EntityTypeComponent>()->getEntityType() == RType::E_PLAYER) {
+            if (entity->getComponent<PowerUpComponent>() != nullptr && entity->getComponent<PowerUpComponent>()->getPowerUps(RType::SHIELD) == true) {
+                entity->getComponent<PowerUpComponent>()->setPowerUps(RType::SHIELD, false);
+                createShield(entity);
+            }
+        }
+    }
+}
 void RType::HandleEntitySpawnSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
     if (entity->getComponent<RType::ClockComponent>()->getClock(RType::SPAWN_CLOCK).getElapsedTime().asSeconds() > 2) {
-        createEntity(1920, _y_spawn, E_FLY);
-        createEntity(1920, _y_spawn + 100, E_OCTOPUS);
+        // createEntity(1920, _y_spawn, E_FLY);
+        // createEntity(1920, _y_spawn + 100, E_OCTOPUS);
         createEntity(1920, _y_spawn - 100, E_SMALL_SPACESHIP);
+        createEntity(1920, _y_spawn, RType::E_ITEM_WEAPON);
+        createEntity(1920, _y_spawn + 100, RType::E_ITEM_SHIELD);
         entity->getComponent<RType::ClockComponent>()->getClock(RType::SPAWN_CLOCK).restart();
         _y_spawn += 100 * _sign;
         if (_y_spawn <= 100 || _y_spawn >= 700)
@@ -68,6 +83,8 @@ void RType::HandleEntitySpawnSystem::createEntity(int posX, int posY, EntityType
     entity->PUSH_CLOCK_E();
     if (entityInfo["health"].asBool() == true)
         entity->PUSH_HEALTH_E(entityInfo["health"].asInt());
+    if (entityInfo["damage"].asBool() == true)
+        entity->PUSH_DAMAGE_E(entityInfo["damage"].asInt());
     if (entityInfo["speed"].asBool() == true)
         entity->PUSH_VELOCITY_E(SERVER_SPEED(entityInfo["speed"].asInt()));
     if (entityInfo["pattern"].asBool() == true)
@@ -80,4 +97,20 @@ void RType::HandleEntitySpawnSystem::createEntity(int posX, int posY, EntityType
         entity->PUSH_INTERVALSHOOT_E(entityInfo["intervalShoot"].asFloat());
     }
     _sendToAllClient(Encoder::newEntity(type, entity->getId(), position->getPositionX(), position->getPositionY()));
+}
+
+void RType::HandleEntitySpawnSystem::createShield(std::shared_ptr<RType::Entity> entity) {
+    std::cout << "create a new shield entity" << std::endl;
+    std::shared_ptr<RType::Entity> shield = _addEntity();
+    shield->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_SHIELD));
+    shield->pushComponent(std::make_shared<RType::HealthComponent>(4));
+    auto position = shield->pushComponent(std::make_shared<RType::PositionComponent>(entity->getComponent<RType::PositionComponent>()->getPositionX() - ((entity->getComponent<RType::IntRectComponent>()->getIntRectWidth() / 2) * entity->getComponent<ScaleComponent>()->getScaleX()), entity->getComponent<RType::PositionComponent>()->getPositionY() - ((entity->getComponent<RType::IntRectComponent>()->getIntRectHeight() / 2) * entity->getComponent<ScaleComponent>()->getScaleY())));
+    shield->pushComponent(std::make_shared<RType::ScaleComponent>(3.0, 3.0));
+    shield->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 32, 32));
+    shield->pushComponent(std::make_shared<RType::DirectionPatternComponent>(FOLLOW_PLAYER));
+    shield->getComponent<RType::DirectionPatternComponent>()->setEntityToFollow(entity->getId());
+    shield->pushComponent(std::make_shared<VelocityComponent>(SERVER_SPEED(10)));
+    shield->pushComponent(std::make_shared<ClockComponent>());
+    shield->pushComponent(std::make_shared<MenuComponent>(GAME));
+    _sendToAllClient(Encoder::newEntity(E_SHIELD, shield->getId(), position->getPositionX(), position->getPositionY()));
 }

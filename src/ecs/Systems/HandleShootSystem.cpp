@@ -50,6 +50,7 @@ bool RType::HandleShootSystem::verifyRequiredComponent(std::shared_ptr<RType::En
     }
     return (true);
 }
+
 void RType::HandleShootSystem::createEnnemyBullet(const std::shared_ptr<RType::Entity> &entity)
 {
     std::shared_ptr<RType::Entity> bullet = _addEntity();
@@ -66,6 +67,7 @@ void RType::HandleShootSystem::createEnnemyBullet(const std::shared_ptr<RType::E
     bullet->pushComponent(std::make_shared<RType::VelocityComponent>(21));
     bullet->pushComponent(std::make_shared<RType::ClockComponent>());
     bullet->pushComponent(std::make_shared<RType::MenuComponent>(GAME));
+    bullet->pushComponent(std::make_shared<RType::DamageComponent>(1));
 
     _sendMessageToAllClient(Encoder::newEntity(E_ENNEMY_BULLET, bullet->getId(), position->getPositionX(), position->getPositionY()));
 }
