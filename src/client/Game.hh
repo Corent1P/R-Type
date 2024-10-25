@@ -136,6 +136,8 @@ namespace RType {
 
             void trySendMessageToServer(const std::basic_string<unsigned char> &message);
             void disconnexion(void);
+            void createEntityMap(void);
+
             std::mutex _mtx;
             RType::Coordinator _coord;
             RType::Client _client;
@@ -143,6 +145,7 @@ namespace RType {
             std::thread _receipter;
             bool _initConnection;
             std::unordered_map<std::string, std::shared_ptr<RType::TextureComponent>> _texturesMap;
+            std::unordered_map<EntityType, std::string> _entityTypeMap;
             std::shared_ptr<sf::Font> _font;
     };
 }

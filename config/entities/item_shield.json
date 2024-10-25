@@ -1,7 +1,6 @@
 {
-    "name": "itemWeapon",
     "health": 3,
-    "sprite":"./ressources/ball-1.png",
+    "sprite":"./ressources/forcefield.png",
     "scale": {
         "x": 1.5,
         "y": 1.5
@@ -12,6 +11,7 @@
         "width": 32,
         "height": 32
     },
+    // UP_N_DOWN_LEFT
     "pattern": 3,
     "speed": 3
 }

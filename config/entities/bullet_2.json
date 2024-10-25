@@ -1,5 +1,4 @@
 {
-    "name": "bullet2",
     "damage": 2,
     "sprite":"./ressources/shoot2.png",
     "scale": {

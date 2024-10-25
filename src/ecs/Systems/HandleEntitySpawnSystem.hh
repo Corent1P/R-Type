@@ -10,6 +10,8 @@
 #include <fstream>
 #include <json/json.h>
 #include <iostream>
+#include <lua.hpp>
+
 #include "../ASystem.hh"
 #include "../Components/ClockComponent.hh"
 #include "../Components/EntityTypeComponent.hh"
@@ -25,6 +27,7 @@
 #include "../Components/MenuComponent.hh"
 #include "../Components/PowerUpComponent.hh"
 #include "../Components/DamageComponent.hh"
+#include "../Components/ParseLevelInfoComponent.hh"
 
 #define POS_COMPONENT std::shared_ptr<RType::PositionComponent>
 
@@ -51,11 +54,12 @@ namespace RType {
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
 
         private:
-            void createEntity(int posX, int posY, EntityType type);
-            void createShield(std::shared_ptr<RType::Entity> entity);
+            static int luaTrampolineCreateEntity(lua_State *luaState);
+            void createEntity(lua_State *LuaState);
+            void createEntityMap(void);
 
             std::function<void(const std::basic_string<unsigned char> &message)> _sendToAllClient;
-            int _y_spawn = 700;
-            short _sign = -1;
+            std::unordered_map<EntityType, std::string> _entityTypeMap;
+            int _prevTime;
     };
 }

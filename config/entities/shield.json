@@ -1,10 +1,9 @@
 {
-    "name": "itemShield",
-    "health": 3,
+    "health": 4,
     "sprite":"./ressources/forcefield.png",
     "scale": {
-        "x": 1.5,
-        "y": 1.5
+        "x": 3.0,
+        "y": 3.0
     },
     "rect" : {
         "x": 0,
@@ -12,7 +11,6 @@
         "width": 32,
         "height": 32
     },
-    // UP_N_DOWN_LEFT
-    "pattern": 3,
-    "speed": 3
+    "pattern": 9,
+    "speed": 10
 }

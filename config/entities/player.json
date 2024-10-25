@@ -1,5 +1,4 @@
 {
-    "name": "player",
     "health": 25,
     "damage": 4,
     "sprite":"./ressources/player-sheet.png",

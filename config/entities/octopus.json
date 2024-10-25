@@ -1,5 +1,4 @@
 {
-    "name": "octopus",
     "health": 3,
     "damage": 2,
     "sprite":"./ressources/octopus-sheet.png",

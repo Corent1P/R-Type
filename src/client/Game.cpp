@@ -21,6 +21,7 @@ RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, c
     createMenu();
     createPlayer();
     createGameSystem();
+    createEntityMap();
     _receipter = std::thread(&Game::loopReceive, this);
     _initConnection = false;
 }
@@ -367,11 +368,10 @@ void RType::Game::createEntity(const RType::EntityType &type, const int &posX,
     Json::Value entityInfo;
     std::ifstream file;
     std::shared_ptr<RType::Entity> entity = _coord.generateNewEntity();
-    std::string filepath("./config/entities/");
     std::shared_ptr<RType::Entity> entityToFollow = nullptr;
 
-    filepath += std::to_string(type);
-    filepath += ".json";
+    std::string filepath("./config/entities/" + _entityTypeMap[type] + ".json");
+
     file.open(filepath);
     if (!file.is_open() || !reader.parse(file, entityInfo)) {
         std::cerr << "Error while reading or parsing the json: " << filepath << std::endl;
@@ -381,7 +381,7 @@ void RType::Game::createEntity(const RType::EntityType &type, const int &posX,
         entity->PUSH_TYPE_E(E_ALLIES);
     else
         entity->PUSH_TYPE_E(type);
-    POS_COMPONENT position = entity->PUSH_POS_E(posX, posY);
+    POS_COMPONENT position = entity->PUSH_POS_E(posX, posY - 20);
     SCALE_COMPONENT scale = entity->PUSH_SCALE_E(entityInfo["scale"]["x"].asFloat(),
                                                  entityInfo["scale"]["y"].asFloat());
     RECT_COMPONENT intRect = entity->PUSH_RECT_E(entityInfo["rect"]["x"].asInt(),
@@ -397,19 +397,10 @@ void RType::Game::createEntity(const RType::EntityType &type, const int &posX,
     entity->PUSH_CLOCK_E();
     if (entityInfo["health"].asBool() == true)
         entity->PUSH_HEALTH_E(entityInfo["health"].asInt());
-    if (entityInfo["damage"].asBool() == true)
-        entity->PUSH_DAMAGE_E(entityInfo["damage"].asInt());
     if (entityInfo["speed"].asBool() == true)
         entity->PUSH_VELOCITY_E(entityInfo["speed"].asInt());
     if (entityInfo["pattern"].asBool() == true)
         entity->PUSH_PATTERN_E(static_cast<RType::PatternType>(entityInfo["pattern"].asInt()));
-    if (entityInfo["isShooting"].asBool() == true) {
-        auto action = entity->PUSH_ACTION_E();
-        action->setActions(SHOOTING, true);
-    }
-    if (entityInfo["intervalShoot"].asBool() == true) {
-        entity->PUSH_INTERVALSHOOT_E(entityInfo["intervalShoot"].asFloat());
-    }
     entity->PUSH_MENU_COMPONENT_E(GAME);
     file.close();
     if (entity->getComponent<RType::DirectionPatternComponent>() &&
@@ -429,11 +420,9 @@ void RType::Game::createEntity(const long &serverId, const RType::EntityType &ty
     Json::Value entityInfo;
     std::ifstream file;
     std::shared_ptr<RType::Entity> entity = _coord.generateNewEntity(serverId);
-    std::string filepath("./config/entities/");
     std::shared_ptr<RType::Entity> entityToFollow = nullptr;
+    std::string filepath("./config/entities/" + _entityTypeMap[type] + ".json");
 
-    filepath += std::to_string(type);
-    filepath += ".json";
     file.open(filepath);
     if (!file.is_open() || !reader.parse(file, entityInfo)) {
         std::cerr << "Error while reading or parsing the json: " << filepath << std::endl;
@@ -702,4 +691,32 @@ std::shared_ptr<RType::Entity> RType::Game::getEntityByServerId(std::vector<std:
             return entity;
     }
     return nullptr;
+}
+
+void RType::Game::createEntityMap(void)
+{
+    _entityTypeMap[E_OTHER] = "other";
+    _entityTypeMap[E_WINDOW] = "window";
+    _entityTypeMap[E_PLAYER] = "player";
+    _entityTypeMap[E_ALLIES] = "player";
+    _entityTypeMap[E_SMALL_SPACESHIP] = "small_spaceship";
+    _entityTypeMap[E_OCTOPUS] = "octopus";
+    _entityTypeMap[E_FLY] = "fly";
+    _entityTypeMap[E_BOSS] = "boss";
+    _entityTypeMap[E_BUTTON] = "button";
+    _entityTypeMap[E_LAYER] = "layer";
+    _entityTypeMap[E_BULLET] = "bullet";
+    _entityTypeMap[E_SHIELD] = "shield";
+    _entityTypeMap[E_ITEM_WEAPON] = "item_weapon";
+    _entityTypeMap[E_ITEM_SHIELD] = "item_shield";
+    _entityTypeMap[E_ITEM_HEAL] = "item_heal";
+    _entityTypeMap[E_BULLET] = "bullet";
+    _entityTypeMap[E_BULLET_2] = "bullet_2";
+    _entityTypeMap[E_BULLET_3] = "bullet_3";
+    _entityTypeMap[E_BULLET_4] = "bullet_4";
+    _entityTypeMap[E_ENNEMY_BULLET] = "ennemy_bullet";
+    _entityTypeMap[E_BULLET_EFFECT] = "bullet_effect";
+    _entityTypeMap[E_HIT_EFFECT] = "hit_effect";
+    _entityTypeMap[E_EXPLOSION_EFFECT] = "explosion_effect";
+    _entityTypeMap[E_TEXT] = "text";
 }

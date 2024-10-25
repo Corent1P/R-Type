@@ -1,7 +1,5 @@
 {
-    "name": "bullet",
-    "damage": 1,
-    "sprite":"./ressources/shoot-spritesheet-ennemy.png",
+    "sprite":"./ressources/shoot-spritesheet.png",
     "scale": {
         "x": 2.0,
         "y": 2.0
@@ -12,7 +10,7 @@
         "width": 19,
         "height": 6
     },
-    // STRAIGHT_LEFT
-    "pattern": 3,
+    // STRAIGHT_RIGHT
+    "pattern": 4,
     "speed": 7
 }
