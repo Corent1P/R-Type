@@ -137,17 +137,19 @@ void RType::Game::loopReceive()
             case NEW_ENTITY:
                 if (_initConnection) {
                     createEntity(receiveInfo.second[1],
-                                 static_cast<RType::EntityType>(receiveInfo.second[0]),
-                                 static_cast<short>(receiveInfo.second[2]),
-                                 static_cast<short>(receiveInfo.second[3]));
-                    if (EntityTypeComponent::isWeapon((EntityType)receiveInfo.second[0]))
-                        createEntity(E_BULLET_EFFECT,
-                                     static_cast<short>(receiveInfo.second[2]),
-                                     static_cast<short>(receiveInfo.second[3]));
+                                static_cast<RType::EntityType>(receiveInfo.second[0]),
+                                static_cast<short> (receiveInfo.second[2]),
+                                static_cast<short> (receiveInfo.second[3]),
+                                receiveInfo.second[4]);
+                    if (EntityTypeComponent::isWeapon((EntityType)receiveInfo.second[0])) {
+                        sf::Vector2f position = getBulletPosition((int)receiveInfo.second[0], (int)receiveInfo.second[2], (int)receiveInfo.second[3]);
+                        createEntity(E_BULLET_EFFECT, position.x, position.y - 20);
+                    }
                 } else {
                     if (receiveInfo.second[0] != E_PLAYER)
                         continue;
                     _initConnection = true;
+                    auto entities = _coord.getEntities();
                     for (const auto &entity : entities) {
                         if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER)
                             entity->setServerId(receiveInfo.second[1]);
@@ -206,11 +208,9 @@ void RType::Game::loopReceive()
                     }
                 }
                 break;
-
             case DISCONNEXION:
                 _stopLoop = true;
                 break;
-
             case INFO_ENTITY:
                 for (const auto &entity : entities) {
                     if (entity->getServerId() == receiveInfo.second[0]) {
@@ -361,13 +361,14 @@ std::shared_ptr<RType::Entity> RType::Game::createText(int x, int y, std::string
 }
 
 void RType::Game::createEntity(const RType::EntityType &type, const int &posX,
-                               const int &posY)
+                               const int &posY, const int &idToFollow)
 {
     Json::Reader reader;
     Json::Value entityInfo;
     std::ifstream file;
     std::shared_ptr<RType::Entity> entity = _coord.generateNewEntity();
     std::string filepath("./config/entities/");
+    std::shared_ptr<RType::Entity> entityToFollow = nullptr;
 
     filepath += std::to_string(type);
     filepath += ".json";
@@ -411,17 +412,25 @@ void RType::Game::createEntity(const RType::EntityType &type, const int &posX,
     }
     entity->PUSH_MENU_COMPONENT_E(GAME);
     file.close();
+    if (entity->getComponent<RType::DirectionPatternComponent>() &&
+        entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::FOLLOW_PLAYER) {
+        entityToFollow = getEntityByServerId(_coord.getEntities(), idToFollow);
+        if (!entityToFollow)
+            return;
+        entity->getComponent<RType::DirectionPatternComponent>()->setEntityToFollow(entityToFollow->getId());
+    }
 }
 
 
 void RType::Game::createEntity(const long &serverId, const RType::EntityType &type,
-                               const int &posX, const int &posY)
+                               const int &posX, const int &posY, const int &idToFollow)
 {
     Json::Reader reader;
     Json::Value entityInfo;
     std::ifstream file;
     std::shared_ptr<RType::Entity> entity = _coord.generateNewEntity(serverId);
     std::string filepath("./config/entities/");
+    std::shared_ptr<RType::Entity> entityToFollow = nullptr;
 
     filepath += std::to_string(type);
     filepath += ".json";
@@ -465,11 +474,12 @@ void RType::Game::createEntity(const long &serverId, const RType::EntityType &ty
     }
     entity->PUSH_MENU_COMPONENT_E(GAME);
     file.close();
-    if (type == E_SHIELD) {
-        std::shared_ptr<RType::Entity> playerEntity = getPlayerEntity();
-        if (playerEntity == nullptr)
+    if (entity->getComponent<RType::DirectionPatternComponent>() &&
+        entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::FOLLOW_PLAYER) {
+        entityToFollow = getEntityByServerId(_coord.getEntities(), idToFollow);
+        if (!entityToFollow)
             return;
-        entity->getComponent<RType::DirectionPatternComponent>()->setEntityToFollow(playerEntity->getId());
+        entity->getComponent<RType::DirectionPatternComponent>()->setEntityToFollow(entityToFollow->getId());
     }
 }
 
@@ -683,4 +693,13 @@ sf::Vector2f RType::Game::getBulletPosition(int type, int posX, int posY)
         default:
             return sf::Vector2f(0, 0);
     }
+}
+
+std::shared_ptr<RType::Entity> RType::Game::getEntityByServerId(std::vector<std::shared_ptr<RType::Entity>> entities, int serverId)
+{
+    for (const auto &entity : entities) {
+        if (entity->getServerId() == serverId)
+            return entity;
+    }
+    return nullptr;
 }

@@ -97,6 +97,12 @@ namespace RType {
              */
             void handleDisconnection(std::shared_ptr<ClientServer> connectedClient);
             /**
+             * @brief Remove all the following objects of a client
+             *
+             * @param id the id of the client
+             */
+            void removeFollowingObjects(long id);
+            /**
              * @brief Handle the command received by the client
              *
              * @param receivInfo the received command

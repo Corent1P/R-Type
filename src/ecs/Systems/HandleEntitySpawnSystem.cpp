@@ -34,6 +34,7 @@ void RType::HandleEntitySpawnSystem::effects(std::vector<std::shared_ptr<RType::
         }
     }
 }
+
 void RType::HandleEntitySpawnSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
     if (entity->getComponent<RType::ClockComponent>()->getClock(RType::SPAWN_CLOCK).getElapsedTime().asSeconds() > 2) {
@@ -100,7 +101,6 @@ void RType::HandleEntitySpawnSystem::createEntity(int posX, int posY, EntityType
 }
 
 void RType::HandleEntitySpawnSystem::createShield(std::shared_ptr<RType::Entity> entity) {
-    std::cout << "create a new shield entity" << std::endl;
     std::shared_ptr<RType::Entity> shield = _addEntity();
     shield->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_SHIELD));
     shield->pushComponent(std::make_shared<RType::HealthComponent>(4));
@@ -112,5 +112,6 @@ void RType::HandleEntitySpawnSystem::createShield(std::shared_ptr<RType::Entity>
     shield->pushComponent(std::make_shared<VelocityComponent>(SERVER_SPEED(10)));
     shield->pushComponent(std::make_shared<ClockComponent>());
     shield->pushComponent(std::make_shared<MenuComponent>(GAME));
-    _sendToAllClient(Encoder::newEntity(E_SHIELD, shield->getId(), position->getPositionX(), position->getPositionY()));
+    u_int16_t idToFollow = shield->getComponent<RType::DirectionPatternComponent>()->getEntityToFollow();
+    _sendToAllClient(Encoder::newEntity(E_SHIELD, shield->getId(), position->getPositionX(), position->getPositionY(), idToFollow));
 }

@@ -72,6 +72,11 @@ bool RType::EntityTypeComponent::isWeapon(EntityType entityType)
     return entityType == E_BULLET || entityType == E_BULLET_2 || entityType == E_BULLET_3 || entityType == E_BULLET_4;
 }
 
+bool RType::EntityTypeComponent::isPowerUp(EntityType entityType)
+{
+    return entityType == E_SHIELD;
+}
+
 
 std::string RType::EntityTypeComponent::getOutput() const
 {

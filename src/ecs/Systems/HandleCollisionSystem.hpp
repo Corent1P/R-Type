@@ -123,6 +123,8 @@ namespace RType {
             bool isInPastCollision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &colidingPair);
 
             void decreaseHealth(std::shared_ptr<RType::Entity> entity, int damage);
+            void decreasePlayerHealth(std::shared_ptr<RType::Entity> entity, int damage);
+
     };
 }
 #endif /* !HANDLECOLISIONSYTEM_HPP_ */

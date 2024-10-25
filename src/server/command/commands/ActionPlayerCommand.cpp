@@ -24,7 +24,6 @@ void RType::ActionPlayerCommand::execute(std::shared_ptr<ClientServer> client, F
     bullet->pushComponent(std::make_shared<RType::VelocityComponent>(21));
     bullet->pushComponent(std::make_shared<RType::ClockComponent>());
     bullet->pushComponent(std::make_shared<RType::DamageComponent>(client->getEntity()->getComponent<DamageComponent>()->getDamage()));
-    std::cout << "bullet damage:" << bullet->getComponent<DamageComponent>()->getDamage() <<std::endl;
     bullet->pushComponent(std::make_shared<RType::MenuComponent>(GAME));
 
     switch (client->getEntity()->getComponent<RType::EntityTypeComponent>()->getWeaponType()) {

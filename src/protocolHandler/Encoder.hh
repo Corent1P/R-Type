@@ -73,7 +73,8 @@ namespace RType {
         * @return U_STRING Encoded new entity packet
         */
         static U_STRING newEntity(std::uint8_t type, std::uint16_t id,
-                                  std::uint16_t x, std::uint16_t y);
+                                  std::uint16_t x, std::uint16_t y,
+                                  std::uint16_t entityToFollow = 0);
 
         /**
         * @brief Encode the delete entity packet

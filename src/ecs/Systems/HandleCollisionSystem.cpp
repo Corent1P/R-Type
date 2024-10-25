@@ -37,7 +37,6 @@ void RType::HandleCollisionSystem::effects(std::vector<std::shared_ptr<RType::En
     handleEntityCollisions();
     for (const auto &entity: _entitiesToDestroy) {
         if (entity->getComponent<EntityTypeComponent>() != nullptr && entity->getComponent<EntityTypeComponent>()->getEntityType() == E_SHIELD) {
-            std::cout << "Shield in destroy vector" << std::endl;
             for (const auto &player: entities) {
                 if (player->getComponent<EntityTypeComponent>() != nullptr && player->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER) {
                     player->getComponent<PowerUpComponent>()->setPowerUpsIsActive(RType::SHIELD, false);
@@ -98,7 +97,7 @@ void RType::HandleCollisionSystem::handleEntityCollision(const std::pair<std::sh
     const auto &entityDamage1 = entity1->getComponent<DamageComponent>();
     const auto &entityDamage2 = entity2->getComponent<DamageComponent>();
 
-    if (entityType1 == RType::E_PLAYER && entityType2 == RType::E_ENNEMY_BULLET && entityDamage2) {
+    if ((entityType1 == RType::E_SHIELD || entityType1 == RType::E_PLAYER) && entityType2 == RType::E_ENNEMY_BULLET && entityDamage2) {
         _entitiesToDestroy.push_back(entity2);
         decreaseHealth(entity1, entityDamage2->getDamage());
     } else if (entityType1 == RType::E_PLAYER && EntityTypeComponent::isMob(entityType2) && entityDamage1 && entityDamage2) {
@@ -111,8 +110,6 @@ void RType::HandleCollisionSystem::handleEntityCollision(const std::pair<std::sh
     } else if (entityType1 == RType::E_PLAYER && EntityTypeComponent::isItem(entityType2)) {
         handleItemEffect(entity1, entity2);
         _entitiesToDestroy.push_back(entity2);
-    } else if (entityType1 == RType::E_SHIELD && EntityTypeComponent::isMob(entityType2) && entityDamage2) {
-        decreaseHealth(entity1, entityDamage2->getDamage());
     }
 }
 
@@ -122,13 +119,11 @@ void RType::HandleCollisionSystem::handleItemEffect(std::shared_ptr<RType::Entit
     {
         case RType::E_ITEM_WEAPON:
             if (entity1->getComponent<RType::EntityTypeComponent>()->getWeaponType() < 3) {
-                std::cout << "improve weapon lvl: " << entity1->getComponent<RType::EntityTypeComponent>()->getWeaponType() << std::endl;
                 entity1->getComponent<RType::EntityTypeComponent>()->setWeaponType(RType::WeaponType(entity1->getComponent<RType::EntityTypeComponent>()->getWeaponType() + 1));
                 entity1->getComponent<RType::DamageComponent>()->setDamage(entity1->getComponent<RType::DamageComponent>()->getDamage() + 1);
             }
             break;
         case RType::E_ITEM_HEAL:
-            std::cout << "player health + 1" << std::endl;
             entity1->getComponent<RType::HealthComponent>()->setHealth(entity1->getComponent<RType::HealthComponent>()->getHealth() + 1);
             break;
         case RType::E_ITEM_SHIELD:
@@ -166,12 +161,25 @@ bool RType::HandleCollisionSystem::isInPastCollision(const std::pair<std::shared
 void RType::HandleCollisionSystem::decreaseHealth(std::shared_ptr<RType::Entity> entity, int damage)
 {
     auto healthComponent = entity->getComponent<HealthComponent>();
-    healthComponent->setHealth(healthComponent->getHealth() - damage);
-    if (healthComponent->getHealth() <= 0)
-        _entitiesToDestroy.push_back(entity);
-    else if (healthComponent->getHealth() > 0 && _sendMessageToAllClient && GET_ENTITY_TYPE(entity) == E_PLAYER) {
-        std::cout << "health: " << healthComponent->getHealth() << std::endl;
-        _sendMessageToAllClient(Encoder::infoEntity(entity->getId(), E_PLAYER,
-            entity->GET_POSITION_X,  entity->GET_POSITION_Y, 0, healthComponent->getHealth()));
+
+    if (GET_ENTITY_TYPE(entity) == E_PLAYER) {
+        if (entity->getComponent<PowerUpComponent>() && !entity->getComponent<PowerUpComponent>()->getPowerUpsIsActive(SHIELD)) {
+
+            healthComponent->setHealth(healthComponent->getHealth() - damage);
+
+            if (healthComponent->getHealth() <= 0)
+                _entitiesToDestroy.push_back(entity);
+            else if (_sendMessageToAllClient) {
+                std::cout << "health: " << healthComponent->getHealth() << std::endl;
+                _sendMessageToAllClient(Encoder::infoEntity(entity->getId(), E_PLAYER,
+                    entity->GET_POSITION_X,  entity->GET_POSITION_Y, 0, healthComponent->getHealth()));
+            }
+        }
+    } else if (GET_ENTITY_TYPE(entity) != E_PLAYER) {
+
+        healthComponent->setHealth(healthComponent->getHealth() - damage);
+
+        if (healthComponent->getHealth() <= 0)
+            _entitiesToDestroy.push_back(entity);
     }
 }
