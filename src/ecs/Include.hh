@@ -22,4 +22,5 @@
 #include "../protocolHandler/Encoder.hh"
 #include <mutex>
 #include "../../ressources/mobs/mobs.h"
+#include <typeindex>
 
