@@ -39,7 +39,7 @@ namespace RType {
         private:
             PatternType _patternType;
             sf::Vector2f _pattern;
-            uint16_t _entityToFollow;
+            uint16_t _entityToFollow = 0;
     };
 }
 #endif /* !DIRECTIONPATTERNCOMPONENT_HPP_ */

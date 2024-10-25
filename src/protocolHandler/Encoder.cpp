@@ -29,7 +29,8 @@ namespace RType {
     }
 
     U_STRING Encoder::newEntity(std::uint8_t type, std::uint16_t id,
-                                std::uint16_t x, std::uint16_t y)
+                                std::uint16_t x, std::uint16_t y,
+                                std::uint16_t entityToFollow)
     {
         U_STRING encodedEntity;
 
@@ -40,6 +41,8 @@ namespace RType {
         encodedEntity += x & 0xff;
         encodedEntity += y >> 8;
         encodedEntity += y & 0xff;
+        encodedEntity += entityToFollow >> 8;
+        encodedEntity += entityToFollow % 0xff;
         return header(encodedEntity.size(), NEW_ENTITY) + encodedEntity;
     }
 

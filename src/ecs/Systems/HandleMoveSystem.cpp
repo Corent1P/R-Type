@@ -25,7 +25,7 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
         int speed = entity->getComponent<VelocityComponent>()->getVelocity();
         sf::Vector2 position = entity->getComponent<PositionComponent>()->getPositions();
 
-        if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_PLAYER) {
+        if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_PLAYER && !_sendMessageToAllClient) {
             if (entity->getComponent<RType::DirectionComponent>()->getDirections(LEFT) != 0) {
                 movePosition.first -= speed * (entity->getComponent<RType::DirectionComponent>()->getDirections(LEFT) / 100.);
             }
@@ -43,7 +43,7 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
         }
         if(entity->getComponent<DirectionPatternComponent>() != nullptr) {
             auto pattern = entity->getComponent<RType::DirectionPatternComponent>()->getPattern();
-            if (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_SHIELD) {
+            if (entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == FOLLOW_PLAYER) {
                 entity->getComponent<RType::PositionComponent>()->setPositions(pattern.x, pattern.y);
             } else
                 entity->getComponent<RType::PositionComponent>()->setPositions(position.x + (pattern.x * speed / 5.), position.y + (pattern.y * speed / 5.));

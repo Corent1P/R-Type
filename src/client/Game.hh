@@ -111,9 +111,9 @@ namespace RType {
             void loopReceive();
             void createPlayer();
             void createEntity(const RType::EntityType &type, const int &posX,
-                              const int &posY);
+                              const int &posY, const int &idToFollow = -1);
             void createEntity(const long &serverId, const RType::EntityType &type,
-                              const int &posX, const int &posY);
+                              const int &posX, const int &posY, const int &idToFollow = -1);
             void createWindow();
             void createMenu();
             void createMappingInputButton(std::shared_ptr<RType::MappingInputComponent> mappingInput);
@@ -129,6 +129,8 @@ namespace RType {
             std::size_t getMaxClientId(void);
 
             sf::Vector2f getBulletPosition(int type, int posX, int posY);
+
+            std::shared_ptr<RType::Entity> getEntityByServerId(std::vector<std::shared_ptr<RType::Entity>> entities, int serverId);
 
             void trySendMessageToServer(const std::basic_string<unsigned char> &message);
             void disconnexion(void);

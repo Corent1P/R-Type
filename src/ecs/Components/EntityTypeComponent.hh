@@ -65,6 +65,7 @@ namespace RType {
             static bool isMob(EntityType);
             static bool isItem(EntityType);
             static bool isWeapon(EntityType);
+            static bool isPowerUp(EntityType);
         private:
             EntityType _entityType;
             WeaponType _weaponType;
