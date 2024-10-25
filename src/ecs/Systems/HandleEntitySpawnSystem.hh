@@ -42,6 +42,7 @@
 #define PUSH_PATTERN_E(pattern) pushComponent(std::make_shared<RType::DirectionPatternComponent>(pattern))
 #define PUSH_ACTION_E() pushComponent(std::make_shared<RType::ActionComponent>())
 #define PUSH_INTERVALSHOOT_E(interval) pushComponent(std::make_shared<RType::ShootIntervalComponent>(interval))
+#define SET_ENTITY_TO_FOLLOW_E(entity) getComponent<RType::DirectionPatternComponent>()->setEntityToFollow(entity->getId())
 
 namespace RType {
     class HandleEntitySpawnSystem : public ASystem {
@@ -56,6 +57,8 @@ namespace RType {
         private:
             static int luaTrampolineCreateEntity(lua_State *luaState);
             void createEntity(lua_State *LuaState);
+            void createEntity(EntityType type, std::shared_ptr<RType::Entity> toFollow,
+                              std::pair<int, int> offset);
             void createEntityMap(void);
 
             std::function<void(const std::basic_string<unsigned char> &message)> _sendToAllClient;

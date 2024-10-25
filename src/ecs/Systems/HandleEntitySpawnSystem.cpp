@@ -32,7 +32,7 @@ void RType::HandleEntitySpawnSystem::effects(std::vector<std::shared_ptr<RType::
         } else if (entity->getComponent<EntityTypeComponent>() != nullptr && entity->getComponent<EntityTypeComponent>()->getEntityType() == RType::E_PLAYER) {
             if (entity->getComponent<PowerUpComponent>() != nullptr && entity->getComponent<PowerUpComponent>()->getPowerUps(RType::SHIELD) == true) {
                 entity->getComponent<PowerUpComponent>()->setPowerUps(RType::SHIELD, false);
-                // createShield(entity);
+                createEntity(RType::E_SHIELD, entity, std::make_pair(0, 0));
             }
         }
     }
@@ -134,21 +134,59 @@ void RType::HandleEntitySpawnSystem::createEntity(lua_State *LuaState)
     _sendToAllClient(Encoder::newEntity(type, entity->getId(), position->getPositionX(), position->getPositionY()));
 }
 
-// void RType::HandleEntitySpawnSystem::createShield(std::shared_ptr<RType::Entity> entity) {
-//     std::shared_ptr<RType::Entity> shield = _addEntity();
-//     shield->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_SHIELD));
-//     shield->pushComponent(std::make_shared<RType::HealthComponent>(4));
-//     auto position = shield->pushComponent(std::make_shared<RType::PositionComponent>(entity->getComponent<RType::PositionComponent>()->getPositionX() - ((entity->getComponent<RType::IntRectComponent>()->getIntRectWidth() / 2) * entity->getComponent<ScaleComponent>()->getScaleX()), entity->getComponent<RType::PositionComponent>()->getPositionY() - ((entity->getComponent<RType::IntRectComponent>()->getIntRectHeight() / 2) * entity->getComponent<ScaleComponent>()->getScaleY())));
-//     shield->pushComponent(std::make_shared<RType::ScaleComponent>(3.0, 3.0));
-//     shield->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 32, 32));
-//     shield->pushComponent(std::make_shared<RType::DirectionPatternComponent>(FOLLOW_PLAYER));
-//     shield->getComponent<RType::DirectionPatternComponent>()->setEntityToFollow(entity->getId());
-//     shield->pushComponent(std::make_shared<VelocityComponent>(SERVER_SPEED(10)));
-//     shield->pushComponent(std::make_shared<ClockComponent>());
-//     shield->pushComponent(std::make_shared<MenuComponent>(GAME));
-//     u_int16_t idToFollow = shield->getComponent<RType::DirectionPatternComponent>()->getEntityToFollow();
-//     _sendToAllClient(Encoder::newEntity(E_SHIELD, shield->getId(), position->getPositionX(), position->getPositionY(), idToFollow));
-// }
+void RType::HandleEntitySpawnSystem::createEntity(RType::EntityType type,
+                                                  std::shared_ptr<RType::Entity> toFollow,
+                                                  std::pair<int, int> offset) {
+    Json::Reader reader;
+    Json::Value entityInfo;
+    std::ifstream file;
+    std::shared_ptr<RType::Entity> entity = _addEntity();
+    std::string filepath("./config/entities/" + _entityTypeMap[type] + ".json");
+    int posX = toFollow->getComponent<PositionComponent>()->getPositionY() - offset.first;
+    int posY = toFollow->getComponent<PositionComponent>()->getPositionY() - offset.second;
+    bool isFollowing = false;
+
+    file.open(filepath);
+    if (!file.is_open() || !reader.parse(file, entityInfo)) {
+        std::cerr << "Error while reading or parsing the json: " << filepath << std::endl;
+        return;
+    }
+    file.close();
+    entity->PUSH_TYPE_E(static_cast<EntityType>(type));
+    POS_COMPONENT position = entity->PUSH_POS_E(posX, posY);
+    entity->PUSH_SCALE_E(entityInfo["scale"]["x"].asFloat(),
+                         entityInfo["scale"]["y"].asFloat());
+    entity->PUSH_RECT_E(entityInfo["rect"]["x"].asInt(),
+                        entityInfo["rect"]["y"].asInt(),
+                        entityInfo["rect"]["width"].asInt(),
+                        entityInfo["rect"]["height"].asInt());
+    entity->PUSH_CLOCK_E();
+    if (entityInfo["health"].asBool() == true)
+        entity->PUSH_HEALTH_E(entityInfo["health"].asInt());
+    if (entityInfo["damage"].asBool() == true)
+        entity->PUSH_DAMAGE_E(entityInfo["damage"].asInt());
+    if (entityInfo["speed"].asBool() == true)
+        entity->PUSH_VELOCITY_E(SERVER_SPEED(entityInfo["speed"].asInt()));
+    if (entityInfo["pattern"].asBool() == true) {
+        entity->PUSH_PATTERN_E(static_cast<RType::PatternType>(entityInfo["pattern"].asInt()));
+        if (entityInfo["pattern"].asInt() == RType::FOLLOW_PLAYER) {
+            entity->SET_ENTITY_TO_FOLLOW_E(toFollow);
+            isFollowing = true;
+        }
+    }
+    if (entityInfo["isShooting"].asBool() == true) {
+        auto action = entity->PUSH_ACTION_E();
+        action->setActions(SHOOTING, true);
+    }
+    if (entityInfo["intervalShoot"].asBool() == true) {
+        entity->PUSH_INTERVALSHOOT_E(entityInfo["intervalShoot"].asFloat());
+    }
+    if (isFollowing == true) {
+        _sendToAllClient(Encoder::newEntity(type, entity->getId(), position->getPositionX(), position->getPositionY(), toFollow->getId()));
+    } else {
+        _sendToAllClient(Encoder::newEntity(type, entity->getId(), position->getPositionX(), position->getPositionY()));
+    }
+}
 
 void RType::HandleEntitySpawnSystem::createEntityMap(void)
 {
