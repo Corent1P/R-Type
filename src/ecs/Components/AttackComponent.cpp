@@ -21,6 +21,12 @@ void RType::AttackComponent::pushBackAttacksPatterns(Pattern pattern)
         case SPAWN_STING:
             _patterns.push_back(AttackPatterns::spawnSting);
             break;
+        case SPACE_SHIP_SHOOT:
+            _patterns.push_back(AttackPatterns::spaceShipShoot);
+            break;
+        case WAVE_SHOOT:
+            _patterns.push_back(AttackPatterns::waveShoot);
+            break;
         default:
             break;
     }
@@ -32,6 +38,12 @@ void RType::AttackComponent::pushBackAttacksPatterns(std::string pattern)
         _patterns.push_back(AttackPatterns::spawnBabyFly);
     else if (pattern == "spawnSting")
         _patterns.push_back(AttackPatterns::spawnSting);
+    else if (pattern == "spaceShipShoot")
+        _patterns.push_back(AttackPatterns::spaceShipShoot);
+    else if (pattern == "waveShoot")
+        _patterns.push_back(AttackPatterns::waveShoot);
+    else
+        throw EcsError("Attack pattern: " + pattern + "was not found");
 }
 
 void RType::AttackComponent::executeCurrentAttackPattern(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient)

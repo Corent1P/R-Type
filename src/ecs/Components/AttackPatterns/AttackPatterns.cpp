@@ -43,7 +43,47 @@ void RType::AttackPatterns::spawnSting(std::shared_ptr<RType::Entity> boss, std:
     }
 }
 
+void RType::AttackPatterns::spaceShipShoot(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient)
+{
+    auto position = boss->getComponent<PositionComponent>();
+    auto rect = boss->getComponent<IntRectComponent>();
+    auto scale = boss->getComponent<ScaleComponent>();
 
+    if (!position || !rect || !scale)
+        return;
+
+
+    int bossX = position->getPositionX();
+    int bossY = position->getPositionY();
+    int bossHeight = rect->getIntRectHeight() * scale->getScaleY();
+
+    int posY = bossY + (bossHeight / 2) + 50;
+
+    createEntity(E_SPACE_SHIP_BULLET, bossX, posY, addEntity, sendMessageToAllClient);
+}
+
+void RType::AttackPatterns::waveShoot(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient)
+{
+    auto position = boss->getComponent<PositionComponent>();
+    auto rect = boss->getComponent<IntRectComponent>();
+    auto scale = boss->getComponent<ScaleComponent>();
+
+    if (!position || !rect || !scale)
+        return;
+
+
+    int bossX = position->getPositionX();
+    int bossY = position->getPositionY();
+    int bossHeight = rect->getIntRectHeight() * scale->getScaleY();
+
+    int posY = bossY + (bossHeight / 2) + 50;
+
+    createEntity(E_SPACE_SHIP_BULLET, bossX, posY, addEntity, sendMessageToAllClient);
+    createEntity(E_SPACE_SHIP_SEMI_DIAGONAL_UP, bossX, posY, addEntity, sendMessageToAllClient);
+    createEntity(E_SPACE_SHIP_SEMI_DIAGONAL_DOWN, bossX, posY, addEntity, sendMessageToAllClient);
+    createEntity(E_SPACE_SHIP_DIAGONAL_UP, bossX, posY, addEntity, sendMessageToAllClient);
+    createEntity(E_SPACE_SHIP_DIAGONAL_DOWN, bossX, posY, addEntity, sendMessageToAllClient);
+}
 
 void RType::AttackPatterns::createEntity(const RType::EntityType &type, const int &posX, const int &posY, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient)
 {
@@ -61,8 +101,13 @@ void RType::AttackPatterns::createEntity(const RType::EntityType &type, const in
     entityTypeMap[E_BABY_FLY] = "baby_fly";
     entityTypeMap[E_STING] = "sting";
 
-    entityTypeMap[E_BOSS] = "boss";
-
+    entityTypeMap[E_FLY_BOSS] = "fly_boss";
+    entityTypeMap[E_SPACE_SHIP_BOSS] = "sape_ship_boss";
+    entityTypeMap[E_SPACE_SHIP_BULLET] = "space_ship_bullet";
+    entityTypeMap[E_SPACE_SHIP_SEMI_DIAGONAL_UP] = "space_ship_semi_diagonal_up_bullet";
+    entityTypeMap[E_SPACE_SHIP_SEMI_DIAGONAL_DOWN] = "space_ship_semi_diagonal_down_bullet";
+    entityTypeMap[E_SPACE_SHIP_DIAGONAL_UP] = "space_ship_diagonal_up_bullet";
+    entityTypeMap[E_SPACE_SHIP_DIAGONAL_DOWN] = "space_ship_diagonal_down_bullet";
     std::string filepath("./config/entities/" + entityTypeMap[type] + ".json");
 
     file.open(filepath);

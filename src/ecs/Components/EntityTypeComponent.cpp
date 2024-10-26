@@ -64,12 +64,12 @@ bool RType::EntityTypeComponent::isMob(EntityType entityType)
 
 bool RType::EntityTypeComponent::isBoss(EntityType entityType)
 {
-    return entityType == E_BOSS;
+    return entityType == E_FLY_BOSS || entityType == E_SPACE_SHIP_BOSS;
 }
 
 bool RType::EntityTypeComponent::isEnnemyShoot(EntityType entityType)
 {
-    return entityType == E_ENNEMY_BULLET || entityType == E_STING;
+    return entityType == E_ENNEMY_BULLET || entityType == E_STING || entityType == E_SPACE_SHIP_BULLET || entityType == E_SPACE_SHIP_SEMI_DIAGONAL_UP || entityType == E_SPACE_SHIP_SEMI_DIAGONAL_DOWN || entityType == E_SPACE_SHIP_DIAGONAL_UP || entityType == E_SPACE_SHIP_DIAGONAL_DOWN;
 }
 
 bool RType::EntityTypeComponent::isItem(EntityType entityType)
@@ -114,8 +114,11 @@ std::string RType::EntityTypeComponent::getOutput() const
         case E_STING:
             entityType = "mob sting";
             break;
-        case E_BOSS:
-            entityType = "boss";
+        case E_FLY_BOSS:
+            entityType = "fly boss";
+            break;
+        case E_SPACE_SHIP_BOSS:
+            entityType = "space ship boss";
             break;
         case E_BUTTON:
             entityType = "button";

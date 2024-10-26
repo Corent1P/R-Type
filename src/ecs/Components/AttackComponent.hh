@@ -18,7 +18,9 @@
 namespace RType {
     enum Pattern {
             SPAWN_BABY_FLY,
-            SPAWN_STING
+            SPAWN_STING,
+            SPACE_SHIP_SHOOT,
+            WAVE_SHOOT
     };
 
     class AttackComponent: public RType::IComponent {

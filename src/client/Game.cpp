@@ -170,6 +170,11 @@ void RType::Game::loopReceive()
                             case RType::E_BULLET_4:
                             case RType::E_ENNEMY_BULLET:
                             case RType::E_STING:
+                            case RType::E_SPACE_SHIP_BULLET:
+                            case RType::E_SPACE_SHIP_SEMI_DIAGONAL_UP:
+                            case RType::E_SPACE_SHIP_SEMI_DIAGONAL_DOWN:
+                            case RType::E_SPACE_SHIP_DIAGONAL_UP:
+                            case RType::E_SPACE_SHIP_DIAGONAL_DOWN:
                                 createEntity(E_HIT_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
                                 _coord.deleteEntity(entity);
                                 break;
@@ -180,7 +185,8 @@ void RType::Game::loopReceive()
                                 createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
                                 _coord.deleteEntity(entity);
                                 break;
-                            case RType::E_BOSS:
+                            case RType::E_FLY_BOSS:
+                            case RType::E_SPACE_SHIP_BOSS:
                                 for (int i = 0; i < 50; i++) {
                                     createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X + (std::rand() % 400), entity->GET_POSITION_Y + (std::rand() % 400));
                                 }
@@ -747,7 +753,8 @@ void RType::Game::createEntityMap(void)
     _entityTypeMap[E_OCTOPUS] = "octopus";
     _entityTypeMap[E_FLY] = "fly";
     _entityTypeMap[E_BABY_FLY] = "baby_fly";
-    _entityTypeMap[E_BOSS] = "boss";
+    _entityTypeMap[E_FLY_BOSS] = "fly_boss";
+    _entityTypeMap[E_SPACE_SHIP_BOSS] = "space_ship_boss";
     _entityTypeMap[E_BUTTON] = "button";
     _entityTypeMap[E_LAYER] = "layer";
     _entityTypeMap[E_BULLET] = "bullet";
@@ -759,6 +766,11 @@ void RType::Game::createEntityMap(void)
     _entityTypeMap[E_BULLET_2] = "bullet_2";
     _entityTypeMap[E_BULLET_3] = "bullet_3";
     _entityTypeMap[E_BULLET_4] = "bullet_4";
+    _entityTypeMap[E_SPACE_SHIP_BULLET] = "space_ship_bullet";
+    _entityTypeMap[E_SPACE_SHIP_SEMI_DIAGONAL_UP] = "space_ship_semi_diagonal_up_bullet";
+    _entityTypeMap[E_SPACE_SHIP_SEMI_DIAGONAL_DOWN] = "space_ship_semi_diagonal_down_bullet";
+    _entityTypeMap[E_SPACE_SHIP_DIAGONAL_UP] = "space_ship_diagonal_up_bullet";
+    _entityTypeMap[E_SPACE_SHIP_DIAGONAL_DOWN] = "space_ship_diagonal_down_bullet";
     _entityTypeMap[E_ENNEMY_BULLET] = "ennemy_bullet";
     _entityTypeMap[E_BULLET_EFFECT] = "bullet_effect";
     _entityTypeMap[E_HIT_EFFECT] = "hit_effect";
