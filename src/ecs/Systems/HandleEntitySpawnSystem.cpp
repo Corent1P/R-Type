@@ -51,6 +51,7 @@ void RType::HandleEntitySpawnSystem::effect(std::shared_ptr<RType::Entity> entit
         lua_pushcclosure(luaState, &HandleEntitySpawnSystem::luaTrampolineCreateEntity, 1);
         lua_setglobal(luaState, "createEntity");
         entity->getComponent<RType::ParseLevelInfoComponent>()->setFunctionPushed(true);
+        entity->getComponent<RType::ClockComponent>()->getClock(LEVEL_CLOCK).restart();
     }
     lua_getglobal(luaState, "Level");
     if (!lua_istable(luaState, -1)) {
