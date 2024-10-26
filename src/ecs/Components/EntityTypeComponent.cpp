@@ -59,7 +59,17 @@ RType::MappingInput RType::EntityTypeComponent::getButtonType() const
 
 bool RType::EntityTypeComponent::isMob(EntityType entityType)
 {
-    return entityType == E_SMALL_SPACESHIP || entityType == E_FLY || entityType == E_OCTOPUS;
+    return entityType == E_SMALL_SPACESHIP || entityType == E_FLY || entityType == E_BABY_FLY || entityType == E_OCTOPUS || isBoss(entityType);
+}
+
+bool RType::EntityTypeComponent::isBoss(EntityType entityType)
+{
+    return entityType == E_BOSS;
+}
+
+bool RType::EntityTypeComponent::isEnnemyShoot(EntityType entityType)
+{
+    return entityType == E_ENNEMY_BULLET || entityType == E_STING;
 }
 
 bool RType::EntityTypeComponent::isItem(EntityType entityType)
@@ -97,6 +107,12 @@ std::string RType::EntityTypeComponent::getOutput() const
             break;
         case E_FLY:
             entityType = "mob fly";
+            break;
+        case E_BABY_FLY:
+            entityType = "mob baby fly";
+            break;
+        case E_STING:
+            entityType = "mob sting";
             break;
         case E_BOSS:
             entityType = "boss";

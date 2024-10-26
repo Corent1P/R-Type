@@ -43,6 +43,23 @@ void RType::HandleCollisionSystem::effects(std::vector<std::shared_ptr<RType::En
                 }
             }
         }
+
+        if (entity->getComponent<EntityTypeComponent>() != nullptr && EntityTypeComponent::isBoss(entity->getComponent<EntityTypeComponent>()->getEntityType())) {
+            for (const auto &window: entities) {
+                auto level = window->getComponent<LevelComponent>();
+                auto parseLevel = window->getComponent<ParseLevelInfoComponent>();
+                if (level && parseLevel) {
+                    if (level->getLevel() == 8)
+                        return _sendMessageToAllClient(Encoder::gameEnd());
+                    level->setLevel(level->getLevel() + 1);
+                    parseLevel->setLevel(level->getLevel());
+                    if (_sendMessageToAllClient)
+                        _sendMessageToAllClient(Encoder::infoLevel(level->getLevel()));
+                    break;
+                }
+            }
+        }
+
         if (_sendMessageToAllClient) {
             _sendMessageToAllClient(Encoder::deleteEntity(entity->getId()));
             _deleteEntity(entity);
@@ -76,9 +93,9 @@ bool RType::HandleCollisionSystem::collides(std::shared_ptr<RType::Entity> entit
     sf::Vector2f scale1 = (entity1->getComponent<ScaleComponent>()) ? entity1->getComponent<ScaleComponent>()->getScales() : sf::Vector2f{1.0, 1.0};
     sf::Vector2f scale2 = (entity2->getComponent<ScaleComponent>()) ? entity2->getComponent<ScaleComponent>()->getScales() : sf::Vector2f{1.0, 1.0};
     auto width1 = entity1->getComponent<IntRectComponent>()->getIntRectWidth();
-    auto height1 = entity1->getComponent<IntRectComponent>()->getIntRectHeight();
+    auto height1 = entity1->getComponent<IntRectComponent>()->getIntRectHeight() - entity1->getComponent<IntRectComponent>()->getIntRectTop();
     auto width2 = entity2->getComponent<IntRectComponent>()->getIntRectWidth();
-    auto height2 = entity2->getComponent<IntRectComponent>()->getIntRectHeight();
+    auto height2 = entity2->getComponent<IntRectComponent>()->getIntRectHeight() - entity2->getComponent<IntRectComponent>()->getIntRectTop();
 
     return (position1.x + (width1 * scale1.x) > position2.x
         && position1.x < position2.x + (width2 * scale2.x)
@@ -97,7 +114,7 @@ void RType::HandleCollisionSystem::handleEntityCollision(const std::pair<std::sh
     const auto &entityDamage1 = entity1->getComponent<DamageComponent>();
     const auto &entityDamage2 = entity2->getComponent<DamageComponent>();
 
-    if ((entityType1 == RType::E_SHIELD || entityType1 == RType::E_PLAYER) && entityType2 == RType::E_ENNEMY_BULLET && entityDamage2) {
+    if ((entityType1 == RType::E_SHIELD || entityType1 == RType::E_PLAYER) && EntityTypeComponent::isEnnemyShoot(entityType2) && entityDamage2) {
         _entitiesToDestroy.push_back(entity2);
         decreaseHealth(entity1, entityDamage2->getDamage());
     } else if (entityType1 == RType::E_PLAYER && EntityTypeComponent::isMob(entityType2) && entityDamage1 && entityDamage2) {
@@ -106,7 +123,6 @@ void RType::HandleCollisionSystem::handleEntityCollision(const std::pair<std::sh
     } else if (EntityTypeComponent::isMob(entityType1) && EntityTypeComponent::isWeapon(entityType2) && entityDamage2) {
         _entitiesToDestroy.push_back(entity2);
         decreaseHealth(entity1, entityDamage2->getDamage());
-
     } else if (entityType1 == RType::E_PLAYER && EntityTypeComponent::isItem(entityType2)) {
         handleItemEffect(entity1, entity2);
         _entitiesToDestroy.push_back(entity2);
@@ -179,7 +195,13 @@ void RType::HandleCollisionSystem::decreaseHealth(std::shared_ptr<RType::Entity>
 
         healthComponent->setHealth(healthComponent->getHealth() - damage);
 
-        if (healthComponent->getHealth() <= 0)
+        if (healthComponent->getHealth() <= 0) {
             _entitiesToDestroy.push_back(entity);
+        }
+        else if (_sendMessageToAllClient && EntityTypeComponent::isBoss(GET_ENTITY_TYPE(entity))) {
+                std::cout << "boss health: " << healthComponent->getHealth() << std::endl;
+                _sendMessageToAllClient(Encoder::infoEntity(entity->getId(), GET_ENTITY_TYPE(entity),
+                    entity->GET_POSITION_X,  entity->GET_POSITION_Y, 0, healthComponent->getHealth()));
+            }
     }
 }

@@ -131,6 +131,15 @@ void RType::HandleEntitySpawnSystem::createEntity(lua_State *LuaState)
     if (entityInfo["intervalShoot"].asBool() == true) {
         entity->PUSH_INTERVALSHOOT_E(entityInfo["intervalShoot"].asFloat());
     }
+
+    if (entityInfo["attack"].isArray()) {
+        auto attackComponent = entity->PUSH_ATTACK_E();
+        for (const auto &attack : entityInfo["attack"]) {
+            if (attack.isString()) {
+                attackComponent->pushBackAttacksPatterns(attack.asString());
+            }
+        }
+    }
     _sendToAllClient(Encoder::newEntity(type, entity->getId(), position->getPositionX(), position->getPositionY()));
 }
 
@@ -159,6 +168,7 @@ void RType::HandleEntitySpawnSystem::createEntityMap(void)
     _entityTypeMap[E_SMALL_SPACESHIP] = "small_spaceship";
     _entityTypeMap[E_OCTOPUS] = "octopus";
     _entityTypeMap[E_FLY] = "fly";
+    _entityTypeMap[E_BABY_FLY] = "baby_fly";
     _entityTypeMap[E_BOSS] = "boss";
     _entityTypeMap[E_BUTTON] = "button";
     _entityTypeMap[E_LAYER] = "layer";
@@ -176,4 +186,6 @@ void RType::HandleEntitySpawnSystem::createEntityMap(void)
     _entityTypeMap[E_HIT_EFFECT] = "hit_effect";
     _entityTypeMap[E_EXPLOSION_EFFECT] = "explosion_effect";
     _entityTypeMap[E_TEXT] = "text";
+    _entityTypeMap[E_STING] = "sting";
+
 }

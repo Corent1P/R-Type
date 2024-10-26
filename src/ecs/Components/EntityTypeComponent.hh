@@ -19,6 +19,7 @@ namespace RType {
         E_SMALL_SPACESHIP,
         E_OCTOPUS,
         E_FLY,
+        E_BABY_FLY,
         E_BOSS,
         E_BUTTON,
         E_LAYER,
@@ -35,6 +36,7 @@ namespace RType {
         E_BULLET_2,
         E_BULLET_3,
         E_BULLET_4,
+        E_STING,
     };
 
     enum WeaponType {
@@ -64,6 +66,8 @@ namespace RType {
             MappingInput getButtonType() const;
             std::string getOutput() const;
             static bool isMob(EntityType);
+            static bool isBoss(EntityType);
+            static bool isEnnemyShoot(EntityType);
             static bool isItem(EntityType);
             static bool isWeapon(EntityType);
             static bool isPowerUp(EntityType);

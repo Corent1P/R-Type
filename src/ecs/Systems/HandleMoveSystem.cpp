@@ -67,6 +67,11 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
                     }
                     continue;
                 }
+
+                if (EntityTypeComponent::isBoss(entity->getComponent<EntityTypeComponent>()->getEntityType())
+                && entity->getComponent<RType::PositionComponent>()->getPositionX() < 1500) {
+                    entity->getComponent<RType::DirectionPatternComponent>()->setPatternType(NO_PATTERN);
+                }
             }
         }
 

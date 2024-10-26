@@ -20,6 +20,8 @@
 #include ".././Components/ClockComponent.hh"
 #include ".././Components/VelocityComponent.hh"
 #include ".././Components/IntRectComponent.hh"
+#include ".././Components/ParseLevelInfoComponent.hh"
+
 #include "../../client/Game.hh"
 
 namespace RType {
@@ -87,6 +89,8 @@ namespace RType {
              *
              */
             std::vector<std::shared_ptr<RType::Entity>> _entitiesToDestroy;
+
+            bool _levelFinish;
 
             /**
              * @brief a method to check if two entities are colliding

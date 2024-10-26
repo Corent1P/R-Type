@@ -23,8 +23,8 @@ end
 for i = 1, 10, 1 do
     Level.addEnnemy(4, i, (i * 100) % 1000)
     if i % 2 == 0 then
-        Level.addEnnemy(5, i, (i * 100 - 33) % 1000)
-        Level.addEnnemy(6, i, (i * 100 - 66) % 1000)
+        Level.addEnnemy(4, i, (i * 100 - 33) % 1000)
+        Level.addEnnemy(4, i, (i * 100 - 66) % 1000)
     end
     if i == 10 then
         Level.addEnnemy(8, i, 300)
