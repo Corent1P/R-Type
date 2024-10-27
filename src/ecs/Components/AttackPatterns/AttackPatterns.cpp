@@ -133,6 +133,22 @@ void RType::AttackPatterns::spawnKamikazeOctopus(std::shared_ptr<RType::Entity> 
 
 }
 
+void RType::AttackPatterns::pattern1(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient)
+{
+    (void) boss;
+    (void) addEntity;
+    (void) sendMessageToAllClient;
+    std::cout << "PATTERN 1" << std::endl;
+}
+
+void RType::AttackPatterns::pattern2(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient)
+{
+    (void) boss;
+    (void) addEntity;
+    (void) sendMessageToAllClient;
+    std::cout << "PATTERN 2" << std::endl;
+}
+
 void RType::AttackPatterns::createEntity(const RType::EntityType &type, const int &posX, const int &posY, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient)
 {
     Json::Reader reader;
@@ -160,6 +176,9 @@ void RType::AttackPatterns::createEntity(const RType::EntityType &type, const in
     entityTypeMap[E_OCTOPUS_BOSS] = "octopus_boss";
     entityTypeMap[E_BABY_OCTOPUS] = "baby_octopus";
     entityTypeMap[E_KAMIKAZE_OCTOPUS] = "kamikaze_octopus";
+
+    entityTypeMap[E_LAST_BOSS] = "last_boss";
+
 
     std::string filepath("./config/entities/" + entityTypeMap[type] + ".json");
 

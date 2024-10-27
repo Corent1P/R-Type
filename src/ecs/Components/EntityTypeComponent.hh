@@ -23,6 +23,7 @@ namespace RType {
         E_FLY_BOSS,
         E_SPACE_SHIP_BOSS,
         E_OCTOPUS_BOSS,
+        E_LAST_BOSS,
         E_BABY_OCTOPUS,
         E_KAMIKAZE_OCTOPUS,
         E_BUTTON,
@@ -46,6 +47,7 @@ namespace RType {
         E_SPACE_SHIP_SEMI_DIAGONAL_DOWN,
         E_SPACE_SHIP_DIAGONAL_UP,
         E_SPACE_SHIP_DIAGONAL_DOWN,
+
     };
 
     enum WeaponType {

@@ -65,7 +65,7 @@ bool RType::EntityTypeComponent::isMob(EntityType entityType)
 
 bool RType::EntityTypeComponent::isBoss(EntityType entityType)
 {
-    return entityType == E_FLY_BOSS || entityType == E_SPACE_SHIP_BOSS || entityType == E_OCTOPUS_BOSS;
+    return entityType == E_FLY_BOSS || entityType == E_SPACE_SHIP_BOSS || entityType == E_OCTOPUS_BOSS || entityType == E_LAST_BOSS;
 }
 
 bool RType::EntityTypeComponent::isEnnemyShoot(EntityType entityType)
@@ -129,6 +129,9 @@ std::string RType::EntityTypeComponent::getOutput() const
             break;
         case E_OCTOPUS_BOSS:
             entityType = "octopus boss";
+            break;
+        case E_LAST_BOSS:
+            entityType = "last boss";
             break;
         case E_BUTTON:
             entityType = "button";

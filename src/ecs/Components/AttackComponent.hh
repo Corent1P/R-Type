@@ -22,7 +22,9 @@ namespace RType {
             SPACE_SHIP_SHOOT,
             WAVE_SHOOT,
             SPAWN_BABY_OCTOPUS,
-            SPAWN_KAMIKAZE_OCTOPUS
+            SPAWN_KAMIKAZE_OCTOPUS,
+            PATTERN_1,
+            PATTERN_2
     };
 
     class AttackComponent: public RType::IComponent {

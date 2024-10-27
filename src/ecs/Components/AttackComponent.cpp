@@ -33,6 +33,12 @@ void RType::AttackComponent::pushBackAttacksPatterns(Pattern pattern)
         case SPAWN_KAMIKAZE_OCTOPUS:
             _patterns.push_back(AttackPatterns::spawnKamikazeOctopus);
             break;
+        case PATTERN_1:
+            _patterns.push_back(AttackPatterns::pattern1);
+            break;
+        case PATTERN_2:
+            _patterns.push_back(AttackPatterns::pattern2);
+            break;
         default:
             break;
     }
@@ -52,6 +58,10 @@ void RType::AttackComponent::pushBackAttacksPatterns(std::string pattern)
         _patterns.push_back(AttackPatterns::spawnBabyOctopus);
     else if (pattern == "spawnKamikazeOctopus")
         _patterns.push_back(AttackPatterns::spawnKamikazeOctopus);
+    else if (pattern == "pattern1")
+        _patterns.push_back(AttackPatterns::pattern1);
+    else if (pattern == "pattern2")
+        _patterns.push_back(AttackPatterns::pattern2);
     else
         throw EcsError("Attack pattern: " + pattern + "was not found");
 }

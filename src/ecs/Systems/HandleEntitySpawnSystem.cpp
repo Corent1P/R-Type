@@ -173,6 +173,7 @@ void RType::HandleEntitySpawnSystem::createEntityMap(void)
     _entityTypeMap[E_FLY_BOSS] = "fly_boss";
     _entityTypeMap[E_SPACE_SHIP_BOSS] = "space_ship_boss";
     _entityTypeMap[E_OCTOPUS_BOSS] = "octopus_boss";
+    _entityTypeMap[E_LAST_BOSS] = "last_boss";
     _entityTypeMap[E_BABY_OCTOPUS] = "baby_octopus";
     _entityTypeMap[E_KAMIKAZE_OCTOPUS] = "kamikaze_octopus";
     _entityTypeMap[E_BUTTON] = "button";
