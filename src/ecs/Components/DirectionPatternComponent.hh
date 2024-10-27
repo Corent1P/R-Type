@@ -25,7 +25,8 @@ namespace RType {
         SEMI_DIAGONAL_UP,
         SEMI_DIAGONAL_DOWN,
         DIAGONAL_UP,
-        DIAGONAL_DOWN
+        DIAGONAL_DOWN,
+        TO_PLAYER
     };
 
     class DirectionPatternComponent: public RType::IComponent {

@@ -59,12 +59,13 @@ RType::MappingInput RType::EntityTypeComponent::getButtonType() const
 
 bool RType::EntityTypeComponent::isMob(EntityType entityType)
 {
-    return entityType == E_SMALL_SPACESHIP || entityType == E_FLY || entityType == E_BABY_FLY || entityType == E_OCTOPUS || isBoss(entityType);
+    return entityType == E_SMALL_SPACESHIP || entityType == E_FLY || entityType == E_BABY_FLY || entityType == E_OCTOPUS || entityType == E_BABY_OCTOPUS || entityType == E_KAMIKAZE_OCTOPUS
+    || isBoss(entityType);
 }
 
 bool RType::EntityTypeComponent::isBoss(EntityType entityType)
 {
-    return entityType == E_FLY_BOSS || entityType == E_SPACE_SHIP_BOSS;
+    return entityType == E_FLY_BOSS || entityType == E_SPACE_SHIP_BOSS || entityType == E_OCTOPUS_BOSS;
 }
 
 bool RType::EntityTypeComponent::isEnnemyShoot(EntityType entityType)
@@ -114,11 +115,20 @@ std::string RType::EntityTypeComponent::getOutput() const
         case E_STING:
             entityType = "mob sting";
             break;
+        case E_BABY_OCTOPUS:
+            entityType = "mob baby octopus";
+            break;
+        case E_KAMIKAZE_OCTOPUS:
+            entityType = "mob kamikaze octopus";
+            break;
         case E_FLY_BOSS:
             entityType = "fly boss";
             break;
         case E_SPACE_SHIP_BOSS:
             entityType = "space ship boss";
+            break;
+        case E_OCTOPUS_BOSS:
+            entityType = "octopus boss";
             break;
         case E_BUTTON:
             entityType = "button";

@@ -25,7 +25,7 @@ for i = 1, 10, 1 do
     Level.addEnnemy(5, i, (i * 100 - 33) % 1000)
     Level.addEnnemy(5, i, (i * 100 - 66) % 1000)
     if i == 10 then
-        Level.addEnnemy(8, i, 300)
+        Level.addEnnemy(10, i, 300)
     end
 end
 

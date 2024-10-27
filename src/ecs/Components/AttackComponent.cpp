@@ -27,6 +27,12 @@ void RType::AttackComponent::pushBackAttacksPatterns(Pattern pattern)
         case WAVE_SHOOT:
             _patterns.push_back(AttackPatterns::waveShoot);
             break;
+        case SPAWN_BABY_OCTOPUS:
+            _patterns.push_back(AttackPatterns::spawnBabyOctopus);
+            break;
+        case SPAWN_KAMIKAZE_OCTOPUS:
+            _patterns.push_back(AttackPatterns::spawnKamikazeOctopus);
+            break;
         default:
             break;
     }
@@ -42,6 +48,10 @@ void RType::AttackComponent::pushBackAttacksPatterns(std::string pattern)
         _patterns.push_back(AttackPatterns::spaceShipShoot);
     else if (pattern == "waveShoot")
         _patterns.push_back(AttackPatterns::waveShoot);
+    else if (pattern == "spawnBabyOctopus")
+        _patterns.push_back(AttackPatterns::spawnBabyOctopus);
+    else if (pattern == "spawnKamikazeOctopus")
+        _patterns.push_back(AttackPatterns::spawnKamikazeOctopus);
     else
         throw EcsError("Attack pattern: " + pattern + "was not found");
 }
