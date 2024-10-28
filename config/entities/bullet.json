@@ -1,5 +1,4 @@
 {
-    "name": "bullet",
     "sprite":"./ressources/shoot-spritesheet.png",
     "scale": {
         "x": 2.0,

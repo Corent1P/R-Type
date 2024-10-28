@@ -19,7 +19,7 @@ namespace RType {
             Entity(uint16_t id, std::shared_ptr<std::mutex> mtx, int serverId = -1);
             ~Entity() = default;
 
-            std::vector<std::shared_ptr<IComponent>> getComponents(void) const;
+            const std::unordered_map<std::type_index, std::shared_ptr<RType::IComponent>> &getComponents(void) const;
             uint16_t getId(void) const;
             int getServerId(void) const;
             void setServerId(int serverId);
@@ -27,18 +27,16 @@ namespace RType {
             template <typename T>
             std::shared_ptr<T> pushComponent(std::shared_ptr<T> component) {
                 std::unique_lock<std::mutex> lock(*_mtx);
-                this->_components.push_back(component);
+                _typedComponents[typeid(T)] = component;
                 return component;
             }
 
             template <typename T>
             std::shared_ptr<T> getComponent() const {
                 std::unique_lock<std::mutex> lock(*_mtx);
-                for (const auto& component : _components) {
-                    std::shared_ptr<T> castedComponent = std::dynamic_pointer_cast<T>(component);
-                    if (castedComponent) {
-                        return castedComponent;
-                    }
+                auto it = _typedComponents.find(typeid(T));
+                if (it != _typedComponents.end()) {
+                    return std::static_pointer_cast<T>(it->second);
                 }
                 return nullptr;
             }
@@ -49,7 +47,7 @@ namespace RType {
             Entity &operator=(const Entity &other);
             static bool compareEntity(const std::shared_ptr<RType::Entity> &entity1, const std::shared_ptr<RType::Entity> &entity2);
         private:
-            std::vector<std::shared_ptr<IComponent>> _components;
+            std::unordered_map<std::type_index, std::shared_ptr<IComponent>> _typedComponents;
             uint16_t _id;
             std::shared_ptr<std::mutex> _mtx;
             int _serverId;

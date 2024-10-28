@@ -44,6 +44,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
 add_subdirectory(src/protocolHandler)
 
+find_package(Lua REQUIRED)
 find_package(jsoncpp CONFIG REQUIRED)
 find_package(Boost REQUIRED)
 find_package(SFML 2.6.1 COMPONENTS system window graphics REQUIRED)

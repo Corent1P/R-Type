@@ -1,5 +1,4 @@
 {
-    "name": "bullet effect",
     "sprite":"./ressources/effects/flash.png",
     "scale": {
         "x": 2.0,

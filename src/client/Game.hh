@@ -10,9 +10,12 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <unordered_map>
 #include <vector>
-#include <json/json.h>
 #include <string>
-
+#include <charconv>
+#include <cstdlib>
+#include <fstream>
+#include <json/json.h>
+#include <json/reader.h>
 #include "./communication/Client.hh"
 
 #include "../ecs/Coordinator.hh"
@@ -30,9 +33,15 @@
 #include "../ecs/Components/VelocityComponent.hh"
 #include "../ecs/Components/ScaleComponent.hh"
 #include "../ecs/Components/IntRectComponent.hh"
+#include "../ecs/Components/MappingInputComponent.hh"
+#include "../ecs/Components/MenuComponent.hh"
+#include "../ecs/Components/ClickEffectComponent.hh"
 
 #include "../ecs/Systems/HandleEventSystem.hpp"
+#include "../ecs/Systems/HandleClearSystem.hpp"
 #include "../ecs/Systems/HandleDrawSystem.hpp"
+#include "../ecs/Systems/HandleDrawTextSystem.hpp"
+#include "../ecs/Systems/HandleDisplaySystem.hpp"
 #include "../ecs/Systems/HandleMoveSystem.hpp"
 #include "../ecs/Systems/HandleMoveSpriteSystem.hpp"
 #include "../ecs/Systems/HandleAnimationSystem.hpp"
@@ -55,6 +64,8 @@
 #define GET_POSITION_X getComponent<RType::PositionComponent>()->getPositionX()
 #define GET_POSITION_Y getComponent<RType::PositionComponent>()->getPositionY()
 
+#define SET_BUTTON_TYPE(type) getComponent<EntityTypeComponent>()->setButtonType(type)
+
 #define POS_COMPONENT std::shared_ptr<RType::PositionComponent>
 #define SCALE_COMPONENT std::shared_ptr<RType::ScaleComponent>
 #define RECT_COMPONENT std::shared_ptr<RType::IntRectComponent>
@@ -69,6 +80,7 @@
 #define PUSH_VELOCITY_E(speed) pushComponent(std::make_shared<RType::VelocityComponent>(speed))
 #define PUSH_PATTERN_E(pattern) pushComponent(std::make_shared<RType::DirectionPatternComponent>(pattern))
 #define PUSH_CLOCK_E() pushComponent(std::make_shared<RType::ClockComponent>())
+#define PUSH_MENU_COMPONENT_E(menu) pushComponent(std::make_shared<RType::MenuComponent>(menu))
 
 namespace RType {
 
@@ -95,12 +107,19 @@ namespace RType {
             void createEntity(const long &serverId, const RType::EntityType &type,
                               const int &posX, const int &posY);
             void createWindow();
+            void createMenu();
+            void createMappingInputButton(std::shared_ptr<RType::MappingInputComponent> mappingInput);
+            std::shared_ptr<RType::Entity> createButton(int x, int y, std::string text);
+            std::shared_ptr<RType::Entity> createText(int x, int y, std::string text);
             void createGameSystem();
             void createParallaxBackground(std::shared_ptr<RType::Entity> window);
             void createParallaxEntity(const std::string &path, const int &posX, const int &posY,
                 const int &winMaxX, const int &winMaxY, const int &index, const int &level);
             std::shared_ptr<RType::TextureComponent> getTextureComponent(const std::string &path);
             std::size_t getMaxClientId(void);
+            void trySendMessageToServer(const std::basic_string<unsigned char> &message);
+            void disconnexion(void);
+            void createEntityMap(void);
 
             std::mutex _mtx;
             RType::Coordinator _coord;
@@ -109,6 +128,8 @@ namespace RType {
             std::thread _receipter;
             bool _initConnection;
             std::unordered_map<std::string, std::shared_ptr<RType::TextureComponent>> _texturesMap;
+            std::unordered_map<EntityType, std::string> _entityTypeMap;
+            std::shared_ptr<sf::Font> _font;
     };
 }
 

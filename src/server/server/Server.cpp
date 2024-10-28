@@ -44,13 +44,19 @@ void RType::Server::handleReceive(const boost::system::error_code& error, std::s
     std::shared_ptr<ClientServer> connectedClient = getConnectedClient();
 
     if (!connectedClient) {
-        std::unique_lock<std::mutex> lock(_mtx);
         connectedClient = createClient();
+        if (receivInfo.first == CONNEXION) {
+            std::unique_lock<std::mutex> lock(_mtx);
+            handleConnection(connectedClient);
+            return startReceive();
+        } else {
+            std::unique_lock<std::mutex> lock(_mtx);
+            connectedClient->sendMessage(_socket, Encoder::header(0, RType::PACKET_ERROR));
+            removeClient(connectedClient);
+            return startReceive();
+        }
     }
-    if (receivInfo.first == CONNEXION) {
-        std::unique_lock<std::mutex> lock(_mtx);
-        handleConnection(connectedClient);
-    } else if (receivInfo.first == DISCONNEXION) {
+    if (receivInfo.first == DISCONNEXION) {
         std::unique_lock<std::mutex> lock(_mtx);
         handleDisconnection(connectedClient);
     } else {
@@ -76,8 +82,20 @@ std::shared_ptr<RType::ClientServer> RType::Server::createClient(void)
     return newClient;
 }
 
+void RType::Server::removeClient(std::shared_ptr<ClientServer> client)
+{
+    for (std::size_t i = 0; i < _clients.size(); i++) {
+        if (_clients[i]->getPortNumber() == client->getPortNumber() && _clients[i]->getAddress() == client->getAddress()) {
+            _clients.erase(std::next(_clients.begin(), i));
+            std::cout << "remove client" << std::endl;
+            break;
+        }
+    }
+}
+
 std::shared_ptr<RType::ClientServer> RType::Server::getConnectedClient(void)
 {
+    std::unique_lock<std::mutex> lock(_mtx);
     for (auto client: _clients)
         if (client->getAddress() == _remoteEndpoint.address() && client->getPortNumber() == _remoteEndpoint.port() && client->getIsConnected())
             return client;
@@ -187,6 +205,7 @@ void RType::Server::initSystem(void)
     std::shared_ptr<RType::Entity> window = _coord.generateNewEntity();
     window->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_WINDOW));
     window->pushComponent(std::make_shared<RType::ClockComponent>());
+    window->pushComponent(std::make_shared<RType::ParseLevelInfoComponent>(1));
 }
 
 void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)
@@ -195,5 +214,13 @@ void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)
         if (client->getEntity()->getId() != entity->getId() && (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER || EntityTypeComponent::isMob(entity->getComponent<EntityTypeComponent>()->getEntityType()))) {
             client->sendMessage(_socket, Encoder::newEntity(entity->getComponent<EntityTypeComponent>()->getEntityType(), entity->getId(), entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY()));
         }
+    }
+}
+
+void RType::Server::stop(void)
+{
+    _stopLoop = true;
+    for (auto client: _clients) {
+        client->sendMessage(_socket, Encoder::disconnexion());
     }
 }

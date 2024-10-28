@@ -23,11 +23,19 @@ set(SRC_COMPONENTS
     ./Components/LevelComponent.cpp
     ./Components/ScaleComponent.cpp
     ./Components/IntRectComponent.cpp
+    ./Components/MappingInputComponent.cpp
+    ./Components/TextComponent.cpp
+    ./Components/ClickEffectComponent.cpp
+    ./Components/MenuComponent.cpp
+    ./Components/ParseLevelInfoComponent.cpp
 )
 
 set(SRC_SYSTEMS
     ./Systems/HandleEventSystem.cpp
+    ./Systems/HandleClearSystem.cpp
     ./Systems/HandleDrawSystem.cpp
+    ./Systems/HandleDrawTextSystem.cpp
+    ./Systems/HandleDisplaySystem.cpp
     ./Systems/HandleMoveSystem.cpp
     ./Systems/HandleMoveSpriteSystem.cpp
     ./Systems/HandleAnimationSystem.cpp
@@ -47,8 +55,13 @@ if (NOT WIN32)
 endif()
 
 find_package(Boost REQUIRED)
+find_package(Lua REQUIRED)
 find_package(SFML COMPONENTS system window graphics network audio REQUIRED)
+
+target_include_directories(ecs PRIVATE ${LUA_INCLUDE_DIR})
+
 target_link_libraries(ecs PRIVATE
+    ${LUA_LIBRARIES}
     JsonCpp::JsonCpp
     Boost::boost
     sfml-system

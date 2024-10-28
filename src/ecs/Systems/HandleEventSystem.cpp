@@ -7,8 +7,8 @@
 
 #include "HandleEventSystem.hpp"
 
-RType::HandleEventSystem::HandleEventSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity):
-    ASystem(S_EVENT, addEntity, deleteEntity), _isShooting(false)
+RType::HandleEventSystem::HandleEventSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::function<void(void)> disconnexion):
+    ASystem(S_EVENT, addEntity, deleteEntity), _isShooting(false), _disconnexion(disconnexion)
 {
 }
 
@@ -17,85 +17,22 @@ RType::HandleEventSystem::~HandleEventSystem()
 }
 
 void RType::HandleEventSystem::effects(std::vector<std::shared_ptr<RType::Entity>> entities) {
-    // bool canShoot = true;
     for (const auto &e: entities) {
         if (verifyRequiredComponent(e)) {
+            auto inputs = e->getComponent<RType::MappingInputComponent>()->getMappingInputs();
             while (GET_WINDOW_POLL_EVENT->pollEvent(e->getComponent<RType::EventComponent>()->getEvent())) {
                 if (e->getComponent<RType::EventComponent>()->getEvent().type == sf::Event::Closed) {
                     GET_WINDOW_POLL_EVENT->close();
                 }
+                modifyInput(entities, e);
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                    if (_disconnexion)
+                        _disconnexion();
+                    e->getComponent<RType::MenuComponent>()->setMenu(HOME);
+                }
                 for (const auto &player: entities) {
-                    if (player->getComponent<RType::EntityTypeComponent>() != nullptr
-                    && player->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER
-                    && player->getComponent<RType::DirectionComponent>() != nullptr
-                    && player->getComponent<RType::SpriteComponent>() != nullptr
-                    && player->getComponent<RType::ActionComponent>() != nullptr
-                    ) {
-                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-                            GET_WINDOW_POLL_EVENT->close();
-                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && !player->getComponent<RType::DirectionComponent>()->getDirections(LEFT)) {
-                            player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, true);
-                        } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && player->getComponent<RType::DirectionComponent>()->getDirections(LEFT)) {
-                            player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, false);
-                        }
-                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && !player->getComponent<RType::DirectionComponent>()->getDirections(RIGHT)) {
-                            player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, true);
-                        } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && player->getComponent<RType::DirectionComponent>()->getDirections(RIGHT)) {
-                            player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, false);
-                        }
-                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !player->getComponent<RType::DirectionComponent>()->getDirections(UP)) {
-                            player->getComponent<RType::DirectionComponent>()->setDirections(UP, true);
-                        } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && player->getComponent<RType::DirectionComponent>()->getDirections(UP)) {
-                            player->getComponent<RType::DirectionComponent>()->setDirections(UP, false);
-                        }
-                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && !player->getComponent<RType::DirectionComponent>()->getDirections(DOWN)) {
-                            player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, true);
-                        } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && player->getComponent<RType::DirectionComponent>()->getDirections(DOWN)) {
-                            player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, false);
-                        }
-
-                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !_isShooting) {
-                            _isShooting = true;
-                            player->getComponent<RType::ActionComponent>()->setActions(RType::SHOOTING, true);
-                        } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && _isShooting) {
-                            _isShooting = false;
-                        }
-
-                        if (sf::Joystick::isConnected(0))
-                        {
-                           float x = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
-                           float y = sf::Joystick::getAxisPosition(0, sf::Joystick::Y);
-                           if (e->getComponent<RType::EventComponent>()->getEvent().type == sf::Event::JoystickButtonPressed) {
-                                std::cout << "Bouton " << e->getComponent<RType::EventComponent>()->getEvent().joystickButton.button
-                                        << " pressé sur la manette "
-                                        << e->getComponent<RType::EventComponent>()->getEvent().joystickButton.joystickId << std::endl;
-                                if (e->getComponent<RType::EventComponent>()->getEvent().joystickButton.button == 1) {
-                                    player->getComponent<RType::ActionComponent>()->setActions(RType::SHOOTING, true);
-                                }
-                            }
-                           if (y > 10.0) {
-                                player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, true);
-                           } else {
-                                player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, false);
-                           }
-                           if (y < -10.0) {
-                                player->getComponent<RType::DirectionComponent>()->setDirections(UP, true);
-                           } else {
-                                player->getComponent<RType::DirectionComponent>()->setDirections(UP, false);
-                           }
-                           if (x < -10.0) {
-                                player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, true);
-                           } else {
-                                player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, false);
-                           }
-                           if (x > 10.0) {
-                                player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, true);
-                           } else {
-                                player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, false);
-                           }
-
-                        }
-                    }
+                    handleInputPlayer(player, e, inputs);
+                    handleClickOnButton(player, e);
                 }
             }
         }
@@ -114,8 +51,130 @@ void RType::HandleEventSystem::effect(std::shared_ptr<RType::Entity> entity)
 bool RType::HandleEventSystem::verifyRequiredComponent(std::shared_ptr<RType::Entity> entity)
 {
     if (entity->getComponent<RType::SFWindowComponent>() == nullptr
-    ||entity->getComponent<RType::EventComponent>() == nullptr) {
+    || entity->getComponent<RType::EventComponent>() == nullptr
+    || entity->getComponent<RType::MappingInputComponent>() == nullptr
+    || entity->getComponent<RType::MenuComponent>() == nullptr) {
         return false;
     }
     return (true);
+}
+
+void RType::HandleEventSystem::modifyInput(std::vector<std::shared_ptr<RType::Entity>> entities, std::shared_ptr<RType::Entity> window)
+{
+    if (window->getComponent<RType::MappingInputComponent>()->getInputToDefined() != INPUT_UNDEFINED
+        && window->getComponent<RType::EventComponent>()->getEvent().type == sf::Event::KeyPressed) {
+        auto keyCode = window->getComponent<RType::EventComponent>()->getEvent().key.code;
+
+        for (const auto &button: entities) {
+            if (button->getComponent<EntityTypeComponent>()
+            && button->getComponent<EntityTypeComponent>()->getButtonType() == window->getComponent<RType::MappingInputComponent>()->getInputToDefined()) {
+
+                auto textComponent = button->getComponent<TextComponent>();
+                if (textComponent != nullptr) {
+                    std::string keyName = RType::MappingInputComponent::getKeyName(keyCode);
+                    textComponent->setText(textComponent->getTextWithoutVariable() + keyName);
+                }
+            }
+        }
+        window->getComponent<RType::MappingInputComponent>()->setMappingInput(keyCode);
+    }
+}
+
+void RType::HandleEventSystem::handleInputPlayer(std::shared_ptr<RType::Entity> player, std::shared_ptr<RType::Entity> window, std::unordered_map<RType::MappingInput, sf::Keyboard::Key> inputs)
+{
+    if (player->getComponent<RType::EntityTypeComponent>() != nullptr
+    && player->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER
+    && player->getComponent<RType::DirectionComponent>() != nullptr
+    && player->getComponent<RType::SpriteComponent>() != nullptr
+    && player->getComponent<RType::ActionComponent>() != nullptr
+    ) {
+        if (sf::Keyboard::isKeyPressed(inputs.at(INPUT_LEFT)) && player->getComponent<RType::DirectionComponent>()->getDirections(LEFT) == 0) {
+            player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, 100);
+        } else if (!sf::Keyboard::isKeyPressed(inputs.at(INPUT_LEFT)) && player->getComponent<RType::DirectionComponent>()->getDirections(LEFT) != 0) {
+            player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, 0);
+        }
+        if (sf::Keyboard::isKeyPressed(inputs.at(INPUT_RIGHT)) && player->getComponent<RType::DirectionComponent>()->getDirections(RIGHT) == 0) {
+            player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, 100);
+        } else if (!sf::Keyboard::isKeyPressed(inputs.at(INPUT_RIGHT)) && player->getComponent<RType::DirectionComponent>()->getDirections(RIGHT) != 0) {
+            player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, 0);
+        }
+        if (sf::Keyboard::isKeyPressed(inputs.at(INPUT_UP)) && player->getComponent<RType::DirectionComponent>()->getDirections(UP) == 0) {
+            player->getComponent<RType::DirectionComponent>()->setDirections(UP, 100);
+        } else if (!sf::Keyboard::isKeyPressed(inputs.at(INPUT_UP)) && player->getComponent<RType::DirectionComponent>()->getDirections(UP) != 0) {
+            player->getComponent<RType::DirectionComponent>()->setDirections(UP, 0);
+        }
+        if (sf::Keyboard::isKeyPressed(inputs.at(INPUT_DOWN)) && player->getComponent<RType::DirectionComponent>()->getDirections(DOWN) == 0) {
+            player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, 100);
+        } else if (!sf::Keyboard::isKeyPressed(inputs.at(INPUT_DOWN)) && player->getComponent<RType::DirectionComponent>()->getDirections(DOWN) != 0) {
+            player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, 0);
+        }
+        if (sf::Keyboard::isKeyPressed(inputs.at(INPUT_SHOOT)) && !_isShooting) {
+            _isShooting = true;
+            player->getComponent<RType::ActionComponent>()->setActions(RType::SHOOTING, true);
+        } else if (!sf::Keyboard::isKeyPressed(inputs.at(INPUT_SHOOT)) && _isShooting) {
+            _isShooting = false;
+        }
+
+        if (sf::Joystick::isConnected(0))
+        {
+            float x = sf::Joystick::getAxisPosition(0, sf::Joystick::X);
+            float y = sf::Joystick::getAxisPosition(0, sf::Joystick::Y);
+            if (window->getComponent<RType::EventComponent>()->getEvent().type == sf::Event::JoystickButtonPressed) {
+                if (window->getComponent<RType::EventComponent>()->getEvent().joystickButton.button == 1) {
+                    player->getComponent<RType::ActionComponent>()->setActions(RType::SHOOTING, true);
+                }
+            }
+            if (y > 10.0) {
+                player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, y);
+            } else {
+                player->getComponent<RType::DirectionComponent>()->setDirections(DOWN, 0);
+            }
+            if (y < -10.0) {
+                player->getComponent<RType::DirectionComponent>()->setDirections(UP, abs(y));
+            } else {
+                player->getComponent<RType::DirectionComponent>()->setDirections(UP, 0);
+            }
+            if (x < -10.0) {
+                player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, abs(x));
+            } else {
+                player->getComponent<RType::DirectionComponent>()->setDirections(LEFT, 0);
+            }
+            if (x > 10.0) {
+                player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, x);
+            } else {
+                player->getComponent<RType::DirectionComponent>()->setDirections(RIGHT, 0);
+            }
+
+        }
+    }
+}
+
+void RType::HandleEventSystem::handleClickOnButton(std::shared_ptr<RType::Entity> button, std::shared_ptr<RType::Entity> window)
+{
+    if (button->getComponent<RType::ClickEffectComponent>() != nullptr
+    && button->getComponent<RType::IntRectComponent>() != nullptr
+    && button->getComponent<RType::PositionComponent>() != nullptr
+    && button->getComponent<RType::MenuComponent>() != nullptr
+    && *button->GET_MENU == *window->GET_MENU) {
+        if (window->getComponent<RType::EventComponent>()->getEvent().type == sf::Event::MouseButtonPressed) {
+            sf::Event::MouseButtonEvent mouseEvent = window->getComponent<RType::EventComponent>()->getEvent().mouseButton;
+
+            if (mouseEvent.button == sf::Mouse::Left) {
+                int boxX = button->getComponent<RType::PositionComponent>()->getPositionX();
+                int boxY = button->getComponent<RType::PositionComponent>()->getPositionY();
+                int boxWidth = button->getComponent<RType::IntRectComponent>()->getIntRectWidth();
+                int boxHeight = button->getComponent<RType::IntRectComponent>()->getIntRectHeight();
+
+                int mouseX = mouseEvent.x;
+                int mouseY = mouseEvent.y;
+
+                auto coord = window->getComponent<RType::SFWindowComponent>()->getWindow()->mapPixelToCoords({mouseX, mouseY});
+                sf::IntRect hitbox ({boxX, boxY}, {boxWidth, boxHeight});
+
+                if (hitbox.contains(sf::Vector2i(coord))) {
+                    CLICK_ON_BUTTON;
+                }
+            }
+        }
+    }
 }
