@@ -47,7 +47,7 @@ add_subdirectory(src/protocolHandler)
 find_package(Lua REQUIRED)
 find_package(jsoncpp CONFIG REQUIRED)
 find_package(Boost REQUIRED)
-find_package(SFML 2.6.1 COMPONENTS system window graphics REQUIRED)
+find_package(SFML 2.6.1 COMPONENTS system window graphics audio REQUIRED)
 
 add_subdirectory(src/ecs)
 add_subdirectory(src/client)

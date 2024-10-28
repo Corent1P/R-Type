@@ -1,5 +1,6 @@
 {
     "health": 2,
+    "damage": 2,
     "sprite":"./ressources/enemy-sheet.png",
     "scale": {
         "x": 2.0,
@@ -13,5 +14,7 @@
     },
     // STRAIGHT_LEFT
     "pattern": 3,
-    "speed": 3
+    "speed": 3,
+    "isShooting": true,
+    "intervalShoot": 0.5
 }

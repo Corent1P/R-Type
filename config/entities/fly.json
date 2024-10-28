@@ -1,5 +1,6 @@
 {
     "health": 5,
+    "damage": 2,
     "sprite":"./ressources/fly-sheet.png",
     "scale": {
         "x": 2.0,
@@ -11,7 +12,7 @@
         "width": 65,
         "height": 74
     },
-    // STRAIGHT_LEFT
+    // UP_N_DOWN_LEFT
     "pattern": 5,
     "speed": 2
 }

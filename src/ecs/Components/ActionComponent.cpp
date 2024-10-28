@@ -9,32 +9,12 @@
 
 RType::ActionComponent::ActionComponent()
 {
-    _action = RType::NOTHING;
-
     _actions.push_back(true);
     _actions.push_back(false);
 }
-
-RType::ActionComponent::ActionComponent(Action action)
-{
-    _action = action;
-    _actions.push_back(true);
-    _actions.push_back(false);
-}
-
 
 RType::ActionComponent::~ActionComponent()
 {
-}
-
-void RType::ActionComponent::setAction(Action action)
-{
-    _action = action;
-}
-
-RType::Action RType::ActionComponent::getAction() const
-{
-    return (_action);
 }
 
 void RType::ActionComponent::setActions(Action action, bool newBool) {
@@ -48,19 +28,6 @@ bool RType::ActionComponent::getActions(Action action) const
 
 std::string RType::ActionComponent::getOutput() const
 {
-    std::string action("");
-    switch (_action)
-        {
-        case NOTHING:
-            action = "NOTHING";
-            break;
-        case SHOOTING:
-            action = "SHOOTING";
-            break;
-        default:
-            action = "NOTHING";
-            break;
-        }
-    std::string output("Entity Action Component (entity Action " + action + ")");
+    std::string output("Entity Action Component (entity Action)");
     return output;
 }

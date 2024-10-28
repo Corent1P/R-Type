@@ -21,6 +21,12 @@ namespace RType {
         UP_N_DOWN_RIGHT,
         LEFT_N_RIGHT,
         UP_THEN_DOWN,
+        FOLLOW_PLAYER,
+        SEMI_DIAGONAL_UP,
+        SEMI_DIAGONAL_DOWN,
+        DIAGONAL_UP,
+        DIAGONAL_DOWN,
+        TO_PLAYER
     };
 
     class DirectionPatternComponent: public RType::IComponent {
@@ -32,10 +38,13 @@ namespace RType {
             PatternType getPatternType() const;
             void setPattern(sf::Vector2f pattern);
             sf::Vector2f getPattern() const;
+            void setEntityToFollow(uint16_t entityToFollow);
+            uint16_t getEntityToFollow() const;
             std::string getOutput() const;
         private:
             PatternType _patternType;
             sf::Vector2f _pattern;
+            uint16_t _entityToFollow = 0;
     };
 }
 #endif /* !DIRECTIONPATTERNCOMPONENT_HPP_ */

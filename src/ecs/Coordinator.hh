@@ -21,7 +21,7 @@ namespace RType {
             const std::vector<std::shared_ptr<Entity>> &getEntities() const;
             const std::vector<std::shared_ptr<ISystem>> &getSystems() const;
             std::shared_ptr<Entity> addEntity(void);
-            void deleteEntity(std::shared_ptr<Entity> entityToDestroy);
+            void deleteEntity(std::shared_ptr<Entity> entityToDestroy, bool lock = true);
 
         private:
             std::size_t getNextEntityId(void);
