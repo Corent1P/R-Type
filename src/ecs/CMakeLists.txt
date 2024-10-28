@@ -27,7 +27,13 @@ set(SRC_COMPONENTS
     ./Components/TextComponent.cpp
     ./Components/ClickEffectComponent.cpp
     ./Components/MenuComponent.cpp
+    ./Components/ShootIntervalComponent.cpp
+    ./Components/DamageComponent.cpp
+    ./Components/PowerUpComponent.cpp
     ./Components/ParseLevelInfoComponent.cpp
+    ./Components/AttackComponent.cpp
+    ./Components/AttackPatterns/AttackPatterns.cpp
+
 )
 
 set(SRC_SYSTEMS
@@ -41,8 +47,10 @@ set(SRC_SYSTEMS
     ./Systems/HandleAnimationSystem.cpp
     ./Systems/HandlePatternSystem.cpp
     ./Systems/HandleShootSystem.cpp
-    ./Systems/HandleColisionSystem.cpp
+    ./Systems/HandleCollisionSystem.cpp
     ./Systems/HandleEntitySpawnSystem.cpp
+    ./Systems/HandleBossAttackSystem.cpp
+
 )
 # set(SFML_DIR "../../vcpkg_installed/x64-windows/share/sfml")
 add_library(ecs ${SRC_ECS} ${SRC_COMPONENTS} ${SRC_SYSTEMS} )

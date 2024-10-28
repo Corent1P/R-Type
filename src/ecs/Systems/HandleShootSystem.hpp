@@ -19,8 +19,11 @@
 #include ".././Components/TextureComponent.hh"
 #include ".././Components/ClockComponent.hh"
 #include ".././Components/VelocityComponent.hh"
+#include "../Components/ShootIntervalComponent.hh"
 #include "../../client/Game.hh"
 
+#define GET_CLOCK getComponent<ClockComponent>()
+#define GET_SHOOTING_CLOCK GET_CLOCK->getClock(SHOOTING_CLOCK)
 namespace RType {
     /**
      * @brief a system that handle entities to shoot a bullet by creating a new entity of type weapon to the coordinator.
@@ -34,8 +37,9 @@ namespace RType {
              * @param addEntity method used to add a new Entity to the coordinator.
              * @param deleteEntity method used to delete a Entity from the coordinator.
              * @param sendMessageToServer method that send information from client to server.
+             * @param sendMessageToAllClient methods that send to all clients the message in parameter.
              */
-            HandleShootSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToServer);
+            HandleShootSystem(std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(std::shared_ptr<Entity>)> deleteEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToServer = nullptr, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient = nullptr);
             /**
              * @brief Destroy the Handle Shoot System object
              *
@@ -64,7 +68,10 @@ namespace RType {
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
         protected:
         private:
+            void createEnnemyBullet(const std::shared_ptr<RType::Entity> &entity);
             std::function<void(const std::basic_string<unsigned char> &message)> _sendMessageToServer;
+            std::function<void(const std::basic_string<unsigned char> &message)> _sendMessageToAllClient;
+
     };
 }
 #endif /* !HANDLESHOOTSYTEM_HPP_ */

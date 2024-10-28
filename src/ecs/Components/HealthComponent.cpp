@@ -8,7 +8,7 @@
 #include "HealthComponent.hh"
 
 RType::HealthComponent::HealthComponent(int health):
-    _health(health)
+    _health(health), _maxHealth(health)
 {
 }
 
@@ -24,6 +24,11 @@ void RType::HealthComponent::setHealth(int health)
 int RType::HealthComponent::getHealth() const
 {
     return (_health);
+}
+
+int RType::HealthComponent::getMaxHealth() const
+{
+	return _maxHealth;
 }
 
 std::string RType::HealthComponent::getOutput() const
