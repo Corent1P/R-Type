@@ -144,7 +144,7 @@ void RType::Game::loopReceive()
                                 receiveInfo.second[4]);
                     if (EntityTypeComponent::isWeapon((EntityType)receiveInfo.second[0])) {
                         sf::Vector2f position = getBulletPosition((int)receiveInfo.second[0], (int)receiveInfo.second[2], (int)receiveInfo.second[3]);
-                        createEntity(E_BULLET_EFFECT, position.x, position.y - 20);
+                        createEntity(E_BULLET_EFFECT, position.x, position.y);
                     }
                 } else {
                     if (receiveInfo.second[0] != E_PLAYER)
@@ -168,6 +168,7 @@ void RType::Game::loopReceive()
                             case RType::E_BULLET_2:
                             case RType::E_BULLET_3:
                             case RType::E_BULLET_4:
+                            case RType::E_FORCEPOD_BULLET:
                             case RType::E_ENNEMY_BULLET:
                                 createEntity(E_HIT_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
                                 _coord.deleteEntity(entity);
@@ -185,7 +186,10 @@ void RType::Game::loopReceive()
                                 break;
                             case RType::E_ITEM_WEAPON:
                             case RType::E_ITEM_SHIELD:
+                            case RType::E_ITEM_HEAL:
+                            case RType::E_ITEM_FORCEPOD:
                             case RType::E_SHIELD:
+                            case RType::E_FORCEPOD:
                             case RType::E_ALLIES:
                                 _coord.deleteEntity(entity);
                                 break;
@@ -679,6 +683,8 @@ sf::Vector2f RType::Game::getBulletPosition(int type, int posX, int posY)
             return sf::Vector2f(posX, posY + (32 * 2.) / 2);
         case RType::E_BULLET_4:
             return sf::Vector2f(posX, posY + (32 * 2.) / 2);
+        case RType::E_FORCEPOD_BULLET:
+            return sf::Vector2f(posX, posY + (6 * 2) / 2);
         default:
             return sf::Vector2f(0, 0);
     }
@@ -719,4 +725,8 @@ void RType::Game::createEntityMap(void)
     _entityTypeMap[E_HIT_EFFECT] = "hit_effect";
     _entityTypeMap[E_EXPLOSION_EFFECT] = "explosion_effect";
     _entityTypeMap[E_TEXT] = "text";
+    _entityTypeMap[E_ITEM_FORCEPOD] = "item_forcepod";
+    _entityTypeMap[E_FORCEPOD] = "forcepod";
+    _entityTypeMap[E_FORCEPOD_BULLET] = "forcepod_bullet";
+    _entityTypeMap[E_FORCEPOD_2] = "forcepod2";
 }

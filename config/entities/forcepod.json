@@ -1,0 +1,17 @@
+{
+    "sprite":"./ressources/forcepod_lvl1.gif",
+    "scale": {
+        "x": 2.0,
+        "y": 2.0
+    },
+    "rect" : {
+        "x": 0,
+        "y": 0,
+        "width": 17,
+        "height": 18
+    },
+    "pattern": 9,
+    "speed": 10,
+    "isShooting": true,
+    "intervalShoot": 0.5
+}

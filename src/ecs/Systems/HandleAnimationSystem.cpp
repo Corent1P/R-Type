@@ -30,7 +30,7 @@ void RType::HandleAnimationSystem::effect(std::shared_ptr<RType::Entity> entity)
                 return;
             }
         }
-        else if (rect.left == (maxSpritWidth - rect.width)) {
+        else if (rect.left >= (maxSpritWidth - rect.width)) {
             rect.left = 0;
         }
         else

@@ -27,6 +27,11 @@ void RType::HandleShootSystem::effects(std::vector<std::shared_ptr<RType::Entity
                 && entity->GET_SHOOTING_CLOCK.getElapsedTime().asSeconds() > entity->getComponent<ShootIntervalComponent>()->getShootInterval()) {
                 createEnnemyBullet(entity);
                 entity->GET_SHOOTING_CLOCK.restart();
+            } else if ((entity->getComponent<EntityTypeComponent>()->getEntityType() == E_FORCEPOD || entity->getComponent<EntityTypeComponent>()->getEntityType() == E_FORCEPOD_2) && _sendMessageToAllClient
+                && entity->GET_CLOCK && entity->getComponent<ShootIntervalComponent>()
+                && entity->GET_SHOOTING_CLOCK.getElapsedTime().asSeconds() > entity->getComponent<ShootIntervalComponent>()->getShootInterval()) {
+                createForcePodBullet(entity);
+                entity->GET_SHOOTING_CLOCK.restart();
             }
         }
         if (entity->getComponent<RType::ClockComponent>() != nullptr
@@ -70,4 +75,25 @@ void RType::HandleShootSystem::createEnnemyBullet(const std::shared_ptr<RType::E
     bullet->pushComponent(std::make_shared<RType::DamageComponent>(1));
 
     _sendMessageToAllClient(Encoder::newEntity(E_ENNEMY_BULLET, bullet->getId(), position->getPositionX(), position->getPositionY()));
+}
+
+void RType::HandleShootSystem::createForcePodBullet(const std::shared_ptr<RType::Entity> &entity)
+{
+    std::shared_ptr<RType::Entity> bullet = _addEntity();
+
+    bullet->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_FORCEPOD_BULLET));
+
+    float x = entity->getComponent<PositionComponent>()->getPositions().x;
+    float y = entity->getComponent<PositionComponent>()->getPositions().y + ((entity->getComponent<IntRectComponent>()->getIntRectHeight() * entity->getComponent<ScaleComponent>()->getScaleY()) / 2.);
+
+    std::shared_ptr<RType::PositionComponent> position = bullet->pushComponent(std::make_shared<RType::PositionComponent>(x, y));
+    bullet->pushComponent(std::make_shared<RType::DirectionPatternComponent>(RType::STRAIGHT_RIGHT));
+    bullet->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 19, 6));
+    bullet->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
+    bullet->pushComponent(std::make_shared<RType::VelocityComponent>(21));
+    bullet->pushComponent(std::make_shared<RType::ClockComponent>());
+    bullet->pushComponent(std::make_shared<RType::MenuComponent>(GAME));
+    bullet->pushComponent(std::make_shared<RType::DamageComponent>(1));
+
+    _sendMessageToAllClient(Encoder::newEntity(E_FORCEPOD_BULLET, bullet->getId(), position->getPositionX(), position->getPositionY()));
 }

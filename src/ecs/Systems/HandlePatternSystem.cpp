@@ -37,11 +37,34 @@ void RType::HandlePatternSystem::handlePatternFollowEntities(std::vector<std::sh
                 entityFollowingHeight = entity2->getComponent<RType::IntRectComponent>()->getIntRectHeight();
                 entityFollowingScaleX = entity2->getComponent<RType::ScaleComponent>()->getScaleX();
                 entityFollowingScaleY = entity2->getComponent<RType::ScaleComponent>()->getScaleY();
-
-                entity2->getComponent<RType::DirectionPatternComponent>()->setPattern(sf::Vector2f(
-                    playerPositionX - (((entityFollowingWidth * entityFollowingScaleX) - (playerWidth * playerScaleX))) / 2.,
-                    playerPositionY - (((entityFollowingHeight * entityFollowingScaleY) - (playerHeight * playerScaleY))) / 2.
-                ));
+                switch(entity2->getComponent<RType::EntityTypeComponent>()->getEntityType()) {
+                    case RType::E_SHIELD:
+                        entity2->getComponent<RType::DirectionPatternComponent>()->setPattern(sf::Vector2f(
+                        playerPositionX - (((entityFollowingWidth * entityFollowingScaleX) - (playerWidth * playerScaleX))) / 2.,
+                        playerPositionY - (((entityFollowingHeight * entityFollowingScaleY) - (playerHeight * playerScaleY))) / 2.
+                        ));
+                    break;
+                    case RType::E_FORCEPOD:
+                            entity2->getComponent<RType::DirectionPatternComponent>()->setPattern(sf::Vector2f(
+                            playerPositionX - ((((entityFollowingWidth * entityFollowingScaleX) - (playerWidth * playerScaleX))) / 2.) + 20.,
+                            playerPositionY - ((((entityFollowingHeight * entityFollowingScaleY) - (playerHeight * playerScaleY))) / 2.) - 40.
+                            ));
+                    break;
+                    case RType::E_FORCEPOD_2:
+                        entity2->getComponent<RType::DirectionPatternComponent>()->setPattern(sf::Vector2f(
+                        playerPositionX - ((((entityFollowingWidth * entityFollowingScaleX) - (playerWidth * playerScaleX))) / 2.) + 20.,
+                        playerPositionY - ((((entityFollowingHeight * entityFollowingScaleY) - (playerHeight * playerScaleY))) / 2.) + 40.
+                        ));
+                    break;
+                    default:
+                    break;
+                }
+                //if (entity2->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_SHIELD) {
+                    // entity2->getComponent<RType::DirectionPatternComponent>()->setPattern(sf::Vector2f(
+                    //     playerPositionX - (((entityFollowingWidth * entityFollowingScaleX) - (playerWidth * playerScaleX))) / 2.,
+                    //     playerPositionY - (((entityFollowingHeight * entityFollowingScaleY) - (playerHeight * playerScaleY))) / 2.
+                    // ));
+                //}
             }
         }
     }

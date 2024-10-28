@@ -43,6 +43,13 @@ void RType::HandleCollisionSystem::effects(std::vector<std::shared_ptr<RType::En
                 }
             }
         }
+        if (entity->getComponent<EntityTypeComponent>() != nullptr && entity->getComponent<EntityTypeComponent>()->getEntityType() == E_FORCEPOD) {
+            for (const auto &player: entities) {
+                if (player->getComponent<EntityTypeComponent>() != nullptr && player->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER) {
+                    player->getComponent<PowerUpComponent>()->setPowerUpsIsActive(RType::FORCE_POD, false);
+                }
+            }
+        }
         if (_sendMessageToAllClient) {
             _sendMessageToAllClient(Encoder::deleteEntity(entity->getId()));
             _deleteEntity(entity);
@@ -125,6 +132,7 @@ void RType::HandleCollisionSystem::handleItemEffect(std::shared_ptr<RType::Entit
             break;
         case RType::E_ITEM_HEAL:
             entity1->getComponent<RType::HealthComponent>()->setHealth(entity1->getComponent<RType::HealthComponent>()->getHealth() + 1);
+            std::cout << "player " << entity1->getId() <<" health: " << entity1->getComponent<RType::HealthComponent>()->getHealth() << std::endl;
             break;
         case RType::E_ITEM_SHIELD:
             if (entity1->getComponent<PowerUpComponent>() != nullptr && entity1->getComponent<PowerUpComponent>()->getPowerUps(RType::SHIELD) == false) {
@@ -134,7 +142,18 @@ void RType::HandleCollisionSystem::handleItemEffect(std::shared_ptr<RType::Entit
                 }
             }
             break;
-
+        case RType::E_ITEM_FORCEPOD:
+            if (entity1->getComponent<PowerUpComponent>() != nullptr && entity1->getComponent<PowerUpComponent>()->getPowerUps(RType::SHIELD) == false) {
+                if (entity1->getComponent<RType::EntityTypeComponent>()->getForcePodType() < 2) {
+                    entity1->getComponent<RType::EntityTypeComponent>()->setForcePodType(RType::ForcePodType(entity1->getComponent<RType::EntityTypeComponent>()->getForcePodType() + 1));
+                    //if (entity1->getComponent<PowerUpComponent>()->getPowerUpsIsActive(RType::FORCE_POD) == false) {
+                        entity1->getComponent<PowerUpComponent>()->setPowerUps(RType::FORCE_POD, true);
+                        //entity1->getComponent<PowerUpComponent>()->setPowerUpsIsActive(RType::FORCE_POD, true);
+                    //}
+                }
+            }
+            break;
+        break;
         default:
         break;
     }

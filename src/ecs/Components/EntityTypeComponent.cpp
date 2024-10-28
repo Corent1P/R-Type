@@ -11,6 +11,8 @@ RType::EntityTypeComponent::EntityTypeComponent(EntityType entityType):
     _entityType(entityType)
 {
     _buttonType = INPUT_UNDEFINED;
+    _forcePodType = RType::ForcePodType::F_NO_FORCEPOD;
+    _weaponType = RType::WeaponType::LVL_1;
 }
 
 RType::EntityTypeComponent::~EntityTypeComponent()
@@ -57,6 +59,16 @@ RType::MappingInput RType::EntityTypeComponent::getButtonType() const
 	return _buttonType;
 }
 
+void RType::EntityTypeComponent::setForcePodType(ForcePodType forcePodType)
+{
+    _forcePodType = forcePodType;
+}
+
+RType::ForcePodType RType::EntityTypeComponent::getForcePodType() const
+{
+    return _forcePodType;
+}
+
 bool RType::EntityTypeComponent::isMob(EntityType entityType)
 {
     return entityType == E_SMALL_SPACESHIP || entityType == E_FLY || entityType == E_OCTOPUS;
@@ -64,17 +76,17 @@ bool RType::EntityTypeComponent::isMob(EntityType entityType)
 
 bool RType::EntityTypeComponent::isItem(EntityType entityType)
 {
-    return entityType == E_ITEM_WEAPON || entityType == E_ITEM_HEAL || entityType == E_ITEM_SHIELD;
+    return entityType == E_ITEM_WEAPON || entityType == E_ITEM_HEAL || entityType == E_ITEM_SHIELD || entityType == E_ITEM_FORCEPOD;
 }
 
 bool RType::EntityTypeComponent::isWeapon(EntityType entityType)
 {
-    return entityType == E_BULLET || entityType == E_BULLET_2 || entityType == E_BULLET_3 || entityType == E_BULLET_4;
+    return entityType == E_BULLET || entityType == E_BULLET_2 || entityType == E_BULLET_3 || entityType == E_BULLET_4 || entityType == E_FORCEPOD_BULLET;
 }
 
 bool RType::EntityTypeComponent::isPowerUp(EntityType entityType)
 {
-    return entityType == E_SHIELD;
+    return entityType == E_SHIELD || entityType == E_FORCEPOD;
 }
 
 

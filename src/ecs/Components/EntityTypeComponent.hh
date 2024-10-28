@@ -35,6 +35,10 @@ namespace RType {
         E_BULLET_2,
         E_BULLET_3,
         E_BULLET_4,
+        E_ITEM_FORCEPOD,
+        E_FORCEPOD,
+        E_FORCEPOD_BULLET,
+        E_FORCEPOD_2,
     };
 
     enum WeaponType {
@@ -42,6 +46,12 @@ namespace RType {
         LVL_2,
         LVL_3,
         LVL_4,
+    };
+
+    enum ForcePodType {
+        F_NO_FORCEPOD,
+        F_LVL_1,
+        F_LVL_2,
     };
 
     enum EnemyType {
@@ -60,6 +70,8 @@ namespace RType {
             WeaponType getWeaponType() const;
             void setEnemyType(EnemyType powerUpType);
             EnemyType getEnemyType() const;
+            void setForcePodType(ForcePodType forcePodType);
+            ForcePodType getForcePodType() const;
             void setButtonType(MappingInput buttonType);
             MappingInput getButtonType() const;
             std::string getOutput() const;
@@ -71,6 +83,7 @@ namespace RType {
             EntityType _entityType;
             WeaponType _weaponType;
             EnemyType _enemyType;
+            ForcePodType _forcePodType;
             MappingInput _buttonType;
     };
 }

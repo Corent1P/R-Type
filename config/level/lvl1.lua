@@ -22,6 +22,10 @@ end
 
 for i = 1, 1000, 1 do
     Level.addEnnemy(4, i, (i * 100) % 1000)
+    Level.addEnnemy(16, i, (i * 100 - 33) % 1000)
+    Level.addEnnemy(17, i, (i * 100 - 66) % 1000)
+    Level.addEnnemy(18, i, (i * 100 - 99) % 1000)
+    Level.addEnnemy(23, i, (i * 100 - 122) % 1000)
     if i % 2 == 0 then
         Level.addEnnemy(5, i, (i * 100 - 33) % 1000)
         Level.addEnnemy(6, i, (i * 100 - 66) % 1000)

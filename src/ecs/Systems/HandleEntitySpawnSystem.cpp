@@ -34,6 +34,20 @@ void RType::HandleEntitySpawnSystem::effects(std::vector<std::shared_ptr<RType::
                 entity->getComponent<PowerUpComponent>()->setPowerUps(RType::SHIELD, false);
                 createEntity(RType::E_SHIELD, entity, std::make_pair(0, 0));
             }
+            if (entity->getComponent<PowerUpComponent>() != nullptr && entity->getComponent<PowerUpComponent>()->getPowerUps(RType::FORCE_POD) == true) {
+                switch (entity->getComponent<EntityTypeComponent>()->getForcePodType()){
+                    case F_LVL_1:
+                        entity->getComponent<PowerUpComponent>()->setPowerUps(RType::FORCE_POD, false);
+                        createEntity(RType::E_FORCEPOD, entity, std::make_pair(0, 0));
+                        break;
+                    case F_LVL_2:
+                        entity->getComponent<PowerUpComponent>()->setPowerUps(RType::FORCE_POD, false);
+                        createEntity(RType::E_FORCEPOD_2, entity, std::make_pair(0, 0));
+                        break;
+                    default:
+                    break;
+                }
+            }
         }
     }
 }
@@ -214,4 +228,8 @@ void RType::HandleEntitySpawnSystem::createEntityMap(void)
     _entityTypeMap[E_HIT_EFFECT] = "hit_effect";
     _entityTypeMap[E_EXPLOSION_EFFECT] = "explosion_effect";
     _entityTypeMap[E_TEXT] = "text";
+    _entityTypeMap[E_ITEM_FORCEPOD] = "item_forcepod";
+    _entityTypeMap[E_FORCEPOD] = "forcepod";
+    _entityTypeMap[E_FORCEPOD_BULLET] = "forcepod_bullet";
+    _entityTypeMap[E_FORCEPOD_2] = "forcepod2";
 }
