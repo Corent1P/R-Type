@@ -159,49 +159,22 @@ void RType::Game::loopReceive()
                 break;
 
             case DELETE_ENTITY:
-                for (const auto &entity : entities) {
+                for (const auto &entity : entities)
                     if (entity->getServerId() == receiveInfo.second[0]) {
                         if (entity->getComponent<RType::EntityTypeComponent>() == nullptr)
                             continue;
-                        switch (entity->getComponent<RType::EntityTypeComponent>()->getEntityType()) {
-                            case RType::E_BULLET:
-                            case RType::E_BULLET_2:
-                            case RType::E_BULLET_3:
-                            case RType::E_BULLET_4:
-                            case RType::E_ENNEMY_BULLET:
-                            case RType::E_STING:
+                        if (EntityTypeComponent::isWeapon(GET_ENTITY_TYPE(entity)))
                                 createEntity(E_HIT_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
-                                _coord.deleteEntity(entity);
-                                break;
-                            case RType::E_OCTOPUS:
-                            case RType::E_FLY:
-                            case RType::E_BABY_FLY:
-                            case RType::E_SMALL_SPACESHIP:
+                        if (EntityTypeComponent::isMob(GET_ENTITY_TYPE(entity)) && !EntityTypeComponent::isBoss(GET_ENTITY_TYPE(entity)))
                                 createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
-                                _coord.deleteEntity(entity);
-                                break;
-                            case RType::E_BOSS:
-                                for (int i = 0; i < 50; i++) {
+                        if (EntityTypeComponent::isBoss(GET_ENTITY_TYPE(entity)))
+                                for (int i = 0; i < 50; i++)
                                     createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X + (std::rand() % 400), entity->GET_POSITION_Y + (std::rand() % 400));
-                                }
-                                _coord.deleteEntity(entity);
-                                break;
-                            case RType::E_PLAYER:
+                        if (GET_ENTITY_TYPE(entity) == E_PLAYER)
                                 if (entity->getComponent<ActionComponent>())
                                     std::cout << "§!§!§ YOU ARE DEAD §!§!§" << std::endl;
-                                _coord.deleteEntity(entity);
-                                break;
-                            case RType::E_ITEM_WEAPON:
-                            case RType::E_ITEM_SHIELD:
-                            case RType::E_SHIELD:
-                            case RType::E_ALLIES:
-                                _coord.deleteEntity(entity);
-                                break;
-                            default:
-                                break;
-                        }
+                        _coord.deleteEntity(entity);
                     }
-                }
                 break;
 
             case MOVE_ENTITY:
@@ -528,7 +501,7 @@ void RType::Game::createPlayer()
     std::shared_ptr<RType::ScaleComponent> scale = player->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     std::shared_ptr<RType::IntRectComponent> intRect = player->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 26, 21));
     player->pushComponent(std::make_shared<RType::HealthComponent>(25));
-    std::shared_ptr<RType::TextureComponent> texture = getTextureComponent("./ressources/player-sheet.png");
+    std::shared_ptr<RType::TextureComponent> texture = getTextureComponent("./ressources/players/player-sheet.png");
 
     player->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(),
     sf::Vector2f(scale->getScaleX(), scale->getScaleY()),
@@ -743,19 +716,20 @@ void RType::Game::createEntityMap(void)
     _entityTypeMap[E_WINDOW] = "window";
     _entityTypeMap[E_PLAYER] = "player";
     _entityTypeMap[E_ALLIES] = "player";
-    _entityTypeMap[E_SMALL_SPACESHIP] = "small_spaceship";
+    _entityTypeMap[E_SPACE_SHIP_1] = "space_ship_1";
+    _entityTypeMap[E_SPACE_SHIP_2] = "space_ship_2";
+    _entityTypeMap[E_SPACE_SHIP_3] = "space_ship_3";
     _entityTypeMap[E_OCTOPUS] = "octopus";
     _entityTypeMap[E_FLY] = "fly";
     _entityTypeMap[E_BABY_FLY] = "baby_fly";
     _entityTypeMap[E_BOSS] = "boss";
     _entityTypeMap[E_BUTTON] = "button";
     _entityTypeMap[E_LAYER] = "layer";
-    _entityTypeMap[E_BULLET] = "bullet";
     _entityTypeMap[E_SHIELD] = "shield";
     _entityTypeMap[E_ITEM_WEAPON] = "item_weapon";
     _entityTypeMap[E_ITEM_SHIELD] = "item_shield";
     _entityTypeMap[E_ITEM_HEAL] = "item_heal";
-    _entityTypeMap[E_BULLET] = "bullet";
+    _entityTypeMap[E_BULLET] = "bullet_1";
     _entityTypeMap[E_BULLET_2] = "bullet_2";
     _entityTypeMap[E_BULLET_3] = "bullet_3";
     _entityTypeMap[E_BULLET_4] = "bullet_4";
