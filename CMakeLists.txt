@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
-project(main)
+project(R-Type)
 
 cmake_policy(SET CMP0091 NEW)
 add_definitions(-D_WIN32_WINNT=0x0601)
@@ -25,9 +25,9 @@ if(WIN32)
 endif()
 
 if(NOT MSVC)
-#     add_compile_options(/W4 /WX)
-# else()
     add_compile_options(-Wall -Wextra -Werror -g -ljsoncpp)
+else()
+    add_compile_options(/W4 /WX)
 endif()
 
 set(CMAKE_CXX_CLANG_TIDY
