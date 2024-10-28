@@ -83,6 +83,9 @@ std::string RType::EntityTypeComponent::getOutput() const
         case E_PLAYER:
             entityType = "player";
             break;
+        case E_ALLIES:
+            entityType = "allies";
+            break;
         case E_SMALL_SPACESHIP:
             entityType = "mob small spaceship";
             break;
