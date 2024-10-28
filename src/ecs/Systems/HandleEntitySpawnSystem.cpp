@@ -41,8 +41,9 @@ void RType::HandleEntitySpawnSystem::effects(std::vector<std::shared_ptr<RType::
 void RType::HandleEntitySpawnSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
     lua_State *luaState;
-    int time = entity->getComponent<RType::ClockComponent>()->getClock(LEVEL_CLOCK).getElapsedTime().asSeconds();
+    float time = entity->getComponent<RType::ClockComponent>()->getClock(LEVEL_CLOCK).getElapsedTime().asSeconds();
 
+    time = static_cast<int>(time * 10) / 10.0;
     if (verifyRequiredComponent(entity) == false || time == _prevTime)
         return;
     luaState = entity->getComponent<RType::ParseLevelInfoComponent>()->getLuaState();
@@ -65,7 +66,7 @@ void RType::HandleEntitySpawnSystem::effect(std::shared_ptr<RType::Entity> entit
         lua_pop(luaState, 2);
         return;
     }
-    lua_pushinteger(luaState, time);
+    lua_pushstring(luaState, std::to_string(time).c_str());
     if (lua_pcall(luaState, 1, 0, 0) != LUA_OK) {
         std::cerr << "Error calling 'update': " << lua_tostring(luaState, -1) << std::endl;
         lua_pop(luaState, 1);
@@ -97,10 +98,11 @@ void RType::HandleEntitySpawnSystem::createEntity(lua_State *LuaState)
     Json::Value entityInfo;
     std::ifstream file;
     std::shared_ptr<RType::Entity> entity = _addEntity();
-    EntityType type = static_cast<EntityType>(luaL_checkinteger(LuaState, 1));
+    std::string type = luaL_checkstring(LuaState, 1);
     int posY = luaL_checkinteger(LuaState, 2);
     int posX = luaL_checkinteger(LuaState, 3);
-    std::string filepath("./config/entities/" + _entityTypeMap[type] + ".json");
+    std::string filepath("./config/entities/" + type + ".json");
+    RType::EntityType entityType;
 
     file.open(filepath);
     if (!file.is_open() || !reader.parse(file, entityInfo)) {
@@ -108,7 +110,12 @@ void RType::HandleEntitySpawnSystem::createEntity(lua_State *LuaState)
         return;
     }
     file.close();
-    entity->PUSH_TYPE_E(static_cast<EntityType>(type));
+    for (auto &it : _entityTypeMap)
+        if (it.second == type) {
+            entityType = it.first;
+            break;
+        }
+    entity->PUSH_TYPE_E(entityType);
     POS_COMPONENT position = entity->PUSH_POS_E(posX, posY);
     entity->PUSH_SCALE_E(entityInfo["scale"]["x"].asFloat(),
                          entityInfo["scale"]["y"].asFloat());
@@ -129,19 +136,15 @@ void RType::HandleEntitySpawnSystem::createEntity(lua_State *LuaState)
         auto action = entity->PUSH_ACTION_E();
         action->setActions(SHOOTING, true);
     }
-    if (entityInfo["intervalShoot"].asBool() == true) {
+    if (entityInfo["intervalShoot"].asBool() == true)
         entity->PUSH_INTERVALSHOOT_E(entityInfo["intervalShoot"].asFloat());
-    }
-
     if (entityInfo["attack"].isArray()) {
         auto attackComponent = entity->PUSH_ATTACK_E();
-        for (const auto &attack : entityInfo["attack"]) {
-            if (attack.isString()) {
+        for (const auto &attack : entityInfo["attack"])
+            if (attack.isString())
                 attackComponent->pushBackAttacksPatterns(attack.asString());
-            }
-        }
     }
-    _sendToAllClient(Encoder::newEntity(type, entity->getId(), position->getPositionX(), position->getPositionY()));
+    _sendToAllClient(Encoder::newEntity(entityType, entity->getId(), position->getPositionX(), position->getPositionY()));
 }
 
 // void RType::HandleEntitySpawnSystem::createShield(std::shared_ptr<RType::Entity> entity) {
@@ -166,19 +169,20 @@ void RType::HandleEntitySpawnSystem::createEntityMap(void)
     _entityTypeMap[E_WINDOW] = "window";
     _entityTypeMap[E_PLAYER] = "player";
     _entityTypeMap[E_ALLIES] = "player";
-    _entityTypeMap[E_SMALL_SPACESHIP] = "small_spaceship";
+    _entityTypeMap[E_SPACE_SHIP_1] = "space_ship_1";
+    _entityTypeMap[E_SPACE_SHIP_2] = "space_ship_2";
+    _entityTypeMap[E_SPACE_SHIP_3] = "space_ship_3";
     _entityTypeMap[E_OCTOPUS] = "octopus";
     _entityTypeMap[E_FLY] = "fly";
     _entityTypeMap[E_BABY_FLY] = "baby_fly";
     _entityTypeMap[E_BOSS] = "boss";
     _entityTypeMap[E_BUTTON] = "button";
     _entityTypeMap[E_LAYER] = "layer";
-    _entityTypeMap[E_BULLET] = "bullet";
     _entityTypeMap[E_SHIELD] = "shield";
     _entityTypeMap[E_ITEM_WEAPON] = "item_weapon";
     _entityTypeMap[E_ITEM_SHIELD] = "item_shield";
     _entityTypeMap[E_ITEM_HEAL] = "item_heal";
-    _entityTypeMap[E_BULLET] = "bullet";
+    _entityTypeMap[E_BULLET] = "bullet_1";
     _entityTypeMap[E_BULLET_2] = "bullet_2";
     _entityTypeMap[E_BULLET_3] = "bullet_3";
     _entityTypeMap[E_BULLET_4] = "bullet_4";
