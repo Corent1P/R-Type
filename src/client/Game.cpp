@@ -20,6 +20,7 @@ RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, c
     createWindow();
     createMenu();
     createPlayer();
+    createSound();
     createGameSystem();
     createEntityMap();
     _receipter = std::thread(&Game::loopReceive, this);
@@ -144,89 +145,100 @@ void RType::Game::loopReceive()
     while (!_stopLoop) {
         command = _client.receive();
         receiveInfo = Decoder::getCommandInfo(command);
-        if (receiveInfo.first == MOVE_PLAYER)
-            std::cout << "Message received = " << receiveInfo.first << " move with coordinates " << receiveInfo.second[0] << ":" << receiveInfo.second[1] << std::endl;
-        if (receiveInfo.first == NEW_ENTITY) {
-            if (_initConnection) {
-                std::unique_lock<std::mutex> lock(_mtx);
-                createEntity(receiveInfo.second[1],
-                             static_cast<RType::EntityType>(receiveInfo.second[0]),
-                             static_cast<short> (receiveInfo.second[2]),
-                             static_cast<short> (receiveInfo.second[3]));
-                if (receiveInfo.second[0] == E_BULLET)
-                createEntity(E_BULLET_EFFECT,
-                             static_cast<short> (receiveInfo.second[2]),
-                             static_cast<short> (receiveInfo.second[3]));
-            } else {
-                if (receiveInfo.second[0] != E_PLAYER)
-                    continue;
-                std::unique_lock<std::mutex> lock(_mtx);
-                _initConnection = true;
-                auto entities = _coord.getEntities();
-                for (const auto &entity : entities) {
-                    if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER)
-                        entity->setServerId(receiveInfo.second[1]);
-                }
-            }
-        }
-        if (receiveInfo.first == DELETE_ENTITY) {
 
-            std::unique_lock<std::mutex> lock(_mtx);
-            auto entities = _coord.getEntities();
-            for (const auto &entity : entities) {
-                if (entity->getServerId() == receiveInfo.second[0]) {
-                    if (entity->getComponent<RType::EntityTypeComponent>() == nullptr)
+        std::unique_lock<std::mutex> lock(_mtx);
+        auto entities = _coord.getEntities();
+
+        switch (receiveInfo.first) {
+            case NEW_ENTITY:
+                if (_initConnection) {
+                    createEntity(receiveInfo.second[1],
+                                static_cast<RType::EntityType>(receiveInfo.second[0]),
+                                static_cast<short> (receiveInfo.second[2]),
+                                static_cast<short> (receiveInfo.second[3]),
+                                receiveInfo.second[4]);
+                    if (EntityTypeComponent::isWeapon((EntityType)receiveInfo.second[0])) {
+                        sf::Vector2f position = getBulletPosition((int)receiveInfo.second[0], (int)receiveInfo.second[2], (int)receiveInfo.second[3]);
+                        createEntity(E_BULLET_EFFECT, position.x, position.y - 20);
+                    }
+                } else {
+                    if (receiveInfo.second[0] != E_PLAYER)
                         continue;
-                    switch (entity->getComponent<RType::EntityTypeComponent>()->getEntityType())
-                    {
-                    case RType::E_BULLET:
-                        createEntity(E_HIT_EFFECT, entity->GET_POSITION_X,
-                                     entity->GET_POSITION_Y);
+                    _initConnection = true;
+                    auto entities = _coord.getEntities();
+                    for (const auto &entity : entities) {
+                        if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER)
+                            entity->setServerId(receiveInfo.second[1]);
+                    }
+                }
+                break;
+
+            case DELETE_ENTITY:
+                for (const auto &entity : entities)
+                    if (entity->getServerId() == receiveInfo.second[0]) {
+                        if (entity->getComponent<RType::EntityTypeComponent>() == nullptr)
+                            continue;
+                        if (entity->GET_POSITION_X > 0) {
+                            if (EntityTypeComponent::isWeapon(GET_ENTITY_TYPE(entity)) || EntityTypeComponent::isEnnemyShoot(GET_ENTITY_TYPE(entity)))
+                                    createEntity(E_HIT_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
+                            if (EntityTypeComponent::isMob(GET_ENTITY_TYPE(entity)) && !EntityTypeComponent::isBoss(GET_ENTITY_TYPE(entity)))
+                                    createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
+                        }
+                        if (EntityTypeComponent::isBoss(GET_ENTITY_TYPE(entity)))
+                            for (int i = 0; i < 50; i++)
+                                createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X + (std::rand() % 400), entity->GET_POSITION_Y + (std::rand() % 400));
+                        if (GET_ENTITY_TYPE(entity) == E_PLAYER)
+                            if (entity->getComponent<ActionComponent>())
+                                std::cout << "§!§!§ YOU ARE DEAD §!§!§" << std::endl;
                         _coord.deleteEntity(entity);
-                        break;
-                    case RType::E_OCTOPUS:
-                        createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X,
-                                     entity->GET_POSITION_Y);
-                        _coord.deleteEntity(entity);
-                        break;
-                    case RType::E_FLY:
-                        createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X,
-                                     entity->GET_POSITION_Y);
-                        _coord.deleteEntity(entity);
-                        break;
-                    case RType::E_SMALL_SPACESHIP:
-                        createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X,
-                                     entity->GET_POSITION_Y);
-                        _coord.deleteEntity(entity);
-                        break;
-                        break;
-                    case RType::E_PLAYER:
-                        _coord.deleteEntity(entity);
-                        break;
-                    default:
+                    }
+                break;
+
+            case MOVE_ENTITY:
+                for (const auto &entity : entities) {
+                    if (entity->getServerId() == receiveInfo.second[0] &&
+                        entity->getComponent<RType::PositionComponent>() &&
+                        entity->getComponent<RType::SpriteComponent>()) {
+                        entity->getComponent<RType::PositionComponent>()->setPositions(
+                            static_cast<short>(receiveInfo.second[1]), static_cast<short>(receiveInfo.second[2]));
+                        entity->getComponent<RType::SpriteComponent>()->getSprite()->setPosition(
+                            static_cast<short>(receiveInfo.second[1]), static_cast<short>(receiveInfo.second[2]));
                         break;
                     }
-                    break;
                 }
-            }
-        }
-        if (receiveInfo.first == MOVE_ENTITY) {
-            std::unique_lock<std::mutex> lock(_mtx);
-            auto entities = _coord.getEntities();
-            for (const auto &entity : entities) {
-                if (entity->getServerId() == receiveInfo.second[0] && entity->getComponent<RType::PositionComponent>() && entity->getComponent<RType::SpriteComponent>()) {
-                    entity->getComponent<RType::PositionComponent>()->setPositions(static_cast<short>(receiveInfo.second[1]), static_cast<short> (receiveInfo.second[2]));
-                    entity->getComponent<RType::SpriteComponent>()->getSprite()->setPosition(static_cast<short>(receiveInfo.second[1]), static_cast<short> (receiveInfo.second[2]));
-                    break;
+                break;
+            case DISCONNEXION:
+                _stopLoop = true;
+                break;
+            case INFO_ENTITY:
+                for (const auto &entity : entities) {
+                    if (entity->getServerId() == receiveInfo.second[0]) {
+                        if (entity->getComponent<RType::PositionComponent>())
+                            entity->getComponent<RType::PositionComponent>()->setPositions(
+                                static_cast<short>(receiveInfo.second[2]), static_cast<short>(receiveInfo.second[3]));
+                        if (entity->getComponent<RType::HealthComponent>()) {
+                            entity->getComponent<RType::HealthComponent>()->setHealth(receiveInfo.second[5]);
+                        }
+                        break;
+                    }
                 }
-            }
-        }
-        if (receiveInfo.first == DISCONNEXION) {
-            std::unique_lock<std::mutex> lock(_mtx);
-            _stopLoop = true;
+                break;
+            case INFO_LEVEL:
+                for (const auto &entity : entities) {
+                    if (entity->getComponent<RType::EntityTypeComponent>()
+                    && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_WINDOW
+                    && entity->getComponent<LevelComponent>()) {
+                        entity->getComponent<LevelComponent>()->setLevel(static_cast<short>(receiveInfo.second[0]));
+                        break;
+                    }
+                }
+                break;
+            default:
+                break;
         }
     }
 }
+
 
 void RType::Game::createMenu()
 {
@@ -358,55 +370,14 @@ std::shared_ptr<RType::Entity> RType::Game::createText(int x, int y, std::string
 }
 
 void RType::Game::createEntity(const RType::EntityType &type, const int &posX,
-                               const int &posY)
+                               const int &posY, const int &idToFollow)
 {
     Json::Reader reader;
     Json::Value entityInfo;
     std::ifstream file;
     std::shared_ptr<RType::Entity> entity = _coord.generateNewEntity();
-    std::string filepath("./config/entities/" + _entityTypeMap[type] + ".json");
+    std::shared_ptr<RType::Entity> entityToFollow = nullptr;
 
-    file.open(filepath);
-    if (!file.is_open() || !reader.parse(file, entityInfo)) {
-        std::cerr << "Error while reading or parsing the json: " << filepath << std::endl;
-        return;
-    }
-    if (type == E_PLAYER)
-        entity->PUSH_TYPE_E(E_ALLIES);
-    else
-        entity->PUSH_TYPE_E(type);
-    POS_COMPONENT position = entity->PUSH_POS_E(posX, posY - 20);
-    SCALE_COMPONENT scale = entity->PUSH_SCALE_E(entityInfo["scale"]["x"].asFloat(),
-                                                 entityInfo["scale"]["y"].asFloat());
-    RECT_COMPONENT intRect = entity->PUSH_RECT_E(entityInfo["rect"]["x"].asInt(),
-                                                 entityInfo["rect"]["y"].asInt(),
-                                                 entityInfo["rect"]["width"].asInt(),
-                                                 entityInfo["rect"]["height"].asInt());
-    TEXTURE_COMPONENT texture = getTextureComponent(entityInfo["sprite"].asString());
-    entity->pushComponent(CREATE_SPRITE_COMPONENT(texture->getTexture(),
-                          position->getPositions(), sf::Vector2f(scale->getScaleX(),
-                          scale->getScaleY()), sf::IntRect(intRect->getIntRectLeft(),
-                          intRect->getIntRectTop(), intRect->getIntRectWidth(),
-                          intRect->getIntRectHeight())));
-    entity->PUSH_CLOCK_E();
-    if (entityInfo["health"].asBool() == true)
-        entity->PUSH_HEALTH_E(entityInfo["health"].asInt());
-    if (entityInfo["speed"].asBool() == true)
-        entity->PUSH_VELOCITY_E(entityInfo["speed"].asInt());
-    if (entityInfo["pattern"].asBool() == true)
-        entity->PUSH_PATTERN_E(static_cast<RType::PatternType>(entityInfo["pattern"].asInt()));
-    entity->PUSH_MENU_COMPONENT_E(GAME);
-    file.close();
-}
-
-
-void RType::Game::createEntity(const long &serverId, const RType::EntityType &type,
-                               const int &posX, const int &posY)
-{
-    Json::Reader reader;
-    Json::Value entityInfo;
-    std::ifstream file;
-    std::shared_ptr<RType::Entity> entity = _coord.generateNewEntity(serverId);
     std::string filepath("./config/entities/" + _entityTypeMap[type] + ".json");
 
     file.open(filepath);
@@ -434,12 +405,120 @@ void RType::Game::createEntity(const long &serverId, const RType::EntityType &ty
     entity->PUSH_CLOCK_E();
     if (entityInfo["health"].asBool() == true)
         entity->PUSH_HEALTH_E(entityInfo["health"].asInt());
+    if (entityInfo["damage"].asBool() == true)
+        entity->PUSH_DAMAGE_E(entityInfo["damage"].asInt());
     if (entityInfo["speed"].asBool() == true)
         entity->PUSH_VELOCITY_E(entityInfo["speed"].asInt());
     if (entityInfo["pattern"].asBool() == true)
         entity->PUSH_PATTERN_E(static_cast<RType::PatternType>(entityInfo["pattern"].asInt()));
+    if (!entityInfo["sound"].asString().empty() && _soundsEntity && _soundsEntity->getComponent<SoundQueueComponent>() && entityInfo["soundVolume"].asBool() == true) {
+        SOUND_BUFFER_COMPONENT soundBuffer = getSoundBufferComponent(entityInfo["sound"].asString());
+        _soundsEntity->getComponent<SoundQueueComponent>()->pushSound(soundBuffer->getSoundBuffer(), entityInfo["soundVolume"].asFloat());
+    } else if (!entityInfo["sound"].asString().empty() && _soundsEntity && _soundsEntity->getComponent<SoundQueueComponent>()) {
+        SOUND_BUFFER_COMPONENT soundBuffer = getSoundBufferComponent(entityInfo["sound"].asString());
+        _soundsEntity->getComponent<SoundQueueComponent>()->pushSound(soundBuffer->getSoundBuffer());
+    }
+    if (entityInfo["isShooting"].asBool() == true) {
+        auto action = entity->PUSH_ACTION_E();
+        action->setActions(SHOOTING, true);
+    }
+    if (entityInfo["intervalShoot"].asBool() == true) {
+        entity->PUSH_INTERVALSHOOT_E(entityInfo["intervalShoot"].asFloat());
+    }
+
+    if (entityInfo["attack"].isArray()) {
+        auto attackComponent = entity->PUSH_ATTACK_E();
+        for (const auto &attack : entityInfo["attack"]) {
+            if (attack.isString()) {
+                attackComponent->pushBackAttacksPatterns(attack.asString());
+            }
+        }
+    }
+
     entity->PUSH_MENU_COMPONENT_E(GAME);
     file.close();
+    if (entity->getComponent<RType::DirectionPatternComponent>() &&
+        entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::FOLLOW_PLAYER) {
+        entityToFollow = getEntityByServerId(_coord.getEntities(), idToFollow);
+        if (!entityToFollow)
+            return;
+        entity->getComponent<RType::DirectionPatternComponent>()->setEntityToFollow(entityToFollow->getId());
+    }
+}
+
+
+void RType::Game::createEntity(const long &serverId, const RType::EntityType &type,
+                               const int &posX, const int &posY, const int &idToFollow)
+{
+    Json::Reader reader;
+    Json::Value entityInfo;
+    std::ifstream file;
+    std::shared_ptr<RType::Entity> entity = _coord.generateNewEntity(serverId);
+    std::shared_ptr<RType::Entity> entityToFollow = nullptr;
+    std::string filepath("./config/entities/" + _entityTypeMap[type] + ".json");
+
+    file.open(filepath);
+    if (!file.is_open() || !reader.parse(file, entityInfo)) {
+        std::cerr << "Error while reading or parsing the json: " << filepath << std::endl;
+        return;
+    }
+    if (type == E_PLAYER)
+        entity->PUSH_TYPE_E(E_ALLIES);
+    else
+        entity->PUSH_TYPE_E(type);
+    POS_COMPONENT position = entity->PUSH_POS_E(posX, posY);
+    SCALE_COMPONENT scale = entity->PUSH_SCALE_E(entityInfo["scale"]["x"].asFloat(),
+                                                 entityInfo["scale"]["y"].asFloat());
+    RECT_COMPONENT intRect = entity->PUSH_RECT_E(entityInfo["rect"]["x"].asInt(),
+                                                 entityInfo["rect"]["y"].asInt(),
+                                                 entityInfo["rect"]["width"].asInt(),
+                                                 entityInfo["rect"]["height"].asInt());
+    TEXTURE_COMPONENT texture = getTextureComponent(entityInfo["sprite"].asString());
+    entity->pushComponent(CREATE_SPRITE_COMPONENT(texture->getTexture(),
+                          position->getPositions(), sf::Vector2f(scale->getScaleX(),
+                          scale->getScaleY()), sf::IntRect(intRect->getIntRectLeft(),
+                          intRect->getIntRectTop(), intRect->getIntRectWidth(),
+                          intRect->getIntRectHeight())));
+    entity->PUSH_CLOCK_E();
+    if (entityInfo["health"].asBool() == true)
+        entity->PUSH_HEALTH_E(entityInfo["health"].asInt());
+    if (entityInfo["damage"].asBool() == true)
+        entity->PUSH_DAMAGE_E(entityInfo["damage"].asInt());
+    if (entityInfo["speed"].asBool() == true)
+        entity->PUSH_VELOCITY_E(entityInfo["speed"].asInt());
+    if (entityInfo["pattern"].asBool() == true)
+        entity->PUSH_PATTERN_E(static_cast<RType::PatternType>(entityInfo["pattern"].asInt()));
+    if (entityInfo["isShooting"].asBool() == true) {
+        auto action = entity->PUSH_ACTION_E();
+        action->setActions(SHOOTING, true);
+    }
+    if (entityInfo["intervalShoot"].asBool() == true) {
+        entity->PUSH_INTERVALSHOOT_E(entityInfo["intervalShoot"].asFloat());
+    }
+    if (entityInfo["attack"].isArray()) {
+        auto attackComponent = entity->PUSH_ATTACK_E();
+        for (const auto &attack : entityInfo["attack"]) {
+            if (attack.isString()) {
+                attackComponent->pushBackAttacksPatterns(attack.asString());
+            }
+        }
+    }
+    if (!entityInfo["sound"].asString().empty() && _soundsEntity && _soundsEntity->getComponent<SoundQueueComponent>() && entityInfo["soundVolume"].asBool() == true) {
+        SOUND_BUFFER_COMPONENT soundBuffer = getSoundBufferComponent(entityInfo["sound"].asString());
+        _soundsEntity->getComponent<SoundQueueComponent>()->pushSound(soundBuffer->getSoundBuffer(), entityInfo["soundVolume"].asFloat());
+    } else if (!entityInfo["sound"].asString().empty() && _soundsEntity && _soundsEntity->getComponent<SoundQueueComponent>()) {
+        SOUND_BUFFER_COMPONENT soundBuffer = getSoundBufferComponent(entityInfo["sound"].asString());
+        _soundsEntity->getComponent<SoundQueueComponent>()->pushSound(soundBuffer->getSoundBuffer());
+    }
+    entity->PUSH_MENU_COMPONENT_E(GAME);
+    file.close();
+    if (entity->getComponent<RType::DirectionPatternComponent>() &&
+        entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::FOLLOW_PLAYER) {
+        entityToFollow = getEntityByServerId(_coord.getEntities(), idToFollow);
+        if (!entityToFollow)
+            return;
+        entity->getComponent<RType::DirectionPatternComponent>()->setEntityToFollow(entityToFollow->getId());
+    }
 }
 
 void RType::Game::createPlayer()
@@ -460,7 +539,18 @@ void RType::Game::createPlayer()
     player->pushComponent(std::make_shared<RType::ClockComponent>());
     player->pushComponent(std::make_shared<RType::ActionComponent>());
     player->pushComponent(std::make_shared<VelocityComponent>(10));
+    player->pushComponent(std::make_shared<RType::DamageComponent>(1));
+    player->pushComponent(std::make_shared<RType::PowerUpComponent>());
     player->PUSH_MENU_COMPONENT_E(GAME);
+}
+
+
+void RType::Game::createSound()
+{
+    _soundsEntity = _coord.generateNewEntity();
+
+    _soundsEntity->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_SOUNDS));
+    _soundsEntity->pushComponent(std::make_shared<RType::SoundQueueComponent>());
 }
 
 void RType::Game::createWindow()
@@ -471,7 +561,7 @@ void RType::Game::createWindow()
     window->pushComponent(std::make_shared<RType::SFWindowComponent>(1920, 1080));
     window->pushComponent(std::make_shared<RType::EventComponent>());
     window->pushComponent(std::make_shared<RType::ClockComponent>());
-    window->pushComponent(std::make_shared<RType::LevelComponent>(4));
+    window->pushComponent(std::make_shared<RType::LevelComponent>(1));
     createParallaxBackground(window);
 
     window->PUSH_MENU_COMPONENT_E(HOME);
@@ -485,55 +575,60 @@ void RType::Game::createGameSystem()
     std::unique_lock<std::mutex> lock(_mtx);
     _coord.generateNewSystem(std::make_shared<HandleEventSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
         std::bind(&RType::Game::disconnexion, this)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandlePatternSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
+    ));
+
+    _coord.generateNewSystem(std::make_shared<HandleSoundSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleMoveSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
         std::bind(&RType::Game::trySendMessageToServer, this, std::placeholders::_1)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleMoveSpriteSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleShootSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
         std::bind(&RType::Game::trySendMessageToServer, this, std::placeholders::_1)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleAnimationSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleClearSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleDrawSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleDrawTextSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleDisplaySystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 }
 
@@ -591,6 +686,18 @@ std::shared_ptr<RType::TextureComponent> RType::Game::getTextureComponent(const 
     return texture;
 }
 
+std::shared_ptr<RType::SoundBufferComponent> RType::Game::getSoundBufferComponent(const std::string &path)
+{
+    if (_soundBufferMap.find(path) != _soundBufferMap.end()) {
+        return _soundBufferMap[path];
+    }
+
+    auto soundBuffer = std::make_shared<RType::SoundBufferComponent>(path);
+    _soundBufferMap[path] = soundBuffer;
+
+    return soundBuffer;
+}
+
 bool RType::Game::getGameHasStarted(void) const
 {
     return _initConnection;
@@ -607,6 +714,7 @@ void RType::Game::trySendMessageToServer(const std::basic_string<unsigned char> 
         _client.send(message);
 }
 
+
 std::ostream &operator<<(std::ostream &s, const RType::Game &game)
 {
     s << game.getCoordinator();
@@ -619,6 +727,44 @@ void RType::Game::disconnexion(void)
     // _initConnection = false;
 }
 
+std::shared_ptr<RType::Entity> RType::Game::getPlayerEntity(void)
+{
+    auto entities = _coord.getEntities();
+    for (const auto &entity : entities) {
+        if (!entity->getComponent<RType::EntityTypeComponent>())
+            continue;
+        if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_PLAYER)
+            return entity;
+    }
+    return nullptr;
+}
+
+sf::Vector2f RType::Game::getBulletPosition(int type, int posX, int posY)
+{
+    // !Data to get dynamically
+    switch (type) {
+        case RType::E_BULLET:
+            return sf::Vector2f(posX, posY + (6 * 2) / 2);
+        case RType::E_BULLET_2:
+            return sf::Vector2f(posX, posY + (192 * 0.5) / 2);
+        case RType::E_BULLET_3:
+            return sf::Vector2f(posX, posY + (32 * 2.) / 2);
+        case RType::E_BULLET_4:
+            return sf::Vector2f(posX, posY + (32 * 2.) / 2);
+        default:
+            return sf::Vector2f(0, 0);
+    }
+}
+
+std::shared_ptr<RType::Entity> RType::Game::getEntityByServerId(std::vector<std::shared_ptr<RType::Entity>> entities, int serverId)
+{
+    for (const auto &entity : entities) {
+        if (entity->getServerId() == serverId)
+            return entity;
+    }
+    return nullptr;
+}
+
 void RType::Game::createEntityMap(void)
 {
     _entityTypeMap[E_OTHER] = "other";
@@ -628,13 +774,33 @@ void RType::Game::createEntityMap(void)
     _entityTypeMap[E_SMALL_SPACESHIP] = "small_spaceship";
     _entityTypeMap[E_OCTOPUS] = "octopus";
     _entityTypeMap[E_FLY] = "fly";
-    _entityTypeMap[E_BOSS] = "boss";
+    _entityTypeMap[E_BABY_FLY] = "baby_fly";
+    _entityTypeMap[E_FLY_BOSS] = "fly_boss";
+    _entityTypeMap[E_SPACE_SHIP_BOSS] = "space_ship_boss";
+    _entityTypeMap[E_OCTOPUS_BOSS] = "octopus_boss";
+    _entityTypeMap[E_LAST_BOSS] = "last_boss";
+    _entityTypeMap[E_BABY_OCTOPUS] = "baby_octopus";
+    _entityTypeMap[E_KAMIKAZE_OCTOPUS] = "kamikaze_octopus";
     _entityTypeMap[E_BUTTON] = "button";
     _entityTypeMap[E_LAYER] = "layer";
     _entityTypeMap[E_BULLET] = "bullet";
-    _entityTypeMap[E_POWER_UP] = "power_up";
+    _entityTypeMap[E_SHIELD] = "shield";
+    _entityTypeMap[E_ITEM_WEAPON] = "item_weapon";
+    _entityTypeMap[E_ITEM_SHIELD] = "item_shield";
+    _entityTypeMap[E_ITEM_HEAL] = "item_heal";
+    _entityTypeMap[E_BULLET] = "bullet";
+    _entityTypeMap[E_BULLET_2] = "bullet_2";
+    _entityTypeMap[E_BULLET_3] = "bullet_3";
+    _entityTypeMap[E_BULLET_4] = "bullet_4";
+    _entityTypeMap[E_SPACE_SHIP_BULLET] = "space_ship_bullet";
+    _entityTypeMap[E_SPACE_SHIP_SEMI_DIAGONAL_UP] = "space_ship_semi_diagonal_up_bullet";
+    _entityTypeMap[E_SPACE_SHIP_SEMI_DIAGONAL_DOWN] = "space_ship_semi_diagonal_down_bullet";
+    _entityTypeMap[E_SPACE_SHIP_DIAGONAL_UP] = "space_ship_diagonal_up_bullet";
+    _entityTypeMap[E_SPACE_SHIP_DIAGONAL_DOWN] = "space_ship_diagonal_down_bullet";
+    _entityTypeMap[E_ENNEMY_BULLET] = "ennemy_bullet";
     _entityTypeMap[E_BULLET_EFFECT] = "bullet_effect";
     _entityTypeMap[E_HIT_EFFECT] = "hit_effect";
     _entityTypeMap[E_EXPLOSION_EFFECT] = "explosion_effect";
     _entityTypeMap[E_TEXT] = "text";
+    _entityTypeMap[E_STING] = "sting";
 }

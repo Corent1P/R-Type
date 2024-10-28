@@ -28,6 +28,7 @@ namespace RType {
         S_SHOOT,
         S_COLISION,
         S_ENTITY_MOB_SYSTEM,
+        S_BOSS_ATTACK
     };
 
     class ISystem {

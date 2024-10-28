@@ -52,12 +52,13 @@ namespace RType {
 
     COMMAND_ARGS Decoder::newEntity(U_STRING &packet)
     {
-        COMMAND_ARGS args(4);
+        COMMAND_ARGS args(5);
 
         args[0] = packet[2];
         args[1] = (packet[3] << 8) + packet[4];
         args[2] = (packet[5] << 8) + packet[6];
         args[3] = (packet[7] << 8) + packet[8];
+        args[4] = (packet[9] << 8) + packet[10];
         return args;
     }
 

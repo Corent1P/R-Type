@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.25)
 project(main)
 
 cmake_policy(SET CMP0091 NEW)
@@ -46,7 +46,7 @@ add_subdirectory(src/protocolHandler)
 find_package(Lua REQUIRED)
 find_package(jsoncpp CONFIG REQUIRED)
 find_package(Boost REQUIRED)
-find_package(SFML 2.6.1 COMPONENTS system window graphics REQUIRED)
+find_package(SFML 2.6.1 COMPONENTS system window graphics audio REQUIRED)
 
 add_subdirectory(src/ecs)
 add_subdirectory(src/client)

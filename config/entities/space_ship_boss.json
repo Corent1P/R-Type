@@ -1,0 +1,25 @@
+{
+    "health": 50,
+    "damage": 5,
+    "sprite":"./ressources/space-ship-boss.png",
+    "scale": {
+        "x": 1.0,
+        "y": 1.0
+    },
+    "rect" : {
+        "x": 0,
+        "y": 0,
+        "width": 594,
+        "height": 178
+    },
+
+    "pattern": 3,
+    "speed": 2,
+
+    "intervalShoot": 1.0,
+
+    "attack": [
+        "spaceShipShoot",
+        "waveShoot"
+    ]
+}
