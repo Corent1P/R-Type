@@ -38,6 +38,7 @@
 #include "../ecs/Components/ClickEffectComponent.hh"
 #include "../ecs/Components/SoundComponent.hh"
 #include "../ecs/Components/SoundBufferComponent.hh"
+#include "../ecs/Components/SoundQueueComponent.hh"
 
 #include "../ecs/Systems/HandleEventSystem.hpp"
 #include "../ecs/Systems/HandleClearSystem.hpp"
@@ -109,6 +110,7 @@ namespace RType {
         private:
             void loopReceive();
             void createPlayer();
+            void createSound();
             void createEntity(const RType::EntityType &type, const int &posX,
                               const int &posY);
             void createEntity(const long &serverId, const RType::EntityType &type,
@@ -136,6 +138,7 @@ namespace RType {
             bool _initConnection;
             std::unordered_map<std::string, std::shared_ptr<RType::TextureComponent>> _texturesMap;
             std::unordered_map<std::string, std::shared_ptr<RType::SoundBufferComponent>> _soundBufferMap;
+            std::shared_ptr<Entity> _soundsEntity;
             std::shared_ptr<sf::Font> _font;
     };
 }

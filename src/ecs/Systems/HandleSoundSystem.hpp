@@ -9,6 +9,7 @@
 #define HANDLESOUNDSYSTEM_HPP_
 
 #include "../ASystem.hh"
+#include ".././Components/SoundQueueComponent.hh"
 #include ".././Components/SoundComponent.hh"
 
 namespace RType {

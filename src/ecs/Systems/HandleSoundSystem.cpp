@@ -18,11 +18,11 @@ RType::HandleSoundSystem::~HandleSoundSystem()
 
 void RType::HandleSoundSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
-    entity->getComponent<SoundComponent>()->getSound().play();
+    entity->getComponent<SoundQueueComponent>()->deleteFinishedSound();
+    entity->getComponent<SoundQueueComponent>()->playAllSounds();
 }
 
 bool RType::HandleSoundSystem::verifyRequiredComponent(std::shared_ptr<RType::Entity> entity)
 {
-    return (entity->getComponent<SoundComponent>() && entity->getComponent<SoundComponent>()->getSound().getStatus() != sf::Sound::Status::Playing &&
-    entity->getComponent<PositionComponent>()->getPositionX() > 0);
+    return (entity->getComponent<SoundQueueComponent>() != nullptr);
 }

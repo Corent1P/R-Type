@@ -28,6 +28,7 @@ namespace RType {
         E_HIT_EFFECT,
         E_EXPLOSION_EFFECT,
         E_TEXT,
+        E_SOUNDS
     };
 
     enum WeaponType {

@@ -29,6 +29,7 @@ set(SRC_COMPONENTS
     ./Components/MenuComponent.cpp
     ./Components/SoundComponent.cpp
     ./Components/SoundBufferComponent.cpp
+    ./Components/SoundQueueComponent.cpp
 )
 
 set(SRC_SYSTEMS
