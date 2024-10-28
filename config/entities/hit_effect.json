@@ -9,5 +9,7 @@
         "y": 0,
         "width": 16,
         "height": 16
-    }
+    },
+    "soundVolume": 30.0,
+    "sound": "./ressources/sounds/hit.ogg"
 }

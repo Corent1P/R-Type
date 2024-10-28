@@ -33,7 +33,9 @@ set(SRC_COMPONENTS
     ./Components/ParseLevelInfoComponent.cpp
     ./Components/AttackComponent.cpp
     ./Components/AttackPatterns/AttackPatterns.cpp
-
+    ./Components/SoundComponent.cpp
+    ./Components/SoundBufferComponent.cpp
+    ./Components/SoundQueueComponent.cpp
 )
 
 set(SRC_SYSTEMS
@@ -41,6 +43,7 @@ set(SRC_SYSTEMS
     ./Systems/HandleClearSystem.cpp
     ./Systems/HandleDrawSystem.cpp
     ./Systems/HandleDrawTextSystem.cpp
+    ./Systems/HandleSoundSystem.cpp
     ./Systems/HandleDisplaySystem.cpp
     ./Systems/HandleMoveSystem.cpp
     ./Systems/HandleMoveSpriteSystem.cpp
