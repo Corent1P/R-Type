@@ -51,6 +51,7 @@ void RType::HandleEntitySpawnSystem::effect(std::shared_ptr<RType::Entity> entit
         lua_pushcclosure(luaState, &HandleEntitySpawnSystem::luaTrampolineCreateEntity, 1);
         lua_setglobal(luaState, "createEntity");
         entity->getComponent<RType::ParseLevelInfoComponent>()->setFunctionPushed(true);
+        entity->getComponent<RType::ClockComponent>()->getClock(LEVEL_CLOCK).restart();
     }
     lua_getglobal(luaState, "Level");
     if (!lua_istable(luaState, -1)) {
@@ -131,6 +132,15 @@ void RType::HandleEntitySpawnSystem::createEntity(lua_State *LuaState)
     if (entityInfo["intervalShoot"].asBool() == true) {
         entity->PUSH_INTERVALSHOOT_E(entityInfo["intervalShoot"].asFloat());
     }
+
+    if (entityInfo["attack"].isArray()) {
+        auto attackComponent = entity->PUSH_ATTACK_E();
+        for (const auto &attack : entityInfo["attack"]) {
+            if (attack.isString()) {
+                attackComponent->pushBackAttacksPatterns(attack.asString());
+            }
+        }
+    }
     _sendToAllClient(Encoder::newEntity(type, entity->getId(), position->getPositionX(), position->getPositionY()));
 }
 
@@ -197,7 +207,13 @@ void RType::HandleEntitySpawnSystem::createEntityMap(void)
     _entityTypeMap[E_SMALL_SPACESHIP] = "small_spaceship";
     _entityTypeMap[E_OCTOPUS] = "octopus";
     _entityTypeMap[E_FLY] = "fly";
-    _entityTypeMap[E_BOSS] = "boss";
+    _entityTypeMap[E_BABY_FLY] = "baby_fly";
+    _entityTypeMap[E_FLY_BOSS] = "fly_boss";
+    _entityTypeMap[E_SPACE_SHIP_BOSS] = "space_ship_boss";
+    _entityTypeMap[E_OCTOPUS_BOSS] = "octopus_boss";
+    _entityTypeMap[E_LAST_BOSS] = "last_boss";
+    _entityTypeMap[E_BABY_OCTOPUS] = "baby_octopus";
+    _entityTypeMap[E_KAMIKAZE_OCTOPUS] = "kamikaze_octopus";
     _entityTypeMap[E_BUTTON] = "button";
     _entityTypeMap[E_LAYER] = "layer";
     _entityTypeMap[E_BULLET] = "bullet";
@@ -209,9 +225,16 @@ void RType::HandleEntitySpawnSystem::createEntityMap(void)
     _entityTypeMap[E_BULLET_2] = "bullet_2";
     _entityTypeMap[E_BULLET_3] = "bullet_3";
     _entityTypeMap[E_BULLET_4] = "bullet_4";
+    _entityTypeMap[E_SPACE_SHIP_BULLET] = "space_ship_bullet";
+    _entityTypeMap[E_SPACE_SHIP_SEMI_DIAGONAL_UP] = "space_ship_semi_diagonal_up_bullet";
+    _entityTypeMap[E_SPACE_SHIP_SEMI_DIAGONAL_DOWN] = "space_ship_semi_diagonal_down_bullet";
+    _entityTypeMap[E_SPACE_SHIP_DIAGONAL_UP] = "space_ship_diagonal_up_bullet";
+    _entityTypeMap[E_SPACE_SHIP_DIAGONAL_DOWN] = "space_ship_diagonal_down_bullet";
     _entityTypeMap[E_ENNEMY_BULLET] = "ennemy_bullet";
     _entityTypeMap[E_BULLET_EFFECT] = "bullet_effect";
     _entityTypeMap[E_HIT_EFFECT] = "hit_effect";
     _entityTypeMap[E_EXPLOSION_EFFECT] = "explosion_effect";
     _entityTypeMap[E_TEXT] = "text";
+    _entityTypeMap[E_STING] = "sting";
+
 }

@@ -67,6 +67,29 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
                     }
                     continue;
                 }
+
+                if (EntityTypeComponent::isBoss(entity->getComponent<EntityTypeComponent>()->getEntityType())) {
+                    if (entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == STRAIGHT_LEFT
+                    && entity->getComponent<RType::PositionComponent>()->getPositionX() < 1920 -
+                    (entity->getComponent<RType::IntRectComponent>()->getIntRectWidth() * entity->getComponent<RType::ScaleComponent>()->getScaleX())) {
+                        switch (entity->getComponent<EntityTypeComponent>()->getEntityType()) {
+                            case E_SPACE_SHIP_BOSS:
+                                entity->getComponent<RType::DirectionPatternComponent>()->setPatternType(STRAIGHT_DOWN);
+                                break;
+                            default:
+                                entity->getComponent<RType::DirectionPatternComponent>()->setPatternType(NO_PATTERN);
+                                break;
+                        }
+                    }
+                    if (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_SPACE_SHIP_BOSS) {
+                        if (entity->getComponent<RType::PositionComponent>()->getPositionY() < 0)
+                            entity->getComponent<RType::DirectionPatternComponent>()->setPatternType(STRAIGHT_DOWN);
+                        if (entity->getComponent<RType::PositionComponent>()->getPositionY() > 1080 -
+                            (entity->getComponent<RType::IntRectComponent>()->getIntRectHeight() * entity->getComponent<RType::ScaleComponent>()->getScaleY()))
+                            entity->getComponent<RType::DirectionPatternComponent>()->setPatternType(STRAIGHT_UP);
+                    }
+
+                }
             }
         }
 

@@ -39,6 +39,7 @@
 #include "../ecs/Components/ShootIntervalComponent.hh"
 #include "../ecs/Components/DamageComponent.hh"
 #include "../ecs/Components/PowerUpComponent.hh"
+#include "../ecs/Components/AttackComponent.hh"
 
 
 #include "../ecs/Systems/HandleEventSystem.hpp"
@@ -52,6 +53,8 @@
 #include "../ecs/Systems/HandlePatternSystem.hpp"
 #include "../ecs/Systems/HandleShootSystem.hpp"
 #include "../ecs/Systems/HandleCollisionSystem.hpp"
+#include "../ecs/Systems/HandleBossAttackSystem.hh"
+
 #include <thread>
 #include "../protocolHandler/Encoder.hh"
 #include "../protocolHandler/Decoder.hh"
@@ -92,6 +95,8 @@
 #define PUSH_CLOCK_E() pushComponent(std::make_shared<RType::ClockComponent>())
 #define PUSH_MENU_COMPONENT_E(menu) pushComponent(std::make_shared<RType::MenuComponent>(menu))
 #define PUSH_INTERVALSHOOT_E(interval) pushComponent(std::make_shared<RType::ShootIntervalComponent>(interval))
+#define PUSH_ATTACK_E() pushComponent(std::make_shared<RType::AttackComponent>())
+
 namespace RType {
 
     enum Backgrounds{

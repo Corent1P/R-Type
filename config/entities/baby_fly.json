@@ -1,10 +1,10 @@
 {
-    "health": 5,
-    "damage": 2,
+    "health": 1,
+    "damage": 1,
     "sprite":"./ressources/fly-sheet.png",
     "scale": {
-        "x": 2.0,
-        "y": 2.0
+        "x": 1,
+        "y": 1
     },
     "rect" : {
         "x": 0,
@@ -14,5 +14,5 @@
     },
     // UP_N_DOWN_LEFT
     "pattern": 5,
-    "speed": 2
+    "speed": 1
 }

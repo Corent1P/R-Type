@@ -207,6 +207,12 @@ void RType::Server::initSystem(void)
         std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
     ));
 
+    _coord.generateNewSystem(std::make_shared<HandleBossAttackSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
+    ));
+
     _coord.generateNewSystem(std::make_shared<HandleShootSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
@@ -230,6 +236,7 @@ void RType::Server::initSystem(void)
     window->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_WINDOW));
     window->pushComponent(std::make_shared<RType::ClockComponent>());
     window->pushComponent(std::make_shared<RType::ParseLevelInfoComponent>(1));
+    window->pushComponent(std::make_shared<RType::LevelComponent>(1));
 }
 
 void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)

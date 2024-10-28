@@ -28,6 +28,7 @@
 #include "../Components/PowerUpComponent.hh"
 #include "../Components/DamageComponent.hh"
 #include "../Components/ParseLevelInfoComponent.hh"
+#include "../Components/AttackComponent.hh"
 
 #define POS_COMPONENT std::shared_ptr<RType::PositionComponent>
 
@@ -43,6 +44,7 @@
 #define PUSH_ACTION_E() pushComponent(std::make_shared<RType::ActionComponent>())
 #define PUSH_INTERVALSHOOT_E(interval) pushComponent(std::make_shared<RType::ShootIntervalComponent>(interval))
 #define SET_ENTITY_TO_FOLLOW_E(entity) getComponent<RType::DirectionPatternComponent>()->setEntityToFollow(entity->getId())
+#define PUSH_ATTACK_E() pushComponent(std::make_shared<RType::AttackComponent>())
 
 namespace RType {
     class HandleEntitySpawnSystem : public ASystem {

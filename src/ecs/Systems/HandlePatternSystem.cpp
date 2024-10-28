@@ -60,6 +60,9 @@ void RType::HandlePatternSystem::effects(std::vector<std::shared_ptr<RType::Enti
 void RType::HandlePatternSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
     if (verifyRequiredComponent(entity)) {
+        if (entity->getComponent<DirectionPatternComponent>()->getPatternType() == RType::NO_PATTERN) {
+            entity->getComponent<DirectionPatternComponent>()->setPattern(sf::Vector2f(0, 0));
+        }
         if (entity->getComponent<DirectionPatternComponent>()->getPatternType() == RType::STRAIGHT_UP) {
             entity->getComponent<DirectionPatternComponent>()->setPattern(sf::Vector2f(0, -10));
         }
@@ -72,11 +75,26 @@ void RType::HandlePatternSystem::effect(std::shared_ptr<RType::Entity> entity)
         if (entity->getComponent<DirectionPatternComponent>()->getPatternType() == RType::STRAIGHT_RIGHT) {
             entity->getComponent<DirectionPatternComponent>()->setPattern(sf::Vector2f(10, 0));
         }
+        if (entity->getComponent<DirectionPatternComponent>()->getPatternType() == RType::SEMI_DIAGONAL_UP) {
+            entity->getComponent<DirectionPatternComponent>()->setPattern(sf::Vector2f(-10, -2.5));
+        }
+        if (entity->getComponent<DirectionPatternComponent>()->getPatternType() == RType::SEMI_DIAGONAL_DOWN) {
+            entity->getComponent<DirectionPatternComponent>()->setPattern(sf::Vector2f(-10, 2.5));
+        }
+        if (entity->getComponent<DirectionPatternComponent>()->getPatternType() == RType::DIAGONAL_UP) {
+            entity->getComponent<DirectionPatternComponent>()->setPattern(sf::Vector2f(-10, -5));
+        }
+        if (entity->getComponent<DirectionPatternComponent>()->getPatternType() == RType::DIAGONAL_DOWN) {
+            entity->getComponent<DirectionPatternComponent>()->setPattern(sf::Vector2f(-10, 5));
+        }
         if (entity->getComponent<DirectionPatternComponent>()->getPatternType() == RType::UP_N_DOWN_LEFT && entity->getComponent<RType::PositionComponent>()) {
             entity->getComponent<DirectionPatternComponent>()->setPattern(sf::Vector2f(-10, 10 *(cos(entity->getComponent<RType::PositionComponent>()->getPositionX() * 0.01f))));
         }
         if (entity->getComponent<DirectionPatternComponent>()->getPatternType() == RType::UP_N_DOWN_RIGHT) {
             entity->getComponent<DirectionPatternComponent>()->setPattern(sf::Vector2f(10, 10 * (cos(entity->getComponent<RType::PositionComponent>()->getPositionX() * 0.01f))));
+        }
+        if (entity->getComponent<DirectionPatternComponent>()->getPatternType() == RType::TO_PLAYER) {
+            entity->getComponent<DirectionPatternComponent>()->setPattern(sf::Vector2f(-10, 0)); // to modify
         }
     }
 }

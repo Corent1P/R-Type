@@ -169,13 +169,32 @@ void RType::Game::loopReceive()
                             case RType::E_BULLET_3:
                             case RType::E_BULLET_4:
                             case RType::E_ENNEMY_BULLET:
+                            case RType::E_STING:
+                            case RType::E_SPACE_SHIP_BULLET:
+                            case RType::E_SPACE_SHIP_SEMI_DIAGONAL_UP:
+                            case RType::E_SPACE_SHIP_SEMI_DIAGONAL_DOWN:
+                            case RType::E_SPACE_SHIP_DIAGONAL_UP:
+                            case RType::E_SPACE_SHIP_DIAGONAL_DOWN:
+                            case RType::E_BABY_OCTOPUS:
+                            case RType::E_KAMIKAZE_OCTOPUS:
+
                                 createEntity(E_HIT_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
                                 _coord.deleteEntity(entity);
                                 break;
                             case RType::E_OCTOPUS:
                             case RType::E_FLY:
+                            case RType::E_BABY_FLY:
                             case RType::E_SMALL_SPACESHIP:
                                 createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
+                                _coord.deleteEntity(entity);
+                                break;
+                            case RType::E_FLY_BOSS:
+                            case RType::E_SPACE_SHIP_BOSS:
+                            case RType::E_OCTOPUS_BOSS:
+                            case RType::E_LAST_BOSS:
+                                for (int i = 0; i < 50; i++) {
+                                    createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X + (std::rand() % 400), entity->GET_POSITION_Y + (std::rand() % 400));
+                                }
                                 _coord.deleteEntity(entity);
                                 break;
                             case RType::E_PLAYER:
@@ -224,7 +243,17 @@ void RType::Game::loopReceive()
                         break;
                     }
                 }
-
+                break;
+            case INFO_LEVEL:
+                for (const auto &entity : entities) {
+                    if (entity->getComponent<RType::EntityTypeComponent>()
+                    && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_WINDOW
+                    && entity->getComponent<LevelComponent>()) {
+                        entity->getComponent<LevelComponent>()->setLevel(static_cast<short>(receiveInfo.second[0]));
+                        break;
+                    }
+                }
+                break;
             default:
                 break;
         }
@@ -397,10 +426,29 @@ void RType::Game::createEntity(const RType::EntityType &type, const int &posX,
     entity->PUSH_CLOCK_E();
     if (entityInfo["health"].asBool() == true)
         entity->PUSH_HEALTH_E(entityInfo["health"].asInt());
+    if (entityInfo["damage"].asBool() == true)
+        entity->PUSH_DAMAGE_E(entityInfo["damage"].asInt());
     if (entityInfo["speed"].asBool() == true)
         entity->PUSH_VELOCITY_E(entityInfo["speed"].asInt());
     if (entityInfo["pattern"].asBool() == true)
         entity->PUSH_PATTERN_E(static_cast<RType::PatternType>(entityInfo["pattern"].asInt()));
+    if (entityInfo["isShooting"].asBool() == true) {
+        auto action = entity->PUSH_ACTION_E();
+        action->setActions(SHOOTING, true);
+    }
+    if (entityInfo["intervalShoot"].asBool() == true) {
+        entity->PUSH_INTERVALSHOOT_E(entityInfo["intervalShoot"].asFloat());
+    }
+
+    if (entityInfo["attack"].isArray()) {
+        auto attackComponent = entity->PUSH_ATTACK_E();
+        for (const auto &attack : entityInfo["attack"]) {
+            if (attack.isString()) {
+                attackComponent->pushBackAttacksPatterns(attack.asString());
+            }
+        }
+    }
+
     entity->PUSH_MENU_COMPONENT_E(GAME);
     file.close();
     if (entity->getComponent<RType::DirectionPatternComponent>() &&
@@ -461,6 +509,16 @@ void RType::Game::createEntity(const long &serverId, const RType::EntityType &ty
     if (entityInfo["intervalShoot"].asBool() == true) {
         entity->PUSH_INTERVALSHOOT_E(entityInfo["intervalShoot"].asFloat());
     }
+
+    if (entityInfo["attack"].isArray()) {
+        auto attackComponent = entity->PUSH_ATTACK_E();
+        for (const auto &attack : entityInfo["attack"]) {
+            if (attack.isString()) {
+                attackComponent->pushBackAttacksPatterns(attack.asString());
+            }
+        }
+    }
+
     entity->PUSH_MENU_COMPONENT_E(GAME);
     file.close();
     if (entity->getComponent<RType::DirectionPatternComponent>() &&
@@ -493,9 +551,6 @@ void RType::Game::createPlayer()
     player->pushComponent(std::make_shared<RType::DamageComponent>(1));
     player->pushComponent(std::make_shared<RType::PowerUpComponent>());
     player->PUSH_MENU_COMPONENT_E(GAME);
-    player->pushComponent(std::make_shared<VelocityComponent>(10));
-    player->pushComponent(std::make_shared<RType::DamageComponent>(1));
-    player->pushComponent(std::make_shared<RType::PowerUpComponent>());
 }
 
 void RType::Game::createWindow()
@@ -506,7 +561,7 @@ void RType::Game::createWindow()
     window->pushComponent(std::make_shared<RType::SFWindowComponent>(1920, 1080));
     window->pushComponent(std::make_shared<RType::EventComponent>());
     window->pushComponent(std::make_shared<RType::ClockComponent>());
-    window->pushComponent(std::make_shared<RType::LevelComponent>(4));
+    window->pushComponent(std::make_shared<RType::LevelComponent>(1));
     createParallaxBackground(window);
 
     window->PUSH_MENU_COMPONENT_E(HOME);
@@ -702,7 +757,13 @@ void RType::Game::createEntityMap(void)
     _entityTypeMap[E_SMALL_SPACESHIP] = "small_spaceship";
     _entityTypeMap[E_OCTOPUS] = "octopus";
     _entityTypeMap[E_FLY] = "fly";
-    _entityTypeMap[E_BOSS] = "boss";
+    _entityTypeMap[E_BABY_FLY] = "baby_fly";
+    _entityTypeMap[E_FLY_BOSS] = "fly_boss";
+    _entityTypeMap[E_SPACE_SHIP_BOSS] = "space_ship_boss";
+    _entityTypeMap[E_OCTOPUS_BOSS] = "octopus_boss";
+    _entityTypeMap[E_LAST_BOSS] = "last_boss";
+    _entityTypeMap[E_BABY_OCTOPUS] = "baby_octopus";
+    _entityTypeMap[E_KAMIKAZE_OCTOPUS] = "kamikaze_octopus";
     _entityTypeMap[E_BUTTON] = "button";
     _entityTypeMap[E_LAYER] = "layer";
     _entityTypeMap[E_BULLET] = "bullet";
@@ -714,9 +775,15 @@ void RType::Game::createEntityMap(void)
     _entityTypeMap[E_BULLET_2] = "bullet_2";
     _entityTypeMap[E_BULLET_3] = "bullet_3";
     _entityTypeMap[E_BULLET_4] = "bullet_4";
+    _entityTypeMap[E_SPACE_SHIP_BULLET] = "space_ship_bullet";
+    _entityTypeMap[E_SPACE_SHIP_SEMI_DIAGONAL_UP] = "space_ship_semi_diagonal_up_bullet";
+    _entityTypeMap[E_SPACE_SHIP_SEMI_DIAGONAL_DOWN] = "space_ship_semi_diagonal_down_bullet";
+    _entityTypeMap[E_SPACE_SHIP_DIAGONAL_UP] = "space_ship_diagonal_up_bullet";
+    _entityTypeMap[E_SPACE_SHIP_DIAGONAL_DOWN] = "space_ship_diagonal_down_bullet";
     _entityTypeMap[E_ENNEMY_BULLET] = "ennemy_bullet";
     _entityTypeMap[E_BULLET_EFFECT] = "bullet_effect";
     _entityTypeMap[E_HIT_EFFECT] = "hit_effect";
     _entityTypeMap[E_EXPLOSION_EFFECT] = "explosion_effect";
     _entityTypeMap[E_TEXT] = "text";
+    _entityTypeMap[E_STING] = "sting";
 }
