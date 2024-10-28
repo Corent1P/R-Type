@@ -10,5 +10,6 @@
         "y": 0,
         "width": 11,
         "height": 19
-    }
+    },
+    "sound": "./ressources/sounds/shot.ogg"
 }

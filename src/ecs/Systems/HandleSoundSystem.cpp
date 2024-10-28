@@ -23,5 +23,6 @@ void RType::HandleSoundSystem::effect(std::shared_ptr<RType::Entity> entity)
 
 bool RType::HandleSoundSystem::verifyRequiredComponent(std::shared_ptr<RType::Entity> entity)
 {
-    return (entity->getComponent<SoundComponent>() && entity->getComponent<SoundComponent>()->getSound().getStatus() != sf::Sound::Status::Playing);
+    return (entity->getComponent<SoundComponent>() && entity->getComponent<SoundComponent>()->getSound().getStatus() != sf::Sound::Status::Playing &&
+    entity->getComponent<PositionComponent>()->getPositionX() > 0);
 }

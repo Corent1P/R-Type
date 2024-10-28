@@ -8,6 +8,7 @@
 #pragma once
 #include <SFML/Audio.hpp>
 #include "../IComponent.hh"
+#include "./PositionComponent.hh"
 
 namespace RType {
     class SoundComponent: public RType::IComponent {
