@@ -197,38 +197,38 @@ void RType::Server::initSystem(void)
 {
     _coord.generateNewSystem(std::make_shared<HandlePatternSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleMoveSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
         nullptr,
         std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleBossAttackSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
         std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleShootSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
         nullptr,
         std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleCollisionSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
         std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleEntitySpawnSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
         std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
     ));
 

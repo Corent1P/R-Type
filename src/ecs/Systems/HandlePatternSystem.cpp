@@ -60,8 +60,6 @@ void RType::HandlePatternSystem::effects(std::vector<std::shared_ptr<RType::Enti
 }
 void RType::HandlePatternSystem::effect(std::shared_ptr<RType::Entity> entity)
 {
-    if (!verifyRequiredComponent(entity))
-        return;
     if (entity->GET_PATTERN->getPatternType() == RType::NO_PATTERN)
         entity->GET_PATTERN->setPattern(sf::Vector2f(0, 0));
     if (entity->GET_PATTERN->getPatternType() == RType::STRAIGHT_UP)
@@ -87,6 +85,21 @@ void RType::HandlePatternSystem::effect(std::shared_ptr<RType::Entity> entity)
             entity->GET_PATTERN->setDirectionForZigZag(false);
         if (entity->getComponent<RType::PositionComponent>()->getPositionY() > 1000)
             entity->GET_PATTERN->setDirectionForZigZag(true);
+    }
+    if (entity->GET_PATTERN->getPatternType() == RType::SEMI_DIAGONAL_UP) {
+        entity->GET_PATTERN->setPattern(sf::Vector2f(-10, -2.5));
+    }
+    if (entity->GET_PATTERN->getPatternType() == RType::SEMI_DIAGONAL_DOWN) {
+        entity->GET_PATTERN->setPattern(sf::Vector2f(-10, 2.5));
+    }
+    if (entity->GET_PATTERN->getPatternType() == RType::DIAGONAL_UP) {
+        entity->GET_PATTERN->setPattern(sf::Vector2f(-10, -5));
+    }
+    if (entity->GET_PATTERN->getPatternType() == RType::DIAGONAL_DOWN) {
+        entity->GET_PATTERN->setPattern(sf::Vector2f(-10, 5));
+    }
+    if (entity->GET_PATTERN->getPatternType() == RType::TO_PLAYER) {
+        entity->GET_PATTERN->setPattern(sf::Vector2f(-10, 0)); // to modify
     }
 }
 

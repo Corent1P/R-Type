@@ -43,7 +43,111 @@ void RType::AttackPatterns::spawnSting(std::shared_ptr<RType::Entity> boss, std:
     }
 }
 
+void RType::AttackPatterns::spaceShipShoot(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient)
+{
+    auto position = boss->getComponent<PositionComponent>();
+    auto rect = boss->getComponent<IntRectComponent>();
+    auto scale = boss->getComponent<ScaleComponent>();
 
+    if (!position || !rect || !scale)
+        return;
+
+
+    int bossX = position->getPositionX();
+    int bossY = position->getPositionY();
+    int bossHeight = rect->getIntRectHeight() * scale->getScaleY();
+
+    int posY = bossY + (bossHeight / 2) + 50;
+
+    createEntity(E_SPACE_SHIP_BULLET, bossX, posY, addEntity, sendMessageToAllClient);
+}
+
+void RType::AttackPatterns::waveShoot(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient)
+{
+    auto position = boss->getComponent<PositionComponent>();
+    auto rect = boss->getComponent<IntRectComponent>();
+    auto scale = boss->getComponent<ScaleComponent>();
+
+    if (!position || !rect || !scale)
+        return;
+
+
+    int bossX = position->getPositionX();
+    int bossY = position->getPositionY();
+    int bossHeight = rect->getIntRectHeight() * scale->getScaleY();
+
+    int posY = bossY + (bossHeight / 2) + 50;
+
+    createEntity(E_SPACE_SHIP_BULLET, bossX, posY, addEntity, sendMessageToAllClient);
+    createEntity(E_SPACE_SHIP_SEMI_DIAGONAL_UP, bossX, posY, addEntity, sendMessageToAllClient);
+    createEntity(E_SPACE_SHIP_SEMI_DIAGONAL_DOWN, bossX, posY, addEntity, sendMessageToAllClient);
+    createEntity(E_SPACE_SHIP_DIAGONAL_UP, bossX, posY, addEntity, sendMessageToAllClient);
+    createEntity(E_SPACE_SHIP_DIAGONAL_DOWN, bossX, posY, addEntity, sendMessageToAllClient);
+}
+
+void RType::AttackPatterns::spawnBabyOctopus(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient)
+{
+    auto position = boss->getComponent<PositionComponent>();
+    auto rect = boss->getComponent<IntRectComponent>();
+    auto scale = boss->getComponent<ScaleComponent>();
+
+    if (!position || !rect || !scale)
+        return;
+
+    int bossX = position->getPositionX();
+    int bossY = position->getPositionY();
+    int bossHeight = rect->getIntRectHeight() * scale->getScaleY();
+    int posY = bossY + (bossHeight / 2.);
+
+    createEntity(E_BABY_OCTOPUS, bossX - 50, posY, addEntity, sendMessageToAllClient);
+
+    for (int i = 75; i < 400; i += 75) {
+        createEntity(E_BABY_OCTOPUS, bossX - 50 + i, posY - i, addEntity, sendMessageToAllClient);
+        createEntity(E_BABY_OCTOPUS, bossX - 50 + i, posY + i, addEntity, sendMessageToAllClient);
+    }
+}
+
+void RType::AttackPatterns::spawnKamikazeOctopus(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient)
+{
+    auto position = boss->getComponent<PositionComponent>();
+    auto rect = boss->getComponent<IntRectComponent>();
+    auto scale = boss->getComponent<ScaleComponent>();
+
+    if (!position || !rect || !scale)
+        return;
+
+    int bossX = position->getPositionX();
+    int bossY = position->getPositionY();
+    int bossHeight = rect->getIntRectHeight() * scale->getScaleY();
+    int posY = bossY + (bossHeight / 2.);
+
+    createEntity(E_BABY_OCTOPUS, bossX, posY, addEntity, sendMessageToAllClient);
+
+    for (int i = 75; i < 400; i += 75) {
+        createEntity(E_BABY_OCTOPUS, bossX - i, posY - i, addEntity, sendMessageToAllClient);
+        createEntity(E_BABY_OCTOPUS, bossX - i, posY + i, addEntity, sendMessageToAllClient);
+    }
+
+    createEntity(E_KAMIKAZE_OCTOPUS, bossX - 75, posY - 42, addEntity, sendMessageToAllClient);
+    createEntity(E_KAMIKAZE_OCTOPUS, bossX - 75, posY + 42, addEntity, sendMessageToAllClient);
+
+}
+
+void RType::AttackPatterns::pattern1(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient)
+{
+    (void) boss;
+    (void) addEntity;
+    (void) sendMessageToAllClient;
+    std::cout << "PATTERN 1" << std::endl;
+}
+
+void RType::AttackPatterns::pattern2(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient)
+{
+    (void) boss;
+    (void) addEntity;
+    (void) sendMessageToAllClient;
+    std::cout << "PATTERN 2" << std::endl;
+}
 
 void RType::AttackPatterns::createEntity(const RType::EntityType &type, const int &posX, const int &posY, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient)
 {
@@ -61,7 +165,20 @@ void RType::AttackPatterns::createEntity(const RType::EntityType &type, const in
     entityTypeMap[E_BABY_FLY] = "baby_fly";
     entityTypeMap[E_STING] = "sting";
 
-    entityTypeMap[E_BOSS] = "boss";
+    entityTypeMap[E_FLY_BOSS] = "fly_boss";
+    entityTypeMap[E_SPACE_SHIP_BOSS] = "sape_ship_boss";
+    entityTypeMap[E_SPACE_SHIP_BULLET] = "space_ship_bullet";
+    entityTypeMap[E_SPACE_SHIP_SEMI_DIAGONAL_UP] = "space_ship_semi_diagonal_up_bullet";
+    entityTypeMap[E_SPACE_SHIP_SEMI_DIAGONAL_DOWN] = "space_ship_semi_diagonal_down_bullet";
+    entityTypeMap[E_SPACE_SHIP_DIAGONAL_UP] = "space_ship_diagonal_up_bullet";
+    entityTypeMap[E_SPACE_SHIP_DIAGONAL_DOWN] = "space_ship_diagonal_down_bullet";
+
+    entityTypeMap[E_OCTOPUS_BOSS] = "octopus_boss";
+    entityTypeMap[E_BABY_OCTOPUS] = "baby_octopus";
+    entityTypeMap[E_KAMIKAZE_OCTOPUS] = "kamikaze_octopus";
+
+    entityTypeMap[E_LAST_BOSS] = "last_boss";
+
 
     std::string filepath("./config/entities/" + entityTypeMap[type] + ".json");
 

@@ -117,7 +117,7 @@ Level.addEnnemy("item_weapon", 33, 1080 / 5 * 4)
 Level.addEnnemy("space_ship_1", 34, 1080 / 5)
 Level.addEnnemy("space_ship_1", 34, 1080 / 5 * 4)
 
-Level.addEnnemy("boss", 40, 150)
+Level.addEnnemy("space_ship_boss", 40, 150)
 
 function Level.update(dt)
     local time = tonumber(dt)

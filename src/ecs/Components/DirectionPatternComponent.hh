@@ -23,6 +23,11 @@ namespace RType {
         UP_THEN_DOWN,
         FOLLOW_PLAYER,
         ZIGZAG_LEFT,
+        SEMI_DIAGONAL_UP,
+        SEMI_DIAGONAL_DOWN,
+        DIAGONAL_UP,
+        DIAGONAL_DOWN,
+        TO_PLAYER
     };
 
     class DirectionPatternComponent: public RType::IComponent {

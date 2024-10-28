@@ -22,7 +22,12 @@ namespace RType {
         E_OCTOPUS,
         E_FLY,
         E_BABY_FLY,
-        E_BOSS,
+        E_FLY_BOSS,
+        E_SPACE_SHIP_BOSS,
+        E_OCTOPUS_BOSS,
+        E_LAST_BOSS,
+        E_BABY_OCTOPUS,
+        E_KAMIKAZE_OCTOPUS,
         E_BUTTON,
         E_LAYER,
         E_BULLET,
@@ -39,6 +44,12 @@ namespace RType {
         E_BULLET_3,
         E_BULLET_4,
         E_STING,
+        E_SPACE_SHIP_BULLET,
+        E_SPACE_SHIP_SEMI_DIAGONAL_UP,
+        E_SPACE_SHIP_SEMI_DIAGONAL_DOWN,
+        E_SPACE_SHIP_DIAGONAL_UP,
+        E_SPACE_SHIP_DIAGONAL_DOWN,
+        E_SOUNDS
     };
 
     enum WeaponType {

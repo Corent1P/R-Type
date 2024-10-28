@@ -9,5 +9,7 @@
         "y": 0,
         "width": 32,
         "height": 32
-    }
+    },
+    "soundVolume": 50.0,
+    "sound": "./ressources/sounds/explosion.ogg"
 }
