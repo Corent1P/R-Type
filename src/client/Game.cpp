@@ -174,60 +174,24 @@ void RType::Game::loopReceive()
                 break;
 
             case DELETE_ENTITY:
-                for (const auto &entity : entities) {
+                for (const auto &entity : entities)
                     if (entity->getServerId() == receiveInfo.second[0]) {
                         if (entity->getComponent<RType::EntityTypeComponent>() == nullptr)
                             continue;
-                        switch (entity->getComponent<RType::EntityTypeComponent>()->getEntityType()) {
-                            case RType::E_BULLET:
-                            case RType::E_BULLET_2:
-                            case RType::E_BULLET_3:
-                            case RType::E_BULLET_4:
-                            case RType::E_ENNEMY_BULLET:
-                            case RType::E_STING:
-                            case RType::E_SPACE_SHIP_BULLET:
-                            case RType::E_SPACE_SHIP_SEMI_DIAGONAL_UP:
-                            case RType::E_SPACE_SHIP_SEMI_DIAGONAL_DOWN:
-                            case RType::E_SPACE_SHIP_DIAGONAL_UP:
-                            case RType::E_SPACE_SHIP_DIAGONAL_DOWN:
-                            case RType::E_BABY_OCTOPUS:
-                            case RType::E_KAMIKAZE_OCTOPUS:
-
-                                createEntity(E_HIT_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
-                                _coord.deleteEntity(entity);
-                                break;
-                            case RType::E_OCTOPUS:
-                            case RType::E_FLY:
-                            case RType::E_BABY_FLY:
-                            case RType::E_SMALL_SPACESHIP:
-                                createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
-                                _coord.deleteEntity(entity);
-                                break;
-                            case RType::E_FLY_BOSS:
-                            case RType::E_SPACE_SHIP_BOSS:
-                            case RType::E_OCTOPUS_BOSS:
-                            case RType::E_LAST_BOSS:
-                                for (int i = 0; i < 50; i++) {
-                                    createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X + (std::rand() % 400), entity->GET_POSITION_Y + (std::rand() % 400));
-                                }
-                                _coord.deleteEntity(entity);
-                                break;
-                            case RType::E_PLAYER:
-                                if (entity->getComponent<ActionComponent>())
-                                    std::cout << "§!§!§ YOU ARE DEAD §!§!§" << std::endl;
-                                _coord.deleteEntity(entity);
-                                break;
-                            case RType::E_ITEM_WEAPON:
-                            case RType::E_ITEM_SHIELD:
-                            case RType::E_SHIELD:
-                            case RType::E_ALLIES:
-                                _coord.deleteEntity(entity);
-                                break;
-                            default:
-                                break;
+                        if (entity->GET_POSITION_X > 0) {
+                            if (EntityTypeComponent::isWeapon(GET_ENTITY_TYPE(entity)) || EntityTypeComponent::isEnnemyShoot(GET_ENTITY_TYPE(entity)))
+                                    createEntity(E_HIT_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
+                            if (EntityTypeComponent::isMob(GET_ENTITY_TYPE(entity)) && !EntityTypeComponent::isBoss(GET_ENTITY_TYPE(entity)))
+                                    createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
                         }
+                        if (EntityTypeComponent::isBoss(GET_ENTITY_TYPE(entity)))
+                            for (int i = 0; i < 50; i++)
+                                createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X + (std::rand() % 400), entity->GET_POSITION_Y + (std::rand() % 400));
+                        if (GET_ENTITY_TYPE(entity) == E_PLAYER)
+                            if (entity->getComponent<ActionComponent>())
+                                std::cout << "§!§!§ YOU ARE DEAD §!§!§" << std::endl;
+                        _coord.deleteEntity(entity);
                     }
-                }
                 break;
 
             case MOVE_ENTITY:
