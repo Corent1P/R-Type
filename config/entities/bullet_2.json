@@ -1,6 +1,6 @@
 {
     "damage": 2,
-    "sprite":"./ressources/shoot2.png",
+    "sprite":"./ressources/weapons/shoot2-sheet.png",
     "scale": {
         "x": 0.5,
         "y": 0.5

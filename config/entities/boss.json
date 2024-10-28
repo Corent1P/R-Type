@@ -1,7 +1,7 @@
 {
     "health": 50,
     "damage": 5,
-    "sprite":"./ressources/fly-sheet.png",
+    "sprite":"./ressources/mobs/fly-sheet.png",
     "scale": {
         "x": 4.0,
         "y": 4.0
