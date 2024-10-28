@@ -248,12 +248,7 @@ void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)
             EntityTypeComponent::isItem(entity->getComponent<EntityTypeComponent>()->getEntityType()) ||
             EntityTypeComponent::isPowerUp(entity->getComponent<EntityTypeComponent>()->getEntityType()))) {
             if (entity->getComponent<RType::DirectionPatternComponent>() != nullptr && entity->getComponent<RType::DirectionPatternComponent>()->getEntityToFollow() != 0)
-                client->sendMessage(_socket,
-                    Encoder::newEntity(entity->getComponent<EntityTypeComponent>()->getEntityType(),
-                        entity->getId(),
-                        entity->getComponent<RType::PositionComponent>()->getPositionX(),
-                        entity->getComponent<RType::PositionComponent>()->getPositionY(),
-                        entity->getComponent<RType::DirectionPatternComponent>()->getEntityToFollow()));
+                continue;
             else
                 client->sendMessage(_socket,
                     Encoder::newEntity(entity->getComponent<EntityTypeComponent>()->getEntityType(),
@@ -261,6 +256,23 @@ void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)
                         entity->getComponent<RType::PositionComponent>()->getPositionX(),
                         entity->getComponent<RType::PositionComponent>()->getPositionY()));
         }
+    }
+    for (auto entity: _coord.getEntities()) {
+        if (client->getEntity()->getId() != entity->getId() &&
+            (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER ||
+            EntityTypeComponent::isMob(entity->getComponent<EntityTypeComponent>()->getEntityType()) ||
+            EntityTypeComponent::isItem(entity->getComponent<EntityTypeComponent>()->getEntityType()) ||
+            EntityTypeComponent::isPowerUp(entity->getComponent<EntityTypeComponent>()->getEntityType()))) {
+            if (entity->getComponent<RType::DirectionPatternComponent>() != nullptr && entity->getComponent<RType::DirectionPatternComponent>()->getEntityToFollow() != 0) {
+                client->sendMessage(_socket,
+                        Encoder::newEntity(entity->getComponent<EntityTypeComponent>()->getEntityType(),
+                            entity->getId(),
+                            entity->getComponent<RType::PositionComponent>()->getPositionX(),
+                            entity->getComponent<RType::PositionComponent>()->getPositionY(),
+                            entity->getComponent<RType::DirectionPatternComponent>()->getEntityToFollow()));
+            }
+        }
+
     }
 }
 

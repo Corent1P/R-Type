@@ -36,13 +36,7 @@ void RType::HandleCollisionSystem::effects(std::vector<std::shared_ptr<RType::En
     }
     handleEntityCollisions();
     for (const auto &entity: _entitiesToDestroy) {
-        if (entity->getComponent<EntityTypeComponent>() != nullptr && entity->getComponent<EntityTypeComponent>()->getEntityType() == E_SHIELD) {
-            for (const auto &player: entities) {
-                if (player->getComponent<EntityTypeComponent>() != nullptr && player->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER) {
-                    player->getComponent<PowerUpComponent>()->setPowerUpsIsActive(RType::SHIELD, false);
-                }
-            }
-        }
+        removeShieldToPlayer(entities, entity);
 
         if (entity->getComponent<EntityTypeComponent>() != nullptr && EntityTypeComponent::isBoss(entity->getComponent<EntityTypeComponent>()->getEntityType())) {
             for (const auto &window: entities) {
@@ -203,5 +197,22 @@ void RType::HandleCollisionSystem::decreaseHealth(std::shared_ptr<RType::Entity>
                 _sendMessageToAllClient(Encoder::infoEntity(entity->getId(), GET_ENTITY_TYPE(entity),
                     entity->GET_POSITION_X,  entity->GET_POSITION_Y, 0, healthComponent->getHealth()));
             }
+    }
+}
+
+void RType::HandleCollisionSystem::removeShieldToPlayer(std::vector<std::shared_ptr<RType::Entity>> entities, std::shared_ptr<RType::Entity> entity)
+{
+    int idToFollow;
+
+    if (entity->getComponent<DirectionPatternComponent>() == nullptr || entity->getComponent<DirectionPatternComponent>()->getEntityToFollow() == 0)
+        return;
+    idToFollow = entity->getComponent<DirectionPatternComponent>()->getEntityToFollow();
+    if (entity->getComponent<EntityTypeComponent>() != nullptr && entity->getComponent<EntityTypeComponent>()->getEntityType() == E_SHIELD) {
+        for (const auto &player: entities) {
+            if (player->getComponent<EntityTypeComponent>() != nullptr && player->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER && player->getId() == idToFollow) {
+                player->getComponent<PowerUpComponent>()->setPowerUpsIsActive(RType::SHIELD, false);
+                return;
+            }
+        }
     }
 }
