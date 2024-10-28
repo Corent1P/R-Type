@@ -129,6 +129,8 @@ namespace RType {
             void decreaseHealth(std::shared_ptr<RType::Entity> entity, int damage);
             void decreasePlayerHealth(std::shared_ptr<RType::Entity> entity, int damage);
 
+            void removeShieldToPlayer(std::vector<std::shared_ptr<RType::Entity>> entities, std::shared_ptr<RType::Entity> entity);
+
     };
 }
 #endif /* !HANDLECOLISIONSYTEM_HPP_ */
