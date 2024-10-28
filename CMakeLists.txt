@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
-project(main)
+project(R-Type)
 
 cmake_policy(SET CMP0091 NEW)
 add_definitions(-D_WIN32_WINNT=0x0601)
@@ -9,6 +9,7 @@ set(WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/Plugins)
 set(Boost_INCLUDE_DIR "./vcpkg_installed/x64-windows/include/boost")
+set(jsoncpp_INCLUDE_DIR "${WORKING_DIRECTORY}/build/vcpkg_installed/x64-linux/include/json")
 set(SFML_DIR "./vcpkg_installed/x64-windows/share/sfml")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -24,9 +25,9 @@ if(WIN32)
 endif()
 
 if(NOT MSVC)
-#     add_compile_options(/W4 /WX)
-# else()
-    add_compile_options(-Wall -Wextra -Werror -g)
+    add_compile_options(-Wall -Wextra -Werror -g -ljsoncpp)
+else()
+    add_compile_options(/W4 /WX)
 endif()
 
 set(CMAKE_CXX_CLANG_TIDY

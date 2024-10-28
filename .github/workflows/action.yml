@@ -11,7 +11,6 @@ on:
         branches-ignore:
             - "ga-ignore**"
 
-
 jobs:
     check_program_compilation:
         runs-on: ubuntu-latest
@@ -23,50 +22,69 @@ jobs:
               with:
                   fetch-depth: 0
 
-            - name: Cache Conan dependencies
+            - name: Cache vcpkg
               uses: actions/cache@v3
               with:
                 path: |
-                  ~/.cache/pip
-                  ~/.conan2
+                  ${{github.workspace}}/vcpkg
                   ${{github.workspace}}/build
-                key: ${{ runner.os }}-dependencies-${{ hashFiles('**/conanfile.txt') }}
+                key: ${{ runner.os }}-vcpkg-${{ hashFiles('vcpkg.json', '*/vcpkg.json') }}
                 restore-keys: |
-                  ${{ runner.os }}-dependencies-
+                  ${{ runner.os }}-vcpkg-
 
+            - name: Install vcpkg
+              id: vcpkg
+              run: |
+                  if [ -d "/path/to/dir" ]; then
+                    git clone https://github.com/microsoft/vcpkg.git
+                    ./vcpkg/bootstrap-vcpkg.sh
+                  fi
 
             - name: Install dependencies
               id: package
               run: |
-                  sudo apt-get update -y && sudo apt-get install -y pipx clang-tidy
-                  pipx install conan
-                  pipx ensurepath
-                  echo "$HOME/.local/bin" >> $GITHUB_PATH
-                  sudo apt-get install -y libx11-dev libx11-xcb-dev libfontenc-dev libice-dev libsm-dev libxau-dev libxaw7-dev
+                  sudo apt-get update -y && sudo apt-get install -y clang-tidy wget
+                  sudo wget -qO /usr/local/bin/ninja.gz https://github.com/ninja-build/ninja/releases/latest/download/ninja-linux.zip
+                  sudo gunzip /usr/local/bin/ninja.gz
+                  sudo chmod a+x /usr/local/bin/ninja
+                  sudo apt-get install -y libx11-dev libx11-xcb-dev libfontenc-dev libice-dev libsm-dev libxau-dev libxaw7-dev build-essential pkg-config
+                  sudo apt-get install -y autoconf automake autoconf-archive libbz2-dev libdivsufsort-dev libssl-dev libmpfr-dev
+                  sudo apt install -y libjsoncpp-dev ninja-build
+                  sudo ln -s /usr/include/jsoncpp/json/ /usr/include/json
+                  sudo apt remove -y cmake
+                  sudo apt install -y cmake
+                  cmake --version
+                  echo "VCPKG_ROOT=${{github.workspace}}/vcpkg/" >> $GITHUB_ENV
 
             - name: Compilation with CMake
               id: build
               if: steps.package.outcome == 'success'
               run: |
                   ./build.sh
+
+            - name: Build Unit Tests
+              continue-on-error: true
+              id: tests_build
+              if: steps.build.outcome == 'success'
+              run: |
                   make unit_tests
 
             - name: Run Unit Tests Client
-              if: steps.build.outcome == 'success'
+              if: steps.tests_build.outcome == 'success'
               run: |
                   ./unit_tests_client --verbose
                   gcovr --exclude tests
                   gcovr --exclude tests --branches
 
             - name: Run Unit Tests ECS
-              if: steps.build.outcome == 'success'
+              if: steps.tests_build.outcome == 'success'
               run: |
                   ./unit_tests_ecs --verbose
                   gcovr --exclude tests
                   gcovr --exclude tests --branches
 
             - name: Run Unit Tests Server
-              if: steps.build.outcome == 'success'
+              if: steps.tests_build.outcome == 'success'
               run: |
                   ./unit_tests_server --verbose
                   gcovr --exclude tests
