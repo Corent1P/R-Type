@@ -55,7 +55,7 @@ void RType::AttackPatterns::createEntity(const RType::EntityType &type, const in
     std::shared_ptr<RType::Entity> entityToFollow = nullptr;
     std::unordered_map<EntityType, std::string> entityTypeMap;
 
-    entityTypeMap[E_SMALL_SPACESHIP] = "small_spaceship";
+    entityTypeMap[E_SPACE_SHIP_1] = "small_spaceship";
     entityTypeMap[E_OCTOPUS] = "octopus";
     entityTypeMap[E_FLY] = "fly";
     entityTypeMap[E_BABY_FLY] = "baby_fly";

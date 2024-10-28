@@ -59,7 +59,10 @@ RType::MappingInput RType::EntityTypeComponent::getButtonType() const
 
 bool RType::EntityTypeComponent::isMob(EntityType entityType)
 {
-    return entityType == E_SMALL_SPACESHIP || entityType == E_FLY || entityType == E_BABY_FLY || entityType == E_OCTOPUS || isBoss(entityType);
+    return entityType == E_SPACE_SHIP_1 || entityType == E_SPACE_SHIP_2 ||
+           entityType == E_SPACE_SHIP_3 || entityType == E_FLY ||
+           entityType == E_BABY_FLY || entityType == E_OCTOPUS ||
+           isBoss(entityType);
 }
 
 bool RType::EntityTypeComponent::isBoss(EntityType entityType)
@@ -99,8 +102,14 @@ std::string RType::EntityTypeComponent::getOutput() const
         case E_PLAYER:
             entityType = "player";
             break;
-        case E_SMALL_SPACESHIP:
-            entityType = "mob small spaceship";
+        case E_SPACE_SHIP_1:
+            entityType = "mob spaceship 1";
+            break;
+        case E_SPACE_SHIP_2:
+            entityType = "mob spaceship 2";
+            break;
+        case E_SPACE_SHIP_3:
+            entityType = "mob spaceship 3";
             break;
         case E_OCTOPUS:
             entityType = "mob octopus";
