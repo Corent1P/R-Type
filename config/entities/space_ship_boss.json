@@ -1,5 +1,5 @@
 {
-    "health": 50,
+    "health": 200,
     "damage": 5,
     "sprite":"./ressources/boss/space-ship-boss.png",
     "scale": {

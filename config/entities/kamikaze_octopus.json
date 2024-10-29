@@ -1,7 +1,7 @@
 {
     "health": 3,
     "damage": 2,
-    "sprite":"./ressources/octopus-sheet.png",
+    "sprite":"./ressources/mobs/octopus-sheet.png",
     "scale": {
         "x": 2.0,
         "y": 2.0
@@ -13,6 +13,6 @@
         "height": 46
     },
     // KAMIKAZE
-    "pattern": 14,
+    "pattern": 15,
     "speed": 3
 }

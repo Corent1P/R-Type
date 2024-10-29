@@ -1,5 +1,5 @@
 {
-    "health": 50,
+    "health": 150,
     "damage": 5,
     "sprite":"./ressources/mobs/fly-sheet.png",
     "scale": {
