@@ -43,7 +43,7 @@ void RType::HandleCollisionSystem::effects(std::vector<std::shared_ptr<RType::En
                 auto level = window->getComponent<LevelComponent>();
                 auto parseLevel = window->getComponent<ParseLevelInfoComponent>();
                 if (level && parseLevel) {
-                    if (level->getLevel() == 8)
+                    if (level->getLevel() == 4)
                         return _sendMessageToAllClient(Encoder::gameEnd());
                     level->setLevel(level->getLevel() + 1);
                     parseLevel->setLevel(level->getLevel());

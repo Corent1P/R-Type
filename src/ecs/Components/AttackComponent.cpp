@@ -33,11 +33,11 @@ void RType::AttackComponent::pushBackAttacksPatterns(Pattern pattern)
         case SPAWN_KAMIKAZE_OCTOPUS:
             _patterns.push_back(AttackPatterns::spawnKamikazeOctopus);
             break;
-        case PATTERN_1:
-            _patterns.push_back(AttackPatterns::pattern1);
+        case SPAWN_WALL_STATIC_BOMB:
+            _patterns.push_back(AttackPatterns::spawnWallStaticBomb);
             break;
-        case PATTERN_2:
-            _patterns.push_back(AttackPatterns::pattern2);
+        case SPAWN_WALL_ZIGZAG_BOMB:
+            _patterns.push_back(AttackPatterns::spawnWallZigZagBomb);
             break;
         default:
             break;
@@ -58,10 +58,10 @@ void RType::AttackComponent::pushBackAttacksPatterns(std::string pattern)
         _patterns.push_back(AttackPatterns::spawnBabyOctopus);
     else if (pattern == "spawnKamikazeOctopus")
         _patterns.push_back(AttackPatterns::spawnKamikazeOctopus);
-    else if (pattern == "pattern1")
-        _patterns.push_back(AttackPatterns::pattern1);
-    else if (pattern == "pattern2")
-        _patterns.push_back(AttackPatterns::pattern2);
+    else if (pattern == "spawnWallStaticBomb")
+        _patterns.push_back(AttackPatterns::spawnWallStaticBomb);
+    else if (pattern == "spawnWallZigZagBomb")
+        _patterns.push_back(AttackPatterns::spawnWallZigZagBomb);
     else
         throw EcsError("Attack pattern: " + pattern + "was not found");
 }

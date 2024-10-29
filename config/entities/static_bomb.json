@@ -1,0 +1,16 @@
+{
+    "damage": 5,
+    "sprite":"./ressources/mobs/bomb.png",
+    "scale": {
+        "x": 3,
+        "y": 3
+    },
+    "rect" : {
+        "x": 0,
+        "y": 0,
+        "width": 41,
+        "height": 38
+    },
+    "pattern": 3,
+    "speed": 3
+}

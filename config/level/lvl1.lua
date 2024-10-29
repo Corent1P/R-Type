@@ -70,8 +70,6 @@ Level.addEnnemy("octopus", 4.5, 930)
 
 Level.spawnMixedWave("space_ship_2", "octopus", 5, 300, 60, 8)
 
-Level.addEnnemy("item_shield", 6.5, 1080 / 2)
-
 Level.spawnColumn("octopus", 8, 1080 / 2, 40, 12)
 Level.spawnColumn("space_ship_2", 10, 950, 45, 10)
 
@@ -92,8 +90,6 @@ Level.addEnnemy("octopus", 21.5, 150)
 Level.addEnnemy("octopus", 21.5, 930)
 
 Level.spawnVFormation("space_ship_3", 22, 600, 40)
-
-Level.addEnnemy("item_shield", 25, 1080 / 2)
 
 Level.spawnColumn("octopus", 27, 1080 / 2, 30, 12)
 Level.spawnColumn("space_ship_2", 28, 950, 40, 10)
@@ -116,7 +112,7 @@ Level.spawnMixedWave("octopus", "space_ship_2", 36, 880, 50, 10)
 -- Level.addEnnemy("item_heal", 38.5, 1080 / 4 * 3)
 -- Level.addEnnemy("item_heal", 39, 1080 / 2)
 
-Level.addEnnemy("octopus_boss", 40, 400)
+Level.addEnnemy("octopus_boss", 42, 400)
 
 function Level.update(dt)
     local time = tonumber(dt)

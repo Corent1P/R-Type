@@ -32,7 +32,7 @@ void RType::HandlePatternSystem::handlePatternFollowEntities(std::vector<std::sh
 
     for(const auto &entity2: entities) {
         if (!verifyRequiredComponent(entity2)) {
-            return;
+            continue;;
         }
         if (entity2->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::FOLLOW_PLAYER && entity2->getComponent<RType::DirectionPatternComponent>()->getEntityToFollow() == entity->getId()) {
             entityFollowingWidth = entity2->getComponent<RType::IntRectComponent>()->getIntRectWidth();
@@ -97,9 +97,6 @@ void RType::HandlePatternSystem::effect(std::shared_ptr<RType::Entity> entity)
     }
     if (entity->GET_PATTERN->getPatternType() == RType::DIAGONAL_DOWN) {
         entity->GET_PATTERN->setPattern(sf::Vector2f(-10, 5));
-    }
-    if (entity->GET_PATTERN->getPatternType() == RType::TO_PLAYER) {
-        entity->GET_PATTERN->setPattern(sf::Vector2f(-10, 0)); // to modify
     }
 }
 

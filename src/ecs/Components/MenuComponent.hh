@@ -17,7 +17,8 @@ namespace RType {
         HOME,
         MAPPING_INPUT,
         LOADING,
-        GAME
+        GAME,
+        END
     };
     class MenuComponent: public RType::IComponent {
         public:

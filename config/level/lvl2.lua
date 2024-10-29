@@ -115,8 +115,6 @@ Level.spawnVFormation("space_ship_3", 11, 300, 40)
 Level.spawnCircle("fly", 12, 750, 200, 10)
 Level.spawnHorizontalLine("octopus", 13, 450, 100, 5)
 
-Level.addEnnemy("item_shield", 14, 540)
-
 Level.spawnVFormation("fly", 15, 600, 50)
 Level.spawnPack("space_ship_2", 16, 500)
 

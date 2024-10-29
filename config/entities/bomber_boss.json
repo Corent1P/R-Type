@@ -1,7 +1,7 @@
 {
-    "health": 15,
+    "health": 300,
     "damage": 5,
-    "sprite":"./ressources/mobs/octopus-sheet.png",
+    "sprite":"./ressources/boss/bomber-boss.png",
     "scale": {
         "x": 5.0,
         "y": 5.0
@@ -9,8 +9,8 @@
     "rect" : {
         "x": 0,
         "y": 0,
-        "width": 41,
-        "height": 46
+        "width": 37,
+        "height": 42
     },
     "pattern": 3,
     "speed": 1,
@@ -18,7 +18,7 @@
     "intervalShoot": 2.0,
 
     "attack": [
-        "pattern1",
-        "pattern2"
+        "spawnWallStaticBomb",
+        "spawnWallZigZagBomb"
     ]
 }

@@ -216,9 +216,9 @@ void RType::HandleEntitySpawnSystem::createEntityMap(void)
     _entityTypeMap[E_FLY_BOSS] = "fly_boss";
     _entityTypeMap[E_SPACE_SHIP_BOSS] = "space_ship_boss";
     _entityTypeMap[E_OCTOPUS_BOSS] = "octopus_boss";
-    _entityTypeMap[E_LAST_BOSS] = "last_boss";
+    _entityTypeMap[E_BOMBER_BOSS] = "bomber_boss";
     _entityTypeMap[E_BABY_OCTOPUS] = "baby_octopus";
-    _entityTypeMap[E_KAMIKAZE_OCTOPUS] = "kamikaze_octopus";
+    _entityTypeMap[E_SPACE_SHIP_4] = "space_ship_4";
     _entityTypeMap[E_BUTTON] = "button";
     _entityTypeMap[E_LAYER] = "layer";
     _entityTypeMap[E_SHIELD] = "shield";
@@ -240,5 +240,6 @@ void RType::HandleEntitySpawnSystem::createEntityMap(void)
     _entityTypeMap[E_EXPLOSION_EFFECT] = "explosion_effect";
     _entityTypeMap[E_TEXT] = "text";
     _entityTypeMap[E_STING] = "sting";
-
+    _entityTypeMap[E_STATIC_BOMB] = "static_bomb";
+    _entityTypeMap[E_ZIGZAG_BOMB] = "zigzag_bomb";
 }
