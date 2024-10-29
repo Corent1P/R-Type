@@ -21,7 +21,7 @@ void RType::HandleShootSystem::effects(std::vector<std::shared_ptr<RType::Entity
         if (verifyRequiredComponent(entity) && (entity->getComponent<ActionComponent>()->getActions(RType::SHOOTING) == true || entity->getComponent<ActionComponent>()->getActions(RType::CHARGING_SHOT) == true)) {
             if (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER && _sendMessageToServer) {
                 entity->getComponent<RType::ActionComponent>()->setActions(RType::SHOOTING, false);
-                if (entity->getComponent<ClockComponent>()->getChargedTime() <= 1) {
+                if (entity->getComponent<ClockComponent>()->getChargedTime() <= 0.5) {
                     _sendMessageToServer(Encoder::actionPlayer(true, false, false, false));
                 } else {
                     _sendMessageToServer(Encoder::actionPlayer(true, true, false, false));

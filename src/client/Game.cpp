@@ -653,21 +653,21 @@ sf::Vector2f RType::Game::getBulletPosition(int type, int posX, int posY)
         case RType::E_BULLET:
             return sf::Vector2f(posX, posY + (6 * 2) / 2);
         case RType::E_BULLET_2:
-            return sf::Vector2f(posX, posY + (32 * 0.5) / 2);
+            return sf::Vector2f(posX, posY + (32 * 2) / 2);
         case RType::E_BULLET_3:
-            return sf::Vector2f(posX, posY + (32 * 2.) / 2);
+            return sf::Vector2f(posX, posY + (32 * 3.) / 2);
         case RType::E_BULLET_4:
-            return sf::Vector2f(posX, posY + (192 * 2.) / 2);
+            return sf::Vector2f(posX, posY + (192 * 0.5) / 2);
         case RType::E_FORCEPOD_BULLET:
             return sf::Vector2f(posX, posY + (6 * 2) / 2);
         case RType::E_BULLET_LASER:
             return sf::Vector2f(posX, posY + (32 * 2.) / 2);
         case RType::E_BULLET_LASER_2:
-            return sf::Vector2f(posX, posY + (32 * 2.) / 2);
+            return sf::Vector2f(posX, posY + (32 * 3.) / 2);
         case RType::E_BULLET_LASER_3:
-            return sf::Vector2f(posX, posY + (32 * 2.) / 2);
+            return sf::Vector2f(posX, posY + (32 * 3.) / 2);
         case RType::E_BULLET_LASER_4:
-            return sf::Vector2f(posX, posY + (48 * 2.) / 2);
+            return sf::Vector2f(posX, posY + (48 * 4.) / 2);
         default:
             return sf::Vector2f(0, 0);
     }

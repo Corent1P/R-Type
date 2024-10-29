@@ -108,16 +108,16 @@ sf::Vector2f RType::ActionPlayerCommand::getBulletSize(WeaponType weaponType)
     if (_data[1] == true) {
         switch (weaponType) {
             case RType::LVL_1:
-                bulletSize.x = 95 * 3.;
-                bulletSize.y = 32 * 3.;
+                bulletSize.x = 95 * 2.;
+                bulletSize.y = 32 * 2.;
                 break;
             case RType::LVL_2:
                 bulletSize.x = 32 * 3.;
                 bulletSize.y = 32 * 3.;
                 break;
             case RType::LVL_3:
-                bulletSize.x = 63 * 2.;
-                bulletSize.y = 32 * 2.;
+                bulletSize.x = 63 * 3.;
+                bulletSize.y = 32 * 3.;
                 break;
             case RType::LVL_4:
                 bulletSize.x = 63 * 4.;
@@ -137,11 +137,11 @@ sf::Vector2f RType::ActionPlayerCommand::getBulletSize(WeaponType weaponType)
                 bulletSize.y = 32 * 2.;
                 break;
             case RType::LVL_3:
-                bulletSize.x = 63 * 2.;
-                bulletSize.y = 32 * 2.;
+                bulletSize.x = 63 * 3.;
+                bulletSize.y = 32 * 3.;
                 break;
             case RType::LVL_4:
-                bulletSize.x = 228 * 0.5;
+                bulletSize.x = 288 * 0.5;
                 bulletSize.y = 192 * 0.5;
                 break;
             default:
