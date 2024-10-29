@@ -113,7 +113,7 @@ jobs:
                 ZIP_FILE: r-type.zip
 
             - name: Create NSIS installer
-              steps.zip.outcome == 'success'
+              if: steps.zip.outcome == 'success'
               run: |
                 echo 'Outfile "R-Type.exe"' > r-type.nsi
                 echo 'Section' >> r-type.nsi
