@@ -30,9 +30,10 @@ void RType::HandleEventSystem::effects(std::vector<std::shared_ptr<RType::Entity
                         _disconnexion();
                     e->getComponent<RType::MenuComponent>()->setMenu(HOME);
                 }
-                for (const auto &player: entities) {
-                    handleInputPlayer(player, e, inputs);
-                    handleClickOnButton(player, e);
+                for (const auto &entity: entities) {
+                    handleInputPlayer(entity, e, inputs);
+                    handleHoverOnButton(entity, e);
+                    handleClickOnButton(entity, e);
                 }
             }
         }
@@ -149,32 +150,60 @@ void RType::HandleEventSystem::handleInputPlayer(std::shared_ptr<RType::Entity> 
     }
 }
 
-void RType::HandleEventSystem::handleClickOnButton(std::shared_ptr<RType::Entity> button, std::shared_ptr<RType::Entity> window)
+void RType::HandleEventSystem::handleHoverOnButton(std::shared_ptr<RType::Entity> button, std::shared_ptr<RType::Entity> window)
 {
-    if (button->getComponent<RType::ClickEffectComponent>() != nullptr
+    if (!(button->getComponent<RType::HoverEffectComponent>() != nullptr
     && button->getComponent<RType::IntRectComponent>() != nullptr
     && button->getComponent<RType::PositionComponent>() != nullptr
     && button->getComponent<RType::MenuComponent>() != nullptr
-    && *button->GET_MENU == *window->GET_MENU) {
-        if (window->getComponent<RType::EventComponent>()->getEvent().type == sf::Event::MouseButtonPressed) {
-            sf::Event::MouseButtonEvent mouseEvent = window->getComponent<RType::EventComponent>()->getEvent().mouseButton;
+    && *button->GET_MENU == *window->GET_MENU))
+        return;
+    if (!(window->getComponent<RType::EventComponent>()->getEvent().type == sf::Event::MouseMoved))
+        return;
 
-            if (mouseEvent.button == sf::Mouse::Left) {
-                int boxX = button->getComponent<RType::PositionComponent>()->getPositionX();
-                int boxY = button->getComponent<RType::PositionComponent>()->getPositionY();
-                int boxWidth = button->getComponent<RType::IntRectComponent>()->getIntRectWidth();
-                int boxHeight = button->getComponent<RType::IntRectComponent>()->getIntRectHeight();
+    sf::Event::MouseMoveEvent mouseEvent = window->GET_EVENT.mouseMove;
 
-                int mouseX = mouseEvent.x;
-                int mouseY = mouseEvent.y;
+    int boxX = button->getComponent<RType::PositionComponent>()->getPositionX();
+    int boxY = button->getComponent<RType::PositionComponent>()->getPositionY();
+    int boxWidth = button->getComponent<RType::IntRectComponent>()->getIntRectWidth();
+    int boxHeight = button->getComponent<RType::IntRectComponent>()->getIntRectHeight();
 
-                auto coord = window->getComponent<RType::SFWindowComponent>()->getWindow()->mapPixelToCoords({mouseX, mouseY});
-                sf::IntRect hitbox ({boxX, boxY}, {boxWidth, boxHeight});
+    int mouseX = mouseEvent.x;
+    int mouseY = mouseEvent.y;
 
-                if (hitbox.contains(sf::Vector2i(coord))) {
-                    CLICK_ON_BUTTON;
-                }
-            }
-        }
+    auto coord = window->getComponent<RType::SFWindowComponent>()->getWindow()->mapPixelToCoords({mouseX, mouseY});
+    sf::IntRect hitbox ({boxX, boxY}, {boxWidth, boxHeight});
+
+    HOVER_ON_BUTTON(false);
+    if (hitbox.contains(sf::Vector2i(coord)))
+        HOVER_ON_BUTTON(true);
+}
+
+void RType::HandleEventSystem::handleClickOnButton(std::shared_ptr<RType::Entity> button, std::shared_ptr<RType::Entity> window)
+{
+    if (!(button->getComponent<RType::HoverEffectComponent>() != nullptr
+    && button->getComponent<RType::IntRectComponent>() != nullptr
+    && button->getComponent<RType::PositionComponent>() != nullptr
+    && button->getComponent<RType::MenuComponent>() != nullptr
+    && *button->GET_MENU == *window->GET_MENU))
+        return;
+    if (!(window->getComponent<RType::EventComponent>()->getEvent().type == sf::Event::MouseButtonPressed))
+        return;
+    sf::Event::MouseButtonEvent mouseEvent = window->getComponent<RType::EventComponent>()->getEvent().mouseButton;
+
+    if (mouseEvent.button == sf::Mouse::Left) {
+        int boxX = button->getComponent<RType::PositionComponent>()->getPositionX();
+        int boxY = button->getComponent<RType::PositionComponent>()->getPositionY();
+        int boxWidth = button->getComponent<RType::IntRectComponent>()->getIntRectWidth();
+        int boxHeight = button->getComponent<RType::IntRectComponent>()->getIntRectHeight();
+
+        int mouseX = mouseEvent.x;
+        int mouseY = mouseEvent.y;
+
+        auto coord = window->getComponent<RType::SFWindowComponent>()->getWindow()->mapPixelToCoords({mouseX, mouseY});
+        sf::IntRect hitbox ({boxX, boxY}, {boxWidth, boxHeight});
+
+        if (hitbox.contains(sf::Vector2i(coord)))
+            CLICK_ON_BUTTON;
     }
 }

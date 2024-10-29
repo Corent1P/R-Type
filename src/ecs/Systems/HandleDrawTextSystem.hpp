@@ -16,9 +16,11 @@
 #include "../Components/MenuComponent.hh"
 #include "../Components/HealthComponent.hh"
 #include "../Components/ScoreComponent.hh"
+#include "../Components/HoverEffectComponent.hh"
 
 #define GET_WINDOW_FOR_DRAW w->getComponent<RType::SFWindowComponent>()
 #define SET_TEXT_POSITION entity->getComponent<RType::TextComponent>()->getText()->setPosition(entity->getComponent<PositionComponent>()->getPositions())
+#define GET_HOVER_C entity->getComponent<RType::HoverEffectComponent>()
 
 namespace RType {
     /**
@@ -61,10 +63,10 @@ namespace RType {
              * @param window
              */
             void updateText(std::shared_ptr<RType::Entity> button, std::shared_ptr<RType::Entity> window);
+            static void drawHitBox(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &entity);
         protected:
         private:
             const std::string& getDotString(void);
-            void drawHitBox(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &entity);
             std::vector<std::shared_ptr<RType::Entity>> _entities;
             std::string _dotString;
             std::size_t _dotCounter;

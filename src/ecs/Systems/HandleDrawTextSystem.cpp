@@ -20,17 +20,19 @@ RType::HandleDrawTextSystem::~HandleDrawTextSystem()
 void RType::HandleDrawTextSystem::effects(std::vector<std::shared_ptr<RType::Entity>> entities)
 {
     for (const auto &w: entities) {
-        if (GET_WINDOW_FOR_DRAW != nullptr) {
-            for (const auto &entity: entities) {
-                if (verifyRequiredComponent(entity) && *entity->GET_MENU == *w->GET_MENU) {
-                    updateText(entity, w);
-                    SET_TEXT_POSITION;
-                    GET_WINDOW_FOR_DRAW->getWindow()->draw(*(entity->getComponent<RType::TextComponent>()->getText()));
-                    // drawHitBox(w, entity);
+        if (GET_WINDOW_FOR_DRAW == nullptr)
+            continue;
+        for (const auto &entity: entities) {
+            if (verifyRequiredComponent(entity) && *entity->GET_MENU == *w->GET_MENU) {
+                updateText(entity, w);
+                SET_TEXT_POSITION;
+                if (GET_HOVER_C != nullptr && GET_HOVER_C->getHoverState()) {
+                    drawHitBox(w, entity);
                 }
+                GET_WINDOW_FOR_DRAW->getWindow()->draw(*(entity->getComponent<RType::TextComponent>()->getText()));
             }
-            return;
         }
+        return;
     }
 }
 
@@ -74,6 +76,18 @@ void RType::HandleDrawTextSystem::updateText(std::shared_ptr<RType::Entity> butt
     }
 }
 
+void RType::HandleDrawTextSystem::drawHitBox(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &entity)
+{
+    if (entity->getComponent<EntityTypeComponent>()->getEntityType() != E_LAYER) {
+        sf::FloatRect bounds = entity->getComponent<RType::TextComponent>()->getText()->getGlobalBounds();
+        sf::RectangleShape rect(sf::Vector2f(bounds.width, bounds.height));
+        rect.setPosition(entity->getComponent<RType::TextComponent>()->getText()->getPosition());
+        rect.setOutlineColor(sf::Color::White);
+        rect.setOutlineThickness(2);
+        GET_WINDOW_FOR_DRAW->getWindow()->draw(rect);
+    }
+}
+
 const std::string& RType::HandleDrawTextSystem::getDotString(void)
 {
     _dotCounter++;
@@ -85,16 +99,4 @@ const std::string& RType::HandleDrawTextSystem::getDotString(void)
         _dotCounter = 0;
     }
 	return _dotString;
-}
-
-void RType::HandleDrawTextSystem::drawHitBox(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &entity)
-{
-    if (entity->getComponent<EntityTypeComponent>()->getEntityType() != E_LAYER) {
-        sf::FloatRect bounds = entity->getComponent<RType::TextComponent>()->getText()->getGlobalBounds();
-        sf::RectangleShape rect(sf::Vector2f(bounds.width, bounds.height));
-        rect.setPosition(entity->getComponent<RType::TextComponent>()->getText()->getPosition());
-        rect.setOutlineColor(sf::Color::Red);
-        rect.setOutlineThickness(2);
-        GET_WINDOW_FOR_DRAW->getWindow()->draw(rect);
-    }
 }
