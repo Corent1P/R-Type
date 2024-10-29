@@ -77,7 +77,9 @@ std::string RType::DirectionPatternComponent::getOutput() const
 
 bool RType::DirectionPatternComponent::isPatternLeft(RType::PatternType patternType)
 {
-    if (patternType == RType::STRAIGHT_LEFT || patternType == RType::UP_N_DOWN_LEFT || patternType == RType::ZIGZAG_LEFT)
+    if (patternType == RType::STRAIGHT_LEFT || patternType == RType::UP_N_DOWN_LEFT || patternType == RType::ZIGZAG_LEFT ||
+        patternType == RType::SEMI_DIAGONAL_UP || patternType == RType::SEMI_DIAGONAL_DOWN || patternType == RType::DIAGONAL_UP ||
+        patternType == RType::DIAGONAL_DOWN)
         return true;
     return false;
 }
