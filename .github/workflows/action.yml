@@ -115,9 +115,9 @@ jobs:
                 echo 'Outfile "R-Type.exe"' > r-type.nsi
                 echo 'Section' >> r-type.nsi
                 echo '  nsisdl::download "https://github.com/Corent1P/R-Type/archive/refs/heads/main.zip" "$EXEDIR\\repo.zip"' >> r-type.nsi
-                echo '  SetOutPath "$EXEDIR\\repo"' >> r-type.nsi
-                echo '  File /oname=$EXEDIR\\repo\\repo.zip "$EXEDIR\\repo.zip"' >> r-type.nsi
-                echo '  ExecWait "$EXEDIR\\repo\\build.bat"' >> r-type.nsi
+                echo '  SetOutPath "$EXEDIR\\r-type"' >> r-type.nsi
+                echo '  File /oname=$EXEDIR\\r-type\\r-type.zip "$EXEDIR\\r-type.zip"' >> r-type.nsi
+                echo '  ExecWait "$EXEDIR\\r-type\\build.bat"' >> r-type.nsi
                 echo 'SectionEnd' >> r-type.nsi
 
                 makensis r-type.nsi
