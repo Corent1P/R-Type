@@ -6,6 +6,7 @@
 */
 
 #include "Game.hh"
+#include <SFML/System/Vector2.hpp>
 
 RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, const std::string &port):
     _client(ioContext, host, port)
@@ -13,7 +14,7 @@ RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, c
     _stopLoop = false;
 
     _font = std::make_shared<sf::Font>();
-    if (!_font->loadFromFile("ressources/font/planetKosmos.ttf")) {
+    if (!_font->loadFromFile("ressources/font/VCR_OSD_MONO_1.001.ttf")) {
         throw ClientError("Font not load");
     }
 
@@ -271,13 +272,13 @@ void RType::Game::loopReceive()
 
 void RType::Game::createMenu()
 {
-    std::shared_ptr<RType::Entity> title = createText(660, 200, "{{Game.name}}");
+    std::shared_ptr<RType::Entity> title = createText(200, "R-TYPE");
     title->PUSH_MENU_COMPONENT_E(HOME);
 
     std::shared_ptr<RType::Entity> loading = createText(660, 400, "LOADING ...");
     loading->PUSH_MENU_COMPONENT_E(LOADING);
 
-    std::shared_ptr<RType::Entity> buttonPlayButton = createButton(875, 400, "PLAY");
+    std::shared_ptr<RType::Entity> buttonPlayButton = createButton(400, "PLAY");
 
     buttonPlayButton->PUSH_MENU_COMPONENT_E(HOME);
     buttonPlayButton->pushComponent(std::make_shared<RType::ClickEffectComponent> (
@@ -286,7 +287,7 @@ void RType::Game::createMenu()
         }
     ));
 
-    std::shared_ptr<RType::Entity> buttonMappingInput = createButton(650, 600, "MAPPING INPUTS");
+    std::shared_ptr<RType::Entity> buttonMappingInput = createButton(600, "MAPPING INPUTS");
     buttonMappingInput->PUSH_MENU_COMPONENT_E(HOME);
     buttonMappingInput->pushComponent(std::make_shared<RType::ClickEffectComponent> (
         [] (std::shared_ptr<Entity> window) {
@@ -294,7 +295,7 @@ void RType::Game::createMenu()
         }
     ));
 
-    std::shared_ptr<RType::Entity> buttonExit = createButton(875, 800, "EXIT");
+    std::shared_ptr<RType::Entity> buttonExit = createButton(800, "EXIT");
     buttonExit->PUSH_MENU_COMPONENT_E(HOME);
     buttonExit->pushComponent(std::make_shared<RType::ClickEffectComponent> (
         [] (std::shared_ptr<Entity> window) {
@@ -423,7 +424,26 @@ std::shared_ptr<RType::Entity> RType::Game::createButton(int x, int y, std::stri
     std::shared_ptr<TextComponent> textComponent = button->pushComponent(std::make_shared<RType::TextComponent>(text, 60, _font));
     sf::FloatRect size = textComponent->getText()->getGlobalBounds();
     button->pushComponent(std::make_shared<RType::PositionComponent>(x, y));
-    button->pushComponent(std::make_shared<RType::IntRectComponent>(size.left, size.top, size.width, size.height));
+    button->pushComponent(std::make_shared<RType::IntRectComponent>(x, y, size.width, size.height));
+    button->pushComponent(std::make_shared<RType::HoverEffectComponent>());
+    return button;
+}
+
+std::shared_ptr<RType::Entity> RType::Game::createButton(int y, std::string text)
+{
+    std::shared_ptr<RType::Entity> button = _coord.generateNewEntity();
+
+    for (auto &entity: _coord.getEntities()) {
+        if (entity->getComponent<RType::SFWindowComponent>() == nullptr)
+            continue;
+        button->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BUTTON));
+        std::shared_ptr<TextComponent> textComponent = button->pushComponent(std::make_shared<RType::TextComponent>(text, 60, _font));
+        sf::FloatRect size = textComponent->getText()->getGlobalBounds();
+        sf::Vector2<unsigned int> windowSize = entity->getComponent<RType::SFWindowComponent>()->getWindow()->getSize();
+        button->pushComponent(std::make_shared<RType::PositionComponent>((windowSize.x - size.width) / 2, y));
+        button->pushComponent(std::make_shared<RType::IntRectComponent>((windowSize.x - size.width) / 2, y, size.width, size.height));
+        button->pushComponent(std::make_shared<RType::HoverEffectComponent>());
+    }
     return button;
 }
 
@@ -434,6 +454,22 @@ std::shared_ptr<RType::Entity> RType::Game::createText(int x, int y, std::string
     textEntity->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_TEXT));
     std::shared_ptr<TextComponent> textComponent = textEntity->pushComponent(std::make_shared<RType::TextComponent>(text, 60, _font));
     textEntity->pushComponent(std::make_shared<RType::PositionComponent>(x, y));
+    return textEntity;
+}
+
+std::shared_ptr<RType::Entity> RType::Game::createText(int y, std::string text)
+{
+    std::shared_ptr<RType::Entity> textEntity = _coord.generateNewEntity();
+
+    for (auto &entity: _coord.getEntities()) {
+        if (entity->getComponent<RType::SFWindowComponent>() == nullptr)
+            continue;
+        textEntity->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_TEXT));
+        std::shared_ptr<TextComponent> textComponent = textEntity->pushComponent(std::make_shared<RType::TextComponent>(text, 60, _font));
+        sf::FloatRect size = textComponent->getText()->getGlobalBounds();
+        sf::Vector2<unsigned int> windowSize = entity->getComponent<RType::SFWindowComponent>()->getWindow()->getSize();
+        textEntity->pushComponent(std::make_shared<RType::PositionComponent>((windowSize.x - size.width) / 2, y));
+    }
     return textEntity;
 }
 

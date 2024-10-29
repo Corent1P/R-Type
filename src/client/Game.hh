@@ -46,6 +46,7 @@
 #include "../ecs/Components/SoundComponent.hh"
 #include "../ecs/Components/SoundBufferComponent.hh"
 #include "../ecs/Components/SoundQueueComponent.hh"
+#include "../ecs/Components/HoverEffectComponent.hh"
 
 #include "../ecs/Systems/HandleEventSystem.hpp"
 #include "../ecs/Systems/HandleClearSystem.hpp"
@@ -138,7 +139,9 @@ namespace RType {
             void createWinMenu();
             void createMappingInputButton(std::shared_ptr<RType::MappingInputComponent> mappingInput);
             std::shared_ptr<RType::Entity> createButton(int x, int y, std::string text);
+            std::shared_ptr<RType::Entity> createButton(int y, std::string text);
             std::shared_ptr<RType::Entity> createText(int x, int y, std::string text);
+            std::shared_ptr<RType::Entity> createText(int y, std::string text);
             void createGameSystem();
             void createParallaxBackground(std::shared_ptr<RType::Entity> window);
             void createParallaxEntity(const std::string &path, const int &posX, const int &posY,
