@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** R-Type
 ** File description:
-** direction component assign to a entity movement 
+** direction component assign to a entity movement
 */
 
 #ifndef DIRECTIONPATTERNCOMPONENT_HPP_
@@ -44,6 +44,8 @@ namespace RType {
             void setDirectionForZigZag(bool directionForZigZag);
             bool getDirectionForZigZag() const;
             std::string getOutput() const;
+            static bool isPatternLeft(PatternType patternType);
+            static bool isPatternRight(PatternType patternType);
         private:
             PatternType _patternType;
             sf::Vector2f _pattern;

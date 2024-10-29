@@ -74,3 +74,17 @@ std::string RType::DirectionPatternComponent::getOutput() const
     std::string output("Entity Direction Component (entity direction: " + pattern + ")");
     return output;
 }
+
+bool RType::DirectionPatternComponent::isPatternLeft(RType::PatternType patternType)
+{
+    if (patternType == RType::STRAIGHT_LEFT || patternType == RType::UP_N_DOWN_LEFT || patternType == RType::ZIGZAG_LEFT)
+        return true;
+    return false;
+}
+
+bool RType::DirectionPatternComponent::isPatternRight(RType::PatternType patternType)
+{
+    if (patternType == RType::STRAIGHT_RIGHT || patternType == RType::UP_N_DOWN_RIGHT)
+        return true;
+    return false;
+}
