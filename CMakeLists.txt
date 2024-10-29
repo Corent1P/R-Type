@@ -27,7 +27,7 @@ endif()
 if(NOT MSVC)
     add_compile_options(-Wall -Wextra -Werror -g -ljsoncpp)
 else()
-    add_compile_options(/W4 /WX)
+    # add_compile_options(/W4 /WX)
 endif()
 
 set(CMAKE_CXX_CLANG_TIDY
