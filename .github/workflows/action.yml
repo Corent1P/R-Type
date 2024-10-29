@@ -102,15 +102,18 @@ jobs:
 
             - name: Set up NSIS
               run: |
+                sudo apt-get update -y
                 sudo apt-get install -y nsis
 
             - name: Compress repository into zip
+              id: zip
               run: |
                 zip -r r-type.zip .
               env:
                 ZIP_FILE: r-type.zip
 
             - name: Create NSIS installer
+              steps.zip.outcome == 'success'
               run: |
                 echo 'Outfile "R-Type.exe"' > r-type.nsi
                 echo 'Section' >> r-type.nsi
