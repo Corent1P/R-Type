@@ -10,8 +10,10 @@
 RType::TextComponent::TextComponent(std::string text, std::size_t fontSize, std::shared_ptr<sf::Font> font)
 {
     _text = std::make_shared<sf::Text>();
-	_text->setFont(*font);
-	setText(text, fontSize);
+    _text->setFont(*font);
+    setText(text, fontSize);
+    _text->setOutlineThickness(3);
+    _text->setOutlineColor(sf::Color::Black);
 }
 
 RType::TextComponent::~TextComponent()
@@ -28,7 +30,7 @@ void RType::TextComponent::setText(std::string text, std::size_t fontSize)
 {
 	_text->setString(text);
 	_text->setCharacterSize(fontSize);
-	_text->setFillColor(sf::Color::Red);
+	_text->setFillColor(sf::Color::White);
 }
 
 std::shared_ptr<sf::Text> RType::TextComponent::getText() const
