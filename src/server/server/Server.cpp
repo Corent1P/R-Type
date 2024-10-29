@@ -45,7 +45,7 @@ void RType::Server::handleReceive(const boost::system::error_code& error, std::s
 
     if (!connectedClient) {
         connectedClient = createClient();
-        if (receivInfo.first == CONNEXION) {
+        if (receivInfo.first.first == CONNEXION) {
             std::unique_lock<std::mutex> lock(_mtx);
             handleConnection(connectedClient);
             return startReceive();
@@ -56,7 +56,7 @@ void RType::Server::handleReceive(const boost::system::error_code& error, std::s
             return startReceive();
         }
     }
-    if (receivInfo.first == DISCONNEXION) {
+    if (receivInfo.first.first == DISCONNEXION) {
         std::unique_lock<std::mutex> lock(_mtx);
         handleDisconnection(connectedClient);
     } else {
@@ -153,7 +153,7 @@ void RType::Server::removeFollowingObjects(long id)
     }
 }
 
-void RType::Server::handleCommand(std::pair<RType::PacketType, std::vector<long>> receivInfo, std::shared_ptr<ClientServer> connectedClient)
+void RType::Server::handleCommand(const PACKET &receivInfo, std::shared_ptr<ClientServer> connectedClient)
 {
     std::unique_lock<std::mutex> lock(_mtx);
     std::shared_ptr<ICommand> com = _commandFactory.createCommand(receivInfo);

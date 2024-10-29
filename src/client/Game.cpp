@@ -140,7 +140,7 @@ void RType::Game::gameLoop()
 void RType::Game::loopReceive()
 {
     std::basic_string<unsigned char> command;
-    COMMAND_INFO receiveInfo;
+    PACKET receiveInfo;
 
     while (!_stopLoop) {
         command = _client.receive();
@@ -149,7 +149,7 @@ void RType::Game::loopReceive()
         std::unique_lock<std::mutex> lock(_mtx);
         auto entities = _coord.getEntities();
 
-        switch (receiveInfo.first) {
+        switch (receiveInfo.first.first) {
             case NEW_ENTITY:
                 if (_initConnection) {
                     createEntity(receiveInfo.second[1],

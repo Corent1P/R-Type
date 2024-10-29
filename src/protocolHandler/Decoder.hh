@@ -14,9 +14,11 @@
 
 #define COMMAND_ARGS std::vector<long>
 #define COMMAND_INFO std::pair<RType::PacketType, COMMAND_ARGS>
+#define HEADER std::pair<RType::PacketType, std::uint16_t>
+#define UNKNOWN_HEADER std::make_pair(UNKNOWN, 0)
+#define PACKET std::pair<HEADER, COMMAND_ARGS>
 
 namespace RType {
-
     /**
     * @brief Class to decode the data received from the client and the server
     */
@@ -30,7 +32,7 @@ namespace RType {
         *
         * @return return the command info composed of two parts : the type of the command and the arguments of the command
         */
-        static COMMAND_INFO getCommandInfo(U_STRING &packet);
+        static PACKET getCommandInfo(U_STRING &packet);
 
         /**
         * @brief Decode the header of the packet to get the type of packet received
@@ -49,6 +51,24 @@ namespace RType {
         * @return std::size_t Size of the packet
         */
         static std::size_t getSize(U_STRING &packet);
+
+        /**
+        * @brief Decode the header of the packet to get the number of the packet received
+        *
+        * @param packet Packet received
+        *
+        * @return std::uint8_t Number of the packet
+        */
+        static std::uint8_t getPacketNumber(const U_STRING &packet);
+
+        /**
+        * @brief Decrypt the header of the packet
+        *
+        * @param packet Packet received
+        *
+        * @return HEADER the content of the header
+        */
+        static HEADER decryptHeader(U_STRING &packet);
 
         /**
         * @brief Decode the new entity packet
@@ -130,5 +150,22 @@ namespace RType {
         * @return COMMAND_ARGS the content of the command
         */
         static COMMAND_ARGS gameEnd(U_STRING &packet);
+
+        /**
+        * @brief Decode the game over packet
+        *
+        * @param packet Packet received
+        *
+        * @return COMMAND_ARGS the content of the command
+        */
+        static COMMAND_ARGS error(U_STRING &packet);
+
+        /**
+         * @brief Decode the ACKMissing packet
+         *
+         * @param packet Packet received
+         * @return COMMAND_ARGS the content of the command
+         */
+        static COMMAND_ARGS ACKMissing(U_STRING &packet);
     };
 }

@@ -8,6 +8,15 @@
 #include "Encoder.hh"
 
 namespace RType {
+    U_STRING Encoder::addPacketNumber(const U_STRING &packet, std::uint16_t number)
+    {
+        U_STRING encodedWithNumber = packet;
+
+        encodedWithNumber[2] = number >> 8;
+        encodedWithNumber[3] = number & 0xff;
+        return encodedWithNumber;
+    }
+
     U_STRING Encoder::header(std::uint16_t size, unsigned char type)
     {
         std::uint16_t header = (size << 6) | type;
@@ -15,6 +24,8 @@ namespace RType {
 
         encodedHeader += header >> 8;
         encodedHeader += header & 0xff;
+        encodedHeader += '\0';
+        encodedHeader += '\0';
         return encodedHeader;
     }
 
@@ -122,5 +133,45 @@ namespace RType {
     U_STRING Encoder::gameEnd()
     {
         return header(0, GAME_END);
+    }
+
+    U_STRING Encoder::error()
+    {
+        return header(0, PACKET_ERROR);
+    }
+
+    U_STRING Encoder::ACKMissing(std::vector<std::uint16_t> packets)
+    {
+        U_STRING encoded;
+        std::vector<std::uint8_t> chars(MAX_PACKETS / 8, 0);
+        std::size_t smallestSuite = 0;
+        std::size_t biggestPacket = 0;
+        std::size_t packetSize = 0;
+
+        if (packets.size() == 0)
+            return header(encoded.size(), ACK_MISSING);
+        biggestPacket = packets.back();
+        packetSize = packets.size();
+        std::sort(packets.begin(), packets.end());
+        while (smallestSuite == packets[0]) {
+            smallestSuite++;
+            packets.erase(packets.begin());
+        }
+        encoded += smallestSuite >> 8;
+        encoded += smallestSuite & 0xff;
+        if (smallestSuite == packetSize)
+            return header(encoded.size(), ACK_MISSING) + encoded;
+        for (auto packet : packets) {
+            packet -= smallestSuite;
+            if (packet == biggestPacket)
+                break;
+            chars[packet / 8] += 1 << (packet % 8);
+        }
+        chars.resize(biggestPacket / 8 + 1);
+        for (auto char_ : chars)
+            encoded += char_;
+        encoded += biggestPacket >> 8;
+        encoded += biggestPacket & 0xff;
+        return header(encoded.size(), ACK_MISSING) + encoded;
     }
 }

@@ -7,10 +7,15 @@
 
 #pragma once
 
+#include <bitset>
 #include <cstdint>
 #include <iostream>
 #include <stdbool.h>
+#include <vector>
+#include <array>
+#include <algorithm>
 
+#define MAX_PACKETS 512
 #define U_STRING std::basic_string<unsigned char>
 
 namespace RType {
@@ -30,7 +35,8 @@ namespace RType {
         MOVE_PLAYER = 7,
         ACTION_PLAYER = 8,
         GAME_START = 9,
-        GAME_END = 10
+        GAME_END = 10,
+        ACK_MISSING = 11
     };
 
     /**
@@ -38,6 +44,16 @@ namespace RType {
     */
     class Encoder {
     public:
+        /**
+        * @brief Add the packet number to the packet
+        *
+        * @param packet Packet to add the number
+        * @param number Number to add to the packet
+        *
+        * @return U_STRING Packet with the number added
+        */
+        static U_STRING addPacketNumber(const U_STRING &packet, std::uint16_t number);
+
         /**
         * @brief Encode the header of the packet
         *
@@ -156,5 +172,19 @@ namespace RType {
         * @return U_STRING Encoded game end packet
         */
         static U_STRING gameEnd();
+
+        /**
+        * @brief Encode the error packet
+        *
+        * @return U_STRING Encoded error packet
+        */
+        static U_STRING error();
+
+        /**
+        * @brief Encode the ACK packet
+        *
+        * @return U_STRING Encoded ACK packet
+        */
+        static U_STRING ACKMissing(std::vector<std::uint16_t> packets);
     };
 }

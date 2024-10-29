@@ -108,7 +108,7 @@ namespace RType {
              * @param receivInfo the received command
              * @param connectedClient the connected client
              */
-            void handleCommand(std::pair<RType::PacketType, std::vector<long>> receivInfo, std::shared_ptr<ClientServer> connectedClient);
+            void handleCommand(const PACKET &receivInfo, std::shared_ptr<ClientServer> connectedClient);
 
             // Game handling
             /**

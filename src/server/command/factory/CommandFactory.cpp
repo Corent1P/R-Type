@@ -20,10 +20,10 @@ RType::CommandFactory::CommandFactory()
     _constructors.insert({GAME_END, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new GameEndCommand(data));}});
 }
 
-std::shared_ptr<RType::ICommand> RType::CommandFactory::createCommand(const std::pair<RType::PacketType, std::vector<long>> &command)
+std::shared_ptr<RType::ICommand> RType::CommandFactory::createCommand(const PACKET &command)
 {
     try {
-        PacketType type = (PacketType)command.first;
+        PacketType type = command.first.first;
 
         if (type == PACKET_ERROR)
             throw Error("Unvalid Command sent from client");
