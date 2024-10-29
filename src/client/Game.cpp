@@ -59,6 +59,8 @@ void RType::Game::gameLoop()
     float fpsTime = 0.0;
     float fps = 0.0;
 
+    int indexNackCommand = 0;
+
     for (auto sys : _coord.getSystems()) {
         if (sys->getType() == SystemType::S_DRAW)
             drawSystem = sys;
@@ -117,6 +119,9 @@ void RType::Game::gameLoop()
                 std::unique_lock<std::mutex> lock(_mtx);
                 displaySystem->effects(_coord.getEntities());
             }
+            if (indexNackCommand % NACK_PROTOCOL_TIME == 0)
+                _client.askForLostPackets();
+            indexNackCommand = (indexNackCommand + 1) % NACK_PROTOCOL_TIME;
             renderTime = 0.0;
             std::unique_lock<std::mutex> lock(_mtx);
             if (windowComponent != nullptr && !windowComponent->getIsOpen()) {

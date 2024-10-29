@@ -52,13 +52,44 @@ void RType::ClientServer::sendMessage(udp::socket &socket, const std::string &me
 	);
 }
 
+void displayPackets(std::array<U_STRING, MAX_PACKETS> &packets)
+{
+	for (std::size_t i = 0; i < MAX_PACKETS; i++) {
+		std::cout << "[" << i << " = ";
+		if (packets[i].size() > 0)
+			for (const auto &byte: packets[i])
+				std::cout << (int)byte << " ";
+		else
+			std::cout << "empty";
+		std::cout << "]" << std::endl;
+	}
+}
+
+bool importantType(RType::PacketType type)
+{
+    return type == RType::CONNEXION ||
+        type == RType::DISCONNEXION ||
+        type == RType::ACK_MISSING || //not implemented yet
+        type == RType::GAME_START ||
+        type == RType::GAME_END ||
+        type == RType::INFO_LEVEL ||
+        type == RType::NEW_ENTITY ||
+        type == RType::DELETE_ENTITY;
+}
+
 void RType::ClientServer::sendMessage(udp::socket &socket, const std::basic_string<unsigned char> &message)
 {
-	socket.async_send_to(boost::asio::buffer(message), _endpoint,
-		[this, message](const boost::system::error_code &error, std::size_t bytes_transferred) {
-            sendCallback(message, error, bytes_transferred);
+    U_STRING messageNumbered = Encoder::addPacketNumber(message, _packetId);
+    socket.async_send_to(boost::asio::buffer(messageNumbered), _endpoint,
+        [this, messageNumbered](const boost::system::error_code &error, std::size_t bytes_transferred) {
+            sendCallback(messageNumbered, error, bytes_transferred);
         }
 	);
+    PacketType type = Decoder::getType(messageNumbered);
+    if (importantType(type))
+        _packetsSent.push_back(messageNumbered);
+    _packetId = (_packetId + 1) % MAX_PACKETS;
+	// displayPackets(_packetsSent);
 }
 
 void RType::ClientServer::sendCallback(const std::string &, const boost::system::error_code &error, std::size_t bytesTransferred)
@@ -72,7 +103,7 @@ void RType::ClientServer::sendCallback(const std::string &, const boost::system:
     // }
 }
 
-void RType::ClientServer::sendCallback(const std::basic_string<unsigned char> &, const boost::system::error_code &error, std::size_t bytesTransferred)
+void RType::ClientServer::sendCallback(const U_STRING &, const boost::system::error_code &error, std::size_t bytesTransferred)
 {
 	(void)error;
 	(void)bytesTransferred;
@@ -101,4 +132,14 @@ std::shared_ptr<RType::Entity> RType::ClientServer::getEntity(void) const
 void RType::ClientServer::setEntity(std::shared_ptr<RType::Entity> entity)
 {
 	_entity = entity;
+}
+
+const std::vector<U_STRING> &RType::ClientServer::getPacketsSent(void) const
+{
+    return _packetsSent;
+}
+
+void RType::ClientServer::resetPacketsSent(void)
+{
+    _packetsSent.clear();
 }

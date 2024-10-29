@@ -18,6 +18,7 @@ RType::CommandFactory::CommandFactory()
     _constructors.insert({ACTION_PLAYER, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new ActionPlayerCommand(data));}});
     _constructors.insert({GAME_START, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new GameStartCommand(data));}});
     _constructors.insert({GAME_END, [](const std::vector<long> &data){return std::shared_ptr<ICommand>(new GameEndCommand(data));}});
+    _constructors.insert({ACK_MISSING, [](const COMMAND_ARGS &data){return std::shared_ptr<ICommand>(new AckMissingCommand(data));}});
 }
 
 std::shared_ptr<RType::ICommand> RType::CommandFactory::createCommand(const PACKET &command)

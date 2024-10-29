@@ -19,6 +19,7 @@
 #include "../commands/ActionPlayerCommand.hh"
 #include "../commands/GameStartCommand.hh"
 #include "../commands/GameEndCommand.hh"
+#include "../commands/AckMissingCommand.hh"
 #include "../../Error.hh"
 
 namespace RType {

@@ -16,6 +16,7 @@ set(SRC_SERVER
     ./command/commands/ActionPlayerCommand.cpp
     ./command/commands/GameStartCommand.cpp
     ./command/commands/GameEndCommand.cpp
+    ./command/commands/AckMissingCommand.cpp
 )
 
 add_executable(r-type_server ${SRC_SERVER})
