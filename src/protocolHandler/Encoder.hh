@@ -19,7 +19,7 @@ namespace RType {
     * @brief Enum to define the type of the packet
     */
     enum PacketType {
-        ERROR = -1,
+        PACKET_ERROR = -1,
         CONNEXION = 0,
         DISCONNEXION = 1,
         NEW_ENTITY = 2,
@@ -30,7 +30,7 @@ namespace RType {
         MOVE_PLAYER = 7,
         ACTION_PLAYER = 8,
         GAME_START = 9,
-        GAME_END = 10,
+        GAME_END = 10
     };
 
     /**
@@ -73,7 +73,8 @@ namespace RType {
         * @return U_STRING Encoded new entity packet
         */
         static U_STRING newEntity(std::uint8_t type, std::uint16_t id,
-                                  std::uint16_t x, std::uint16_t y);
+                                  std::uint16_t x, std::uint16_t y,
+                                  std::uint16_t entityToFollow = 0);
 
         /**
         * @brief Encode the delete entity packet

@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 6,
   "configurePresets": [
     {
       "name": "vcpkg",
@@ -8,6 +8,20 @@
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_PATH}scripts/buildsystems/vcpkg.cmake"
       }
+    },
+    {
+      "name": "Winvcpkg",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}\\build",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}\\scripts\\buildsystems\\vcpkg.cmake"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "windows",
+      "configurePreset": "Winvcpkg"
     }
   ]
 }

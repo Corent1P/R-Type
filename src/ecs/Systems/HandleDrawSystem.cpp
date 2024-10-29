@@ -21,14 +21,12 @@ void RType::HandleDrawSystem::effects(std::vector<std::shared_ptr<RType::Entity>
 {
     for (const auto &w: entities) {
         if (GET_WINDOW_FOR_DRAW != nullptr) {
-            GET_WINDOW_FOR_DRAW->getWindow()->clear();
             for (const auto &entity: entities) {
-                if (verifyRequiredComponent(entity)) {
-                    // drawHitBox(w, entity);
+                if (verifyRequiredComponent(entity, w)) {
+                    //drawHitBox(w, entity);
                     GET_WINDOW_FOR_DRAW->getWindow()->draw(*(entity->getComponent<RType::SpriteComponent>()->getSprite()));
                 }
             }
-            GET_WINDOW_FOR_DRAW->getWindow()->display();
             return;
         }
     }
@@ -36,15 +34,19 @@ void RType::HandleDrawSystem::effects(std::vector<std::shared_ptr<RType::Entity>
 
 bool RType::HandleDrawSystem::verifyRequiredComponent(std::shared_ptr<RType::Entity> entity)
 {
-    if (entity->getComponent<RType::PositionComponent>() == nullptr
-    ||entity->getComponent<RType::SpriteComponent>() == nullptr) {
+    return !(!entity->getComponent<RType::PositionComponent>() || !entity->getComponent<RType::SpriteComponent>());
+}
+
+bool RType::HandleDrawSystem::verifyRequiredComponent(std::shared_ptr<RType::Entity> entity, std::shared_ptr<RType::Entity> window)
+{
+    if (!entity->getComponent<RType::PositionComponent>() || !entity->getComponent<RType::SpriteComponent>())
+        return false;
+    if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_LAYER &&
+        entity->getComponent<RType::LevelComponent>()->getLevel() != window->getComponent<RType::LevelComponent>()->getLevel()) {
         return false;
     }
-    if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_LAYER
-        && entity->getComponent<RType::LevelComponent>()->getLevel() != 1)
-        return false;
 
-    return (true);
+    return (*entity->GET_MENU == *window->GET_MENU);
 }
 
 void RType::HandleDrawSystem::drawHitBox(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &entity)

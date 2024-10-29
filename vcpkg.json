@@ -1,13 +1,17 @@
 {
+  "builtin-baseline": "c45ac46dcc16dd588daa029f7ce5bcacc5d7645b",
   "dependencies": [
-    {
-      "name": "boost",
-      "version>=": "1.83.0"
-    },
-    {
-      "name": "sfml",
-      "version>=": "2.6.1"
-    }
+    "boost",
+    "boost-build",
+    "sfml",
+    "vcpkg-cmake",
+    "jsoncpp",
+    "lua"
   ],
-  "builtin-baseline": "369cb5c76ab32408b87fa3f7557e0660b375e582"
+  "overrides": [
+    {
+      "name": "libffi",
+      "version": "3.3#9"
+    }
+  ]
 }

@@ -17,16 +17,12 @@ namespace RType {
 
     class ActionComponent: public RType::IComponent {
         public:
-            ActionComponent(Action Action);
             ActionComponent();
             ~ActionComponent();
-            void setAction(Action entityType);
-            Action getAction() const;
             void setActions(Action direction, bool newBool);
             bool getActions(Action direction) const;
             std::string getOutput() const;
         private:
-            Action _action;
             std::vector<bool> _actions;
     };
 }

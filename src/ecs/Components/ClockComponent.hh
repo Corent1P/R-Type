@@ -17,7 +17,7 @@ namespace RType {
         SHOOTING_CLOCK,
         CHARGED_SHOT_CLOCK,
         LOGIC_CLOCK,
-        SPAWN_CLOCK,
+        LEVEL_CLOCK,
         SHOOTING_EFFECT,
     };
 

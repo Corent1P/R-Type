@@ -30,6 +30,11 @@ namespace RType {
              *
              */
             ~Server();
+            /**
+             * @brief Stop the server
+             *
+             */
+            void stop(void);
 
         private:
             // Communication handling
@@ -60,6 +65,12 @@ namespace RType {
              */
             std::shared_ptr<RType::ClientServer> createClient(void);
             /**
+             * @brief Remove a client
+             *
+             * @param client the client to remove
+             */
+            void removeClient(std::shared_ptr<RType::ClientServer> client);
+            /**
              * @brief Get the connected client
              *
              * @return std::shared_ptr<RType::ClientServer> the connected client
@@ -85,6 +96,12 @@ namespace RType {
              * @param connectedClient the connected client
              */
             void handleDisconnection(std::shared_ptr<ClientServer> connectedClient);
+            /**
+             * @brief Remove all the following objects of a client
+             *
+             * @param id the id of the client
+             */
+            void removeFollowingObjects(long id);
             /**
              * @brief Handle the command received by the client
              *

@@ -18,13 +18,17 @@ namespace RType {
     enum SystemType {
         S_BASIC,
         S_EVENT,
+        S_CLEAR,
         S_DRAW,
+        S_DRAWTEXT,
+        S_DISPLAY,
         S_MOVE,
         S_ANIMATION,
         S_PATTERN,
         S_SHOOT,
         S_COLISION,
         S_ENTITY_MOB_SYSTEM,
+        S_BOSS_ATTACK
     };
 
     class ISystem {

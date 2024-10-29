@@ -12,10 +12,9 @@ RType::Entity::Entity(uint16_t id, std::shared_ptr<std::mutex> mtx, int serverId
 {
 }
 
-std::vector<std::shared_ptr<RType::IComponent>> RType::Entity::getComponents(void) const
+const std::unordered_map<std::type_index, std::shared_ptr<RType::IComponent>> &RType::Entity::getComponents(void) const
 {
-    std::unique_lock<std::mutex> lock(*_mtx);
-	return _components;
+	return _typedComponents;
 }
 
 uint16_t RType::Entity::getId(void) const
@@ -37,7 +36,7 @@ int RType::Entity::getServerId(void) const
 
 void RType::Entity::clearComponents()
 {
-    _components.clear();
+    _typedComponents.clear();
 }
 
 bool RType::Entity::operator<(const RType::Entity &other) const
@@ -54,7 +53,7 @@ RType::Entity &RType::Entity::operator=(const RType::Entity &other)
 {
     if (this == &other)
         return *this;
-    _components = other._components;
+    _typedComponents = other._typedComponents;
     _id = other._id;
     _serverId = other._serverId;
 
@@ -65,14 +64,13 @@ RType::Entity &RType::Entity::operator=(const RType::Entity &other)
 
 std::ostream &operator<<(std::ostream &s, const RType::Entity &entity)
 {
-	std::vector<std::shared_ptr<RType::IComponent>> components = entity.getComponents();
-
     s << "Entity[" << entity.getId() << "]";
     if (entity.getServerId() >= 0 && entity.getServerId() < 65535) {
         s << "[" << entity.getServerId() << "]:" << std::endl;
     } else
         s << ":" << std::endl;
-    for (auto component: components) {
+
+    for (const auto &[type, component] : entity.getComponents()) {
         s << "\t\t" << component->getOutput() << std::endl;
     }
 

@@ -44,13 +44,19 @@ void RType::Server::handleReceive(const boost::system::error_code& error, std::s
     std::shared_ptr<ClientServer> connectedClient = getConnectedClient();
 
     if (!connectedClient) {
-        std::unique_lock<std::mutex> lock(_mtx);
         connectedClient = createClient();
+        if (receivInfo.first == CONNEXION) {
+            std::unique_lock<std::mutex> lock(_mtx);
+            handleConnection(connectedClient);
+            return startReceive();
+        } else {
+            std::unique_lock<std::mutex> lock(_mtx);
+            connectedClient->sendMessage(_socket, Encoder::header(0, RType::PACKET_ERROR));
+            removeClient(connectedClient);
+            return startReceive();
+        }
     }
-    if (receivInfo.first == CONNEXION) {
-        std::unique_lock<std::mutex> lock(_mtx);
-        handleConnection(connectedClient);
-    } else if (receivInfo.first == DISCONNEXION) {
+    if (receivInfo.first == DISCONNEXION) {
         std::unique_lock<std::mutex> lock(_mtx);
         handleDisconnection(connectedClient);
     } else {
@@ -76,8 +82,20 @@ std::shared_ptr<RType::ClientServer> RType::Server::createClient(void)
     return newClient;
 }
 
+void RType::Server::removeClient(std::shared_ptr<ClientServer> client)
+{
+    for (std::size_t i = 0; i < _clients.size(); i++) {
+        if (_clients[i]->getPortNumber() == client->getPortNumber() && _clients[i]->getAddress() == client->getAddress()) {
+            _clients.erase(std::next(_clients.begin(), i));
+            std::cout << "remove client" << std::endl;
+            break;
+        }
+    }
+}
+
 std::shared_ptr<RType::ClientServer> RType::Server::getConnectedClient(void)
 {
+    std::unique_lock<std::mutex> lock(_mtx);
     for (auto client: _clients)
         if (client->getAddress() == _remoteEndpoint.address() && client->getPortNumber() == _remoteEndpoint.port() && client->getIsConnected())
             return client;
@@ -95,12 +113,14 @@ void RType::Server::handleConnection(std::shared_ptr<ClientServer> connectedClie
     std::shared_ptr<RType::Entity> player = _coord.generateNewEntity();
 
     player->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_PLAYER));
+    player->getComponent<RType::EntityTypeComponent>()->setWeaponType(RType::LVL_1);
     std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(10, 10));
     player->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 26, 21));
     player->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     player->pushComponent(std::make_shared<RType::HealthComponent>(25));
     player->pushComponent(std::make_shared<RType::ClockComponent>());
-
+    player->pushComponent(std::make_shared<RType::DamageComponent>(1));
+    player->pushComponent(std::make_shared<RType::PowerUpComponent>());
     connectedClient->setEntity(player);
 
     sendToAllClient(Encoder::newEntity(E_PLAYER, connectedClient->getEntity()->getId(), position->getPositionX(), position->getPositionY()));
@@ -109,11 +129,26 @@ void RType::Server::handleConnection(std::shared_ptr<ClientServer> connectedClie
 
 void RType::Server::handleDisconnection(std::shared_ptr<ClientServer> connectedClient)
 {
+    std::shared_ptr<RType::Entity> clientEntity = connectedClient->getEntity();
     for (std::size_t i = 0; i < _clients.size(); i++) {
         if (_clients[i] == connectedClient) {
-            sendToAllClient(Encoder::deleteEntity(_clients[i]->getEntity()->getId()));
+            removeFollowingObjects(_clients[i]->getEntity()->getId());
             _coord.deleteEntity(_clients[i]->getEntity());
+            sendToAllClient(Encoder::deleteEntity(_clients[i]->getEntity()->getId()));
             _clients.erase(std::next(_clients.begin(), i));
+            continue;
+        }
+    }
+}
+
+void RType::Server::removeFollowingObjects(long id)
+{
+    for (auto entity: _coord.getEntities()) {
+        if (entity == nullptr)
+            continue;
+        if (entity->getComponent<RType::DirectionPatternComponent>() != nullptr && entity->getComponent<RType::DirectionPatternComponent>()->getEntityToFollow() == id) {
+            sendToAllClient(Encoder::deleteEntity(entity->getId()));
+            _coord.deleteEntity(entity);
         }
     }
 }
@@ -123,7 +158,7 @@ void RType::Server::handleCommand(std::pair<RType::PacketType, std::vector<long>
     std::unique_lock<std::mutex> lock(_mtx);
     std::shared_ptr<ICommand> com = _commandFactory.createCommand(receivInfo);
     if (!com) {
-        connectedClient->sendMessage(_socket, Encoder::header(0, RType::ERROR));
+        connectedClient->sendMessage(_socket, Encoder::header(0, RType::PACKET_ERROR));
         std::cout << "unvalid command sent by client" << std::endl;
     } else {
         com->execute(connectedClient,
@@ -162,38 +197,90 @@ void RType::Server::initSystem(void)
 {
     _coord.generateNewSystem(std::make_shared<HandlePatternSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleMoveSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
         nullptr,
         std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
     ));
 
-    _coord.generateNewSystem(std::make_shared<HandleColisionSystem>(
+    _coord.generateNewSystem(std::make_shared<HandleBossAttackSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
+        std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
+    ));
+
+    _coord.generateNewSystem(std::make_shared<HandleShootSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
+        nullptr,
+        std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
+    ));
+
+    _coord.generateNewSystem(std::make_shared<HandleCollisionSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
         std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleEntitySpawnSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
         std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
     ));
 
     std::shared_ptr<RType::Entity> window = _coord.generateNewEntity();
     window->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_WINDOW));
     window->pushComponent(std::make_shared<RType::ClockComponent>());
+    window->pushComponent(std::make_shared<RType::ParseLevelInfoComponent>(1));
+    window->pushComponent(std::make_shared<RType::LevelComponent>(1));
 }
 
 void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)
 {
     for (auto entity: _coord.getEntities()) {
-        if (client->getEntity()->getId() != entity->getId() && (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER || EntityTypeComponent::isMob(entity->getComponent<EntityTypeComponent>()->getEntityType()))) {
-            client->sendMessage(_socket, Encoder::newEntity(entity->getComponent<EntityTypeComponent>()->getEntityType(), entity->getId(), entity->getComponent<RType::PositionComponent>()->getPositionX(), entity->getComponent<RType::PositionComponent>()->getPositionY()));
+        if (client->getEntity()->getId() != entity->getId() &&
+            (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER ||
+            EntityTypeComponent::isMob(entity->getComponent<EntityTypeComponent>()->getEntityType()) ||
+            EntityTypeComponent::isItem(entity->getComponent<EntityTypeComponent>()->getEntityType()) ||
+            EntityTypeComponent::isPowerUp(entity->getComponent<EntityTypeComponent>()->getEntityType()))) {
+            if (entity->getComponent<RType::DirectionPatternComponent>() != nullptr && entity->getComponent<RType::DirectionPatternComponent>()->getEntityToFollow() != 0)
+                continue;
+            else
+                client->sendMessage(_socket,
+                    Encoder::newEntity(entity->getComponent<EntityTypeComponent>()->getEntityType(),
+                        entity->getId(),
+                        entity->getComponent<RType::PositionComponent>()->getPositionX(),
+                        entity->getComponent<RType::PositionComponent>()->getPositionY()));
         }
     }
+    for (auto entity: _coord.getEntities()) {
+        if (client->getEntity()->getId() != entity->getId() &&
+            (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER ||
+            EntityTypeComponent::isMob(entity->getComponent<EntityTypeComponent>()->getEntityType()) ||
+            EntityTypeComponent::isItem(entity->getComponent<EntityTypeComponent>()->getEntityType()) ||
+            EntityTypeComponent::isPowerUp(entity->getComponent<EntityTypeComponent>()->getEntityType()))) {
+            if (entity->getComponent<RType::DirectionPatternComponent>() != nullptr && entity->getComponent<RType::DirectionPatternComponent>()->getEntityToFollow() != 0) {
+                client->sendMessage(_socket,
+                        Encoder::newEntity(entity->getComponent<EntityTypeComponent>()->getEntityType(),
+                            entity->getId(),
+                            entity->getComponent<RType::PositionComponent>()->getPositionX(),
+                            entity->getComponent<RType::PositionComponent>()->getPositionY(),
+                            entity->getComponent<RType::DirectionPatternComponent>()->getEntityToFollow()));
+            }
+        }
+
+    }
+}
+
+void RType::Server::stop(void)
+{
+    _stopLoop = true;
+    for (auto client: _clients) {
+        client->sendMessage(_socket, Encoder::disconnexion());
+    }
+    std::cout << "Server stopped" << std::endl;
 }

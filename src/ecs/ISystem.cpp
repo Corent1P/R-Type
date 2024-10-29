@@ -18,8 +18,17 @@ std::ostream &operator<<(std::ostream &s, const RType::ISystem &system)
         case RType::S_EVENT:
             s << "Event system";
             break;
+        case RType::S_CLEAR:
+            s << "Clear system";
+            break;
         case RType::S_DRAW:
             s << "Draw system";
+            break;
+        case RType::S_DRAWTEXT:
+            s << "Draw Text system";
+            break;
+        case RType::S_DISPLAY:
+            s << "Display system";
             break;
         case RType::S_MOVE:
             s << "Movement system";
@@ -34,7 +43,7 @@ std::ostream &operator<<(std::ostream &s, const RType::ISystem &system)
             s << "Shoot system";
             break;
         case RType::S_COLISION:
-            s << "Colision system";
+            s << "Collision system";
             break;
         default:
             s << "Unknown system";
