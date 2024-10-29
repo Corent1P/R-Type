@@ -25,10 +25,16 @@ namespace RType {
         public:
             ClockComponent();
             ~ClockComponent() = default;
+            void setChargingTime(float time);
+            float getChargingTime(void);
+            void setChargedTime(float time);
+            float getChargedTime(void);
             sf::Clock &getClock(ClockType type);
             std::string getOutput() const;
         private:
             std::vector<sf::Clock> _clock;
+            float _chargingTime;
+            float _chargedTime;
     };
 }
 

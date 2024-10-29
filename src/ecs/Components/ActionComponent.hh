@@ -13,6 +13,7 @@ namespace RType {
     enum Action {
         NOTHING,
         SHOOTING,
+        CHARGING_SHOT,
     };
 
     class ActionComponent: public RType::IComponent {

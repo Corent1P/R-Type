@@ -232,4 +232,8 @@ void RType::HandleEntitySpawnSystem::createEntityMap(void)
     _entityTypeMap[E_FORCEPOD] = "forcepod";
     _entityTypeMap[E_FORCEPOD_BULLET] = "forcepod_bullet";
     _entityTypeMap[E_FORCEPOD_2] = "forcepod2";
+    _entityTypeMap[E_BULLET_LASER] = "laser";
+    _entityTypeMap[E_BULLET_LASER_2] = "laser2";
+    _entityTypeMap[E_BULLET_LASER_3] = "laser3";
+    _entityTypeMap[E_BULLET_LASER_4] = "laser4";
 }

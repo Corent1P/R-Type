@@ -101,7 +101,6 @@ namespace RType {
              *
              */
             bool _isShooting;
-
             std::function<void(void)> _disconnexion;
     };
 }

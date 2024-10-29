@@ -39,6 +39,10 @@ namespace RType {
         E_FORCEPOD,
         E_FORCEPOD_BULLET,
         E_FORCEPOD_2,
+        E_BULLET_LASER,
+        E_BULLET_LASER_2,
+        E_BULLET_LASER_3,
+        E_BULLET_LASER_4,
     };
 
     enum WeaponType {

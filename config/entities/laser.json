@@ -1,6 +1,6 @@
 {
-    "damage": 3,
-    "sprite":"./ressources/shoot3.png",
+    "damage": 4,
+    "sprite":"./ressources/waveform.png",
     "scale": {
         "x": 2.0,
         "y": 2.0
@@ -8,7 +8,7 @@
     "rect" : {
         "x": 0,
         "y": 0,
-        "width": 32,
+        "width": 95,
         "height": 32
     },
     // STRAIGHT_RIGHT

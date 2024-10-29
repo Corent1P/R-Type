@@ -1,15 +1,15 @@
 {
     "health": 3,
-    "sprite":"./ressources/power-ups29.png",
+    "sprite":"./ressources/forcepod_lvl1.gif",
     "scale": {
-        "x": 3,
-        "y": 3
+        "x": 2,
+        "y": 2
     },
     "rect" : {
         "x": 0,
         "y": 0,
-        "width": 16,
-        "height": 20
+        "width": 17,
+        "height": 18
     },
     // UP_N_DOWN_LEFT
     "pattern": 3,

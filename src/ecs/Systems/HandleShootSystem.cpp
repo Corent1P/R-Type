@@ -18,10 +18,14 @@ RType::HandleShootSystem::~HandleShootSystem()
 
 void RType::HandleShootSystem::effects(std::vector<std::shared_ptr<RType::Entity>> entities) {
     for (const auto &entity: entities) {
-        if (verifyRequiredComponent(entity) && entity->getComponent<ActionComponent>()->getActions(RType::SHOOTING) == true) {
+        if (verifyRequiredComponent(entity) && (entity->getComponent<ActionComponent>()->getActions(RType::SHOOTING) == true || entity->getComponent<ActionComponent>()->getActions(RType::CHARGING_SHOT) == true)) {
             if (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER && _sendMessageToServer) {
                 entity->getComponent<RType::ActionComponent>()->setActions(RType::SHOOTING, false);
-                _sendMessageToServer(Encoder::actionPlayer(true, false, false, false));
+                if (entity->getComponent<ClockComponent>()->getChargedTime() <= 1) {
+                    _sendMessageToServer(Encoder::actionPlayer(true, false, false, false));
+                } else {
+                    _sendMessageToServer(Encoder::actionPlayer(true, true, false, false));
+                }
             } else if (EntityTypeComponent::isMob(entity->getComponent<EntityTypeComponent>()->getEntityType()) && _sendMessageToAllClient
                 && entity->GET_CLOCK && entity->getComponent<ShootIntervalComponent>()
                 && entity->GET_SHOOTING_CLOCK.getElapsedTime().asSeconds() > entity->getComponent<ShootIntervalComponent>()->getShootInterval()) {

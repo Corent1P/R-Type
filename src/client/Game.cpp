@@ -163,39 +163,14 @@ void RType::Game::loopReceive()
                     if (entity->getServerId() == receiveInfo.second[0]) {
                         if (entity->getComponent<RType::EntityTypeComponent>() == nullptr)
                             continue;
-                        switch (entity->getComponent<RType::EntityTypeComponent>()->getEntityType()) {
-                            case RType::E_BULLET:
-                            case RType::E_BULLET_2:
-                            case RType::E_BULLET_3:
-                            case RType::E_BULLET_4:
-                            case RType::E_FORCEPOD_BULLET:
-                            case RType::E_ENNEMY_BULLET:
+                        if (EntityTypeComponent::isWeapon(GET_ENTITY_TYPE(entity)))
                                 createEntity(E_HIT_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
-                                _coord.deleteEntity(entity);
-                                break;
-                            case RType::E_OCTOPUS:
-                            case RType::E_FLY:
-                            case RType::E_SMALL_SPACESHIP:
+                        if (EntityTypeComponent::isMob(GET_ENTITY_TYPE(entity)))
                                 createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
-                                _coord.deleteEntity(entity);
-                                break;
-                            case RType::E_PLAYER:
+                        if (GET_ENTITY_TYPE(entity) == E_PLAYER)
                                 if (entity->getComponent<ActionComponent>())
                                     std::cout << "§!§!§ YOU ARE DEAD §!§!§" << std::endl;
-                                _coord.deleteEntity(entity);
-                                break;
-                            case RType::E_ITEM_WEAPON:
-                            case RType::E_ITEM_SHIELD:
-                            case RType::E_ITEM_HEAL:
-                            case RType::E_ITEM_FORCEPOD:
-                            case RType::E_SHIELD:
-                            case RType::E_FORCEPOD:
-                            case RType::E_ALLIES:
-                                _coord.deleteEntity(entity);
-                                break;
-                            default:
-                                break;
-                        }
+                        _coord.deleteEntity(entity);
                     }
                 }
                 break;
@@ -678,13 +653,21 @@ sf::Vector2f RType::Game::getBulletPosition(int type, int posX, int posY)
         case RType::E_BULLET:
             return sf::Vector2f(posX, posY + (6 * 2) / 2);
         case RType::E_BULLET_2:
-            return sf::Vector2f(posX, posY + (192 * 0.5) / 2);
+            return sf::Vector2f(posX, posY + (32 * 0.5) / 2);
         case RType::E_BULLET_3:
             return sf::Vector2f(posX, posY + (32 * 2.) / 2);
         case RType::E_BULLET_4:
-            return sf::Vector2f(posX, posY + (32 * 2.) / 2);
+            return sf::Vector2f(posX, posY + (192 * 2.) / 2);
         case RType::E_FORCEPOD_BULLET:
             return sf::Vector2f(posX, posY + (6 * 2) / 2);
+        case RType::E_BULLET_LASER:
+            return sf::Vector2f(posX, posY + (32 * 2.) / 2);
+        case RType::E_BULLET_LASER_2:
+            return sf::Vector2f(posX, posY + (32 * 2.) / 2);
+        case RType::E_BULLET_LASER_3:
+            return sf::Vector2f(posX, posY + (32 * 2.) / 2);
+        case RType::E_BULLET_LASER_4:
+            return sf::Vector2f(posX, posY + (48 * 2.) / 2);
         default:
             return sf::Vector2f(0, 0);
     }
@@ -729,4 +712,8 @@ void RType::Game::createEntityMap(void)
     _entityTypeMap[E_FORCEPOD] = "forcepod";
     _entityTypeMap[E_FORCEPOD_BULLET] = "forcepod_bullet";
     _entityTypeMap[E_FORCEPOD_2] = "forcepod2";
+    _entityTypeMap[E_BULLET_LASER] = "laser";
+    _entityTypeMap[E_BULLET_LASER_2] = "laser2";
+    _entityTypeMap[E_BULLET_LASER_3] = "laser3";
+    _entityTypeMap[E_BULLET_LASER_4] = "laser4";
 }
