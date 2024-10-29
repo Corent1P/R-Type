@@ -87,8 +87,8 @@ void RType::HandleShootSystem::createForcePodBullet(const std::shared_ptr<RType:
 
     bullet->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_FORCEPOD_BULLET));
 
-    float x = entity->getComponent<PositionComponent>()->getPositions().x;
-    float y = entity->getComponent<PositionComponent>()->getPositions().y + ((entity->getComponent<IntRectComponent>()->getIntRectHeight() * entity->getComponent<ScaleComponent>()->getScaleY()) / 2.);
+    float x = entity->getComponent<PositionComponent>()->getPositions().x + (entity->getComponent<IntRectComponent>()->getIntRectWidth() * entity->getComponent<ScaleComponent>()->getScaleX());
+    float y = entity->getComponent<PositionComponent>()->getPositions().y + ((entity->getComponent<IntRectComponent>()->getIntRectHeight() * entity->getComponent<ScaleComponent>()->getScaleY()) / 2.) - 5;
 
     std::shared_ptr<RType::PositionComponent> position = bullet->pushComponent(std::make_shared<RType::PositionComponent>(x, y));
     bullet->pushComponent(std::make_shared<RType::DirectionPatternComponent>(RType::STRAIGHT_RIGHT));
