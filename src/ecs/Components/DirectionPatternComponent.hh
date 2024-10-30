@@ -37,6 +37,8 @@ namespace RType {
             void setEntityToFollow(uint16_t entityToFollow);
             uint16_t getEntityToFollow() const;
             std::string getOutput() const;
+            static bool isPatternRight(PatternType pattern);
+            static bool isPatternLeft(PatternType pattern);
         private:
             PatternType _patternType;
             sf::Vector2f _pattern;

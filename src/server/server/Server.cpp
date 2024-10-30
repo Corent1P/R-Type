@@ -143,9 +143,8 @@ void RType::Server::handleDisconnection(std::shared_ptr<ClientServer> connectedC
 
 void RType::Server::removeFollowingObjects(long id)
 {
-    for (auto entity: _coord.getEntities()) {
-        if (entity == nullptr)
-            continue;
+    auto entities = _coord.getEntities();
+    for (auto entity: entities) {
         if (entity->getComponent<RType::DirectionPatternComponent>() != nullptr && entity->getComponent<RType::DirectionPatternComponent>()->getEntityToFollow() == id) {
             sendToAllClient(Encoder::deleteEntity(entity->getId()));
             _coord.deleteEntity(entity);

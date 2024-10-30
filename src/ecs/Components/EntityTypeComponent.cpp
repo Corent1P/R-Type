@@ -86,7 +86,7 @@ bool RType::EntityTypeComponent::isWeapon(EntityType entityType)
 
 bool RType::EntityTypeComponent::isPowerUp(EntityType entityType)
 {
-    return entityType == E_SHIELD || entityType == E_FORCEPOD;
+    return entityType == E_SHIELD || entityType == E_FORCEPOD || entityType == E_FORCEPOD_2 || entityType == E_FORCEPOD_3;
 }
 
 

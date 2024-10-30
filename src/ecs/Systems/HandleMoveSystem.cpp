@@ -39,17 +39,16 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
                 movePosition.second += speed * (entity->getComponent<RType::DirectionComponent>()->getDirections(DOWN) / 100.);
             }
             entity->getComponent<RType::PositionComponent>()->setPositions(position.x + movePosition.first, position.y + movePosition.second);
-            setShieldPosition(entities, entity->getId(), entity->getComponent<PositionComponent>()->getPositions());
         }
         if(entity->getComponent<DirectionPatternComponent>() != nullptr) {
             auto pattern = entity->getComponent<RType::DirectionPatternComponent>()->getPattern();
             if (entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == FOLLOW_PLAYER) {
-                entity->getComponent<RType::PositionComponent>()->setPositions(pattern.x, pattern.y);
+                if (_sendMessageToAllClient)
+                    entity->getComponent<RType::PositionComponent>()->setPositions(pattern.x, pattern.y);
             } else
                 entity->getComponent<RType::PositionComponent>()->setPositions(position.x + (pattern.x * speed / 5.), position.y + (pattern.y * speed / 5.));
             if (entity->getComponent<EntityTypeComponent>()->getEntityType() != RType::E_LAYER) {
-                if ((entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::STRAIGHT_LEFT
-                || entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::UP_N_DOWN_LEFT)
+                if (DirectionPatternComponent::isPatternLeft(entity->getComponent<RType::DirectionPatternComponent>()->getPatternType())
                 && entity->getComponent<RType::PositionComponent>()->getPositionX() < -300) {
                     if (_sendMessageToAllClient) {
                         _sendMessageToAllClient(Encoder::deleteEntity(entity->getId()));
@@ -58,8 +57,7 @@ void RType::HandleMoveSystem::effects(std::vector<std::shared_ptr<RType::Entity>
                     continue;
                 }
 
-                if ((entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::STRAIGHT_RIGHT
-                || entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::UP_N_DOWN_RIGHT)
+                if (DirectionPatternComponent::isPatternRight(entity->getComponent<RType::DirectionPatternComponent>()->getPatternType())
                 && entity->getComponent<RType::PositionComponent>()->getPositionX() > 2200) {
                     if (_sendMessageToAllClient) {
                         _sendMessageToAllClient(Encoder::deleteEntity(entity->getId()));
@@ -86,15 +84,4 @@ bool RType::HandleMoveSystem::verifyRequiredComponent(std::shared_ptr<RType::Ent
         return false;
     }
     return (true);
-}
-
-void RType::HandleMoveSystem::setShieldPosition(std::vector<std::shared_ptr<RType::Entity>> entities, int id, sf::Vector2f position)
-{
-    for (const auto &entity: entities) {
-        if (entity->getComponent<RType::EntityTypeComponent>() != nullptr && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_SHIELD &&
-            entity->getComponent<RType::DirectionPatternComponent>() != nullptr &&
-            entity->getComponent<RType::DirectionPatternComponent>()->getEntityToFollow() == id) {
-            entity->getComponent<RType::PositionComponent>()->setPositions(position.x - ((entity->getComponent<RType::IntRectComponent>()->getIntRectWidth() / 2) * entity->getComponent<ScaleComponent>()->getScaleX()), position.y - ((entity->getComponent<RType::IntRectComponent>()->getIntRectHeight() / 2) * entity->getComponent<ScaleComponent>()->getScaleY()));
-        }
-    }
 }

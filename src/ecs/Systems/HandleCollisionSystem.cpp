@@ -43,7 +43,10 @@ void RType::HandleCollisionSystem::effects(std::vector<std::shared_ptr<RType::En
                 }
             }
         }
-        if (entity->getComponent<EntityTypeComponent>() != nullptr && entity->getComponent<EntityTypeComponent>()->getEntityType() == E_FORCEPOD) {
+        if (entity->getComponent<EntityTypeComponent>() != nullptr
+        && (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_FORCEPOD
+        || entity->getComponent<EntityTypeComponent>()->getEntityType() == E_FORCEPOD_2
+        || entity->getComponent<EntityTypeComponent>()->getEntityType() == E_FORCEPOD_3)) {
             for (const auto &player: entities) {
                 if (player->getComponent<EntityTypeComponent>() != nullptr && player->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER) {
                     player->getComponent<PowerUpComponent>()->setPowerUpsIsActive(RType::FORCE_POD, false);
