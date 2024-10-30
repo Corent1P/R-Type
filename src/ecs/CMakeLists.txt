@@ -36,6 +36,7 @@ set(SRC_COMPONENTS
     ./Components/SoundComponent.cpp
     ./Components/SoundBufferComponent.cpp
     ./Components/SoundQueueComponent.cpp
+    ./Components/DifficultyComponent.cpp
 )
 
 set(SRC_SYSTEMS
