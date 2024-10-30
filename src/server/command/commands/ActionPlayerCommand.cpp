@@ -137,8 +137,8 @@ sf::Vector2f RType::ActionPlayerCommand::getBulletSize(WeaponType weaponType)
                 bulletSize.y = 32 * 2.;
                 break;
             case RType::LVL_3:
-                bulletSize.x = 63 * 3.;
-                bulletSize.y = 32 * 3.;
+                bulletSize.x = 63 * 2.;
+                bulletSize.y = 32 * 2.;
                 break;
             case RType::LVL_4:
                 bulletSize.x = 288 * 0.5;

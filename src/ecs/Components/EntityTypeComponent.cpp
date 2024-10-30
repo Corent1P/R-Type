@@ -81,7 +81,7 @@ bool RType::EntityTypeComponent::isItem(EntityType entityType)
 
 bool RType::EntityTypeComponent::isWeapon(EntityType entityType)
 {
-    return entityType == E_BULLET || entityType == E_BULLET_2 || entityType == E_BULLET_3 || entityType == E_BULLET_4 || entityType == E_FORCEPOD_BULLET || entityType == E_BULLET_LASER || entityType == E_BULLET_LASER_2 || entityType == E_BULLET_LASER_3 || entityType == E_BULLET_LASER_4;
+    return entityType == E_BULLET || entityType == E_BULLET_2 || entityType == E_BULLET_3 || entityType == E_BULLET_4 || entityType == E_FORCEPOD_BULLET || entityType == E_FORCEPOD_BULLET_2 || entityType == E_FORCEPOD_BULLET_3 || entityType == E_BULLET_LASER || entityType == E_BULLET_LASER_2 || entityType == E_BULLET_LASER_3 || entityType == E_BULLET_LASER_4;
 }
 
 bool RType::EntityTypeComponent::isPowerUp(EntityType entityType)

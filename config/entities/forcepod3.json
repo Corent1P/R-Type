@@ -11,7 +11,7 @@
         "height": 32
     },
     "pattern": 9,
-    "speed": 10
-    // "isShooting": true,
-    // "intervalShoot": 0.5
+    "speed": 10,
+    "isShooting": true,
+    "intervalShoot": 0.5
 }

@@ -91,7 +91,7 @@ bool RType::HandleMoveSystem::verifyRequiredComponent(std::shared_ptr<RType::Ent
 void RType::HandleMoveSystem::setShieldPosition(std::vector<std::shared_ptr<RType::Entity>> entities, int id, sf::Vector2f position)
 {
     for (const auto &entity: entities) {
-        if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_SHIELD &&
+        if (entity->getComponent<RType::EntityTypeComponent>() != nullptr && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_SHIELD &&
             entity->getComponent<RType::DirectionPatternComponent>() != nullptr &&
             entity->getComponent<RType::DirectionPatternComponent>()->getEntityToFollow() == id) {
             entity->getComponent<RType::PositionComponent>()->setPositions(position.x - ((entity->getComponent<RType::IntRectComponent>()->getIntRectWidth() / 2) * entity->getComponent<ScaleComponent>()->getScaleX()), position.y - ((entity->getComponent<RType::IntRectComponent>()->getIntRectHeight() / 2) * entity->getComponent<ScaleComponent>()->getScaleY()));

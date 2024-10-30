@@ -101,6 +101,9 @@ void RType::HandlePatternSystem::effect(std::shared_ptr<RType::Entity> entity)
         if (entity->getComponent<DirectionPatternComponent>()->getPatternType() == RType::UP_N_DOWN_RIGHT) {
             entity->getComponent<DirectionPatternComponent>()->setPattern(sf::Vector2f(10, 10 * (cos(entity->getComponent<RType::PositionComponent>()->getPositionX() * 0.01f))));
         }
+        if (entity->getComponent<DirectionPatternComponent>()->getPatternType() == RType::REVERSE_UP_N_DOWN_RIGHT && entity->getComponent<RType::PositionComponent>()) {
+            entity->getComponent<DirectionPatternComponent>()->setPattern(sf::Vector2f(10, 10 *(-cos(entity->getComponent<RType::PositionComponent>()->getPositionX() * 0.01f))));
+        }
     }
 }
 

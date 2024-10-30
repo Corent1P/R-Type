@@ -660,6 +660,10 @@ sf::Vector2f RType::Game::getBulletPosition(int type, int posX, int posY)
             return sf::Vector2f(posX, posY + (192 * 0.5) / 2);
         case RType::E_FORCEPOD_BULLET:
             return sf::Vector2f(posX, posY + (6 * 2) / 2);
+        case RType::E_FORCEPOD_BULLET_2:
+            return sf::Vector2f(posX, posY + (6 * 2) / 2);
+        case RType::E_FORCEPOD_BULLET_3:
+            return sf::Vector2f(posX, posY + (6 * 2) / 2);
         case RType::E_BULLET_LASER:
             return sf::Vector2f(posX, posY + (32 * 2.) / 2);
         case RType::E_BULLET_LASER_2:
@@ -718,4 +722,6 @@ void RType::Game::createEntityMap(void)
     _entityTypeMap[E_BULLET_LASER_4] = "laser4";
     _entityTypeMap[E_CHARGING_EFFECT] = "charging_effect";
     _entityTypeMap[E_FORCEPOD_3] = "forcepod3";
+    _entityTypeMap[E_FORCEPOD_BULLET_2] = "forcepod_bullet2";
+    _entityTypeMap[E_FORCEPOD_BULLET_3] = "forcepod_bullet3";
 }
