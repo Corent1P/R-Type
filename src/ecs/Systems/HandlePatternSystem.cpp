@@ -56,15 +56,15 @@ void RType::HandlePatternSystem::handlePatternFollowEntities(std::vector<std::sh
                         playerPositionY - ((((entityFollowingHeight * entityFollowingScaleY) - (playerHeight * playerScaleY))) / 2.) + 40.
                         ));
                     break;
+                    case RType::E_FORCEPOD_3:
+                        entity2->getComponent<RType::DirectionPatternComponent>()->setPattern(sf::Vector2f(
+                        playerPositionX - ((((entityFollowingWidth * entityFollowingScaleX) - (playerWidth * playerScaleX))) / 2.) + 45.,
+                        playerPositionY - ((((entityFollowingHeight * entityFollowingScaleY) - (playerHeight * playerScaleY))) / 2.)
+                        ));
+                    break;
                     default:
                     break;
                 }
-                //if (entity2->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_SHIELD) {
-                    // entity2->getComponent<RType::DirectionPatternComponent>()->setPattern(sf::Vector2f(
-                    //     playerPositionX - (((entityFollowingWidth * entityFollowingScaleX) - (playerWidth * playerScaleX))) / 2.,
-                    //     playerPositionY - (((entityFollowingHeight * entityFollowingScaleY) - (playerHeight * playerScaleY))) / 2.
-                    // ));
-                //}
             }
         }
     }

@@ -716,4 +716,6 @@ void RType::Game::createEntityMap(void)
     _entityTypeMap[E_BULLET_LASER_2] = "laser2";
     _entityTypeMap[E_BULLET_LASER_3] = "laser3";
     _entityTypeMap[E_BULLET_LASER_4] = "laser4";
+    _entityTypeMap[E_CHARGING_EFFECT] = "charging_effect";
+    _entityTypeMap[E_FORCEPOD_3] = "forcepod3";
 }

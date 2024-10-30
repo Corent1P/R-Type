@@ -43,6 +43,8 @@ namespace RType {
         E_BULLET_LASER_2,
         E_BULLET_LASER_3,
         E_BULLET_LASER_4,
+        E_FORCEPOD_3,
+        E_CHARGING_EFFECT,
     };
 
     enum WeaponType {
@@ -56,6 +58,7 @@ namespace RType {
         F_NO_FORCEPOD,
         F_LVL_1,
         F_LVL_2,
+        F_LVL_3,
     };
 
     enum EnemyType {

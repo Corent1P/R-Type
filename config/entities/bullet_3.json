@@ -2,8 +2,8 @@
     "damage": 2,
     "sprite":"./ressources/spark.png",
     "scale": {
-        "x": 3,
-        "y": 3
+        "x": 2,
+        "y": 2
     },
     "rect" : {
         "x": 0,

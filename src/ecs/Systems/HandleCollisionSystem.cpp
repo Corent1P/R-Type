@@ -144,7 +144,7 @@ void RType::HandleCollisionSystem::handleItemEffect(std::shared_ptr<RType::Entit
             break;
         case RType::E_ITEM_FORCEPOD:
             if (entity1->getComponent<PowerUpComponent>() != nullptr && entity1->getComponent<PowerUpComponent>()->getPowerUps(RType::SHIELD) == false) {
-                if (entity1->getComponent<RType::EntityTypeComponent>()->getForcePodType() < 2) {
+                if (entity1->getComponent<RType::EntityTypeComponent>()->getForcePodType() < 3) {
                     entity1->getComponent<RType::EntityTypeComponent>()->setForcePodType(RType::ForcePodType(entity1->getComponent<RType::EntityTypeComponent>()->getForcePodType() + 1));
                     //if (entity1->getComponent<PowerUpComponent>()->getPowerUpsIsActive(RType::FORCE_POD) == false) {
                         entity1->getComponent<PowerUpComponent>()->setPowerUps(RType::FORCE_POD, true);
