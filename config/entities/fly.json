@@ -14,5 +14,6 @@
     },
     // UP_N_DOWN_LEFT
     "pattern": 5,
-    "speed": 2
+    "speed": 2,
+    "score": 7
 }

@@ -16,5 +16,6 @@
     "pattern": 3,
     "speed": 3,
     "isShooting": true,
-    "intervalShoot": 0.5
+    "intervalShoot": 0.5,
+    "score": 10
 }

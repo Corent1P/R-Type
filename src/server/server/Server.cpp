@@ -241,6 +241,7 @@ void RType::Server::initSystem(void)
     window->pushComponent(std::make_shared<RType::ParseLevelInfoComponent>(1));
     window->pushComponent(std::make_shared<RType::LevelComponent>(1));
     window->pushComponent(std::make_shared<RType::DifficultyComponent>(EASY));
+    window->pushComponent(std::make_shared<RType::ScoreComponent>(0));
 }
 
 void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)

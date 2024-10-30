@@ -27,6 +27,8 @@ namespace RType {
                 return std::make_pair(INFO_LEVEL, infoLevel(packet));
             case INFO_ENTITY:
                 return std::make_pair(INFO_ENTITY, infoEntity(packet));
+            case INFO_SCORE:
+                return std::make_pair(INFO_SCORE, infoScore(packet));
             case MOVE_PLAYER:
                 return std::make_pair(MOVE_PLAYER, movePlayer(packet));
             case ACTION_PLAYER:
@@ -86,6 +88,14 @@ namespace RType {
         COMMAND_ARGS args(1);
 
         args[0] = packet[2];
+        return args;
+    }
+
+    COMMAND_ARGS Decoder::infoScore(U_STRING &packet)
+    {
+        COMMAND_ARGS args(1);
+
+        args[0] = (packet[2] << 8) + packet[3];
         return args;
     }
 

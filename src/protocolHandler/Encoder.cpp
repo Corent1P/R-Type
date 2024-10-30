@@ -123,4 +123,14 @@ namespace RType {
     {
         return header(0, GAME_END);
     }
+
+    U_STRING Encoder::infoScore(std::uint16_t score)
+    {
+        U_STRING encodedScore;
+
+        encodedScore += score >> 8;
+        encodedScore += score & 0xff;
+
+        return header(encodedScore.size(), INFO_SCORE) + encodedScore;
+    }
 }

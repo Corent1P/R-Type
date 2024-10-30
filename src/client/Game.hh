@@ -41,6 +41,7 @@
 #include "../ecs/Components/PowerUpComponent.hh"
 #include "../ecs/Components/AttackComponent.hh"
 #include "../ecs/Components/MusicComponent.hh"
+#include "../ecs/Components/ScoreComponent.hh"
 
 #include "../ecs/Components/SoundComponent.hh"
 #include "../ecs/Components/SoundBufferComponent.hh"

@@ -87,6 +87,16 @@ namespace RType {
         static COMMAND_ARGS infoLevel(U_STRING &packet);
 
         /**
+        * @brief Decode the info score packet
+        *
+        * @param packet Packet received
+        *
+        * @return COMMAND_ARGS the content of the command
+        */
+        static COMMAND_ARGS infoScore(U_STRING &packet);
+
+
+        /**
         * @brief Decode the info entity packet
         *
         * @param packet Packet received
