@@ -47,7 +47,8 @@ namespace RType {
         E_SPACE_SHIP_SEMI_DIAGONAL_DOWN,
         E_SPACE_SHIP_DIAGONAL_UP,
         E_SPACE_SHIP_DIAGONAL_DOWN,
-        E_SOUNDS
+        E_SOUNDS,
+        E_HEALTHTEXT
     };
 
     enum WeaponType {
