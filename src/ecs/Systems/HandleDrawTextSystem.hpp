@@ -14,6 +14,7 @@
 #include "../Components/EntityTypeComponent.hh"
 #include "../Components/LevelComponent.hh"
 #include "../Components/MenuComponent.hh"
+#include "../Components/HealthComponent.hh"
 
 #define GET_WINDOW_FOR_DRAW w->getComponent<RType::SFWindowComponent>()
 #define SET_TEXT_POSITION entity->getComponent<RType::TextComponent>()->getText()->setPosition(entity->getComponent<PositionComponent>()->getPositions())
