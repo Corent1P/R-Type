@@ -12,18 +12,23 @@ SRC_CLIENT	=	src/client/Game.cpp\
 SRC_ECS	=		src/ecs/Components/PositionComponent.cpp\
 			src/ecs/Components/HealthComponent.cpp\
 			src/ecs/Components/EntityTypeComponent.cpp\
-			src/ecs/Components/EventComponent.cpp\
 			src/ecs/Components/SFWindowComponent.cpp\
+			src/ecs/Components/EventComponent.cpp\
 			src/ecs/Components/TextureComponent.cpp\
 			src/ecs/Components/SpriteComponent.cpp\
 			src/ecs/Components/DirectionComponent.cpp\
-			src/ecs/Components/DirectionPatternComponent.cpp\
 			src/ecs/Components/ClockComponent.cpp\
-			src/ecs/Components/VelocityComponent.cpp\
 			src/ecs/Components/ActionComponent.cpp\
+			src/ecs/Components/DirectionPatternComponent.cpp\
+			src/ecs/Components/VelocityComponent.cpp\
 			src/ecs/Components/LevelComponent.cpp\
 			src/ecs/Components/ScaleComponent.cpp\
 			src/ecs/Components/IntRectComponent.cpp\
+			src/ecs/Components/MappingInputComponent.cpp\
+			src/ecs/Components/TextComponent.cpp\
+			src/ecs/Components/ClickEffectComponent.cpp\
+			src/ecs/Components/MenuComponent.cpp\
+			src/ecs/Components/ParseLevelInfoComponent.cpp\
 			src/ecs/Systems/HandleEventSystem.cpp\
 			src/ecs/Systems/HandleColisionSystem.cpp\
 			src/ecs/Systems/HandleDrawSystem.cpp\
@@ -72,7 +77,7 @@ UNIT_TEST_SERVER_FILE	=	tests/server/Server_tests.cpp
 
 UNIT_TEST_COMMAND_FILE	=	tests/server/Command_tests.cpp
 
-UNIT_TEST_FLAGS	=	-std=c++20  --coverage -lcriterion -lsfml-graphics -lsfml-window -lsfml-system
+UNIT_TEST_FLAGS	=	-std=c++20  --coverage -lcriterion -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -ljsoncpp -llua
 
 clean:
 	rm -rf *.gcda

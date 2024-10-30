@@ -54,6 +54,14 @@ uint16_t RType::DirectionPatternComponent::getEntityToFollow() const {
     return (_entityToFollow);
 }
 
+void RType::DirectionPatternComponent::setDirectionForZigZag(bool directionForZigZag) {
+    _directionForZigZag = directionForZigZag;
+}
+
+bool RType::DirectionPatternComponent::getDirectionForZigZag() const {
+    return (_directionForZigZag);
+}
+
 std::string RType::DirectionPatternComponent::getOutput() const
 {
     std::string pattern("");
@@ -104,5 +112,7 @@ bool RType::DirectionPatternComponent::isPatternRight(PatternType pattern)
 
 bool RType::DirectionPatternComponent::isPatternLeft(PatternType pattern)
 {
-    return pattern == STRAIGHT_LEFT || pattern == UP_N_DOWN_LEFT;
+    return (pattern == RType::STRAIGHT_LEFT || pattern == RType::UP_N_DOWN_LEFT || pattern == RType::ZIGZAG_LEFT || pattern == RType::ZIGZAG_REVERSE_LEFT ||
+            pattern == RType::SEMI_DIAGONAL_UP || pattern == RType::SEMI_DIAGONAL_DOWN || pattern == RType::DIAGONAL_UP ||
+            pattern == RType::DIAGONAL_DOWN);
 }

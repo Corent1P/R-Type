@@ -16,10 +16,18 @@ namespace RType {
         E_WINDOW,
         E_PLAYER,
         E_ALLIES,
-        E_SMALL_SPACESHIP,
+        E_SPACE_SHIP_1,
+        E_SPACE_SHIP_2,
+        E_SPACE_SHIP_3,
         E_OCTOPUS,
         E_FLY,
-        E_BOSS,
+        E_BABY_FLY,
+        E_FLY_BOSS,
+        E_SPACE_SHIP_BOSS,
+        E_OCTOPUS_BOSS,
+        E_BOMBER_BOSS,
+        E_BABY_OCTOPUS,
+        E_SPACE_SHIP_4,
         E_BUTTON,
         E_LAYER,
         E_BULLET,
@@ -47,6 +55,17 @@ namespace RType {
         E_CHARGING_EFFECT,
         E_FORCEPOD_BULLET_2,
         E_FORCEPOD_BULLET_3,
+        E_STING,
+        E_SPACE_SHIP_BULLET,
+        E_SPACE_SHIP_SEMI_DIAGONAL_UP,
+        E_SPACE_SHIP_SEMI_DIAGONAL_DOWN,
+        E_SPACE_SHIP_DIAGONAL_UP,
+        E_SPACE_SHIP_DIAGONAL_DOWN,
+        E_SOUNDS,
+        E_STATIC_BOMB,
+        E_ZIGZAG_BOMB,
+        E_ZIGZAG_BOMB_REVERSE,
+        E_HEALTHTEXT
     };
 
     enum WeaponType {
@@ -85,6 +104,8 @@ namespace RType {
             MappingInput getButtonType() const;
             std::string getOutput() const;
             static bool isMob(EntityType);
+            static bool isBoss(EntityType);
+            static bool isEnnemyShoot(EntityType);
             static bool isItem(EntityType);
             static bool isWeapon(EntityType);
             static bool isPowerUp(EntityType);

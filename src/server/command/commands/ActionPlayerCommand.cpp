@@ -17,6 +17,15 @@ void RType::ActionPlayerCommand::execute(std::shared_ptr<ClientServer> client, F
     (void)sendToClient;
     std::shared_ptr<RType::Entity> bullet = coord.generateNewEntity();
 
+    if (client == nullptr || client->getEntity() == nullptr
+    || client->getEntity()->getComponent<PositionComponent>() == nullptr
+    || client->getEntity()->getComponent<ScaleComponent>() == nullptr
+    || client->getEntity()->getComponent<IntRectComponent>() == nullptr
+    || client->getEntity()->getComponent<DamageComponent>() == nullptr
+    || client->getEntity()->getComponent<EntityTypeComponent>() == nullptr) {
+        return;
+    }
+
     sf::Vector2f position = getBulletPosition(client);
 
     bullet->pushComponent(std::make_shared<RType::PositionComponent>(position.x, position.y));
@@ -90,7 +99,7 @@ void RType::ActionPlayerCommand::execute(std::shared_ptr<ClientServer> client, F
 sf::Vector2f RType::ActionPlayerCommand::getBulletPosition(std::shared_ptr<ClientServer> client)
 {
     std::shared_ptr<RType::Entity> entity = client->getEntity();
-
+    
     sf::Vector2f position = entity->getComponent<PositionComponent>()->getPositions();
     sf::Vector2f scale = entity->getComponent<ScaleComponent>()->getScales();
     sf::Vector2f bulletPosition;

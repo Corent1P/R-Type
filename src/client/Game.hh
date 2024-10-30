@@ -39,7 +39,12 @@
 #include "../ecs/Components/ShootIntervalComponent.hh"
 #include "../ecs/Components/DamageComponent.hh"
 #include "../ecs/Components/PowerUpComponent.hh"
+#include "../ecs/Components/AttackComponent.hh"
+#include "../ecs/Components/MusicComponent.hh"
 
+#include "../ecs/Components/SoundComponent.hh"
+#include "../ecs/Components/SoundBufferComponent.hh"
+#include "../ecs/Components/SoundQueueComponent.hh"
 
 #include "../ecs/Systems/HandleEventSystem.hpp"
 #include "../ecs/Systems/HandleClearSystem.hpp"
@@ -51,12 +56,16 @@
 #include "../ecs/Systems/HandleAnimationSystem.hpp"
 #include "../ecs/Systems/HandlePatternSystem.hpp"
 #include "../ecs/Systems/HandleShootSystem.hpp"
+#include "../ecs/Systems/HandleBossAttackSystem.hh"
 #include "../ecs/Systems/HandleCollisionSystem.hpp"
+#include "../ecs/Systems/HandleSoundSystem.hpp"
+#include "../ecs/Systems/HandleMusicSystem.hpp"
+
 #include <thread>
 #include "../protocolHandler/Encoder.hh"
 #include "../protocolHandler/Decoder.hh"
 
-#define MAX_FPS 60.0
+#define MAX_FPS 90.0
 
 #define FRAME_TIME_LOGIC 1.0 / 60.0
 #define RENDER_FRAME_TIME 1.0 / MAX_FPS
@@ -78,6 +87,8 @@
 #define SCALE_COMPONENT std::shared_ptr<RType::ScaleComponent>
 #define RECT_COMPONENT std::shared_ptr<RType::IntRectComponent>
 #define TEXTURE_COMPONENT std::shared_ptr<RType::TextureComponent>
+#define SOUND_COMPONENT std::shared_ptr<RType::SoundComponent>
+#define SOUND_BUFFER_COMPONENT std::shared_ptr<RType::SoundBufferComponent>
 
 #define PUSH_POS_E(x, y) pushComponent(std::make_shared<RType::PositionComponent>(x, y))
 #define PUSH_ACTION_E() pushComponent(std::make_shared<RType::ActionComponent>())
@@ -92,6 +103,9 @@
 #define PUSH_CLOCK_E() pushComponent(std::make_shared<RType::ClockComponent>())
 #define PUSH_MENU_COMPONENT_E(menu) pushComponent(std::make_shared<RType::MenuComponent>(menu))
 #define PUSH_INTERVALSHOOT_E(interval) pushComponent(std::make_shared<RType::ShootIntervalComponent>(interval))
+#define PUSH_ATTACK_E() pushComponent(std::make_shared<RType::AttackComponent>())
+#define PUSH_SOUND_E(soundBuffer) pushComponent(std::make_shared<RType::SoundComponent>(soundBuffer));
+
 namespace RType {
 
     enum Backgrounds{
@@ -112,12 +126,15 @@ namespace RType {
         private:
             void loopReceive();
             void createPlayer();
+            void createSound();
             void createEntity(const RType::EntityType &type, const int &posX,
                               const int &posY, const int &idToFollow = -1);
             void createEntity(const long &serverId, const RType::EntityType &type,
                               const int &posX, const int &posY, const int &idToFollow = -1);
             void createWindow();
             void createMenu();
+            void createDeathMenu();
+            void createWinMenu();
             void createMappingInputButton(std::shared_ptr<RType::MappingInputComponent> mappingInput);
             std::shared_ptr<RType::Entity> createButton(int x, int y, std::string text);
             std::shared_ptr<RType::Entity> createText(int x, int y, std::string text);
@@ -128,6 +145,8 @@ namespace RType {
             std::shared_ptr<RType::Entity> getPlayerEntity(void);
 
             std::shared_ptr<RType::TextureComponent> getTextureComponent(const std::string &path);
+            std::shared_ptr<RType::SoundBufferComponent> getSoundBufferComponent(const std::string &path);
+
             std::size_t getMaxClientId(void);
 
             sf::Vector2f getBulletPosition(int type, int posX, int posY);
@@ -145,7 +164,9 @@ namespace RType {
             std::thread _receipter;
             bool _initConnection;
             std::unordered_map<std::string, std::shared_ptr<RType::TextureComponent>> _texturesMap;
+            std::unordered_map<std::string, std::shared_ptr<RType::SoundBufferComponent>> _soundBufferMap;
             std::unordered_map<EntityType, std::string> _entityTypeMap;
+            std::shared_ptr<Entity> _soundsEntity;
             std::shared_ptr<sf::Font> _font;
     };
 }

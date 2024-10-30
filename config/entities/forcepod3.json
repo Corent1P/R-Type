@@ -1,5 +1,5 @@
 {
-    "sprite":"./ressources/forcepod3.png",
+    "sprite":"./ressources/items/forcepod3.png",
     "scale": {
         "x": 1.5,
         "y": 1.5

@@ -1,6 +1,6 @@
 {
     "damage": 2,
-    "sprite":"./ressources/spark.png",
+    "sprite":"./ressources/weapons/spark.png",
     "scale": {
         "x": 2,
         "y": 2

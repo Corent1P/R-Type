@@ -1,6 +1,6 @@
 {
     "health": 4,
-    "sprite":"./ressources/forcefield.png",
+    "sprite":"./ressources/items/forcefield.png",
     "scale": {
         "x": 3.0,
         "y": 3.0

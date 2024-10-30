@@ -24,6 +24,7 @@
 #include "../ecs/Components/EventComponent.hh"
 #include "../ecs//Components/DirectionComponent.hh"
 #include "../ecs//Components/ClockComponent.hh"
+#include "../ecs//Components/DifficultyComponent.hh"
 #include "../ecs/Systems/HandleEventSystem.hpp"
 #include "../ecs/Systems/HandleMoveSystem.hpp"
 #include "../ecs/Systems/HandleEntitySpawnSystem.hh"

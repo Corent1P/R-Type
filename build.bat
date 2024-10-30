@@ -2,6 +2,7 @@
 
 @REM type ressources\logoASCII.txt
 
+del *.dll .\r-type_client.exe .\r-type_server.exe
 where vcpkg >nul 2>nul
 if %errorlevel% neq 0 (
     echo vcpkg is not installed. Please install vcpkg manually:
@@ -27,13 +28,15 @@ echo Running CMake and Vcpkg...
 
 vcpkg x-update-baseline --add-initial-baseline
 cmake --preset=windows
-cmake -G "Visual Studio 17 2022" build
+cmake --build build --preset windows --config release
 if %errorlevel% neq 0 (
     echo CMake configuration failed. Please check the error messages above.
     pause
     exit
 )
 
+move .\Release\* .
+del /F /Q .\Release
 echo Build process completed.
 
 pause

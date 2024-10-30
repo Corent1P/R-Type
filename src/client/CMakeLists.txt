@@ -24,4 +24,5 @@ target_link_libraries(r-type_client PRIVATE
     sfml-system
     sfml-window
     sfml-graphics
+    sfml-audio
 )

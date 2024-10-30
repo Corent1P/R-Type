@@ -1,6 +1,6 @@
 {
     "damage": 4,
-    "sprite":"./ressources/biggerShoot3.png",
+    "sprite":"./ressources/weapons/biggerShoot3.png",
     "scale": {
         "x": 3.0,
         "y": 3.0

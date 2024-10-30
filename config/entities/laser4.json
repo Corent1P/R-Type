@@ -1,6 +1,6 @@
 {
     "damage": 4,
-    "sprite":"./ressources/charged.png",
+    "sprite":"./ressources/weapons/charged.png",
     "scale": {
         "x": 4.0,
         "y": 4.0

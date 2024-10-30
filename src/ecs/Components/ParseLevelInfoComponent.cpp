@@ -28,7 +28,18 @@ RType::ParseLevelInfoComponent::~ParseLevelInfoComponent()
 
 void RType::ParseLevelInfoComponent::setLevel(int level)
 {
+    std::string lvlName = "./config/level/lvl" + std::to_string(level) + ".lua";
+
     _level = level;
+    lua_close(_luaState);
+    _luaState = luaL_newstate();
+    luaL_openlibs(_luaState);
+    if (luaL_dofile(_luaState, lvlName.c_str()) != 0) {
+        std::cerr << "Error: " << lua_tostring(_luaState, -1) << std::endl;
+        lua_close(_luaState);
+        exit(84);
+    }
+    _functionPushed = false;
 }
 
 int RType::ParseLevelInfoComponent::getLevel() const

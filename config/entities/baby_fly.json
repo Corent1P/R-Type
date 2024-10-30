@@ -1,0 +1,18 @@
+{
+    "health": 1,
+    "damage": 1,
+    "sprite":"./ressources/mobs/fly-sheet.png",
+    "scale": {
+        "x": 1,
+        "y": 1
+    },
+    "rect" : {
+        "x": 0,
+        "y": 0,
+        "width": 65,
+        "height": 74
+    },
+    // UP_N_DOWN_LEFT
+    "pattern": 5,
+    "speed": 1
+}

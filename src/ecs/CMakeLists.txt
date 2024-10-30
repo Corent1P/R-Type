@@ -31,6 +31,13 @@ set(SRC_COMPONENTS
     ./Components/DamageComponent.cpp
     ./Components/PowerUpComponent.cpp
     ./Components/ParseLevelInfoComponent.cpp
+    ./Components/AttackComponent.cpp
+    ./Components/AttackPatterns/AttackPatterns.cpp
+    ./Components/SoundComponent.cpp
+    ./Components/MusicComponent.cpp
+    ./Components/SoundBufferComponent.cpp
+    ./Components/SoundQueueComponent.cpp
+    ./Components/DifficultyComponent.cpp
 )
 
 set(SRC_SYSTEMS
@@ -38,6 +45,8 @@ set(SRC_SYSTEMS
     ./Systems/HandleClearSystem.cpp
     ./Systems/HandleDrawSystem.cpp
     ./Systems/HandleDrawTextSystem.cpp
+    ./Systems/HandleSoundSystem.cpp
+    ./Systems/HandleMusicSystem.cpp
     ./Systems/HandleDisplaySystem.cpp
     ./Systems/HandleMoveSystem.cpp
     ./Systems/HandleMoveSpriteSystem.cpp
@@ -46,6 +55,8 @@ set(SRC_SYSTEMS
     ./Systems/HandleShootSystem.cpp
     ./Systems/HandleCollisionSystem.cpp
     ./Systems/HandleEntitySpawnSystem.cpp
+    ./Systems/HandleBossAttackSystem.cpp
+
 )
 # set(SFML_DIR "../../vcpkg_installed/x64-windows/share/sfml")
 add_library(ecs ${SRC_ECS} ${SRC_COMPONENTS} ${SRC_SYSTEMS} )

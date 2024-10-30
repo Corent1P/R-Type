@@ -41,9 +41,10 @@ std::shared_ptr<RType::Entity> RType::Coordinator::addEntity(void)
     return generateNewEntity(-1);
 }
 
-void RType::Coordinator::deleteEntity(std::shared_ptr<Entity> entityToDestroy)
+void RType::Coordinator::deleteEntity(std::shared_ptr<Entity> entityToDestroy,  bool lock)
 {
-    std::unique_lock<std::mutex> lock(*_mtx);
+    if (lock)
+        std::unique_lock<std::mutex> lock(*_mtx);
     entityToDestroy->clearComponents();
     auto it = std::find(_entities.begin(), _entities.end(), entityToDestroy);
     if (it != _entities.end()) {

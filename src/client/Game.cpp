@@ -19,7 +19,10 @@ RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, c
 
     createWindow();
     createMenu();
+    createDeathMenu();
+    createWinMenu();
     createPlayer();
+    createSound();
     createGameSystem();
     createEntityMap();
     _receipter = std::thread(&Game::loopReceive, this);
@@ -53,6 +56,10 @@ void RType::Game::gameLoop()
     float logicTime = 0.0;
     float renderTime = 0.0;
     float deltaTime = 0.0;
+
+    int frameCount = 0;
+    float fpsTime = 0.0;
+    float fps = 0.0;
 
     for (auto sys : _coord.getSystems()) {
         if (sys->getType() == SystemType::S_DRAW)
@@ -93,7 +100,9 @@ void RType::Game::gameLoop()
         }
 
         renderTime += deltaTime;
+        fpsTime += deltaTime;
         if (renderTime >= RENDER_FRAME_TIME) {
+            frameCount++;
             if (clearSystem != nullptr) {
                 std::unique_lock<std::mutex> lock(_mtx);
                 clearSystem->effects(_coord.getEntities());
@@ -118,6 +127,14 @@ void RType::Game::gameLoop()
                 break;
             }
         }
+
+        if (fpsTime >= 1.0) {
+            fps = frameCount / fpsTime;
+            std::cout << "FPS: " << fps << std::endl;
+            frameCount = 0;
+            fpsTime = 0.0;
+        }
+
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
 }
@@ -133,6 +150,7 @@ void RType::Game::loopReceive()
 
         std::unique_lock<std::mutex> lock(_mtx);
         auto entities = _coord.getEntities();
+        std::shared_ptr<MenuComponent> menuComponent = nullptr;
 
         switch (receiveInfo.first) {
             case NEW_ENTITY:
@@ -144,7 +162,7 @@ void RType::Game::loopReceive()
                                 receiveInfo.second[4]);
                     if (EntityTypeComponent::isWeapon((EntityType)receiveInfo.second[0])) {
                         sf::Vector2f position = getBulletPosition((int)receiveInfo.second[0], (int)receiveInfo.second[2], (int)receiveInfo.second[3]);
-                        createEntity(E_BULLET_EFFECT, position.x, position.y);
+                        createEntity(E_BULLET_EFFECT, position.x, position.y - 20);
                     }
                 } else {
                     if (receiveInfo.second[0] != E_PLAYER)
@@ -160,16 +178,27 @@ void RType::Game::loopReceive()
 
             case DELETE_ENTITY:
                 for (const auto &entity : entities) {
+                    if (entity->getComponent<RType::SFWindowComponent>() != nullptr
+                    && entity->getComponent<RType::MenuComponent>() != nullptr)
+                        menuComponent = entity->getComponent<RType::MenuComponent>();
                     if (entity->getServerId() == receiveInfo.second[0]) {
                         if (entity->getComponent<RType::EntityTypeComponent>() == nullptr)
                             continue;
-                        if (EntityTypeComponent::isWeapon(GET_ENTITY_TYPE(entity)))
-                                createEntity(E_HIT_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
-                        if (EntityTypeComponent::isMob(GET_ENTITY_TYPE(entity)))
-                                createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
+                        if (entity->GET_POSITION_X > 0) {
+                            if (EntityTypeComponent::isWeapon(GET_ENTITY_TYPE(entity)) || EntityTypeComponent::isEnnemyShoot(GET_ENTITY_TYPE(entity)))
+                                    createEntity(E_HIT_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
+                            if (EntityTypeComponent::isMob(GET_ENTITY_TYPE(entity)) && !EntityTypeComponent::isBoss(GET_ENTITY_TYPE(entity)))
+                                    createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
+                        }
+                        if (EntityTypeComponent::isBoss(GET_ENTITY_TYPE(entity)))
+                            for (int i = 0; i < 50; i++)
+                                createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X + (std::rand() % 400), entity->GET_POSITION_Y + (std::rand() % 400));
                         if (GET_ENTITY_TYPE(entity) == E_PLAYER)
-                                if (entity->getComponent<ActionComponent>())
-                                    std::cout << "§!§!§ YOU ARE DEAD §!§!§" << std::endl;
+                            if (entity->getComponent<ActionComponent>() && menuComponent) {
+                                if (entity->getComponent<HealthComponent>())
+                                    entity->getComponent<HealthComponent>()->setIsDead(true);
+                                menuComponent->setMenu(DEAD);
+                            }
                         _coord.deleteEntity(entity);
                     }
                 }
@@ -203,7 +232,27 @@ void RType::Game::loopReceive()
                         break;
                     }
                 }
-
+                break;
+            case INFO_LEVEL:
+                for (const auto &entity : entities) {
+                    if (entity->getComponent<RType::EntityTypeComponent>()
+                    && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_WINDOW
+                    && entity->getComponent<LevelComponent>()) {
+                        entity->getComponent<LevelComponent>()->setLevel(static_cast<short>(receiveInfo.second[0]));
+                        break;
+                    }
+                }
+                break;
+            case GAME_END:
+                for (const auto &entity : entities) {
+                    if (entity->getComponent<RType::EntityTypeComponent>()
+                    && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_WINDOW
+                    && entity->getComponent<MenuComponent>()) {
+                        entity->getComponent<MenuComponent>()->setMenu(WIN);
+                        break;
+                    }
+                }
+                break;
             default:
                 break;
         }
@@ -318,6 +367,45 @@ void RType::Game::createMappingInputButton(std::shared_ptr<RType::MappingInputCo
     ));
 }
 
+void RType::Game::createDeathMenu()
+{
+    std::shared_ptr<RType::Entity> title = createText(660, 200, "You're dead!");
+    title->PUSH_MENU_COMPONENT_E(DEAD);
+
+    std::shared_ptr<RType::Entity> subTitle = createText(400, 300, "There's a Fabien mode if you prefer :)");
+    subTitle->PUSH_MENU_COMPONENT_E(DEAD);
+
+    std::shared_ptr<RType::Entity> buttonSpectate = createButton(700, 600, "SPECTATE");
+    buttonSpectate->PUSH_MENU_COMPONENT_E(DEAD);
+    buttonSpectate->pushComponent(std::make_shared<RType::ClickEffectComponent> (
+        [] (std::shared_ptr<Entity> window) {
+            window->getComponent<MenuComponent>()->setMenu(GAME);
+        }
+    ));
+
+    std::shared_ptr<RType::Entity> buttonExit = createButton(875, 800, "EXIT");
+    buttonExit->PUSH_MENU_COMPONENT_E(DEAD);
+    buttonExit->pushComponent(std::make_shared<RType::ClickEffectComponent> (
+        [] (std::shared_ptr<Entity> window) {
+            window->getComponent<SFWindowComponent>()->getWindow()->close();
+        }
+    ));
+}
+
+void RType::Game::createWinMenu()
+{
+    std::shared_ptr<RType::Entity> title = createText(660, 200, "You've won! Well done ;)");
+    title->PUSH_MENU_COMPONENT_E(WIN);
+
+    std::shared_ptr<RType::Entity> buttonExit = createButton(875, 800, "EXIT");
+    buttonExit->PUSH_MENU_COMPONENT_E(WIN);
+    buttonExit->pushComponent(std::make_shared<RType::ClickEffectComponent> (
+        [] (std::shared_ptr<Entity> window) {
+            window->getComponent<SFWindowComponent>()->getWindow()->close();
+        }
+    ));
+}
+
 std::shared_ptr<RType::Entity> RType::Game::createButton(int x, int y, std::string text)
 {
     std::shared_ptr<RType::Entity> button = _coord.generateNewEntity();
@@ -360,7 +448,7 @@ void RType::Game::createEntity(const RType::EntityType &type, const int &posX,
         entity->PUSH_TYPE_E(E_ALLIES);
     else
         entity->PUSH_TYPE_E(type);
-    POS_COMPONENT position = entity->PUSH_POS_E(posX, posY - 20);
+    POS_COMPONENT position = entity->PUSH_POS_E(posX, posY);
     SCALE_COMPONENT scale = entity->PUSH_SCALE_E(entityInfo["scale"]["x"].asFloat(),
                                                  entityInfo["scale"]["y"].asFloat());
     RECT_COMPONENT intRect = entity->PUSH_RECT_E(entityInfo["rect"]["x"].asInt(),
@@ -376,10 +464,36 @@ void RType::Game::createEntity(const RType::EntityType &type, const int &posX,
     entity->PUSH_CLOCK_E();
     if (entityInfo["health"].asBool() == true)
         entity->PUSH_HEALTH_E(entityInfo["health"].asInt());
+    if (entityInfo["damage"].asBool() == true)
+        entity->PUSH_DAMAGE_E(entityInfo["damage"].asInt());
     if (entityInfo["speed"].asBool() == true)
         entity->PUSH_VELOCITY_E(entityInfo["speed"].asInt());
     if (entityInfo["pattern"].asBool() == true)
         entity->PUSH_PATTERN_E(static_cast<RType::PatternType>(entityInfo["pattern"].asInt()));
+    if (!entityInfo["sound"].asString().empty() && _soundsEntity && _soundsEntity->getComponent<SoundQueueComponent>() && entityInfo["soundVolume"].asBool() == true) {
+        SOUND_BUFFER_COMPONENT soundBuffer = getSoundBufferComponent(entityInfo["sound"].asString());
+        _soundsEntity->getComponent<SoundQueueComponent>()->pushSound(soundBuffer->getSoundBuffer(), entityInfo["soundVolume"].asFloat());
+    } else if (!entityInfo["sound"].asString().empty() && _soundsEntity && _soundsEntity->getComponent<SoundQueueComponent>()) {
+        SOUND_BUFFER_COMPONENT soundBuffer = getSoundBufferComponent(entityInfo["sound"].asString());
+        _soundsEntity->getComponent<SoundQueueComponent>()->pushSound(soundBuffer->getSoundBuffer());
+    }
+    if (entityInfo["isShooting"].asBool() == true) {
+        auto action = entity->PUSH_ACTION_E();
+        action->setActions(SHOOTING, true);
+    }
+    if (entityInfo["intervalShoot"].asBool() == true) {
+        entity->PUSH_INTERVALSHOOT_E(entityInfo["intervalShoot"].asFloat());
+    }
+
+    if (entityInfo["attack"].isArray()) {
+        auto attackComponent = entity->PUSH_ATTACK_E();
+        for (const auto &attack : entityInfo["attack"]) {
+            if (attack.isString()) {
+                attackComponent->pushBackAttacksPatterns(attack.asString());
+            }
+        }
+    }
+
     entity->PUSH_MENU_COMPONENT_E(GAME);
     file.close();
     if (entity->getComponent<RType::DirectionPatternComponent>() &&
@@ -440,6 +554,21 @@ void RType::Game::createEntity(const long &serverId, const RType::EntityType &ty
     if (entityInfo["intervalShoot"].asBool() == true) {
         entity->PUSH_INTERVALSHOOT_E(entityInfo["intervalShoot"].asFloat());
     }
+    if (entityInfo["attack"].isArray()) {
+        auto attackComponent = entity->PUSH_ATTACK_E();
+        for (const auto &attack : entityInfo["attack"]) {
+            if (attack.isString()) {
+                attackComponent->pushBackAttacksPatterns(attack.asString());
+            }
+        }
+    }
+    if (!entityInfo["sound"].asString().empty() && _soundsEntity && _soundsEntity->getComponent<SoundQueueComponent>() && entityInfo["soundVolume"].asBool() == true) {
+        SOUND_BUFFER_COMPONENT soundBuffer = getSoundBufferComponent(entityInfo["sound"].asString());
+        _soundsEntity->getComponent<SoundQueueComponent>()->pushSound(soundBuffer->getSoundBuffer(), entityInfo["soundVolume"].asFloat());
+    } else if (!entityInfo["sound"].asString().empty() && _soundsEntity && _soundsEntity->getComponent<SoundQueueComponent>()) {
+        SOUND_BUFFER_COMPONENT soundBuffer = getSoundBufferComponent(entityInfo["sound"].asString());
+        _soundsEntity->getComponent<SoundQueueComponent>()->pushSound(soundBuffer->getSoundBuffer());
+    }
     entity->PUSH_MENU_COMPONENT_E(GAME);
     file.close();
     if (entity->getComponent<RType::DirectionPatternComponent>() &&
@@ -459,8 +588,8 @@ void RType::Game::createPlayer()
     std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(10, 10));
     std::shared_ptr<RType::ScaleComponent> scale = player->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     std::shared_ptr<RType::IntRectComponent> intRect = player->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 26, 21));
-    player->pushComponent(std::make_shared<RType::HealthComponent>(25));
-    std::shared_ptr<RType::TextureComponent> texture = getTextureComponent("./ressources/player-sheet.png");
+    auto health = player->pushComponent(std::make_shared<RType::HealthComponent>(50));
+    std::shared_ptr<RType::TextureComponent> texture = getTextureComponent("./ressources/players/player-sheet.png");
 
     player->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(),
     sf::Vector2f(scale->getScaleX(), scale->getScaleY()),
@@ -472,9 +601,23 @@ void RType::Game::createPlayer()
     player->pushComponent(std::make_shared<RType::DamageComponent>(1));
     player->pushComponent(std::make_shared<RType::PowerUpComponent>());
     player->PUSH_MENU_COMPONENT_E(GAME);
-    player->pushComponent(std::make_shared<VelocityComponent>(10));
-    player->pushComponent(std::make_shared<RType::DamageComponent>(1));
-    player->pushComponent(std::make_shared<RType::PowerUpComponent>());
+
+    std::shared_ptr<RType::Entity> lifeValue = _coord.generateNewEntity();
+    lifeValue->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_HEALTHTEXT));
+    lifeValue->pushComponent(health);
+    std::shared_ptr<TextComponent> textComponent = lifeValue->pushComponent(std::make_shared<RType::TextComponent>("Life: 100%", 60, _font));
+    lifeValue->pushComponent(std::make_shared<RType::PositionComponent>(0, 950));
+    textComponent->setTextWithoutVariable("Life: ");
+    lifeValue->PUSH_MENU_COMPONENT_E(GAME);
+}
+
+
+void RType::Game::createSound()
+{
+    _soundsEntity = _coord.generateNewEntity();
+
+    _soundsEntity->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_SOUNDS));
+    _soundsEntity->pushComponent(std::make_shared<RType::SoundQueueComponent>());
 }
 
 void RType::Game::createWindow()
@@ -485,7 +628,9 @@ void RType::Game::createWindow()
     window->pushComponent(std::make_shared<RType::SFWindowComponent>(1920, 1080));
     window->pushComponent(std::make_shared<RType::EventComponent>());
     window->pushComponent(std::make_shared<RType::ClockComponent>());
-    window->pushComponent(std::make_shared<RType::LevelComponent>(4));
+    window->pushComponent(std::make_shared<RType::LevelComponent>(1));
+    window->pushComponent(std::make_shared<RType::MusicComponent>("ressources/musics/music.mp3"));
+
     createParallaxBackground(window);
 
     window->PUSH_MENU_COMPONENT_E(HOME);
@@ -499,55 +644,65 @@ void RType::Game::createGameSystem()
     std::unique_lock<std::mutex> lock(_mtx);
     _coord.generateNewSystem(std::make_shared<HandleEventSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
         std::bind(&RType::Game::disconnexion, this)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandlePatternSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
+    ));
+
+    _coord.generateNewSystem(std::make_shared<HandleSoundSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
+    ));
+
+    _coord.generateNewSystem(std::make_shared<HandleMusicSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleMoveSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
         std::bind(&RType::Game::trySendMessageToServer, this, std::placeholders::_1)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleMoveSpriteSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleShootSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
         std::bind(&RType::Game::trySendMessageToServer, this, std::placeholders::_1)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleAnimationSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleClearSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleDrawSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleDrawTextSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleDisplaySystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1)
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
 }
 
@@ -603,6 +758,18 @@ std::shared_ptr<RType::TextureComponent> RType::Game::getTextureComponent(const 
     _texturesMap[path] = texture;
 
     return texture;
+}
+
+std::shared_ptr<RType::SoundBufferComponent> RType::Game::getSoundBufferComponent(const std::string &path)
+{
+    if (_soundBufferMap.find(path) != _soundBufferMap.end()) {
+        return _soundBufferMap[path];
+    }
+
+    auto soundBuffer = std::make_shared<RType::SoundBufferComponent>(path);
+    _soundBufferMap[path] = soundBuffer;
+
+    return soundBuffer;
 }
 
 bool RType::Game::getGameHasStarted(void) const
@@ -692,21 +859,33 @@ void RType::Game::createEntityMap(void)
     _entityTypeMap[E_WINDOW] = "window";
     _entityTypeMap[E_PLAYER] = "player";
     _entityTypeMap[E_ALLIES] = "player";
-    _entityTypeMap[E_SMALL_SPACESHIP] = "small_spaceship";
+    _entityTypeMap[E_SPACE_SHIP_1] = "space_ship_1";
+    _entityTypeMap[E_SPACE_SHIP_2] = "space_ship_2";
+    _entityTypeMap[E_SPACE_SHIP_3] = "space_ship_3";
     _entityTypeMap[E_OCTOPUS] = "octopus";
     _entityTypeMap[E_FLY] = "fly";
-    _entityTypeMap[E_BOSS] = "boss";
+    _entityTypeMap[E_BABY_FLY] = "baby_fly";
+    _entityTypeMap[E_FLY_BOSS] = "fly_boss";
+    _entityTypeMap[E_SPACE_SHIP_BOSS] = "space_ship_boss";
+    _entityTypeMap[E_OCTOPUS_BOSS] = "octopus_boss";
+    _entityTypeMap[E_BOMBER_BOSS] = "bomber_boss";
+    _entityTypeMap[E_BABY_OCTOPUS] = "baby_octopus";
+    _entityTypeMap[E_SPACE_SHIP_4] = "space_ship_4";
     _entityTypeMap[E_BUTTON] = "button";
     _entityTypeMap[E_LAYER] = "layer";
-    _entityTypeMap[E_BULLET] = "bullet";
     _entityTypeMap[E_SHIELD] = "shield";
     _entityTypeMap[E_ITEM_WEAPON] = "item_weapon";
     _entityTypeMap[E_ITEM_SHIELD] = "item_shield";
     _entityTypeMap[E_ITEM_HEAL] = "item_heal";
-    _entityTypeMap[E_BULLET] = "bullet";
+    _entityTypeMap[E_BULLET] = "bullet_1";
     _entityTypeMap[E_BULLET_2] = "bullet_2";
     _entityTypeMap[E_BULLET_3] = "bullet_3";
     _entityTypeMap[E_BULLET_4] = "bullet_4";
+    _entityTypeMap[E_SPACE_SHIP_BULLET] = "space_ship_bullet";
+    _entityTypeMap[E_SPACE_SHIP_SEMI_DIAGONAL_UP] = "space_ship_semi_diagonal_up_bullet";
+    _entityTypeMap[E_SPACE_SHIP_SEMI_DIAGONAL_DOWN] = "space_ship_semi_diagonal_down_bullet";
+    _entityTypeMap[E_SPACE_SHIP_DIAGONAL_UP] = "space_ship_diagonal_up_bullet";
+    _entityTypeMap[E_SPACE_SHIP_DIAGONAL_DOWN] = "space_ship_diagonal_down_bullet";
     _entityTypeMap[E_ENNEMY_BULLET] = "ennemy_bullet";
     _entityTypeMap[E_BULLET_EFFECT] = "bullet_effect";
     _entityTypeMap[E_HIT_EFFECT] = "hit_effect";
@@ -716,12 +895,16 @@ void RType::Game::createEntityMap(void)
     _entityTypeMap[E_FORCEPOD] = "forcepod";
     _entityTypeMap[E_FORCEPOD_BULLET] = "forcepod_bullet";
     _entityTypeMap[E_FORCEPOD_2] = "forcepod2";
+    _entityTypeMap[E_FORCEPOD_3] = "forcepod3";
     _entityTypeMap[E_BULLET_LASER] = "laser";
     _entityTypeMap[E_BULLET_LASER_2] = "laser2";
     _entityTypeMap[E_BULLET_LASER_3] = "laser3";
     _entityTypeMap[E_BULLET_LASER_4] = "laser4";
     _entityTypeMap[E_CHARGING_EFFECT] = "charging_effect";
-    _entityTypeMap[E_FORCEPOD_3] = "forcepod3";
     _entityTypeMap[E_FORCEPOD_BULLET_2] = "forcepod_bullet2";
     _entityTypeMap[E_FORCEPOD_BULLET_3] = "forcepod_bullet3";
+    _entityTypeMap[E_STING] = "sting";
+    _entityTypeMap[E_STATIC_BOMB] = "static_bomb";
+    _entityTypeMap[E_ZIGZAG_BOMB] = "zigzag_bomb";
+    _entityTypeMap[E_ZIGZAG_BOMB_REVERSE] = "zigzag_bomb_reverse";
 }
