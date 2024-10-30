@@ -309,6 +309,7 @@ void RType::Server::runCli(void)
             firstWord = command;
         else
             firstWord = command.substr(0, command.find(' '));
+        std::unique_lock<std::mutex> lock(_mtx);
         if (firstWord == "/list") {
             listPlayers();
         } else if (firstWord == "/help") {
@@ -354,7 +355,6 @@ std::string RType::Server::customGetLine(void)
 
 void RType::Server::listPlayers(void)
 {
-    std::unique_lock<std::mutex> lock(_mtx);
     if (_clients.empty()) {
         std::cout << "No player connected" << std::endl;
         return;
@@ -427,6 +427,7 @@ void RType::Server::changeLevel(std::string level)
             if (entity->getComponent<LevelComponent>() != nullptr && entity->getComponent<ParseLevelInfoComponent>() != nullptr) {
                 entity->getComponent<LevelComponent>()->setLevel(levelInt);
                 entity->getComponent<ParseLevelInfoComponent>()->setLevel(levelInt);
+                removeAllEnnemies();
             }
             sendToAllClient(Encoder::infoLevel(levelInt));
             std::cout << "Changing level to " << levelInt << std::endl;
@@ -444,4 +445,19 @@ void RType::Server::printCliHelp(void)
     std::cout << "  /level [levelNumber] : change the level of the game" << std::endl;
     std::cout << "  /friendyFire [on - off] : activate - desactivate the friendly fire" << std::endl;
     std::cout << "  /exit : close the server and disconnect everyone connected to it" << std::endl;
+}
+
+void RType::Server::removeAllEnnemies(void)
+{
+    auto entities = _coord.getEntities();
+    for (auto entity: entities) {
+        if (entity == nullptr)
+            continue;
+        if (entity->getComponent<EntityTypeComponent>() != nullptr &&
+            (EntityTypeComponent::isMob(entity->getComponent<EntityTypeComponent>()->getEntityType()) ||
+            EntityTypeComponent::isBoss(entity->getComponent<EntityTypeComponent>()->getEntityType()))) {
+            sendToAllClient(Encoder::deleteEntity(entity->getId()));
+            _coord.deleteEntity(entity);
+        }
+    }
 }

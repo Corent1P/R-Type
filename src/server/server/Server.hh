@@ -167,6 +167,11 @@ namespace RType {
              *
              */
             void printCliHelp(void);
+            /**
+             * @brief remove all the ennemies
+             *
+             */
+            void removeAllEnnemies(void);
 
             // Attributes
             /**
