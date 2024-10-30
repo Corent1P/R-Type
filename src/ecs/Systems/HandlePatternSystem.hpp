@@ -17,6 +17,8 @@
 #include "../Components/IntRectComponent.hh"
 #include "../Components/ScaleComponent.hh"
 
+#define GET_PATTERN getComponent<RType::DirectionPatternComponent>()
+
 namespace RType {
     /**
      * @brief a system that set a entity movement direction value based on a pattern.

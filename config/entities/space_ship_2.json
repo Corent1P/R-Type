@@ -1,6 +1,7 @@
 {
-    "damage": 1,
-    "sprite":"./ressources/weapons/ennemy-shoot-sheet.png",
+    "health": 2,
+    "damage": 2,
+    "sprite":"./ressources/mobs/space-ship-2-sheet.png",
     "scale": {
         "x": 2.0,
         "y": 2.0
@@ -8,10 +9,10 @@
     "rect" : {
         "x": 0,
         "y": 0,
-        "width": 19,
-        "height": 6
+        "width": 21,
+        "height": 24
     },
     // STRAIGHT_LEFT
     "pattern": 3,
-    "speed": 7
+    "speed": 3
 }

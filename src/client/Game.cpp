@@ -243,6 +243,16 @@ void RType::Game::loopReceive()
                     }
                 }
                 break;
+            case GAME_END:
+                for (const auto &entity : entities) {
+                    if (entity->getComponent<RType::EntityTypeComponent>()
+                    && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_WINDOW
+                    && entity->getComponent<MenuComponent>()) {
+                        entity->getComponent<MenuComponent>()->setMenu(WIN);
+                        break;
+                    }
+                }
+                break;
             default:
                 break;
         }
@@ -578,8 +588,8 @@ void RType::Game::createPlayer()
     std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(10, 10));
     std::shared_ptr<RType::ScaleComponent> scale = player->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
     std::shared_ptr<RType::IntRectComponent> intRect = player->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 26, 21));
-    auto health = player->pushComponent(std::make_shared<RType::HealthComponent>(25));
-    std::shared_ptr<RType::TextureComponent> texture = getTextureComponent("./ressources/player-sheet.png");
+    auto health = player->pushComponent(std::make_shared<RType::HealthComponent>(50));
+    std::shared_ptr<RType::TextureComponent> texture = getTextureComponent("./ressources/players/player-sheet.png");
 
     player->pushComponent(std::make_shared<RType::SpriteComponent>(texture->getTexture(), position->getPositions(),
     sf::Vector2f(scale->getScaleX(), scale->getScaleY()),
@@ -835,24 +845,25 @@ void RType::Game::createEntityMap(void)
     _entityTypeMap[E_WINDOW] = "window";
     _entityTypeMap[E_PLAYER] = "player";
     _entityTypeMap[E_ALLIES] = "player";
-    _entityTypeMap[E_SMALL_SPACESHIP] = "small_spaceship";
+    _entityTypeMap[E_SPACE_SHIP_1] = "space_ship_1";
+    _entityTypeMap[E_SPACE_SHIP_2] = "space_ship_2";
+    _entityTypeMap[E_SPACE_SHIP_3] = "space_ship_3";
     _entityTypeMap[E_OCTOPUS] = "octopus";
     _entityTypeMap[E_FLY] = "fly";
     _entityTypeMap[E_BABY_FLY] = "baby_fly";
     _entityTypeMap[E_FLY_BOSS] = "fly_boss";
     _entityTypeMap[E_SPACE_SHIP_BOSS] = "space_ship_boss";
     _entityTypeMap[E_OCTOPUS_BOSS] = "octopus_boss";
-    _entityTypeMap[E_LAST_BOSS] = "last_boss";
+    _entityTypeMap[E_BOMBER_BOSS] = "bomber_boss";
     _entityTypeMap[E_BABY_OCTOPUS] = "baby_octopus";
-    _entityTypeMap[E_KAMIKAZE_OCTOPUS] = "kamikaze_octopus";
+    _entityTypeMap[E_SPACE_SHIP_4] = "space_ship_4";
     _entityTypeMap[E_BUTTON] = "button";
     _entityTypeMap[E_LAYER] = "layer";
-    _entityTypeMap[E_BULLET] = "bullet";
     _entityTypeMap[E_SHIELD] = "shield";
     _entityTypeMap[E_ITEM_WEAPON] = "item_weapon";
     _entityTypeMap[E_ITEM_SHIELD] = "item_shield";
     _entityTypeMap[E_ITEM_HEAL] = "item_heal";
-    _entityTypeMap[E_BULLET] = "bullet";
+    _entityTypeMap[E_BULLET] = "bullet_1";
     _entityTypeMap[E_BULLET_2] = "bullet_2";
     _entityTypeMap[E_BULLET_3] = "bullet_3";
     _entityTypeMap[E_BULLET_4] = "bullet_4";
@@ -867,4 +878,7 @@ void RType::Game::createEntityMap(void)
     _entityTypeMap[E_EXPLOSION_EFFECT] = "explosion_effect";
     _entityTypeMap[E_TEXT] = "text";
     _entityTypeMap[E_STING] = "sting";
+    _entityTypeMap[E_STATIC_BOMB] = "static_bomb";
+    _entityTypeMap[E_ZIGZAG_BOMB] = "zigzag_bomb";
+    _entityTypeMap[E_ZIGZAG_BOMB_REVERSE] = "zigzag_bomb_reverse";
 }

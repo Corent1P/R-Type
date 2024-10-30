@@ -1,0 +1,18 @@
+{
+    "health": 4,
+    "damage": 2,
+    "sprite":"./ressources/mobs/space-ship-3-sheet.png",
+    "scale": {
+        "x": 2.0,
+        "y": 2.0
+    },
+    "rect" : {
+        "x": 0,
+        "y": 0,
+        "width": 32,
+        "height": 22
+    },
+    // ZIGZAG_LEFT
+    "pattern": 10,
+    "speed": 2
+}

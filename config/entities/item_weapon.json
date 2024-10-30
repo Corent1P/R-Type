@@ -1,6 +1,6 @@
 {
     "health": 3,
-    "sprite":"./ressources/ball-1.png",
+    "sprite":"./ressources/items/ball-1.png",
     "scale": {
         "x": 1.5,
         "y": 1.5

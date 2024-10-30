@@ -59,18 +59,24 @@ RType::MappingInput RType::EntityTypeComponent::getButtonType() const
 
 bool RType::EntityTypeComponent::isMob(EntityType entityType)
 {
-    return entityType == E_SMALL_SPACESHIP || entityType == E_FLY || entityType == E_BABY_FLY || entityType == E_OCTOPUS || entityType == E_BABY_OCTOPUS || entityType == E_KAMIKAZE_OCTOPUS
-    || isBoss(entityType);
+    return entityType == E_SPACE_SHIP_1 || entityType == E_SPACE_SHIP_2 ||
+           entityType == E_SPACE_SHIP_3 || entityType == E_FLY ||
+           entityType == E_BABY_FLY || entityType == E_OCTOPUS ||
+           entityType == E_BABY_OCTOPUS || entityType == E_SPACE_SHIP_4 ||
+           isBoss(entityType);
 }
 
 bool RType::EntityTypeComponent::isBoss(EntityType entityType)
 {
-    return entityType == E_FLY_BOSS || entityType == E_SPACE_SHIP_BOSS || entityType == E_OCTOPUS_BOSS || entityType == E_LAST_BOSS;
+    return entityType == E_FLY_BOSS || entityType == E_SPACE_SHIP_BOSS || entityType == E_OCTOPUS_BOSS || entityType == E_BOMBER_BOSS;
 }
 
 bool RType::EntityTypeComponent::isEnnemyShoot(EntityType entityType)
 {
-    return entityType == E_ENNEMY_BULLET || entityType == E_STING || entityType == E_SPACE_SHIP_BULLET || entityType == E_SPACE_SHIP_SEMI_DIAGONAL_UP || entityType == E_SPACE_SHIP_SEMI_DIAGONAL_DOWN || entityType == E_SPACE_SHIP_DIAGONAL_UP || entityType == E_SPACE_SHIP_DIAGONAL_DOWN;
+    return entityType == E_ENNEMY_BULLET || entityType == E_STING
+    || entityType == E_SPACE_SHIP_BULLET || entityType == E_SPACE_SHIP_SEMI_DIAGONAL_UP
+    || entityType == E_SPACE_SHIP_SEMI_DIAGONAL_DOWN || entityType == E_SPACE_SHIP_DIAGONAL_UP
+    || entityType == E_SPACE_SHIP_DIAGONAL_DOWN || entityType == E_STATIC_BOMB || entityType == E_ZIGZAG_BOMB || entityType == E_ZIGZAG_BOMB_REVERSE;
 }
 
 bool RType::EntityTypeComponent::isItem(EntityType entityType)
@@ -100,14 +106,20 @@ std::string RType::EntityTypeComponent::getOutput() const
         case E_PLAYER:
             entityType = "player";
             break;
+        case E_SPACE_SHIP_1:
+            entityType = "mob spaceship 1";
+            break;
+        case E_SPACE_SHIP_2:
+            entityType = "mob spaceship 2";
+            break;
+        case E_SPACE_SHIP_3:
+            entityType = "mob spaceship 3";
+            break;
         case E_ALLIES:
             entityType = "allies";
             break;
         case E_SOUNDS:
             entityType = "sounds";
-            break;
-        case E_SMALL_SPACESHIP:
-            entityType = "mob small spaceship";
             break;
         case E_OCTOPUS:
             entityType = "mob octopus";
@@ -121,10 +133,18 @@ std::string RType::EntityTypeComponent::getOutput() const
         case E_STING:
             entityType = "mob sting";
             break;
+        case E_STATIC_BOMB:
+            entityType = "static bomb";
+            break;
+        case E_ZIGZAG_BOMB:
+        case E_ZIGZAG_BOMB_REVERSE:
+
+            entityType = "zig zag bomb";
+            break;
         case E_BABY_OCTOPUS:
             entityType = "mob baby octopus";
             break;
-        case E_KAMIKAZE_OCTOPUS:
+        case E_SPACE_SHIP_4:
             entityType = "mob kamikaze octopus";
             break;
         case E_FLY_BOSS:
@@ -136,8 +156,8 @@ std::string RType::EntityTypeComponent::getOutput() const
         case E_OCTOPUS_BOSS:
             entityType = "octopus boss";
             break;
-        case E_LAST_BOSS:
-            entityType = "last boss";
+        case E_BOMBER_BOSS:
+            entityType = "bomber boss";
             break;
         case E_BUTTON:
             entityType = "button";

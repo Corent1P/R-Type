@@ -23,8 +23,8 @@ namespace RType {
             WAVE_SHOOT,
             SPAWN_BABY_OCTOPUS,
             SPAWN_KAMIKAZE_OCTOPUS,
-            PATTERN_1,
-            PATTERN_2
+            SPAWN_WALL_STATIC_BOMB,
+            SPAWN_WALL_ZIGZAG_BOMB
     };
 
     class AttackComponent: public RType::IComponent {
