@@ -13,6 +13,7 @@ RType::Server::Server(boost::asio::io_context &ioContext, int port):
     std::cout << "Server listening on port " << port << std::endl;
     initSystem();
     _gameLoop = std::thread(&Server::gameLoop, this);
+    _cliThread = std::thread(&Server::runCli, this);
     startReceive();
 }
 
@@ -20,6 +21,9 @@ RType::Server::~Server()
 {
     if (_gameLoop.joinable()) {
         _gameLoop.join();
+    }
+    if (_cliThread.joinable()) {
+        _cliThread.join();
     }
 }
 
@@ -87,7 +91,6 @@ void RType::Server::removeClient(std::shared_ptr<ClientServer> client)
     for (std::size_t i = 0; i < _clients.size(); i++) {
         if (_clients[i]->getPortNumber() == client->getPortNumber() && _clients[i]->getAddress() == client->getAddress()) {
             _clients.erase(std::next(_clients.begin(), i));
-            std::cout << "remove client" << std::endl;
             break;
         }
     }
@@ -133,8 +136,8 @@ void RType::Server::handleDisconnection(std::shared_ptr<ClientServer> connectedC
     for (std::size_t i = 0; i < _clients.size(); i++) {
         if (_clients[i] == connectedClient) {
             removeFollowingObjects(_clients[i]->getEntity()->getId());
-            _coord.deleteEntity(_clients[i]->getEntity());
             sendToAllClient(Encoder::deleteEntity(_clients[i]->getEntity()->getId()));
+            _coord.deleteEntity(_clients[i]->getEntity());
             _clients.erase(std::next(_clients.begin(), i));
             continue;
         }
@@ -277,11 +280,168 @@ void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)
     }
 }
 
-void RType::Server::stop(void)
+void RType::Server::stop(bool fromCli)
 {
+    if (_stopLoop)
+        return;
+    if (fromCli)
+        raise(SIGINT);
     _stopLoop = true;
     for (auto client: _clients) {
         client->sendMessage(_socket, Encoder::disconnexion());
     }
     std::cout << "Server stopped" << std::endl;
+}
+
+void RType::Server::runCli(void)
+{
+    std::string command;
+    std::string firstWord;
+
+    std::cout << "Welcome to the R-Type server CLI" << std::endl;
+    std::cout << "Type /help to see the available commands" << std::endl;
+    std::cout << "> " << std::flush;
+    while (!_stopLoop) {
+        command = customGetLine();
+        if (command == "")
+            continue;
+        if (command.find(' ') == std::string::npos)
+            firstWord = command;
+        else
+            firstWord = command.substr(0, command.find(' '));
+        if (firstWord == "/list") {
+            listPlayers();
+        } else if (firstWord == "/help") {
+            printCliHelp();
+        } else if (firstWord == "/difficulty") {
+            changeDifficulty(command);
+        } else if (firstWord == "/kick") {
+            kickPlayer(command);
+        } else if (firstWord == "/level") {
+            changeLevel(command);
+        } else if (firstWord == "/friendyFire") {
+            std::cout << "Changing friendly fire" << std::endl;
+        } else if (firstWord == "/exit") {
+            stop(true);
+            return;
+        } else {
+            std::cout << "Unvalid command" << std::endl;
+        }
+        std::cout << "> " << std::flush;
+    }
+}
+
+std::string RType::Server::customGetLine(void)
+{
+    fd_set rfds;
+    std::string ret;
+    struct timeval timeout = {0, 500000};
+
+    FD_ZERO(&rfds);
+    FD_SET(STDIN_FILENO, &rfds);
+
+    int ready = select(1, &rfds, NULL, NULL, &timeout);
+
+    if (ready) {
+        if (!std::getline(std::cin, ret)) {
+            stop(true);
+            return "";
+        }
+        return ret;
+    }
+    return "";
+}
+
+void RType::Server::listPlayers(void)
+{
+    std::unique_lock<std::mutex> lock(_mtx);
+    if (_clients.empty()) {
+        std::cout << "No player connected" << std::endl;
+        return;
+    }
+    std::cout << "Players connected:" << std::endl;
+    for (auto client: _clients) {
+        if (client->getEntity() != nullptr)
+            std::cout << " - Player " << client->getEntity()->getId() << " : " << client->getAddress().to_string() << ":" << client->getPortNumber() << std::endl;
+    }
+}
+
+void RType::Server::changeDifficulty(std::string difficulty)
+{
+    std::string commandInfo = difficulty.substr(difficulty.find(' ') + 1);
+    RType::Difficulty difficultyEnum;
+
+    if (commandInfo == "fabien") {
+        difficultyEnum = FABIEN;
+        std::cout << "Changing difficulty to fabien" << std::endl;
+    } else if (commandInfo == "easy") {
+        difficultyEnum = EASY;
+        std::cout << "Changing difficulty to easy" << std::endl;
+    } else if (commandInfo == "normal") {
+        difficultyEnum = NORMAL;
+        std::cout << "Changing difficulty to normal" << std::endl;
+    } else if (commandInfo == "hard") {
+        difficultyEnum = HARD;
+        std::cout << "Changing difficulty to hard" << std::endl;
+    } else if (commandInfo == "alien") {
+        difficultyEnum = ALIEN;
+        std::cout << "Changing difficulty to alien" << std::endl;
+    } else {
+        std::cout << "Unvalid difficulty, the valid ones are in increasing order : fabien < easy < normal < hard < alien" << std::endl;
+        return;
+    }
+    for (auto entity: _coord.getEntities()) {
+        if (entity->getComponent<EntityTypeComponent>() != nullptr && entity->getComponent<EntityTypeComponent>()->getEntityType() == E_WINDOW) {
+            if (entity->getComponent<DifficultyComponent>() != nullptr)
+                entity->getComponent<DifficultyComponent>()->setDifficulty(difficultyEnum);
+            std::cout << "Difficulty changed to " << commandInfo << std::endl;
+            return;
+        }
+    }
+}
+
+void RType::Server::kickPlayer(std::string player)
+{
+    std::string playerToKick = player.substr(player.find(' ') + 1);
+    for (auto client: _clients) {
+        if (client->getEntity() != nullptr && std::to_string(client->getEntity()->getId()) == playerToKick) {
+            client->sendMessage(_socket, Encoder::disconnexion());
+            std::cout << "The player " << playerToKick << " has been kicked" << std::endl;
+            return;
+        }
+    }
+    std::cout << "Player not found" << std::endl;
+}
+
+void RType::Server::changeLevel(std::string level)
+{
+    std::string levelNumber = level.substr(level.find(' ') + 1);
+    int levelInt = std::stoi(levelNumber);
+
+    if (levelInt < 1 || levelInt > 4) {
+        std::cout << "Unvalid level, the valid ones are between 1 and 4" << std::endl;
+        return;
+    }
+    for (auto entity: _coord.getEntities()) {
+        if (entity->getComponent<EntityTypeComponent>() != nullptr && entity->getComponent<EntityTypeComponent>()->getEntityType() == E_WINDOW) {
+            if (entity->getComponent<LevelComponent>() != nullptr && entity->getComponent<ParseLevelInfoComponent>() != nullptr) {
+                entity->getComponent<LevelComponent>()->setLevel(levelInt);
+                entity->getComponent<ParseLevelInfoComponent>()->setLevel(levelInt);
+            }
+            sendToAllClient(Encoder::infoLevel(levelInt));
+            std::cout << "Changing level to " << levelInt << std::endl;
+            return;
+        }
+    }
+}
+
+void RType::Server::printCliHelp(void)
+{
+    std::cout << "Commands available:" << std::endl;
+    std::cout << "  /list : list all the connected players" << std::endl;
+    std::cout << "  /difficulty [difficulty] : change the difficulty of the game" << std::endl;
+    std::cout << "  /kick [playerID] : disconnect a player with its id" << std::endl;
+    std::cout << "  /level [levelNumber] : change the level of the game" << std::endl;
+    std::cout << "  /friendyFire [on - off] : activate - desactivate the friendly fire" << std::endl;
+    std::cout << "  /exit : close the server and disconnect everyone connected to it" << std::endl;
 }

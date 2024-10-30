@@ -10,7 +10,6 @@
 RType::ClientServer::ClientServer(boost::asio::ip::udp::endpoint endpoint):
 	_endpoint(endpoint), _portNumber(_endpoint.port()), _address(_endpoint.address()), _isConnected(true), _entity(nullptr)
 {
-	std::cout << "ClientServer created with adress " << _address << ":" << _portNumber << std::endl;
 }
 
 void RType::ClientServer::setIsConnected(bool isConnected)

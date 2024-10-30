@@ -185,7 +185,6 @@ void RType::HandleCollisionSystem::decreaseHealth(std::shared_ptr<RType::Entity>
             if (healthComponent->getHealth() <= 0)
                 _entitiesToDestroy.push_back(entity);
             else if (_sendMessageToAllClient) {
-                std::cout << "health: " << healthComponent->getHealth() << std::endl;
                 _sendMessageToAllClient(Encoder::infoEntity(entity->getId(), E_PLAYER,
                     entity->GET_POSITION_X,  entity->GET_POSITION_Y, 0, healthComponent->getHealth()));
             }
@@ -198,7 +197,6 @@ void RType::HandleCollisionSystem::decreaseHealth(std::shared_ptr<RType::Entity>
             _entitiesToDestroy.push_back(entity);
         }
         else if (_sendMessageToAllClient && EntityTypeComponent::isBoss(GET_ENTITY_TYPE(entity))) {
-                std::cout << "boss health: " << healthComponent->getHealth() << std::endl;
                 _sendMessageToAllClient(Encoder::infoEntity(entity->getId(), GET_ENTITY_TYPE(entity),
                     entity->GET_POSITION_X,  entity->GET_POSITION_Y, 0, healthComponent->getHealth()));
             }
