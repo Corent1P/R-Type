@@ -3,8 +3,8 @@
     "damage": 2,
     "sprite":"./ressources/mobs/police.png",
     "scale": {
-        "x": 0.5,
-        "y": 0.5
+        "x": 0.75,
+        "y": 0.75
     },
     "rect" : {
         "x": 0,
