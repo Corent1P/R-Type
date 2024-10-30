@@ -1,6 +1,6 @@
 {
     "damage": 5,
-    "sprite":"./ressources/shoot-spritesheet-ennemy.png",
+    "sprite":"./ressources/weapons/ennemy-shoot-sheet.png",
     "scale": {
         "x": 4.0,
         "y": 4.0
@@ -11,6 +11,6 @@
         "width": 19,
         "height": 6
     },
-    "pattern": 11,
+    "pattern": 12,
     "speed": 5
 }

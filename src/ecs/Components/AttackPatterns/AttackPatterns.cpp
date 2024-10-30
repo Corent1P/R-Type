@@ -127,26 +127,42 @@ void RType::AttackPatterns::spawnKamikazeOctopus(std::shared_ptr<RType::Entity> 
         createEntity(E_BABY_OCTOPUS, bossX - i, posY - i, addEntity, sendMessageToAllClient);
         createEntity(E_BABY_OCTOPUS, bossX - i, posY + i, addEntity, sendMessageToAllClient);
     }
-
-    createEntity(E_KAMIKAZE_OCTOPUS, bossX - 75, posY - 42, addEntity, sendMessageToAllClient);
-    createEntity(E_KAMIKAZE_OCTOPUS, bossX - 75, posY + 42, addEntity, sendMessageToAllClient);
-
 }
 
-void RType::AttackPatterns::pattern1(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient)
+void RType::AttackPatterns::spawnWallStaticBomb(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient)
 {
-    (void) boss;
-    (void) addEntity;
-    (void) sendMessageToAllClient;
-    std::cout << "PATTERN 1" << std::endl;
+    auto position = boss->getComponent<PositionComponent>();
+    auto rect = boss->getComponent<IntRectComponent>();
+    auto scale = boss->getComponent<ScaleComponent>();
+
+    if (!position || !rect || !scale)
+        return;
+
+    int randomNumber = std::rand() % 9;
+
+    for (int posY = 0; posY < 9; posY++) {
+        if (randomNumber == posY)
+            continue;
+        createEntity(E_STATIC_BOMB, 1920, posY * 120, addEntity, sendMessageToAllClient);
+    }
 }
 
-void RType::AttackPatterns::pattern2(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient)
+void RType::AttackPatterns::spawnWallZigZagBomb(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient)
 {
-    (void) boss;
-    (void) addEntity;
-    (void) sendMessageToAllClient;
-    std::cout << "PATTERN 2" << std::endl;
+    auto position = boss->getComponent<PositionComponent>();
+    auto rect = boss->getComponent<IntRectComponent>();
+    auto scale = boss->getComponent<ScaleComponent>();
+
+    if (!position || !rect || !scale)
+        return;
+
+    for (int posY = 0; posY < 8; posY++) {
+        if (std::rand() % 2)
+            createEntity(E_ZIGZAG_BOMB, 1920, posY * 120, addEntity, sendMessageToAllClient);
+        else
+            createEntity(E_ZIGZAG_BOMB_REVERSE, 1920, posY * 120, addEntity, sendMessageToAllClient);
+
+    }
 }
 
 void RType::AttackPatterns::createEntity(const RType::EntityType &type, const int &posX, const int &posY, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient)
@@ -159,11 +175,14 @@ void RType::AttackPatterns::createEntity(const RType::EntityType &type, const in
     std::shared_ptr<RType::Entity> entityToFollow = nullptr;
     std::unordered_map<EntityType, std::string> entityTypeMap;
 
-    entityTypeMap[E_SMALL_SPACESHIP] = "small_spaceship";
+    entityTypeMap[E_SPACE_SHIP_1] = "small_spaceship";
     entityTypeMap[E_OCTOPUS] = "octopus";
     entityTypeMap[E_FLY] = "fly";
     entityTypeMap[E_BABY_FLY] = "baby_fly";
     entityTypeMap[E_STING] = "sting";
+    entityTypeMap[E_STATIC_BOMB] = "static_bomb";
+    entityTypeMap[E_ZIGZAG_BOMB] = "zigzag_bomb";
+    entityTypeMap[E_ZIGZAG_BOMB_REVERSE] = "zigzag_bomb_reverse";
 
     entityTypeMap[E_FLY_BOSS] = "fly_boss";
     entityTypeMap[E_SPACE_SHIP_BOSS] = "sape_ship_boss";
@@ -175,9 +194,9 @@ void RType::AttackPatterns::createEntity(const RType::EntityType &type, const in
 
     entityTypeMap[E_OCTOPUS_BOSS] = "octopus_boss";
     entityTypeMap[E_BABY_OCTOPUS] = "baby_octopus";
-    entityTypeMap[E_KAMIKAZE_OCTOPUS] = "kamikaze_octopus";
+    entityTypeMap[E_SPACE_SHIP_4] = "space_ship_4";
 
-    entityTypeMap[E_LAST_BOSS] = "last_boss";
+    entityTypeMap[E_BOMBER_BOSS] = "bomber_boss";
 
 
     std::string filepath("./config/entities/" + entityTypeMap[type] + ".json");

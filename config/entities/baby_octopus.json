@@ -1,7 +1,7 @@
 {
     "health": 3,
     "damage": 2,
-    "sprite":"./ressources/octopus-sheet.png",
+    "sprite":"./ressources/mobs/octopus-sheet.png",
     "scale": {
         "x": 1.5,
         "y": 1.5

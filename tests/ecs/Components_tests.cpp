@@ -61,7 +61,7 @@ Test(main, TestEntityTypeComponent) {
     expected = "Entity Type Component (entity type: boss)";
     cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);
 
-    entityType.setEntityType(RType::E_SMALL_SPACESHIP);
+    entityType.setEntityType(RType::E_SPACE_SHIP_1);
     output = entityType.getOutput();
     expected = "Entity Type Component (entity type: mob small spaceship)";
     cr_assert_eq(output, expected, "Expected: %s, Got: %s", output, expected);

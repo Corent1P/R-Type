@@ -65,6 +65,6 @@ namespace RType {
 
             std::function<void(const std::basic_string<unsigned char> &message)> _sendToAllClient;
             std::unordered_map<EntityType, std::string> _entityTypeMap;
-            int _prevTime;
+            float _prevTime;
     };
 }

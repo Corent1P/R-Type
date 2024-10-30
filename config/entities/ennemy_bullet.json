@@ -1,6 +1,6 @@
 {
     "damage": 1,
-    "sprite":"./ressources/shoot-spritesheet-ennemy.png",
+    "sprite":"./ressources/weapons/ennemy-shoot-sheet.png",
     "scale": {
         "x": 2.0,
         "y": 2.0

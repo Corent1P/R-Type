@@ -120,7 +120,7 @@ void RType::Server::handleConnection(std::shared_ptr<ClientServer> connectedClie
     std::shared_ptr<RType::PositionComponent> position = player->pushComponent(std::make_shared<RType::PositionComponent>(10, 10));
     player->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 26, 21));
     player->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
-    player->pushComponent(std::make_shared<RType::HealthComponent>(25));
+    player->pushComponent(std::make_shared<RType::HealthComponent>(50));
     player->pushComponent(std::make_shared<RType::ClockComponent>());
     player->pushComponent(std::make_shared<RType::DamageComponent>(1));
     player->pushComponent(std::make_shared<RType::PowerUpComponent>());
