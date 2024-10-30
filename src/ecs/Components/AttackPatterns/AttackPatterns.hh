@@ -32,6 +32,7 @@
 #include "../DamageComponent.hh"
 #include "../PowerUpComponent.hh"
 #include "../AttackComponent.hh"
+#include "../ScoreComponent.hh"
 
 #define PUSH_POS_E(x, y) pushComponent(std::make_shared<RType::PositionComponent>(x, y))
 #define PUSH_ACTION_E() pushComponent(std::make_shared<RType::ActionComponent>())

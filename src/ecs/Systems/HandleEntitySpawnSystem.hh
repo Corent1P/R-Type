@@ -29,6 +29,7 @@
 #include "../Components/DamageComponent.hh"
 #include "../Components/ParseLevelInfoComponent.hh"
 #include "../Components/AttackComponent.hh"
+#include "../Components/ScoreComponent.hh"
 
 #define POS_COMPONENT std::shared_ptr<RType::PositionComponent>
 

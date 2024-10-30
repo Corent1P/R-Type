@@ -20,5 +20,6 @@
     "attack": [
         "spawnKamikazeOctopus",
         "spawnBabyOctopus"
-    ]
+    ],
+    "score": 210
 }

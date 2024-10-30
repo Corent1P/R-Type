@@ -53,7 +53,8 @@ namespace RType {
         E_STATIC_BOMB,
         E_ZIGZAG_BOMB,
         E_ZIGZAG_BOMB_REVERSE,
-        E_HEALTHTEXT
+        E_HEALTHTEXT,
+        E_SCORETEXT
     };
 
     enum WeaponType {

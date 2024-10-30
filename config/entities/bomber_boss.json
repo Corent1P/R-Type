@@ -20,5 +20,6 @@
     "attack": [
         "spawnWallStaticBomb",
         "spawnWallZigZagBomb"
-    ]
+    ],
+    "score": 4200
 }

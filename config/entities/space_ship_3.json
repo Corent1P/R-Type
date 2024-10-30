@@ -14,5 +14,6 @@
     },
     // ZIGZAG_LEFT
     "pattern": 10,
-    "speed": 2
+    "speed": 2,
+    "score": 7
 }

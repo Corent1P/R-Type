@@ -21,5 +21,6 @@
     "attack": [
         "spawnBabyFly",
         "spawnSting"
-    ]
+    ],
+    "score": 420
 }
