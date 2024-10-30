@@ -150,6 +150,7 @@ void RType::Game::loopReceive()
     while (!_stopLoop) {
         command = _client.receive();
         receiveInfo = Decoder::getCommandInfo(command);
+        _client.logCommand(receiveInfo);
 
         std::unique_lock<std::mutex> lock(_mtx);
         auto entities = _coord.getEntities();

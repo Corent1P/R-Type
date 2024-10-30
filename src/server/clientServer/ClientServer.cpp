@@ -52,20 +52,22 @@ void RType::ClientServer::sendMessage(udp::socket &socket, const std::string &me
 	);
 }
 
-void displayPackets(std::array<U_STRING, MAX_PACKETS> &packets)
+void displayPackets(std::vector<U_STRING> &packets)
 {
-	for (std::size_t i = 0; i < MAX_PACKETS; i++) {
+	int i = 0;
+	for (auto &packet: packets) {
 		std::cout << "[" << i << " = ";
-		if (packets[i].size() > 0)
-			for (const auto &byte: packets[i])
+		if (packet.size() > 0)
+			for (const auto &byte: packet)
 				std::cout << (int)byte << " ";
 		else
 			std::cout << "empty";
 		std::cout << "]" << std::endl;
+		i++;
 	}
 }
 
-bool importantType(RType::PacketType type)
+bool RType::ClientServer::importantType(RType::PacketType type)
 {
     return type == RType::CONNEXION ||
         type == RType::DISCONNEXION ||
@@ -80,16 +82,18 @@ bool importantType(RType::PacketType type)
 void RType::ClientServer::sendMessage(udp::socket &socket, const std::basic_string<unsigned char> &message)
 {
     U_STRING messageNumbered = Encoder::addPacketNumber(message, _packetId);
+	std::cout << "Sending message with id " << _packetId << std::endl;
     socket.async_send_to(boost::asio::buffer(messageNumbered), _endpoint,
         [this, messageNumbered](const boost::system::error_code &error, std::size_t bytes_transferred) {
             sendCallback(messageNumbered, error, bytes_transferred);
         }
 	);
     PacketType type = Decoder::getType(messageNumbered);
-    if (importantType(type))
+    if (importantType(type)) {
         _packetsSent.push_back(messageNumbered);
+		// displayPackets(_packetsSent);
+	}
     _packetId = (_packetId + 1) % MAX_PACKETS;
-	// displayPackets(_packetsSent);
 }
 
 void RType::ClientServer::sendCallback(const std::string &, const boost::system::error_code &error, std::size_t bytesTransferred)

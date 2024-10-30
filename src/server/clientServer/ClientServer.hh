@@ -164,6 +164,14 @@ namespace RType {
             std::vector<U_STRING> _packetsSent;
 
             /**
+             * @brief Check if the type of the packet is important
+             *
+             * @param type the type of the packet
+             * @return true if the type is important, false otherwise
+             */
+            bool importantType(RType::PacketType type);
+
+            /**
              * @brief the callback method after the sending of messages
              *
              * @param message string message

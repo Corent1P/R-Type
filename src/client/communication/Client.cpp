@@ -53,6 +53,14 @@ void RType::Client::logCommand(const PACKET &command)
 
 void RType::Client::askForLostPackets(void)
 {
+    if (_packetsReceived.empty())
+        return;
+    std::cout << "packets received ===================================================" << std::endl;
+    for (auto &packet: _packetsReceived)
+        std::cout << packet << std::endl;
+    std::cout << "packets received ===================================================" << std::endl;
+    std::cout << "before sending" << std::endl;
     send(Encoder::ACKMissing(_packetsReceived));
     _packetsReceived.clear();
+    std::cout << "packets cleared" << std::endl;
 }

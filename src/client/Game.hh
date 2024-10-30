@@ -64,7 +64,7 @@
 #include "../protocolHandler/Decoder.hh"
 
 #define MAX_FPS 60.0
-#define NACK_PROTOCOL_TIME 60
+#define NACK_PROTOCOL_TIME 20
 
 #define FRAME_TIME_LOGIC 1.0 / 60.0
 #define RENDER_FRAME_TIME 1.0 / MAX_FPS

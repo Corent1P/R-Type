@@ -272,7 +272,6 @@ void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)
                             entity->getComponent<RType::DirectionPatternComponent>()->getEntityToFollow()));
             }
         }
-
     }
 }
 
