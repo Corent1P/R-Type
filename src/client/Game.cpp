@@ -619,6 +619,8 @@ void RType::Game::createWindow()
     window->pushComponent(std::make_shared<RType::EventComponent>());
     window->pushComponent(std::make_shared<RType::ClockComponent>());
     window->pushComponent(std::make_shared<RType::LevelComponent>(1));
+    window->pushComponent(std::make_shared<RType::MusicComponent>("ressources/musics/music.mp3"));
+
     createParallaxBackground(window);
 
     window->PUSH_MENU_COMPONENT_E(HOME);
@@ -642,6 +644,11 @@ void RType::Game::createGameSystem()
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleSoundSystem>(
+        std::bind(&RType::Coordinator::addEntity, &_coord),
+        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
+    ));
+
+    _coord.generateNewSystem(std::make_shared<HandleMusicSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true)
     ));
