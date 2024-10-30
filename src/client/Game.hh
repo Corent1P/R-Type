@@ -40,6 +40,7 @@
 #include "../ecs/Components/DamageComponent.hh"
 #include "../ecs/Components/PowerUpComponent.hh"
 #include "../ecs/Components/AttackComponent.hh"
+#include "../ecs/Components/MusicComponent.hh"
 
 #include "../ecs/Components/SoundComponent.hh"
 #include "../ecs/Components/SoundBufferComponent.hh"
@@ -58,6 +59,7 @@
 #include "../ecs/Systems/HandleBossAttackSystem.hh"
 #include "../ecs/Systems/HandleCollisionSystem.hpp"
 #include "../ecs/Systems/HandleSoundSystem.hpp"
+#include "../ecs/Systems/HandleMusicSystem.hpp"
 
 #include <thread>
 #include "../protocolHandler/Encoder.hh"
