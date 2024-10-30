@@ -16,13 +16,16 @@ namespace RType {
             HealthComponent(int health);
             ~HealthComponent();
             void setHealth(int health);
+            void setIsDead(bool isDead);
             int getHealth() const;
             int getMaxHealth() const;
+            bool getIsDead() const;
 
             std::string getOutput() const;
         private:
             int _health;
             int _maxHealth;
+            bool _isDead;
     };
 }
 

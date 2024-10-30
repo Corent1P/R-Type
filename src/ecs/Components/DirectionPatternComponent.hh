@@ -26,7 +26,8 @@ namespace RType {
         SEMI_DIAGONAL_UP,
         SEMI_DIAGONAL_DOWN,
         DIAGONAL_UP,
-        DIAGONAL_DOWN
+        DIAGONAL_DOWN,
+        ZIGZAG_REVERSE_LEFT
     };
 
     class DirectionPatternComponent: public RType::IComponent {

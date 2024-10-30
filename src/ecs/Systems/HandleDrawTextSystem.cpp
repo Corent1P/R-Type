@@ -55,6 +55,15 @@ void RType::HandleDrawTextSystem::updateText(std::shared_ptr<RType::Entity> butt
             else
                 textComponent->setText(textComponent->getTextWithoutVariable() + keyName);
         }
+    } else if (button->getComponent<EntityTypeComponent>() != nullptr && button->getComponent<EntityTypeComponent>()->getEntityType() == E_HEALTHTEXT) {
+        auto textComponent = button->getComponent<TextComponent>();
+        auto healthComponent = button->getComponent<HealthComponent>();
+        if (textComponent && healthComponent && healthComponent->getIsDead() == false) {
+            int healthPercentage = healthComponent->getMaxHealth() != 0 ? healthComponent->getHealth() * 100 / healthComponent->getMaxHealth() : 0;
+            std::string healthStringPercentage = std::to_string(healthPercentage) + "%";
+            textComponent->setText(textComponent->getTextWithoutVariable() + healthStringPercentage);
+        } else
+            textComponent->setText("You're in specator mode");
     }
 }
 

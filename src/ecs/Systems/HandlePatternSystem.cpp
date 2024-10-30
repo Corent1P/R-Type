@@ -86,6 +86,18 @@ void RType::HandlePatternSystem::effect(std::shared_ptr<RType::Entity> entity)
         if (entity->getComponent<RType::PositionComponent>()->getPositionY() > 1000)
             entity->GET_PATTERN->setDirectionForZigZag(true);
     }
+    if (entity->GET_PATTERN->getPatternType() == RType::ZIGZAG_REVERSE_LEFT) {
+        if (entity->getComponent<RType::PositionComponent>() == nullptr)
+            return;
+        if (entity->GET_PATTERN->getDirectionForZigZag() == true)
+            entity->GET_PATTERN->setPattern(sf::Vector2f(-10, 10));
+        else
+            entity->GET_PATTERN->setPattern(sf::Vector2f(-10, -10));
+        if (entity->getComponent<RType::PositionComponent>()->getPositionY() < 20)
+            entity->GET_PATTERN->setDirectionForZigZag(true);
+        if (entity->getComponent<RType::PositionComponent>()->getPositionY() > 1000)
+            entity->GET_PATTERN->setDirectionForZigZag(false);
+    }
     if (entity->GET_PATTERN->getPatternType() == RType::SEMI_DIAGONAL_UP) {
         entity->GET_PATTERN->setPattern(sf::Vector2f(-10, -2.5));
     }

@@ -76,7 +76,7 @@ bool RType::EntityTypeComponent::isEnnemyShoot(EntityType entityType)
     return entityType == E_ENNEMY_BULLET || entityType == E_STING
     || entityType == E_SPACE_SHIP_BULLET || entityType == E_SPACE_SHIP_SEMI_DIAGONAL_UP
     || entityType == E_SPACE_SHIP_SEMI_DIAGONAL_DOWN || entityType == E_SPACE_SHIP_DIAGONAL_UP
-    || entityType == E_SPACE_SHIP_DIAGONAL_DOWN || entityType == E_STATIC_BOMB || entityType == E_ZIGZAG_BOMB;
+    || entityType == E_SPACE_SHIP_DIAGONAL_DOWN || entityType == E_STATIC_BOMB || entityType == E_ZIGZAG_BOMB || entityType == E_ZIGZAG_BOMB_REVERSE;
 }
 
 bool RType::EntityTypeComponent::isItem(EntityType entityType)
@@ -137,6 +137,8 @@ std::string RType::EntityTypeComponent::getOutput() const
             entityType = "static bomb";
             break;
         case E_ZIGZAG_BOMB:
+        case E_ZIGZAG_BOMB_REVERSE:
+
             entityType = "zig zag bomb";
             break;
         case E_BABY_OCTOPUS:

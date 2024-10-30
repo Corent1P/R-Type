@@ -21,6 +21,7 @@
 #include ".././Components/VelocityComponent.hh"
 #include ".././Components/IntRectComponent.hh"
 #include ".././Components/ParseLevelInfoComponent.hh"
+#include ".././Components/DifficultyComponent.hh"
 
 #include "../../client/Game.hh"
 
@@ -103,13 +104,15 @@ namespace RType {
             /**
              * @brief a method to handle the collision between two entities
              *
+             * @param difficultyCoefficient damage coefficient based on difficulty
              */
-            void handleEntityCollision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &entitiesColliding);
+            void handleEntityCollision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &entitiesColliding, float difficultyCoefficient);
             /**
              * @brief a method to handle the collision between all entities
              *
+             * @param difficultyCoefficient damage coefficient based on difficulty
              */
-            void handleEntityCollisions(void);
+            void handleEntityCollisions(float difficultyCoefficient);
 
             void handleShield(void);
             /**

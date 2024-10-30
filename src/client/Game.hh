@@ -40,6 +40,7 @@
 #include "../ecs/Components/DamageComponent.hh"
 #include "../ecs/Components/PowerUpComponent.hh"
 #include "../ecs/Components/AttackComponent.hh"
+#include "../ecs/Components/MusicComponent.hh"
 
 #include "../ecs/Components/SoundComponent.hh"
 #include "../ecs/Components/SoundBufferComponent.hh"
@@ -58,6 +59,7 @@
 #include "../ecs/Systems/HandleBossAttackSystem.hh"
 #include "../ecs/Systems/HandleCollisionSystem.hpp"
 #include "../ecs/Systems/HandleSoundSystem.hpp"
+#include "../ecs/Systems/HandleMusicSystem.hpp"
 
 #include <thread>
 #include "../protocolHandler/Encoder.hh"
@@ -131,6 +133,8 @@ namespace RType {
                               const int &posX, const int &posY, const int &idToFollow = -1);
             void createWindow();
             void createMenu();
+            void createDeathMenu();
+            void createWinMenu();
             void createMappingInputButton(std::shared_ptr<RType::MappingInputComponent> mappingInput);
             std::shared_ptr<RType::Entity> createButton(int x, int y, std::string text);
             std::shared_ptr<RType::Entity> createText(int x, int y, std::string text);

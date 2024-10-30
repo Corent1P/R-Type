@@ -51,7 +51,9 @@ namespace RType {
         E_SPACE_SHIP_DIAGONAL_DOWN,
         E_SOUNDS,
         E_STATIC_BOMB,
-        E_ZIGZAG_BOMB
+        E_ZIGZAG_BOMB,
+        E_ZIGZAG_BOMB_REVERSE,
+        E_HEALTHTEXT
     };
 
     enum WeaponType {

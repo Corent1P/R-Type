@@ -1,16 +1,16 @@
 {
     "health": 10,
     "damage": 2,
-    "sprite":"./ressources/mobs/space-ship-3-sheet.png",
+    "sprite":"./ressources/mobs/police.png",
     "scale": {
-        "x": 2.0,
-        "y": 2.0
+        "x": 0.5,
+        "y": 0.5
     },
     "rect" : {
         "x": 0,
         "y": 0,
-        "width": 32,
-        "height": 22
+        "width": 163,
+        "height": 60
     },
     "pattern": 10,
     "speed": 3,

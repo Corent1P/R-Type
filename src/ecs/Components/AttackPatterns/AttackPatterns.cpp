@@ -156,8 +156,12 @@ void RType::AttackPatterns::spawnWallZigZagBomb(std::shared_ptr<RType::Entity> b
     if (!position || !rect || !scale)
         return;
 
-    for (int posY = 0; posY < 9; posY++) {
-        createEntity(E_ZIGZAG_BOMB, 1920, posY * 120, addEntity, sendMessageToAllClient);
+    for (int posY = 0; posY < 8; posY++) {
+        if (std::rand() % 2)
+            createEntity(E_ZIGZAG_BOMB, 1920, posY * 120, addEntity, sendMessageToAllClient);
+        else
+            createEntity(E_ZIGZAG_BOMB_REVERSE, 1920, posY * 120, addEntity, sendMessageToAllClient);
+
     }
 }
 
@@ -178,6 +182,7 @@ void RType::AttackPatterns::createEntity(const RType::EntityType &type, const in
     entityTypeMap[E_STING] = "sting";
     entityTypeMap[E_STATIC_BOMB] = "static_bomb";
     entityTypeMap[E_ZIGZAG_BOMB] = "zigzag_bomb";
+    entityTypeMap[E_ZIGZAG_BOMB_REVERSE] = "zigzag_bomb_reverse";
 
     entityTypeMap[E_FLY_BOSS] = "fly_boss";
     entityTypeMap[E_SPACE_SHIP_BOSS] = "sape_ship_boss";

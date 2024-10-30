@@ -98,54 +98,61 @@ function Level.spawnZigzag(name, timeStamp, startHeight, amplitude, count, timeS
     end
 end
 
+-- Level.addEnnemy("item_heal", 5, 1080 / 4)
+-- Level.addEnnemy("item_heal", 5, 1080 / 2)
+-- Level.addEnnemy("item_heal", 5, 1080 / 4 * 3)
+-- Level.addEnnemy("item_heal", 5, 1080 / 5 * 2)
+-- Level.addEnnemy("item_heal", 5, 1080 / 5 * 3)
 
-Level.spawnColumn("space_ship_1", 1, 300, 60, 3)
-Level.spawnPack("fly", 2.5, 450)
-Level.spawnMixedWave("space_ship_4", "fly", 4, 600, 80, 3)
+-- Level.addEnnemy("item_forcepod", 8, 1080 / 2)
 
-Level.spawnHorizontalLine("fly", 5.5, 750, 70, 5)
-Level.spawnCircle("space_ship_1", 6, 500, 150, 4)
+Level.spawnColumn("space_ship_1", 10, 300, 60, 3)
+Level.spawnPack("fly", 12.5, 450)
+Level.spawnMixedWave("space_ship_4", "fly", 14, 600, 80, 3)
 
-Level.addEnnemy("space_ship_4", 7.5, 400)
-Level.spawnMixedWave("space_ship_1", "space_ship_4", 8, 300, 80, 4)
-Level.spawnPack("octopus", 9, 500)
+Level.spawnHorizontalLine("fly", 15.5, 750, 70, 5)
+Level.spawnCircle("space_ship_1", 16, 500, 150, 4)
 
-Level.addEnnemy("item_weapon", 10.5, 500)
+Level.addEnnemy("space_ship_4", 17.5, 400)
+Level.spawnMixedWave("space_ship_1", "space_ship_4", 18, 300, 80, 4)
+Level.spawnPack("octopus", 19, 500)
 
-Level.spawnZigzag("fly", 11, 350, 150, 6, 0.25)
-Level.spawnCircle("space_ship_4", 12.5, 600, 250, 5)
+Level.addEnnemy("item_weapon", 20.5, 500)
 
-Level.addEnnemy("item_shield", 14, 600)
+Level.spawnZigzag("fly", 21, 350, 150, 6, 0.25)
+Level.spawnCircle("space_ship_4", 22.5, 600, 250, 5)
 
-Level.spawnMixedWave("fly", "space_ship_4", 15, 700, 50, 5)
-Level.spawnColumn("space_ship_2", 17, 850, 80, 3)
+Level.addEnnemy("item_shield", 24, 600)
 
-Level.addEnnemy("octopus", 19, 550)
-Level.addEnnemy("octopus", 19.5, 650)
+Level.spawnMixedWave("fly", "space_ship_4", 25, 700, 50, 5)
+Level.spawnColumn("space_ship_2", 27, 850, 80, 3)
 
-Level.spawnHorizontalLine("space_ship_2", 20.5, 850, 90, 4)
-Level.spawnVFormation("fly", 22, 450, 50)
+Level.addEnnemy("octopus", 29, 550)
+Level.addEnnemy("octopus", 29.5, 650)
 
-Level.spawnPack("space_ship_3", 23.5, 700)
-Level.spawnCircle("fly", 24.5, 600, 250, 6)
+Level.spawnHorizontalLine("space_ship_2", 30.5, 850, 90, 4)
+Level.spawnVFormation("fly", 32, 450, 50)
 
-Level.addEnnemy("item_weapon", 26, 500)
+Level.spawnPack("space_ship_3", 33.5, 700)
+Level.spawnCircle("fly", 34.5, 600, 250, 6)
 
-Level.spawnMixedWave("octopus", "space_ship_4", 28, 450, 100, 5)
+Level.addEnnemy("item_weapon", 36, 500)
 
-Level.spawnMixedWave("fly", "space_ship_4", 30, 700, 50, 5)
-Level.spawnColumn("space_ship_2", 32, 850, 80, 3)
+Level.spawnMixedWave("octopus", "space_ship_4", 38, 450, 100, 5)
 
-Level.spawnMixedWave("fly", "space_ship_4", 36, 700, 50, 5)
+Level.spawnMixedWave("fly", "space_ship_4", 40, 700, 50, 5)
+Level.spawnColumn("space_ship_2", 42, 850, 80, 3)
 
--- Level.addEnnemy("item_heal", 38, 1080 / 4)
--- Level.addEnnemy("item_heal", 38, 1080 / 2)
--- Level.addEnnemy("item_heal", 38, 1080 / 4 * 3)
--- Level.addEnnemy("item_heal", 38, 1080 / 5 * 2)
--- Level.addEnnemy("item_heal", 38, 1080 / 5 * 3)
+Level.spawnMixedWave("fly", "space_ship_4", 46, 700, 50, 5)
+
+-- Level.addEnnemy("item_heal", 48, 1080 / 4)
+-- Level.addEnnemy("item_heal", 48, 1080 / 2)
+-- Level.addEnnemy("item_heal", 48, 1080 / 4 * 3)
+-- Level.addEnnemy("item_heal", 48, 1080 / 5 * 2)
+-- Level.addEnnemy("item_heal", 48, 1080 / 5 * 3)
 
 
-Level.addEnnemy("bomber_boss", 42, 500)
+Level.addEnnemy("bomber_boss", 42 + 10, 500)
 
 function Level.update(dt)
     local time = tonumber(dt)

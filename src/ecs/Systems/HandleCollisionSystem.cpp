@@ -25,7 +25,11 @@ void RType::HandleCollisionSystem::effects(std::vector<std::shared_ptr<RType::En
     _entitiesToDestroy.clear();
     _entitiesColidingBefore = _entitiesColiding;
     _entitiesColiding.clear();
+
+    float difficultyCoefficient = 1;
     for (const auto &entity: entities) {
+        if (entity->GET_DIFFICULTY != nullptr)
+            difficultyCoefficient = entity->GET_DIFFICULTY->getDamageCoefficient();
         if (!verifyRequiredComponent(entity))
             continue;
         for (const auto &entity2: entities) {
@@ -34,7 +38,7 @@ void RType::HandleCollisionSystem::effects(std::vector<std::shared_ptr<RType::En
             }
         }
     }
-    handleEntityCollisions();
+    handleEntityCollisions(difficultyCoefficient);
     for (const auto &entity: _entitiesToDestroy) {
         removeShieldToPlayer(entities, entity);
 
@@ -70,6 +74,7 @@ bool RType::HandleCollisionSystem::verifyRequiredComponent(std::shared_ptr<RType
 {
     if (entity->getComponent<RType::PositionComponent>() == nullptr
         || entity->getComponent<RType::IntRectComponent>() == nullptr
+        || entity->getComponent<RType::EntityTypeComponent>() == nullptr
         || entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_LAYER) {
         return false;
     }
@@ -98,7 +103,7 @@ bool RType::HandleCollisionSystem::collides(std::shared_ptr<RType::Entity> entit
     );
 }
 
-void RType::HandleCollisionSystem::handleEntityCollision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &colidingPair)
+void RType::HandleCollisionSystem::handleEntityCollision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &colidingPair, float difficultyCoefficient)
 {
     const auto &entity1 = colidingPair.first;
     const auto &entity2 = colidingPair.second;
@@ -110,9 +115,9 @@ void RType::HandleCollisionSystem::handleEntityCollision(const std::pair<std::sh
 
     if ((entityType1 == RType::E_SHIELD || entityType1 == RType::E_PLAYER) && EntityTypeComponent::isEnnemyShoot(entityType2) && entityDamage2) {
         _entitiesToDestroy.push_back(entity2);
-        decreaseHealth(entity1, entityDamage2->getDamage());
+        decreaseHealth(entity1, entityDamage2->getDamage() * difficultyCoefficient);
     } else if (entityType1 == RType::E_PLAYER && EntityTypeComponent::isMob(entityType2) && entityDamage1 && entityDamage2) {
-        decreaseHealth(entity1, entityDamage2->getDamage());
+        decreaseHealth(entity1, entityDamage2->getDamage() * difficultyCoefficient);
         decreaseHealth(entity2, entityDamage1->getDamage());
     } else if (EntityTypeComponent::isMob(entityType1) && EntityTypeComponent::isWeapon(entityType2) && entityDamage2) {
         _entitiesToDestroy.push_back(entity2);
@@ -150,12 +155,12 @@ void RType::HandleCollisionSystem::handleItemEffect(std::shared_ptr<RType::Entit
     }
 }
 
-void RType::HandleCollisionSystem::handleEntityCollisions(void)
+void RType::HandleCollisionSystem::handleEntityCollisions(float difficultyCoefficient)
 {
     for (const auto &colidingPair: _entitiesColiding) {
         if (isInPastCollision(colidingPair))
             continue;
-        handleEntityCollision(colidingPair);
+        handleEntityCollision(colidingPair, difficultyCoefficient);
     }
 }
 
