@@ -104,7 +104,7 @@ void RType::HandleEntitySpawnSystem::effect(std::shared_ptr<RType::Entity> entit
 
 bool RType::HandleEntitySpawnSystem::verifyRequiredComponent(std::shared_ptr<RType::Entity> entity)
 {
-    if (GET_ENTITY_TYPE(entity) == RType::E_WINDOW &&
+    if (entity->getComponent<RType::EntityTypeComponent>() && GET_ENTITY_TYPE(entity) == RType::E_WINDOW &&
         entity->getComponent<RType::ClockComponent>() != nullptr &&
         entity->getComponent<RType::ParseLevelInfoComponent>() != nullptr)
         return true;

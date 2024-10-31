@@ -246,7 +246,7 @@ void RType::Server::initSystem(void)
 void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)
 {
     for (auto entity: _coord.getEntities()) {
-        if (client->getEntity()->getId() != entity->getId() &&
+        if (client->getEntity()->getId() != entity->getId() && entity->getComponent<EntityTypeComponent>() &&
             (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER ||
             EntityTypeComponent::isMob(entity->getComponent<EntityTypeComponent>()->getEntityType()) ||
             EntityTypeComponent::isItem(entity->getComponent<EntityTypeComponent>()->getEntityType()) ||
@@ -262,7 +262,7 @@ void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)
         }
     }
     for (auto entity: _coord.getEntities()) {
-        if (client->getEntity()->getId() != entity->getId() &&
+        if (client->getEntity()->getId() != entity->getId() && entity->getComponent<EntityTypeComponent>() &&
             (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER ||
             EntityTypeComponent::isMob(entity->getComponent<EntityTypeComponent>()->getEntityType()) ||
             EntityTypeComponent::isItem(entity->getComponent<EntityTypeComponent>()->getEntityType()) ||

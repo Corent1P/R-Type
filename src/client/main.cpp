@@ -41,8 +41,14 @@ int main(int ac, char **av)
         RType::Game game(ioContext, av[1], av[2]);
         std::cout << game;
         game.gameLoop();
-    }  catch (const std::exception &e) {
+    } catch (const RType::EcsError &e) {
+        std::cerr << "ECS Error: " << e.what() << std::endl;
+        return 84;
+    } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
+        return 84;
+    } catch (...) {
+        std::cerr << "Unknown error occurred." << std::endl;
         return 84;
     }
     return 0;

@@ -30,7 +30,11 @@ RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, c
     createSound();
     createGameSystem();
     createEntityMap();
-    _receipter = std::thread(&Game::loopReceive, this);
+    try {
+        _receipter = std::thread(&Game::loopReceive, this);
+    } catch(const std::exception& e) {
+        throw std::exception(e);
+    }
     _initConnection = false;
 }
 

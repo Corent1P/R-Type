@@ -11,7 +11,7 @@ RType::SoundBufferComponent::SoundBufferComponent(const std::string &path):
     _path(path)
 {
     if (!_soundBuffer.loadFromFile(path))
-        throw EcsError("Failed Load sound: " + path);
+        return;
 }
 
 const sf::SoundBuffer &RType::SoundBufferComponent::getSoundBuffer() const

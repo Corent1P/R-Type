@@ -11,7 +11,7 @@ RType::MusicComponent::MusicComponent(const std::string &musicPath):
     _volume(50)
 {
     if (!_music.openFromFile(musicPath))
-        throw EcsError("Music: " + musicPath + " was not found");
+        return;
     _music.setLoop(true);
     _music.setVolume(_volume);
 }
