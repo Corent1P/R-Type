@@ -18,10 +18,15 @@
 #include "../Components/ScoreComponent.hh"
 #include "../Components/HoverEffectComponent.hh"
 #include "../Components/IntRectComponent.hh"
+#include "../Components/MusicComponent.hh"
+#include "../Components/SoundQueueComponent.hh"
+#include "../Components/AutoUpdateTextComponent.hh"
+#include "../Components/SoundVolumeComponent.hh"
 
 #define GET_WINDOW_FOR_DRAW w->getComponent<RType::SFWindowComponent>()
 #define SET_TEXT_POSITION entity->getComponent<RType::TextComponent>()->getText()->setPosition(entity->getComponent<PositionComponent>()->getPositions())
 #define GET_HOVER_C entity->getComponent<RType::HoverEffectComponent>()
+#define GET_AUTO_UPDATE_TEXT_C text->getComponent<RType::AutoUpdateTextComponent>()
 
 namespace RType {
     /**
@@ -67,6 +72,7 @@ namespace RType {
             static void drawHitBox(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &entity);
         protected:
         private:
+            void autoUpdateText(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &text);
             const std::string& getDotString(void);
             std::vector<std::shared_ptr<RType::Entity>> _entities;
             std::string _dotString;
