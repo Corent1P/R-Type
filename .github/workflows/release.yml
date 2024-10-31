@@ -1,5 +1,4 @@
 name: Create Release
-
 on:
   workflow_run:
     workflows: ["R-Type"]
@@ -7,11 +6,9 @@ on:
       - completed
     branches:
       - main
-
 permissions:
   contents: write
   packages: write
-
 jobs:
   create-release:
     runs-on: ubuntu-latest
@@ -21,16 +18,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Install NSIS
         run: |
           sudo apt-get update -y
           sudo apt-get install -y nsis zip unzip
-
       - name: Create ZIP of Source
         run: |
           zip -r r-type.zip . -x "*.git/*" "vcpkg/*" "build/*"
-
       - name: Generate NSIS Script
         run: |
           cat > installer.nsi << 'EOF'
@@ -40,62 +34,63 @@ jobs:
           !define PRODUCT_NAME "R-Type"
           !define PRODUCT_VERSION "${{ github.sha }}"
           !define INSTALLER_NAME "R-Type-Setup.exe"
+          !define REPO_URL "https://github.com/YOUR_USERNAME/YOUR_REPO/archive/refs/heads/main.zip"  ; Replace with your actual repository URL
 
           SetCompressor lzma
-
           Name "${PRODUCT_NAME}"
           OutFile "${INSTALLER_NAME}"
-          InstallDir "$PROGRAMFILES\${PRODUCT_NAME}"
+          InstallDir "$DOCUMENTS\${PRODUCT_NAME}"
           RequestExecutionLevel admin
 
           !insertmacro MUI_PAGE_WELCOME
           !insertmacro MUI_PAGE_DIRECTORY
           !insertmacro MUI_PAGE_INSTFILES
-          !insertmacro MUI_PAGE_FINISH
-
           !insertmacro MUI_LANGUAGE "English"
 
           Section "MainSection" SEC01
               SetOutPath "$INSTDIR"
 
-              File "r-type.zip"
+              DetailPrint "Downloading repository..."
+              nsExec::ExecToLog 'powershell -Command "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri \"${REPO_URL}\" -OutFile \"$INSTDIR\repo.zip\""'
+              Pop $0
+              ${If} $0 != 0
+                  DetailPrint "Failed to download repository"
+                  Abort "Repository download failed"
+              ${EndIf}
 
-              nsExec::ExecToLog 'powershell -Command "Expand-Archive -Path $INSTDIR\r-type.zip -DestinationPath $INSTDIR -Force"'
+              DetailPrint "Extracting files..."
+              nsExec::ExecToLog 'powershell -Command "Expand-Archive -Path \"$INSTDIR\repo.zip\" -DestinationPath \"$INSTDIR\" -Force"'
+              Pop $0
+              ${If} $0 != 0
+                  DetailPrint "Failed to extract repository"
+                  Abort "Repository extraction failed"
+              ${EndIf}
 
-              Delete "$INSTDIR\r-type.zip"
+              Delete "$INSTDIR\repo.zip"
 
-              CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
-              CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\R-Type.exe"
-              CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe"
-
-              WriteUninstaller "$INSTDIR\uninstall.exe"
+              FindFirst $0 $1 "$INSTDIR\*-main"
+              ${If} $1 == ""
+                  FindFirst $0 $1 "$INSTDIR\*-master"
+              ${EndIf}
 
               DetailPrint "Starting build process..."
               SetDetailsPrint both
-              ExecWait 'cmd.exe /c cd "$INSTDIR" && build.bat' $0
+              ${If} $1 != ""
+                  ExecWait 'cmd.exe /c cd "$INSTDIR\$1" && build.bat' $0
+              ${Else}
+                  ExecWait 'cmd.exe /c cd "$INSTDIR" && build.bat' $0
+              ${EndIf}
+              FindClose $0
               DetailPrint "Build process finished with exit code $0"
           SectionEnd
-
-          Section "Uninstall"
-              RMDir /r "$INSTDIR\*.*"
-              RMDir "$INSTDIR"
-
-              Delete "$SMPROGRAMS\${PRODUCT_NAME}\*.*"
-              RMDir "$SMPROGRAMS\${PRODUCT_NAME}"
-
-              Delete "$INSTDIR\uninstall.exe"
-          SectionEnd
           EOF
-
       - name: Create R-Type Installer
         run: |
           makensis installer.nsi
-
       - name: Get R-Type Version
         id: version
         run: |
           echo "version=$(git describe --tags --always)" >> $GITHUB_OUTPUT
-
       - name: Create Release
         id: release
         uses: softprops/action-gh-release@v2
