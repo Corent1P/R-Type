@@ -26,9 +26,10 @@ void RType::HandleDrawTextSystem::effects(std::vector<std::shared_ptr<RType::Ent
             if (verifyRequiredComponent(entity) && *entity->GET_MENU == *w->GET_MENU) {
                 updateText(entity, w);
                 SET_TEXT_POSITION;
-                if (GET_HOVER_C != nullptr && GET_HOVER_C->getHoverState()) {
-                    drawHitBox(w, entity);
-                }
+                if (GET_HOVER_C != nullptr && GET_HOVER_C->getHoverState())
+                    entity->getComponent<TextComponent>()->setFontSize(65);
+                else
+                    entity->getComponent<TextComponent>()->setFontSize(60);
                 GET_WINDOW_FOR_DRAW->getWindow()->draw(*(entity->getComponent<RType::TextComponent>()->getText()));
             }
         }
@@ -78,9 +79,18 @@ void RType::HandleDrawTextSystem::updateText(std::shared_ptr<RType::Entity> butt
 
 void RType::HandleDrawTextSystem::drawHitBox(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &entity)
 {
-    if (entity->getComponent<EntityTypeComponent>()->getEntityType() != E_LAYER) {
+    if (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_LAYER)
+        return;
+    if (entity->getComponent<IntRectComponent>() == nullptr) {
         sf::FloatRect bounds = entity->getComponent<RType::TextComponent>()->getText()->getGlobalBounds();
         sf::RectangleShape rect(sf::Vector2f(bounds.width, bounds.height));
+        rect.setPosition(entity->getComponent<RType::TextComponent>()->getText()->getPosition());
+        rect.setOutlineColor(sf::Color::White);
+        rect.setOutlineThickness(2);
+        GET_WINDOW_FOR_DRAW->getWindow()->draw(rect);
+    } else {
+        sf::RectangleShape rect(sf::Vector2f(entity->getComponent<IntRectComponent>()->getIntRectWidth(),
+                                             entity->getComponent<IntRectComponent>()->getIntRectHeight()));
         rect.setPosition(entity->getComponent<RType::TextComponent>()->getText()->getPosition());
         rect.setOutlineColor(sf::Color::White);
         rect.setOutlineThickness(2);
