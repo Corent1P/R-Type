@@ -16,9 +16,12 @@ namespace RType {
             MusicComponent(const std::string &musicPath);
             ~MusicComponent() = default;
             sf::Music &getMusic();
+            std::size_t getVolume() const;
+            void setVolume(int volume);
             std::string getOutput() const;
 
         private:
             sf::Music _music;
+            std::size_t _volume;
     };
 }
