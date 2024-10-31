@@ -15,6 +15,7 @@ namespace RType {
     enum Menu {
         EVERYWHERE,
         HOME,
+        OPTIONS,
         MAPPING_INPUT,
         LOADING,
         GAME,

@@ -21,11 +21,13 @@ namespace RType {
             std::shared_ptr<sf::Text> getText() const;
             const std::string& getTextWithoutVariable() const;
             void setTextWithoutVariable(std::string text);
+            std::size_t getFontSize() const;
+            void setFontSize(std::size_t fontSize);
 
             std::string getOutput() const;
         private:
             std::shared_ptr<sf::Text> _text;
             std::string _textWithoutVariable;
-;
+            std::size_t _fontSize;
     };
 }
