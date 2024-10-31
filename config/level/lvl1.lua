@@ -84,12 +84,7 @@ Level.addEnnemy("octopus", 16, 1080 / 2 - 80)
 
 Level.spawnPack("space_ship_2", 19.5, 880)
 
-Level.addEnnemy("item_heal", 20, 1080 / 4)
-
-Level.addEnnemy("item_forcepod", 20, 1080 / 4 * 2)
-Level.addEnnemy("item_forcepod", 20, 1080 / 4 * 2)
-Level.addEnnemy("item_forcepod", 20, 1080 / 4 * 2)
-Level.addEnnemy("item_shield", 20, 1080 / 4 * 2)
+Level.addEnnemy("item_heal", 20, 1080 / 2)
 
 Level.addEnnemy("octopus", 21.5, 150)
 Level.addEnnemy("octopus", 21.5, 930)
