@@ -1037,8 +1037,8 @@ void RType::Game::createEntityMap(void)
 {
     _entityTypeMap[E_OTHER] = "other";
     _entityTypeMap[E_WINDOW] = "window";
-    _entityTypeMap[E_PLAYER] = "player";
-    _entityTypeMap[E_ALLIES] = "player";
+    _entityTypeMap[E_PLAYER] = "allies";
+    _entityTypeMap[E_ALLIES] = "allies";
     _entityTypeMap[E_SPACE_SHIP_1] = "space_ship_1";
     _entityTypeMap[E_SPACE_SHIP_2] = "space_ship_2";
     _entityTypeMap[E_SPACE_SHIP_3] = "space_ship_3";

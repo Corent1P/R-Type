@@ -177,8 +177,8 @@ void RType::AttackPatterns::createEntity(const RType::EntityType &type, const in
 
     entityTypeMap[E_OTHER] = "other";
     entityTypeMap[E_WINDOW] = "window";
-    entityTypeMap[E_PLAYER] = "player";
-    entityTypeMap[E_ALLIES] = "player";
+    entityTypeMap[E_PLAYER] = "allies";
+    entityTypeMap[E_ALLIES] = "allies";
     entityTypeMap[E_SPACE_SHIP_1] = "space_ship_1";
     entityTypeMap[E_SPACE_SHIP_2] = "space_ship_2";
     entityTypeMap[E_SPACE_SHIP_3] = "space_ship_3";
