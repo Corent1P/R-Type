@@ -39,6 +39,9 @@ set(SRC_COMPONENTS
     ./Components/SoundQueueComponent.cpp
     ./Components/DifficultyComponent.cpp
     ./Components/ScoreComponent.cpp
+    ./Components/HoverEffectComponent.cpp
+    ./Components/AutoUpdateTextComponent.cpp
+    ./Components/SoundVolumeComponent.cpp
 )
 
 set(SRC_SYSTEMS

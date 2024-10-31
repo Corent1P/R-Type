@@ -42,10 +42,12 @@
 #include "../ecs/Components/AttackComponent.hh"
 #include "../ecs/Components/MusicComponent.hh"
 #include "../ecs/Components/ScoreComponent.hh"
-
 #include "../ecs/Components/SoundComponent.hh"
 #include "../ecs/Components/SoundBufferComponent.hh"
 #include "../ecs/Components/SoundQueueComponent.hh"
+#include "../ecs/Components/HoverEffectComponent.hh"
+#include "../ecs/Components/AutoUpdateTextComponent.hh"
+#include "../ecs/Components/SoundVolumeComponent.hh"
 
 #include "../ecs/Systems/HandleEventSystem.hpp"
 #include "../ecs/Systems/HandleClearSystem.hpp"
@@ -134,11 +136,15 @@ namespace RType {
                               const int &posX, const int &posY, const int &idToFollow = -1);
             void createWindow();
             void createMenu();
+            void createOptionMenu();
             void createDeathMenu();
             void createWinMenu();
             void createMappingInputButton(std::shared_ptr<RType::MappingInputComponent> mappingInput);
             std::shared_ptr<RType::Entity> createButton(int x, int y, std::string text);
+            std::shared_ptr<RType::Entity> createButton(int y, std::string text);
             std::shared_ptr<RType::Entity> createText(int x, int y, std::string text);
+            std::shared_ptr<RType::Entity> createText(int y, std::string text);
+            std::shared_ptr<RType::Entity> createText(int y, std::string text, std::size_t fontSize);
             void createGameSystem();
             void createParallaxBackground(std::shared_ptr<RType::Entity> window);
             void createParallaxEntity(const std::string &path, const int &posX, const int &posY,
