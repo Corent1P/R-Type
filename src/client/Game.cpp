@@ -287,11 +287,11 @@ void RType::Game::createMenu()
         }
     ));
 
-    std::shared_ptr<RType::Entity> buttonMappingInput = createButton(600, "MAPPING INPUTS");
-    buttonMappingInput->PUSH_MENU_COMPONENT_E(HOME);
-    buttonMappingInput->pushComponent(std::make_shared<RType::ClickEffectComponent> (
+    std::shared_ptr<RType::Entity> buttonOption = createButton(600, "OPTION");
+    buttonOption->PUSH_MENU_COMPONENT_E(HOME);
+    buttonOption->pushComponent(std::make_shared<RType::ClickEffectComponent> (
         [] (std::shared_ptr<Entity> window) {
-            window->getComponent<MenuComponent>()->setMenu(MAPPING_INPUT);
+            window->getComponent<MenuComponent>()->setMenu(OPTIONS);
         }
     ));
 
@@ -300,6 +300,14 @@ void RType::Game::createMenu()
     buttonExit->pushComponent(std::make_shared<RType::ClickEffectComponent> (
         [] (std::shared_ptr<Entity> window) {
             window->getComponent<SFWindowComponent>()->getWindow()->close();
+        }
+    ));
+
+    std::shared_ptr<RType::Entity> buttonMappingInput = createButton(800, "MAPPING INPUTS");
+    buttonMappingInput->PUSH_MENU_COMPONENT_E(OPTIONS);
+    buttonMappingInput->pushComponent(std::make_shared<RType::ClickEffectComponent> (
+        [] (std::shared_ptr<Entity> window) {
+            window->getComponent<MenuComponent>()->setMenu(MAPPING_INPUT);
         }
     ));
 }
@@ -368,11 +376,19 @@ void RType::Game::createMappingInputButton(std::shared_ptr<RType::MappingInputCo
         }
     ));
 
+    std::shared_ptr<RType::Entity> buttonReturnOpt = createButton(0, 0, "RETURN");
+    buttonReturnOpt->PUSH_MENU_COMPONENT_E(OPTIONS);
+    buttonReturnOpt->pushComponent(std::make_shared<RType::ClickEffectComponent>(
+        [](std::shared_ptr<Entity> window) {
+            window->getComponent<MenuComponent>()->setMenu(HOME);
+        }
+    ));
+
     std::shared_ptr<RType::Entity> buttonReturn = createButton(0, 0, "RETURN");
     buttonReturn->PUSH_MENU_COMPONENT_E(MAPPING_INPUT);
     buttonReturn->pushComponent(std::make_shared<RType::ClickEffectComponent>(
         [](std::shared_ptr<Entity> window) {
-            window->getComponent<MenuComponent>()->setMenu(HOME);
+            window->getComponent<MenuComponent>()->setMenu(OPTIONS);
         }
     ));
 }
@@ -424,7 +440,7 @@ std::shared_ptr<RType::Entity> RType::Game::createButton(int x, int y, std::stri
     std::shared_ptr<TextComponent> textComponent = button->pushComponent(std::make_shared<RType::TextComponent>(text, 60, _font));
     sf::FloatRect size = textComponent->getText()->getGlobalBounds();
     button->pushComponent(std::make_shared<RType::PositionComponent>(x, y));
-    button->pushComponent(std::make_shared<RType::IntRectComponent>(x, y, size.width, size.height));
+    button->pushComponent(std::make_shared<RType::IntRectComponent>(x, y, size.width, size.height + 25));
     button->pushComponent(std::make_shared<RType::HoverEffectComponent>());
     return button;
 }
@@ -441,7 +457,7 @@ std::shared_ptr<RType::Entity> RType::Game::createButton(int y, std::string text
         sf::FloatRect size = textComponent->getText()->getGlobalBounds();
         sf::Vector2<unsigned int> windowSize = entity->getComponent<RType::SFWindowComponent>()->getWindow()->getSize();
         button->pushComponent(std::make_shared<RType::PositionComponent>((windowSize.x - size.width) / 2, y));
-        button->pushComponent(std::make_shared<RType::IntRectComponent>((windowSize.x - size.width) / 2, y, size.width, size.height));
+        button->pushComponent(std::make_shared<RType::IntRectComponent>((windowSize.x - size.width) / 2, y, size.width, size.height + 25));
         button->pushComponent(std::make_shared<RType::HoverEffectComponent>());
     }
     return button;
