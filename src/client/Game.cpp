@@ -6,7 +6,11 @@
 */
 
 #include "Game.hh"
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Window/Keyboard.hpp>
+#include <boost/asio/detail/std_fenced_block.hpp>
 
 RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, const std::string &port):
     _client(ioContext, host, port)
@@ -98,6 +102,13 @@ void RType::Game::gameLoop()
                 menuComponent->setMenu(GAME);
             }
             logicTime -= FRAME_TIME_LOGIC;
+            if (menuComponent && menuComponent->getMenu() == OPTIONS) {
+                for (auto entity: _coord.getEntities()) {
+                    if (entity->getComponent<RType::EntityTypeComponent>() != nullptr
+                    && entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == E_WINDOW)
+                        _soundsEntity->getComponent<SoundQueueComponent>()->setGlobalSoundVolume(entity->getComponent<SoundVolumeComponent>()->getVolume());
+                }
+            }
         }
 
         renderTime += deltaTime;
@@ -272,7 +283,7 @@ void RType::Game::loopReceive()
 
 void RType::Game::createMenu()
 {
-    std::shared_ptr<RType::Entity> title = createText(200, "R-TYPE");
+    std::shared_ptr<RType::Entity> title = createText(150, "R-TYPE", 100);
     title->PUSH_MENU_COMPONENT_E(HOME);
 
     std::shared_ptr<RType::Entity> loading = createText(660, 400, "LOADING ...");
@@ -302,19 +313,94 @@ void RType::Game::createMenu()
             window->getComponent<SFWindowComponent>()->getWindow()->close();
         }
     ));
+}
 
-    std::shared_ptr<RType::Entity> buttonMappingInput = createButton(800, "MAPPING INPUTS");
+void RType::Game::createOptionMenu()
+{
+    createText(150, "OPTIONS", 80)->PUSH_MENU_COMPONENT_E(OPTIONS);
+
+    std::shared_ptr<RType::Entity> buttonMappingInput = createButton(700, "Mapping Inputs");
     buttonMappingInput->PUSH_MENU_COMPONENT_E(OPTIONS);
     buttonMappingInput->pushComponent(std::make_shared<RType::ClickEffectComponent> (
         [] (std::shared_ptr<Entity> window) {
             window->getComponent<MenuComponent>()->setMenu(MAPPING_INPUT);
         }
     ));
+
+    std::shared_ptr<RType::Entity> buttonReturnOpt = createButton(900, "GO BACK");
+    buttonReturnOpt->PUSH_MENU_COMPONENT_E(OPTIONS);
+    buttonReturnOpt->pushComponent(std::make_shared<RType::ClickEffectComponent>(
+        [](std::shared_ptr<Entity> window) {
+            window->getComponent<MenuComponent>()->setMenu(HOME);
+        }
+    ));
+    sf::Font font;
+    font.loadFromFile("./ressources/font/VCR_OSD_MONO_1.001.ttf");
+    sf::Text fullField("Music Volume: - 100 +", font, 60);
+    for (auto &entity: _coord.getEntities()) {
+        if (entity->getComponent<EntityTypeComponent>() != nullptr && entity->getComponent<EntityTypeComponent>()->getEntityType() != E_WINDOW)
+            continue;
+        std::shared_ptr<RType::Entity> music = createText((entity->getComponent<RType::SFWindowComponent>()->getWindow()->getSize().x -
+                                                          fullField.getGlobalBounds().width) / 2, 300, "Music Volume: ");
+        music->PUSH_MENU_COMPONENT_E(OPTIONS);
+        sf::FloatRect titleBound = music->getComponent<TextComponent>()->getText()->getGlobalBounds();
+        std::shared_ptr<Entity> plusButton = createButton(music->getComponent<PositionComponent>()->getPositionX() + titleBound.width, 300, "- ");
+        plusButton->PUSH_MENU_COMPONENT_E(OPTIONS);
+        plusButton->pushComponent(std::make_shared<ClickEffectComponent>(
+            [](std::shared_ptr<Entity> window) {
+                (void) window;
+                window->getComponent<MusicComponent>()->setVolume(window->getComponent<MusicComponent>()->getVolume() - 10);
+            }
+        ));
+        titleBound = plusButton->getComponent<TextComponent>()->getText()->getGlobalBounds();
+        std::shared_ptr<Entity> volumeLevel = createText(plusButton->getComponent<PositionComponent>()->getPositionX() + titleBound.width, 300,
+                   std::to_string(entity->getComponent<MusicComponent>()->getVolume()));
+        volumeLevel->PUSH_MENU_COMPONENT_E(OPTIONS);
+        volumeLevel->pushComponent(std::make_shared<AutoUpdateTextComponent>(MUSIC_VOLUME));
+        titleBound = volumeLevel->getComponent<TextComponent>()->getText()->getGlobalBounds();
+        std::shared_ptr<Entity> minusButton = createButton(volumeLevel->getComponent<PositionComponent>()->getPositionX() + titleBound.width, 300, "  +");
+        minusButton->PUSH_MENU_COMPONENT_E(OPTIONS);
+        minusButton->pushComponent(std::make_shared<ClickEffectComponent>(
+            [](std::shared_ptr<Entity> window) {
+                (void) window;
+                window->getComponent<MusicComponent>()->setVolume(window->getComponent<MusicComponent>()->getVolume() + 10);
+            }
+        ));
+
+        fullField.setString("Sound Volume: - 100 +");
+        std::shared_ptr<RType::Entity> sound = createText((entity->getComponent<RType::SFWindowComponent>()->getWindow()->getSize().x -
+                                                          fullField.getGlobalBounds().width) / 2, 500, "Sound Volume: ");
+        sound->PUSH_MENU_COMPONENT_E(OPTIONS);
+        titleBound = sound->getComponent<TextComponent>()->getText()->getGlobalBounds();
+        std::shared_ptr<Entity> plusButton2 = createButton(sound->getComponent<PositionComponent>()->getPositionX() + titleBound.width, 500, "- ");
+        plusButton2->PUSH_MENU_COMPONENT_E(OPTIONS);
+        plusButton2->pushComponent(std::make_shared<ClickEffectComponent>(
+            [](std::shared_ptr<Entity> window) {
+                (void) window;
+                window->getComponent<SoundVolumeComponent>()->setVolume(window->getComponent<SoundVolumeComponent>()->getVolume() - 10);
+            }
+        ));
+        titleBound = plusButton2->getComponent<TextComponent>()->getText()->getGlobalBounds();
+        std::shared_ptr<Entity> volumeLevel2 = createText(plusButton2->getComponent<PositionComponent>()->getPositionX() + titleBound.width, 500,
+               std::to_string(entity->getComponent<SoundVolumeComponent>()->getVolume()));
+        volumeLevel2->PUSH_MENU_COMPONENT_E(OPTIONS);
+        volumeLevel2->pushComponent(std::make_shared<AutoUpdateTextComponent>(SOUND_VOLUME));
+        titleBound = volumeLevel2->getComponent<TextComponent>()->getText()->getGlobalBounds();
+        std::shared_ptr<Entity> minusButton2 = createButton(volumeLevel2->getComponent<PositionComponent>()->getPositionX() + titleBound.width, 500, "  +");
+        minusButton2->PUSH_MENU_COMPONENT_E(OPTIONS);
+        minusButton2->pushComponent(std::make_shared<ClickEffectComponent>(
+            [](std::shared_ptr<Entity> window) {
+                (void) window;
+                window->getComponent<SoundVolumeComponent>()->setVolume(window->getComponent<SoundVolumeComponent>()->getVolume() + 10);
+            }
+        ));
+    }
 }
 
 void RType::Game::createMappingInputButton(std::shared_ptr<RType::MappingInputComponent> mappingInput)
 {
-    std::shared_ptr<RType::Entity> buttonLeft = createButton(500, 250, "Left: " + MappingInputComponent::getKeyName(mappingInput->getMappingInput(INPUT_LEFT)));
+    createText(150, "MAPPING INPUTS", 80)->PUSH_MENU_COMPONENT_E(MAPPING_INPUT);
+    std::shared_ptr<RType::Entity> buttonLeft = createButton(600, 350, "Left: " + MappingInputComponent::getKeyName(mappingInput->getMappingInput(INPUT_LEFT)));
     buttonLeft->SET_BUTTON_TYPE(INPUT_LEFT);
     std::shared_ptr<RType::TextComponent> textLeft = buttonLeft->getComponent<TextComponent>();
     textLeft->setTextWithoutVariable("Left: ");
@@ -327,7 +413,7 @@ void RType::Game::createMappingInputButton(std::shared_ptr<RType::MappingInputCo
         }
     ));
 
-    std::shared_ptr<RType::Entity> buttonRight = createButton(500, 320, "Right: " + MappingInputComponent::getKeyName(mappingInput->getMappingInput(INPUT_RIGHT)));
+    std::shared_ptr<RType::Entity> buttonRight = createButton(600, 420, "Right: " + MappingInputComponent::getKeyName(mappingInput->getMappingInput(INPUT_RIGHT)));
     buttonRight->SET_BUTTON_TYPE(INPUT_RIGHT);
     std::shared_ptr<RType::TextComponent> textRight = buttonRight->getComponent<TextComponent>();
     textRight->setTextWithoutVariable("Right: ");
@@ -339,7 +425,7 @@ void RType::Game::createMappingInputButton(std::shared_ptr<RType::MappingInputCo
         }
     ));
 
-    std::shared_ptr<RType::Entity> buttonUp = createButton(500, 390, "Up: " + MappingInputComponent::getKeyName(mappingInput->getMappingInput(INPUT_UP)));
+    std::shared_ptr<RType::Entity> buttonUp = createButton(600, 490, "Up: " + MappingInputComponent::getKeyName(mappingInput->getMappingInput(INPUT_UP)));
     buttonUp->SET_BUTTON_TYPE(INPUT_UP);
     std::shared_ptr<RType::TextComponent> textUp = buttonUp->getComponent<TextComponent>();
     textUp->setTextWithoutVariable("Up: ");
@@ -351,7 +437,7 @@ void RType::Game::createMappingInputButton(std::shared_ptr<RType::MappingInputCo
         }
     ));
 
-    std::shared_ptr<RType::Entity> buttonDown = createButton(500, 460, "Down: " + MappingInputComponent::getKeyName(mappingInput->getMappingInput(INPUT_DOWN)));
+    std::shared_ptr<RType::Entity> buttonDown = createButton(600, 560, "Down: " + MappingInputComponent::getKeyName(mappingInput->getMappingInput(INPUT_DOWN)));
     buttonDown->SET_BUTTON_TYPE(INPUT_DOWN);
     std::shared_ptr<RType::TextComponent> textDown = buttonDown->getComponent<TextComponent>();
     textDown->setTextWithoutVariable("Down: ");
@@ -363,7 +449,7 @@ void RType::Game::createMappingInputButton(std::shared_ptr<RType::MappingInputCo
         }
     ));
 
-    std::shared_ptr<RType::Entity> buttonShoot = createButton(500, 530, "Shoot: " + MappingInputComponent::getKeyName(mappingInput->getMappingInput(INPUT_SHOOT)));
+    std::shared_ptr<RType::Entity> buttonShoot = createButton(600, 630, "Shoot: " + MappingInputComponent::getKeyName(mappingInput->getMappingInput(INPUT_SHOOT)));
     buttonShoot->SET_BUTTON_TYPE(INPUT_SHOOT);
     std::shared_ptr<RType::TextComponent> textShoot = buttonShoot->getComponent<TextComponent>();
     textShoot->setTextWithoutVariable("Shoot: ");
@@ -376,15 +462,7 @@ void RType::Game::createMappingInputButton(std::shared_ptr<RType::MappingInputCo
         }
     ));
 
-    std::shared_ptr<RType::Entity> buttonReturnOpt = createButton(0, 0, "RETURN");
-    buttonReturnOpt->PUSH_MENU_COMPONENT_E(OPTIONS);
-    buttonReturnOpt->pushComponent(std::make_shared<RType::ClickEffectComponent>(
-        [](std::shared_ptr<Entity> window) {
-            window->getComponent<MenuComponent>()->setMenu(HOME);
-        }
-    ));
-
-    std::shared_ptr<RType::Entity> buttonReturn = createButton(0, 0, "RETURN");
+    std::shared_ptr<RType::Entity> buttonReturn = createButton(900, "GO BACK");
     buttonReturn->PUSH_MENU_COMPONENT_E(MAPPING_INPUT);
     buttonReturn->pushComponent(std::make_shared<RType::ClickEffectComponent>(
         [](std::shared_ptr<Entity> window) {
@@ -395,13 +473,13 @@ void RType::Game::createMappingInputButton(std::shared_ptr<RType::MappingInputCo
 
 void RType::Game::createDeathMenu()
 {
-    std::shared_ptr<RType::Entity> title = createText(660, 200, "You're dead!");
+    std::shared_ptr<RType::Entity> title = createText(200, "You're dead!");
     title->PUSH_MENU_COMPONENT_E(DEAD);
 
-    std::shared_ptr<RType::Entity> subTitle = createText(400, 300, "There's a Fabien mode if you prefer :)");
+    std::shared_ptr<RType::Entity> subTitle = createText(300, "There's a Fabien mode if you prefer :)");
     subTitle->PUSH_MENU_COMPONENT_E(DEAD);
 
-    std::shared_ptr<RType::Entity> buttonSpectate = createButton(700, 600, "SPECTATE");
+    std::shared_ptr<RType::Entity> buttonSpectate = createButton(600, "SPECTATE");
     buttonSpectate->PUSH_MENU_COMPONENT_E(DEAD);
     buttonSpectate->pushComponent(std::make_shared<RType::ClickEffectComponent> (
         [] (std::shared_ptr<Entity> window) {
@@ -409,7 +487,7 @@ void RType::Game::createDeathMenu()
         }
     ));
 
-    std::shared_ptr<RType::Entity> buttonExit = createButton(875, 800, "EXIT");
+    std::shared_ptr<RType::Entity> buttonExit = createButton(800, "EXIT");
     buttonExit->PUSH_MENU_COMPONENT_E(DEAD);
     buttonExit->pushComponent(std::make_shared<RType::ClickEffectComponent> (
         [] (std::shared_ptr<Entity> window) {
@@ -420,10 +498,10 @@ void RType::Game::createDeathMenu()
 
 void RType::Game::createWinMenu()
 {
-    std::shared_ptr<RType::Entity> title = createText(660, 200, "You've won! Well done ;)");
+    std::shared_ptr<RType::Entity> title = createText(200, "You've won! Well done ;)");
     title->PUSH_MENU_COMPONENT_E(WIN);
 
-    std::shared_ptr<RType::Entity> buttonExit = createButton(875, 800, "EXIT");
+    std::shared_ptr<RType::Entity> buttonExit = createButton(800, "EXIT");
     buttonExit->PUSH_MENU_COMPONENT_E(WIN);
     buttonExit->pushComponent(std::make_shared<RType::ClickEffectComponent> (
         [] (std::shared_ptr<Entity> window) {
@@ -482,6 +560,22 @@ std::shared_ptr<RType::Entity> RType::Game::createText(int y, std::string text)
             continue;
         textEntity->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_TEXT));
         std::shared_ptr<TextComponent> textComponent = textEntity->pushComponent(std::make_shared<RType::TextComponent>(text, 60, _font));
+        sf::FloatRect size = textComponent->getText()->getGlobalBounds();
+        sf::Vector2<unsigned int> windowSize = entity->getComponent<RType::SFWindowComponent>()->getWindow()->getSize();
+        textEntity->pushComponent(std::make_shared<RType::PositionComponent>((windowSize.x - size.width) / 2, y));
+    }
+    return textEntity;
+}
+
+std::shared_ptr<RType::Entity> RType::Game::createText(int y, std::string text, std::size_t fontSize)
+{
+    std::shared_ptr<RType::Entity> textEntity = _coord.generateNewEntity();
+
+    for (auto &entity: _coord.getEntities()) {
+        if (entity->getComponent<RType::SFWindowComponent>() == nullptr)
+            continue;
+        textEntity->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_TEXT));
+        std::shared_ptr<TextComponent> textComponent = textEntity->pushComponent(std::make_shared<RType::TextComponent>(text, fontSize, _font));
         sf::FloatRect size = textComponent->getText()->getGlobalBounds();
         sf::Vector2<unsigned int> windowSize = entity->getComponent<RType::SFWindowComponent>()->getWindow()->getSize();
         textEntity->pushComponent(std::make_shared<RType::PositionComponent>((windowSize.x - size.width) / 2, y));
@@ -700,6 +794,7 @@ void RType::Game::createWindow()
     window->pushComponent(std::make_shared<RType::ClockComponent>());
     window->pushComponent(std::make_shared<RType::LevelComponent>(1));
     window->pushComponent(std::make_shared<RType::MusicComponent>("ressources/musics/music.mp3"));
+    window->pushComponent(std::make_shared<RType::SoundVolumeComponent>());
     auto score = window->pushComponent(std::make_shared<RType::ScoreComponent>(0));
 
     createParallaxBackground(window);
@@ -708,13 +803,14 @@ void RType::Game::createWindow()
 
     auto mappingInput = window->pushComponent(std::make_shared<MappingInputComponent>());
     createMappingInputButton(mappingInput);
+    createOptionMenu();
 
 
     std::shared_ptr<RType::Entity> scoreValue = _coord.generateNewEntity();
     scoreValue->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_SCORETEXT));
     scoreValue->pushComponent(score);
     std::shared_ptr<TextComponent> textScoreComponent = scoreValue->pushComponent(std::make_shared<RType::TextComponent>("Score: 0", 60, _font));
-    scoreValue->pushComponent(std::make_shared<RType::PositionComponent>(500, 950));
+    scoreValue->pushComponent(std::make_shared<RType::PositionComponent>(900, 950));
     textScoreComponent->setTextWithoutVariable("Score: ");
     scoreValue->PUSH_MENU_COMPONENT_E(GAME);
 }
