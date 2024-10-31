@@ -34,8 +34,7 @@ jobs:
           !define PRODUCT_NAME "R-Type"
           !define PRODUCT_VERSION "${{ github.sha }}"
           !define INSTALLER_NAME "R-Type-Setup.exe"
-          !define REPO_URL "https://github.com/YOUR_USERNAME/YOUR_REPO/archive/refs/heads/main.zip"  ; Replace with your actual repository URL
-
+          !define REPO_URL "https://github.com/Corent1P/R-Type/archive/refs/heads/main.zip"
           SetCompressor lzma
           Name "${PRODUCT_NAME}"
           OutFile "${INSTALLER_NAME}"
