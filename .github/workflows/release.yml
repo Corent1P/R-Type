@@ -1,0 +1,106 @@
+name: Create Release
+
+on:
+  workflow_run:
+    workflows: ["R-Type"]
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install NSIS
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y nsis zip unzip
+
+      - name: Create ZIP of Source
+        run: |
+          zip -r r-type.zip . -x "*.git/*" "vcpkg/*" "build/*"
+
+      - name: Generate NSIS Script
+        run: |
+          cat > installer.nsi << 'EOF'
+          !include "MUI2.nsh"
+          !include "FileFunc.nsh"
+
+          !define PRODUCT_NAME "R-Type"
+          !define PRODUCT_VERSION "${{ github.sha }}"
+          !define INSTALLER_NAME "R-Type-Setup.exe"
+
+          SetCompressor lzma
+
+          Name "${PRODUCT_NAME}"
+          OutFile "${INSTALLER_NAME}"
+          InstallDir "$PROGRAMFILES\${PRODUCT_NAME}"
+          RequestExecutionLevel admin
+
+          !insertmacro MUI_PAGE_WELCOME
+          !insertmacro MUI_PAGE_DIRECTORY
+          !insertmacro MUI_PAGE_INSTFILES
+          !insertmacro MUI_PAGE_FINISH
+
+          !insertmacro MUI_LANGUAGE "English"
+
+          Section "MainSection" SEC01
+              SetOutPath "$INSTDIR"
+
+              File "r-type.zip"
+
+              nsExec::ExecToLog 'powershell -Command "Expand-Archive -Path $INSTDIR\r-type.zip -DestinationPath $INSTDIR -Force"'
+
+              Delete "$INSTDIR\r-type.zip"
+
+              CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
+              CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\R-Type.exe"
+              CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe"
+
+              WriteUninstaller "$INSTDIR\uninstall.exe"
+
+              DetailPrint "Starting build process..."
+              SetDetailsPrint both
+              ExecWait 'cmd.exe /c cd "$INSTDIR" && build.bat' $0
+              DetailPrint "Build process finished with exit code $0"
+          SectionEnd
+
+          Section "Uninstall"
+              RMDir /r "$INSTDIR\*.*"
+              RMDir "$INSTDIR"
+
+              Delete "$SMPROGRAMS\${PRODUCT_NAME}\*.*"
+              RMDir "$SMPROGRAMS\${PRODUCT_NAME}"
+
+              Delete "$INSTDIR\uninstall.exe"
+          SectionEnd
+          EOF
+
+      - name: Create R-Type Installer
+        run: |
+          makensis installer.nsi
+
+      - name: Get R-Type Version
+        id: version
+        run: |
+          echo "version=$(git describe --tags --always)" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        id: release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: Release v${{ steps.version.outputs.version }}
+          draft: false
+          prerelease: false
+          files: |
+            r-type.zip
+            R-Type-Setup.exe
+          token: ${{ secrets.GITHUB_TOKEN }}
