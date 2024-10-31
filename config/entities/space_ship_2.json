@@ -14,5 +14,6 @@
     },
     // STRAIGHT_LEFT
     "pattern": 3,
-    "speed": 3
+    "speed": 3,
+    "score": 3
 }

@@ -253,6 +253,15 @@ void RType::Game::loopReceive()
                     }
                 }
                 break;
+            case INFO_SCORE:
+                for (const auto &entity : entities) {
+                    if (entity->getComponent<RType::SFWindowComponent>() != nullptr
+                    && entity->getComponent<RType::ScoreComponent>() != nullptr ) {
+                        entity->getComponent<RType::ScoreComponent>()->setScore(static_cast<std::uint16_t>(receiveInfo.second[0]));
+                        break;
+                    }
+                }
+                break;
             default:
                 break;
         }
@@ -494,6 +503,10 @@ void RType::Game::createEntity(const RType::EntityType &type, const int &posX,
         }
     }
 
+    if (entityInfo["score"].asBool() == true) {
+        entity->pushComponent(std::make_shared<ScoreComponent>(entityInfo["score"].asInt()));
+    }
+
     entity->PUSH_MENU_COMPONENT_E(GAME);
     file.close();
     if (entity->getComponent<RType::DirectionPatternComponent>() &&
@@ -569,6 +582,11 @@ void RType::Game::createEntity(const long &serverId, const RType::EntityType &ty
         SOUND_BUFFER_COMPONENT soundBuffer = getSoundBufferComponent(entityInfo["sound"].asString());
         _soundsEntity->getComponent<SoundQueueComponent>()->pushSound(soundBuffer->getSoundBuffer());
     }
+
+    if (entityInfo["score"].asBool() == true) {
+        entity->pushComponent(std::make_shared<ScoreComponent>(entityInfo["score"].asInt()));
+    }
+
     entity->PUSH_MENU_COMPONENT_E(GAME);
     file.close();
     if (entity->getComponent<RType::DirectionPatternComponent>() &&
@@ -630,6 +648,7 @@ void RType::Game::createWindow()
     window->pushComponent(std::make_shared<RType::ClockComponent>());
     window->pushComponent(std::make_shared<RType::LevelComponent>(1));
     window->pushComponent(std::make_shared<RType::MusicComponent>("ressources/musics/music.mp3"));
+    auto score = window->pushComponent(std::make_shared<RType::ScoreComponent>(0));
 
     createParallaxBackground(window);
 
@@ -637,6 +656,15 @@ void RType::Game::createWindow()
 
     auto mappingInput = window->pushComponent(std::make_shared<MappingInputComponent>());
     createMappingInputButton(mappingInput);
+
+
+    std::shared_ptr<RType::Entity> scoreValue = _coord.generateNewEntity();
+    scoreValue->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_SCORETEXT));
+    scoreValue->pushComponent(score);
+    std::shared_ptr<TextComponent> textScoreComponent = scoreValue->pushComponent(std::make_shared<RType::TextComponent>("Score: 0", 60, _font));
+    scoreValue->pushComponent(std::make_shared<RType::PositionComponent>(500, 950));
+    textScoreComponent->setTextWithoutVariable("Score: ");
+    scoreValue->PUSH_MENU_COMPONENT_E(GAME);
 }
 
 void RType::Game::createGameSystem()

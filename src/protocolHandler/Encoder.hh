@@ -30,7 +30,8 @@ namespace RType {
         MOVE_PLAYER = 7,
         ACTION_PLAYER = 8,
         GAME_START = 9,
-        GAME_END = 10
+        GAME_END = 10,
+        INFO_SCORE = 11
     };
 
     /**
@@ -106,6 +107,15 @@ namespace RType {
         * @return U_STRING Encoded level information packet
         */
         static U_STRING infoLevel(std::uint8_t level);
+
+        /**
+        * @brief Encode the score information packet
+        *
+        * @param score The score of the game
+        *
+        * @return U_STRING Encoded score information packet
+        */
+        static U_STRING infoScore(std::uint16_t score);
 
         /**
         * @brief Encode the entity information packet

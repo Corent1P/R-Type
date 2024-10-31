@@ -262,6 +262,10 @@ void RType::AttackPatterns::createEntity(const RType::EntityType &type, const in
         entity->PUSH_INTERVALSHOOT_E(entityInfo["intervalShoot"].asFloat());
     }
 
+    if (entityInfo["score"].asBool() == true) {
+        entity->pushComponent(std::make_shared<ScoreComponent>(entityInfo["score"].asInt()));
+    }
+
     if (entityInfo["attack"].isArray()) {
         auto attackComponent = entity->PUSH_ATTACK_E();
         for (const auto &attack : entityInfo["attack"]) {

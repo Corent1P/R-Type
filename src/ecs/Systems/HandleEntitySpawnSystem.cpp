@@ -173,6 +173,11 @@ void RType::HandleEntitySpawnSystem::createEntity(lua_State *LuaState)
             if (attack.isString())
                 attackComponent->pushBackAttacksPatterns(attack.asString());
     }
+
+    if (entityInfo["score"].asBool() == true) {
+        entity->pushComponent(std::make_shared<ScoreComponent>(entityInfo["score"].asInt()));
+    }
+
     _sendToAllClient(Encoder::newEntity(entityType, entity->getId(), position->getPositionX(), position->getPositionY()));
 }
 

@@ -26,8 +26,12 @@ void RType::HandleCollisionSystem::effects(std::vector<std::shared_ptr<RType::En
     _entitiesColidingBefore = _entitiesColiding;
     _entitiesColiding.clear();
 
+    std::shared_ptr<ScoreComponent> scoreComponent = nullptr;
     float difficultyCoefficient = 1;
     for (const auto &entity: entities) {
+        if (entity->getComponent<EntityTypeComponent>() != nullptr && entity->getComponent<EntityTypeComponent>()->getEntityType() == E_WINDOW)
+            scoreComponent = entity->getComponent<ScoreComponent>();
+
         if (entity->GET_DIFFICULTY != nullptr)
             difficultyCoefficient = entity->GET_DIFFICULTY->getDamageCoefficient();
         if (!verifyRequiredComponent(entity))
@@ -60,6 +64,10 @@ void RType::HandleCollisionSystem::effects(std::vector<std::shared_ptr<RType::En
 
         if (_sendMessageToAllClient) {
             _sendMessageToAllClient(Encoder::deleteEntity(entity->getId()));
+            if (entity->getComponent<ScoreComponent>() && scoreComponent) {
+                scoreComponent->setScore(scoreComponent->getScore() + entity->getComponent<ScoreComponent>()->getScore());
+                _sendMessageToAllClient(Encoder::infoScore(scoreComponent->getScore()));
+            }
             _deleteEntity(entity);
         }
     }
