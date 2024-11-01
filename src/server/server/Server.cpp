@@ -8,7 +8,7 @@
 #include "Server.hh"
 
 RType::Server::Server(boost::asio::io_context &ioContext, int port):
-    _stopLoop(false), _socket(ioContext, udp::endpoint(udp::v4(), port))
+    _stopLoop(false), _socket(ioContext, udp::endpoint(udp::v4(), port)), _gameHasStarted(false)
 {
     std::cout << "Server listening on port " << port << std::endl;
     initSystem();
@@ -49,6 +49,15 @@ void RType::Server::handleReceive(const boost::system::error_code& error, std::s
 
     if (!connectedClient) {
         connectedClient = createClient();
+        if (_clients.size() == 1 && !_gameHasStarted) {
+            _coord.generateNewSystem(std::make_shared<HandleEntitySpawnSystem>(
+                std::bind(&RType::Coordinator::addEntity, &_coord),
+                std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
+                std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
+            ));
+            _gameHasStarted = true;
+        }
+
         if (receivInfo.first == CONNEXION) {
             std::unique_lock<std::mutex> lock(_mtx);
             handleConnection(connectedClient);
@@ -223,12 +232,6 @@ void RType::Server::initSystem(void)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleCollisionSystem>(
-        std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
-        std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
-    ));
-
-    _coord.generateNewSystem(std::make_shared<HandleEntitySpawnSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
         std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)

@@ -83,7 +83,6 @@ void RType::HandleShootSystem::createEnnemyBullet(const std::shared_ptr<RType::E
 
 void RType::HandleShootSystem::createForcePodBullet(const std::shared_ptr<RType::Entity> &entity)
 {
-    // std::cout << "ENTITY FORCEPODE TYPE: "<< entity->getComponent<EntityTypeComponent>()->getForcePodType() << std::endl;
     if (entity->getComponent<EntityTypeComponent>()->getEntityType() == RType::E_FORCEPOD_3) {
         std::shared_ptr<RType::Entity> bullet = _addEntity();
         bullet->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_FORCEPOD_BULLET_2));

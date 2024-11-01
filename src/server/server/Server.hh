@@ -224,5 +224,11 @@ namespace RType {
              *
              */
             RType::Coordinator _coord;
+
+            /**
+             * @brief The bool to represent if the game has started
+             *
+             */
+            bool _gameHasStarted;
     };
 }
