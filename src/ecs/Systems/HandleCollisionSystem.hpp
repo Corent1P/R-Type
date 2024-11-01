@@ -128,10 +128,26 @@ namespace RType {
              * @return if the collision is in the past
              */
             bool isInPastCollision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &colidingPair);
-
+            /**
+             * @brief a method decreasing a entity healthComponent value by a damage value.
+             *
+             * @param entity the target entity.
+             * @param damage the damage value.
+             */
             void decreaseHealth(std::shared_ptr<RType::Entity> entity, int damage);
+            /**
+             * @brief a method decreasing a entity of EntityType E_PLAYER healthComponent value by a damage value.
+             *
+             * @param entity the target entity.
+             * @param damage the damage value.
+             */
             void decreasePlayerHealth(std::shared_ptr<RType::Entity> entity, int damage);
-
+            /**
+             * @brief a method removing a entity of EntityType E_SHIELD to a Entity of EnityType E_PLAYER
+             *
+             * @param entities a vector of all the entities.
+             * @param entity a target entity.
+             */
             void removeShieldToPlayer(std::vector<std::shared_ptr<RType::Entity>> entities, std::shared_ptr<RType::Entity> entity);
 
     };

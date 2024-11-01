@@ -20,7 +20,7 @@
 namespace RType {
     /**
      * @brief a system handling Sprite Drawing.
-     * 
+     *
      */
     class HandleDrawSystem: public ASystem {
         public:
@@ -62,8 +62,17 @@ namespace RType {
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity, std::shared_ptr<RType::Entity> window);
         protected:
         private:
+            /**
+             * @brief a vector of all entities.
+             *
+             */
             std::vector<std::shared_ptr<RType::Entity>> _entities;
-
+            /**
+             * @brief a method drawing each entities having a sprite Hitbox.
+             *
+             * @param w a entity of entityType WINDOW entity.
+             * @param entity a target entity.
+             */
             void drawHitBox(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &entity);
     };
 }

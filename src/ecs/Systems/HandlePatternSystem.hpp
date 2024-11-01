@@ -61,8 +61,17 @@ namespace RType {
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
         protected:
         private:
+            /**
+             * @brief  a vector that contains each entity stored in the coordinator.
+             *
+             */
             std::vector<std::shared_ptr<RType::Entity>> _entities;
-
+            /**
+             * @brief a mehtod handling the FollowEntities Pattern.
+             *
+             * @param entities a vector that contains each entity stored in the coordinator.
+             * @param entity the entity to follow.
+             */
             void handlePatternFollowEntities(std::vector<std::shared_ptr<RType::Entity>> &entities, const std::shared_ptr<RType::Entity> &entity);
     };
 }

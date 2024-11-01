@@ -69,11 +69,27 @@ namespace RType {
              * @param window
              */
             void updateText(std::shared_ptr<RType::Entity> button, std::shared_ptr<RType::Entity> window);
+            /**
+             * @brief a method drawing each entities having a sprite Hitbox.
+             *
+             * @param w a entity of entityType WINDOW entity.
+             * @param entity a target entity.
+             */
             static void drawHitBox(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &entity);
         protected:
         private:
+            /**
+             * @brief a method auto updating the text
+             *
+             * @param w a entity of entityType WINDOW entity.
+             * @param text a target entity of entityType text.
+             */
             void autoUpdateText(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &text);
             const std::string& getDotString(void);
+            /**
+             * @brief a vector of all entities.
+             *
+             */
             std::vector<std::shared_ptr<RType::Entity>> _entities;
             std::string _dotString;
             std::size_t _dotCounter;

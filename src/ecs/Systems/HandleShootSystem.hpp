@@ -68,9 +68,27 @@ namespace RType {
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
         protected:
         private:
+            /**
+             * @brief a method creating a enemy bullet entity.
+             *
+             * @param entity the entity shooting a enemy bullet.
+             */
             void createEnnemyBullet(const std::shared_ptr<RType::Entity> &entity);
+            /**
+             * @brief a method creating a forcepod bullet entity.
+             *
+             * @param entitythe a entity of type forcepod shooting a bullet.
+             */
             void createForcePodBullet(const std::shared_ptr<RType::Entity> &entity);
+            /**
+             * @brief a method sending a message to the server.
+             *
+             */
             std::function<void(const std::basic_string<unsigned char> &message)> _sendMessageToServer;
+            /**
+             * @brief a method sending a message to all clients.
+             *
+             */
             std::function<void(const std::basic_string<unsigned char> &message)> _sendMessageToAllClient;
 
     };
