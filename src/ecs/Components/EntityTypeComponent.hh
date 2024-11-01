@@ -66,7 +66,10 @@ namespace RType {
         E_ZIGZAG_BOMB,
         E_ZIGZAG_BOMB_REVERSE,
         E_HEALTHTEXT,
-        E_SCORETEXT
+        E_SCORETEXT,
+        E_HIT_EFFECT_2,
+        E_HIT_EFFECT_3,
+        E_HIT_EFFECT_4,
     };
 
     enum WeaponType {

@@ -298,5 +298,7 @@ void RType::HandleEntitySpawnSystem::createEntityMap(void)
     _entityTypeMap[E_STATIC_BOMB] = "static_bomb";
     _entityTypeMap[E_ZIGZAG_BOMB] = "zigzag_bomb";
     _entityTypeMap[E_ZIGZAG_BOMB_REVERSE] = "zigzag_bomb_reverse";
-
+    _entityTypeMap[E_HIT_EFFECT_2] = "hit_effect2";
+    _entityTypeMap[E_HIT_EFFECT_3] = "hit_effect3";
+    _entityTypeMap[E_HIT_EFFECT_4] = "hit_effect4";
 }

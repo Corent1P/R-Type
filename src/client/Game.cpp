@@ -202,7 +202,20 @@ void RType::Game::loopReceive()
                             continue;
                         if (entity->GET_POSITION_X > 0) {
                             if (EntityTypeComponent::isWeapon(GET_ENTITY_TYPE(entity)) || EntityTypeComponent::isEnnemyShoot(GET_ENTITY_TYPE(entity)))
-                                    createEntity(E_HIT_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
+                                switch(GET_ENTITY_TYPE(entity)) {
+                                    case RType::E_BULLET_2:
+                                        createEntity(E_HIT_EFFECT_2, (entity->GET_POSITION_X + 32), entity->GET_POSITION_Y);
+                                        break;
+                                    case RType::E_BULLET_3:
+                                        createEntity(E_HIT_EFFECT_3, (entity->GET_POSITION_X + 32), entity->GET_POSITION_Y);
+                                        break;
+                                    case RType::E_BULLET_4:
+                                        createEntity(E_HIT_EFFECT_3, (entity->GET_POSITION_X + 32), entity->GET_POSITION_Y);
+                                        break;
+                                    default:
+                                        createEntity(E_HIT_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
+                                        break;
+                                }
                             if (EntityTypeComponent::isMob(GET_ENTITY_TYPE(entity)) && !EntityTypeComponent::isBoss(GET_ENTITY_TYPE(entity)))
                                     createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
                         }
@@ -1087,4 +1100,7 @@ void RType::Game::createEntityMap(void)
     _entityTypeMap[E_STATIC_BOMB] = "static_bomb";
     _entityTypeMap[E_ZIGZAG_BOMB] = "zigzag_bomb";
     _entityTypeMap[E_ZIGZAG_BOMB_REVERSE] = "zigzag_bomb_reverse";
+    _entityTypeMap[E_HIT_EFFECT_2] = "hit_effect2";
+    _entityTypeMap[E_HIT_EFFECT_3] = "hit_effect3";
+    _entityTypeMap[E_HIT_EFFECT_4] = "hit_effect4";
 }
