@@ -12,7 +12,6 @@ file(COPY ${CMAKE_SOURCE_DIR}/ressources DESTINATION .)
 if (NOT WIN32)
     target_compile_options(r-type_client PRIVATE
         -fPIC
-        -g
     )
 endif()
 

@@ -22,72 +22,71 @@ namespace RType {
     public:
         /**
          * @brief Construct a new ParseLevelInfoComponent object
-         * 
-         * @param level 
+         *
+         * @param level Initial level
          */
         ParseLevelInfoComponent(int level);
 
         /**
          * @brief Destroy the ParseLevelInfoComponent object
-         * 
          */
         ~ParseLevelInfoComponent();
 
         /**
-         * @brief Set the Level object
-         * 
-         * @param level 
+         * @brief Set the Level
+         *
+         * @param level New level
          */
         void setLevel(int level);
 
         /**
-         * @brief Get the Level object
-         * 
-         * @return int 
+         * @brief Get the Level
+         *
+         * @return int Current level
          */
         int getLevel() const;
 
         /**
-         * @brief Set the Function Pushed object
-         * 
-         * @param functionPushed 
+         * @brief Set the Function Pushed
+         *
+         * @param functionPushed New function pushed state
          */
         void setFunctionPushed(bool functionPushed);
 
         /**
-         * @brief Get the Function Pushed object
-         * 
-         * @return bool 
+         * @brief Get the Function Pushed
+         *
+         * @return bool Current function pushed state
          */
         bool getFunctionPushed() const;
 
         /**
-         * @brief Set the Lua State object
-         * 
-         * @param L 
+         * @brief Get the Lua State
+         *
+         * @return lua_State* Current Lua state
          */
         lua_State *getLuaState() const;
 
         /**
-         * @brief Get the Lua State object
-         * 
-         * @return lua_State* 
+         * @brief Get the Output as a string
+         *
+         * @return std::string Output string
          */
         std::string getOutput() const;
+
     private:
         /**
-         * @brief Level the current level of the game
+         * @brief Current level of the game
          */
         int _level;
 
         /**
-         * @brief FunctionPushed check if the createEntity function has been pushed
-         * to the lua file
+         * @brief Check if the createEntity function has been pushed to the lua file
          */
         bool _functionPushed;
 
         /**
-         * @brief Lua State the lua state
+         * @brief Lua state
          */
         lua_State *_luaState;
     };

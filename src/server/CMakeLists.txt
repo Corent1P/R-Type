@@ -23,7 +23,6 @@ add_executable(r-type_server ${SRC_SERVER})
 if (NOT WIN32)
     target_compile_options(r-type_server PRIVATE
         -fPIC
-        -g
     )
 endif()
 

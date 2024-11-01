@@ -16,14 +16,53 @@ namespace RType {
         CHARGING_SHOT,
     };
 
+    /**
+     * @brief ActionComponent class for handling the actions of an entity
+     *
+     */
     class ActionComponent: public RType::IComponent {
         public:
+            /**
+             * @brief Construct a new ActionComponent object
+             *
+             */
             ActionComponent();
+
+            /**
+             * @brief Destroy the ActionComponent object
+             *
+             */
             ~ActionComponent();
+
+            /**
+             * @brief Set the actions of the entity
+             *
+             * @param direction The action to set
+             * @param newBool The new value of the action
+             */
             void setActions(Action direction, bool newBool);
+
+            /**
+             * @brief Get the actions of the entity
+             *
+             * @param direction The action to get
+             *
+             * @return bool The value of the action
+             */
             bool getActions(Action direction) const;
+
+            /**
+             * @brief Get the output of the component
+             *
+             * @return std::string The output of the component
+             */
             std::string getOutput() const;
+
         private:
+            /**
+             * @brief The vector of actions of the entity
+             *
+             */
             std::vector<bool> _actions;
     };
 }

@@ -68,7 +68,6 @@ add_library(ecs ${SRC_ECS} ${SRC_COMPONENTS} ${SRC_SYSTEMS} )
 if (NOT WIN32)
     target_compile_options(ecs PRIVATE
         -fPIC
-        -g
     )
 endif()
 
