@@ -332,7 +332,7 @@ std::string RType::Server::customGetLine(void)
     struct timeval timeout = {0, 500000};
 
     FD_ZERO(&rfds);
-    FD_SET(STDIN_FILENO, &rfds);
+    FD_SET(STDIN_FD, &rfds);
 
     int ready = select(1, &rfds, NULL, NULL, &timeout);
 
