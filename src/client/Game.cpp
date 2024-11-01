@@ -30,7 +30,11 @@ RType::Game::Game(boost::asio::io_context &ioContext, const std::string &host, c
     createSound();
     createGameSystem();
     createEntityMap();
-    _receipter = std::thread(&Game::loopReceive, this);
+    try {
+        _receipter = std::thread(&Game::loopReceive, this);
+    } catch(const std::exception& e) {
+        throw std::exception(e);
+    }
     _initConnection = false;
 }
 
@@ -996,11 +1000,25 @@ sf::Vector2f RType::Game::getBulletPosition(int type, int posX, int posY)
         case RType::E_BULLET:
             return sf::Vector2f(posX, posY + (6 * 2) / 2);
         case RType::E_BULLET_2:
-            return sf::Vector2f(posX, posY + (192 * 0.5) / 2);
+            return sf::Vector2f(posX, posY + (32 * 2) / 2);
         case RType::E_BULLET_3:
-            return sf::Vector2f(posX, posY + (32 * 2.) / 2);
+            return sf::Vector2f(posX, posY + (32 * 3.) / 2);
         case RType::E_BULLET_4:
+            return sf::Vector2f(posX, posY + (192 * 0.5) / 2);
+        case RType::E_FORCEPOD_BULLET:
+            return sf::Vector2f(posX, posY + (6 * 2) / 2);
+        case RType::E_FORCEPOD_BULLET_2:
+            return sf::Vector2f(posX, posY + (6 * 2) / 2);
+        case RType::E_FORCEPOD_BULLET_3:
+            return sf::Vector2f(posX, posY + (6 * 2) / 2);
+        case RType::E_BULLET_LASER:
             return sf::Vector2f(posX, posY + (32 * 2.) / 2);
+        case RType::E_BULLET_LASER_2:
+            return sf::Vector2f(posX, posY + (32 * 3.) / 2);
+        case RType::E_BULLET_LASER_3:
+            return sf::Vector2f(posX, posY + (32 * 3.) / 2);
+        case RType::E_BULLET_LASER_4:
+            return sf::Vector2f(posX, posY + (48 * 4.) / 2);
         default:
             return sf::Vector2f(0, 0);
     }
@@ -1019,8 +1037,8 @@ void RType::Game::createEntityMap(void)
 {
     _entityTypeMap[E_OTHER] = "other";
     _entityTypeMap[E_WINDOW] = "window";
-    _entityTypeMap[E_PLAYER] = "player";
-    _entityTypeMap[E_ALLIES] = "player";
+    _entityTypeMap[E_PLAYER] = "allies";
+    _entityTypeMap[E_ALLIES] = "allies";
     _entityTypeMap[E_SPACE_SHIP_1] = "space_ship_1";
     _entityTypeMap[E_SPACE_SHIP_2] = "space_ship_2";
     _entityTypeMap[E_SPACE_SHIP_3] = "space_ship_3";
@@ -1053,6 +1071,18 @@ void RType::Game::createEntityMap(void)
     _entityTypeMap[E_HIT_EFFECT] = "hit_effect";
     _entityTypeMap[E_EXPLOSION_EFFECT] = "explosion_effect";
     _entityTypeMap[E_TEXT] = "text";
+    _entityTypeMap[E_ITEM_FORCEPOD] = "item_forcepod";
+    _entityTypeMap[E_FORCEPOD] = "forcepod";
+    _entityTypeMap[E_FORCEPOD_BULLET] = "forcepod_bullet";
+    _entityTypeMap[E_FORCEPOD_2] = "forcepod2";
+    _entityTypeMap[E_FORCEPOD_3] = "forcepod3";
+    _entityTypeMap[E_BULLET_LASER] = "laser";
+    _entityTypeMap[E_BULLET_LASER_2] = "laser2";
+    _entityTypeMap[E_BULLET_LASER_3] = "laser3";
+    _entityTypeMap[E_BULLET_LASER_4] = "laser4";
+    _entityTypeMap[E_CHARGING_EFFECT] = "charging_effect";
+    _entityTypeMap[E_FORCEPOD_BULLET_2] = "forcepod_bullet2";
+    _entityTypeMap[E_FORCEPOD_BULLET_3] = "forcepod_bullet3";
     _entityTypeMap[E_STING] = "sting";
     _entityTypeMap[E_STATIC_BOMB] = "static_bomb";
     _entityTypeMap[E_ZIGZAG_BOMB] = "zigzag_bomb";

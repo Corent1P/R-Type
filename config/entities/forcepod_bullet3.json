@@ -1,0 +1,15 @@
+{
+    "sprite":"./ressources/weapons/shoot1-sheet.png",
+    "scale": {
+        "x": 2.0,
+        "y": 2.0
+    },
+    "rect" : {
+        "x": 0,
+        "y": 0,
+        "width": 19,
+        "height": 6
+    },
+    "pattern": 10,
+    "speed": 7
+}

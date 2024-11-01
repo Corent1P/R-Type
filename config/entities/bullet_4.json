@@ -1,15 +1,15 @@
 {
     "damage": 4,
-    "sprite":"./ressources/weapons/shoot4-sheet.png",
+    "sprite":"./ressources/weapons/shoot2-sheet.png",
     "scale": {
-        "x": 2.0,
-        "y": 2.0
+        "x": 0.5,
+        "y": 0.5
     },
     "rect" : {
         "x": 0,
         "y": 0,
-        "width": 63,
-        "height": 32
+        "width": 288,
+        "height": 192
     },
     // STRAIGHT_RIGHT
     "pattern": 4,

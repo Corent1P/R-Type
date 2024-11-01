@@ -69,6 +69,7 @@ namespace RType {
         protected:
         private:
             void createEnnemyBullet(const std::shared_ptr<RType::Entity> &entity);
+            void createForcePodBullet(const std::shared_ptr<RType::Entity> &entity);
             std::function<void(const std::basic_string<unsigned char> &message)> _sendMessageToServer;
             std::function<void(const std::basic_string<unsigned char> &message)> _sendMessageToAllClient;
 

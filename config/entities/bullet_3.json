@@ -1,15 +1,17 @@
 {
-    "damage": 3,
-    "sprite":"./ressources/weapons/shoot3-sheet.png",
+    "damage": 2,
+    "sprite":"./ressources/weapons/spark.png",
     "scale": {
-        "x": 2.0,
-        "y": 2.0
+        "x": 2,
+        "y": 2
     },
     "rect" : {
         "x": 0,
         "y": 0,
-        "width": 32,
+        "width": 63,
         "height": 32
+        // "width": 288,
+        // "height": 192
     },
     // STRAIGHT_RIGHT
     "pattern": 4,

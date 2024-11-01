@@ -175,28 +175,58 @@ void RType::AttackPatterns::createEntity(const RType::EntityType &type, const in
     std::shared_ptr<RType::Entity> entityToFollow = nullptr;
     std::unordered_map<EntityType, std::string> entityTypeMap;
 
-    entityTypeMap[E_SPACE_SHIP_1] = "small_spaceship";
+    entityTypeMap[E_OTHER] = "other";
+    entityTypeMap[E_WINDOW] = "window";
+    entityTypeMap[E_PLAYER] = "allies";
+    entityTypeMap[E_ALLIES] = "allies";
+    entityTypeMap[E_SPACE_SHIP_1] = "space_ship_1";
+    entityTypeMap[E_SPACE_SHIP_2] = "space_ship_2";
+    entityTypeMap[E_SPACE_SHIP_3] = "space_ship_3";
     entityTypeMap[E_OCTOPUS] = "octopus";
     entityTypeMap[E_FLY] = "fly";
     entityTypeMap[E_BABY_FLY] = "baby_fly";
-    entityTypeMap[E_STING] = "sting";
-    entityTypeMap[E_STATIC_BOMB] = "static_bomb";
-    entityTypeMap[E_ZIGZAG_BOMB] = "zigzag_bomb";
-    entityTypeMap[E_ZIGZAG_BOMB_REVERSE] = "zigzag_bomb_reverse";
-
     entityTypeMap[E_FLY_BOSS] = "fly_boss";
-    entityTypeMap[E_SPACE_SHIP_BOSS] = "sape_ship_boss";
+    entityTypeMap[E_SPACE_SHIP_BOSS] = "space_ship_boss";
+    entityTypeMap[E_OCTOPUS_BOSS] = "octopus_boss";
+    entityTypeMap[E_BOMBER_BOSS] = "bomber_boss";
+    entityTypeMap[E_BABY_OCTOPUS] = "baby_octopus";
+    entityTypeMap[E_SPACE_SHIP_4] = "space_ship_4";
+    entityTypeMap[E_BUTTON] = "button";
+    entityTypeMap[E_LAYER] = "layer";
+    entityTypeMap[E_SHIELD] = "shield";
+    entityTypeMap[E_ITEM_WEAPON] = "item_weapon";
+    entityTypeMap[E_ITEM_SHIELD] = "item_shield";
+    entityTypeMap[E_ITEM_HEAL] = "item_heal";
+    entityTypeMap[E_BULLET] = "bullet_1";
+    entityTypeMap[E_BULLET_2] = "bullet_2";
+    entityTypeMap[E_BULLET_3] = "bullet_3";
+    entityTypeMap[E_BULLET_4] = "bullet_4";
     entityTypeMap[E_SPACE_SHIP_BULLET] = "space_ship_bullet";
     entityTypeMap[E_SPACE_SHIP_SEMI_DIAGONAL_UP] = "space_ship_semi_diagonal_up_bullet";
     entityTypeMap[E_SPACE_SHIP_SEMI_DIAGONAL_DOWN] = "space_ship_semi_diagonal_down_bullet";
     entityTypeMap[E_SPACE_SHIP_DIAGONAL_UP] = "space_ship_diagonal_up_bullet";
     entityTypeMap[E_SPACE_SHIP_DIAGONAL_DOWN] = "space_ship_diagonal_down_bullet";
-
-    entityTypeMap[E_OCTOPUS_BOSS] = "octopus_boss";
-    entityTypeMap[E_BABY_OCTOPUS] = "baby_octopus";
-    entityTypeMap[E_SPACE_SHIP_4] = "space_ship_4";
-
-    entityTypeMap[E_BOMBER_BOSS] = "bomber_boss";
+    entityTypeMap[E_ENNEMY_BULLET] = "ennemy_bullet";
+    entityTypeMap[E_BULLET_EFFECT] = "bullet_effect";
+    entityTypeMap[E_HIT_EFFECT] = "hit_effect";
+    entityTypeMap[E_EXPLOSION_EFFECT] = "explosion_effect";
+    entityTypeMap[E_TEXT] = "text";
+    entityTypeMap[E_ITEM_FORCEPOD] = "item_forcepod";
+    entityTypeMap[E_FORCEPOD] = "forcepod";
+    entityTypeMap[E_FORCEPOD_BULLET] = "forcepod_bullet";
+    entityTypeMap[E_FORCEPOD_2] = "forcepod2";
+    entityTypeMap[E_FORCEPOD_3] = "forcepod3";
+    entityTypeMap[E_BULLET_LASER] = "laser";
+    entityTypeMap[E_BULLET_LASER_2] = "laser2";
+    entityTypeMap[E_BULLET_LASER_3] = "laser3";
+    entityTypeMap[E_BULLET_LASER_4] = "laser4";
+    entityTypeMap[E_CHARGING_EFFECT] = "charging_effect";
+    entityTypeMap[E_FORCEPOD_BULLET_2] = "forcepod_bullet2";
+    entityTypeMap[E_FORCEPOD_BULLET_3] = "forcepod_bullet3";
+    entityTypeMap[E_STING] = "sting";
+    entityTypeMap[E_STATIC_BOMB] = "static_bomb";
+    entityTypeMap[E_ZIGZAG_BOMB] = "zigzag_bomb";
+    entityTypeMap[E_ZIGZAG_BOMB_REVERSE] = "zigzag_bomb_reverse";
 
 
     std::string filepath("./config/entities/" + entityTypeMap[type] + ".json");

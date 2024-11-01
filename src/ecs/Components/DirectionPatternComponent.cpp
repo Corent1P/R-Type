@@ -66,27 +66,53 @@ std::string RType::DirectionPatternComponent::getOutput() const
 {
     std::string pattern("");
     switch (_patternType)
-        {
-        default:
-            pattern = "RIGHT(DEFAULT)";
+    {
+        case STRAIGHT_UP:
+            pattern = "STRAIGHT_UP";
             break;
-        }
+        case STRAIGHT_DOWN:
+            pattern = "STRAIGHT_DOWN";
+            break;
+        case STRAIGHT_LEFT:
+            pattern = "STRAIGHT_LEFT";
+            break;
+        case STRAIGHT_RIGHT:
+            pattern = "STRAIGHT_RIGHT";
+            break;
+        case UP_N_DOWN_LEFT:
+            pattern = "UP_N_DOWN_LEFT";
+            break;
+        case UP_N_DOWN_RIGHT:
+            pattern = "UP_N_DOWN_RIGHT";
+            break;
+        case LEFT_N_RIGHT:
+            pattern = "LEFT_N_RIGHT";
+            break;
+        case UP_THEN_DOWN:
+            pattern = "UP_THEN_DOWN";
+            break;
+        case FOLLOW_PLAYER:
+            pattern = "FOLLOW_PLAYER";
+            break;
+        case REVERSE_UP_N_DOWN_RIGHT:
+            pattern = "REVERSE_UP_N_DOWN_RIGHT";
+            break;
+        default:
+            pattern = "No Pattern";
+            break;
+    }
     std::string output("Entity Direction Component (entity direction: " + pattern + ")");
     return output;
 }
 
-bool RType::DirectionPatternComponent::isPatternLeft(RType::PatternType patternType)
+bool RType::DirectionPatternComponent::isPatternRight(PatternType pattern)
 {
-    if (patternType == RType::STRAIGHT_LEFT || patternType == RType::UP_N_DOWN_LEFT || patternType == RType::ZIGZAG_LEFT || patternType == RType::ZIGZAG_REVERSE_LEFT ||
-        patternType == RType::SEMI_DIAGONAL_UP || patternType == RType::SEMI_DIAGONAL_DOWN || patternType == RType::DIAGONAL_UP ||
-        patternType == RType::DIAGONAL_DOWN)
-        return true;
-    return false;
+    return pattern == LEFT_N_RIGHT || pattern == STRAIGHT_RIGHT || pattern == UP_N_DOWN_RIGHT || pattern == REVERSE_UP_N_DOWN_RIGHT;
 }
 
-bool RType::DirectionPatternComponent::isPatternRight(RType::PatternType patternType)
+bool RType::DirectionPatternComponent::isPatternLeft(PatternType pattern)
 {
-    if (patternType == RType::STRAIGHT_RIGHT || patternType == RType::UP_N_DOWN_RIGHT)
-        return true;
-    return false;
+    return (pattern == RType::STRAIGHT_LEFT || pattern == RType::UP_N_DOWN_LEFT || pattern == RType::ZIGZAG_LEFT || pattern == RType::ZIGZAG_REVERSE_LEFT ||
+            pattern == RType::SEMI_DIAGONAL_UP || pattern == RType::SEMI_DIAGONAL_DOWN || pattern == RType::DIAGONAL_UP ||
+            pattern == RType::DIAGONAL_DOWN);
 }

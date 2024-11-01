@@ -138,28 +138,48 @@ void RType::HandleCollisionSystem::handleEntityCollision(const std::pair<std::sh
 
 void RType::HandleCollisionSystem::handleItemEffect(std::shared_ptr<RType::Entity> entity1, std::shared_ptr<RType::Entity> entity2)
 {
-    switch(entity2->getComponent<EntityTypeComponent>()->getEntityType())
-    {
-        case RType::E_ITEM_WEAPON:
+    switch(entity2->getComponent<EntityTypeComponent>()->getEntityType()) {
+        case RType::E_ITEM_WEAPON: {
             if (entity1->getComponent<RType::EntityTypeComponent>()->getWeaponType() < 3) {
                 entity1->getComponent<RType::EntityTypeComponent>()->setWeaponType(RType::WeaponType(entity1->getComponent<RType::EntityTypeComponent>()->getWeaponType() + 1));
                 entity1->getComponent<RType::DamageComponent>()->setDamage(entity1->getComponent<RType::DamageComponent>()->getDamage() + 1);
             }
             break;
-        case RType::E_ITEM_HEAL:
-            entity1->getComponent<RType::HealthComponent>()->setHealth(entity1->getComponent<RType::HealthComponent>()->getHealth() + 1);
+        }
+        case RType::E_ITEM_HEAL: {
+            auto healthComponent = entity1->getComponent<RType::HealthComponent>();
+            if (healthComponent) {
+                healthComponent->setHealth(healthComponent->getHealth() + 2);
+                if (healthComponent->getHealth() > healthComponent->getMaxHealth())
+                    healthComponent->setHealth(healthComponent->getMaxHealth());
+                if (_sendMessageToAllClient) {
+                    _sendMessageToAllClient(Encoder::infoEntity(entity1->getId(), E_PLAYER,
+                        entity1->GET_POSITION_X,  entity1->GET_POSITION_Y, 0, healthComponent->getHealth()));
+            }
+            }
             break;
-        case RType::E_ITEM_SHIELD:
-            if (entity1->getComponent<PowerUpComponent>() != nullptr && entity1->getComponent<PowerUpComponent>()->getPowerUps(RType::SHIELD) == false) {
-                if (entity1->getComponent<PowerUpComponent>()->getPowerUpsIsActive(RType::SHIELD) == false) {
-                    entity1->getComponent<PowerUpComponent>()->setPowerUps(RType::SHIELD, true);
-                    entity1->getComponent<PowerUpComponent>()->setPowerUpsIsActive(RType::SHIELD, true);
+        }
+        case RType::E_ITEM_SHIELD: {
+            auto powerUpComponent = entity1->getComponent<PowerUpComponent>();
+            if (powerUpComponent && !powerUpComponent->getPowerUps(RType::SHIELD) && !powerUpComponent->getPowerUpsIsActive(RType::SHIELD)) {
+                powerUpComponent->setPowerUps(RType::SHIELD, true);
+                powerUpComponent->setPowerUpsIsActive(RType::SHIELD, true);
+            }
+            break;
+        }
+        case RType::E_ITEM_FORCEPOD: {
+            auto powerUpComponent = entity1->getComponent<PowerUpComponent>();
+            if (powerUpComponent && !powerUpComponent->getPowerUps(RType::FORCE_POD)) {
+                auto entityTypeComponent = entity1->getComponent<RType::EntityTypeComponent>();
+                if (entityTypeComponent && entityTypeComponent->getForcePodType() < 3) {
+                    entityTypeComponent->setForcePodType(RType::ForcePodType(entityTypeComponent->getForcePodType() + 1));
+                    powerUpComponent->setPowerUps(RType::FORCE_POD, true);
                 }
             }
             break;
-
+        }
         default:
-        break;
+            break;
     }
 }
 

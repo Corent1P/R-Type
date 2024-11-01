@@ -1,0 +1,17 @@
+{
+    "damage": 4,
+    "sprite":"./ressources/weapons/charged.png",
+    "scale": {
+        "x": 4.0,
+        "y": 4.0
+    },
+    "rect" : {
+        "x": 0,
+        "y": 0,
+        "width": 63,
+        "height": 48
+    },
+    // STRAIGHT_RIGHT
+    "pattern": 4,
+    "speed": 7
+}

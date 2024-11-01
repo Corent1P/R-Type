@@ -146,9 +146,8 @@ void RType::Server::handleDisconnection(std::shared_ptr<ClientServer> connectedC
 
 void RType::Server::removeFollowingObjects(long id)
 {
-    for (auto entity: _coord.getEntities()) {
-        if (entity == nullptr)
-            continue;
+    auto entities = _coord.getEntities();
+    for (auto entity: entities) {
         if (entity->getComponent<RType::DirectionPatternComponent>() != nullptr && entity->getComponent<RType::DirectionPatternComponent>()->getEntityToFollow() == id) {
             sendToAllClient(Encoder::deleteEntity(entity->getId()));
             _coord.deleteEntity(entity);
@@ -247,7 +246,7 @@ void RType::Server::initSystem(void)
 void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)
 {
     for (auto entity: _coord.getEntities()) {
-        if (client->getEntity()->getId() != entity->getId() &&
+        if (client->getEntity()->getId() != entity->getId() && entity->getComponent<EntityTypeComponent>() &&
             (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER ||
             EntityTypeComponent::isMob(entity->getComponent<EntityTypeComponent>()->getEntityType()) ||
             EntityTypeComponent::isItem(entity->getComponent<EntityTypeComponent>()->getEntityType()) ||
@@ -263,7 +262,7 @@ void RType::Server::sendAllEntity(std::shared_ptr<RType::ClientServer> client)
         }
     }
     for (auto entity: _coord.getEntities()) {
-        if (client->getEntity()->getId() != entity->getId() &&
+        if (client->getEntity()->getId() != entity->getId() && entity->getComponent<EntityTypeComponent>() &&
             (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_PLAYER ||
             EntityTypeComponent::isMob(entity->getComponent<EntityTypeComponent>()->getEntityType()) ||
             EntityTypeComponent::isItem(entity->getComponent<EntityTypeComponent>()->getEntityType()) ||

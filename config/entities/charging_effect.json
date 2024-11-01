@@ -1,0 +1,14 @@
+{
+    "sprite":"./ressources/effects/sparkles.png",
+    "scale": {
+        "x": 2.0,
+        "y": 2.0
+    },
+    "rect" : {
+        "x": 0,
+        "y": 0,
+        "width": 33,
+        "height": 34
+    },
+    "pattern": 9
+}

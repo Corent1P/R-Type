@@ -98,13 +98,10 @@ function Level.spawnZigzag(name, timeStamp, startHeight, amplitude, count, timeS
     end
 end
 
--- Level.addEnnemy("item_heal", 5, 1080 / 4)
--- Level.addEnnemy("item_heal", 5, 1080 / 2)
--- Level.addEnnemy("item_heal", 5, 1080 / 4 * 3)
--- Level.addEnnemy("item_heal", 5, 1080 / 5 * 2)
--- Level.addEnnemy("item_heal", 5, 1080 / 5 * 3)
+Level.addEnnemy("item_heal", 5, 1080 / 2)
 
--- Level.addEnnemy("item_forcepod", 8, 1080 / 2)
+
+Level.addEnnemy("item_forcepod", 8, 1080 / 2)
 
 Level.spawnColumn("space_ship_1", 10, 300, 60, 3)
 Level.spawnPack("fly", 12.5, 450)
@@ -145,11 +142,11 @@ Level.spawnColumn("space_ship_2", 42, 850, 80, 3)
 
 Level.spawnMixedWave("fly", "space_ship_4", 46, 700, 50, 5)
 
--- Level.addEnnemy("item_heal", 48, 1080 / 4)
--- Level.addEnnemy("item_heal", 48, 1080 / 2)
--- Level.addEnnemy("item_heal", 48, 1080 / 4 * 3)
--- Level.addEnnemy("item_heal", 48, 1080 / 5 * 2)
--- Level.addEnnemy("item_heal", 48, 1080 / 5 * 3)
+Level.addEnnemy("item_heal", 48, 1080 / 4)
+Level.addEnnemy("item_heal", 48, 1080 / 2)
+Level.addEnnemy("item_heal", 48, 1080 / 4 * 3)
+Level.addEnnemy("item_heal", 48, 1080 / 5 * 2)
+Level.addEnnemy("item_heal", 48, 1080 / 5 * 3)
 
 
 Level.addEnnemy("bomber_boss", 42 + 10, 500)

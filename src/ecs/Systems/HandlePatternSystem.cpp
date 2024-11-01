@@ -31,19 +31,42 @@ void RType::HandlePatternSystem::handlePatternFollowEntities(std::vector<std::sh
     float entityFollowingScaleY;
 
     for(const auto &entity2: entities) {
-        if (!verifyRequiredComponent(entity2)) {
-            continue;;
-        }
+        if (!verifyRequiredComponent(entity2))
+            continue;
+
         if (entity2->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::FOLLOW_PLAYER && entity2->getComponent<RType::DirectionPatternComponent>()->getEntityToFollow() == entity->getId()) {
             entityFollowingWidth = entity2->getComponent<RType::IntRectComponent>()->getIntRectWidth();
             entityFollowingHeight = entity2->getComponent<RType::IntRectComponent>()->getIntRectHeight();
             entityFollowingScaleX = entity2->getComponent<RType::ScaleComponent>()->getScaleX();
             entityFollowingScaleY = entity2->getComponent<RType::ScaleComponent>()->getScaleY();
-
-            entity2->getComponent<RType::DirectionPatternComponent>()->setPattern(sf::Vector2f(
-                playerPositionX - (((entityFollowingWidth * entityFollowingScaleX) - (playerWidth * playerScaleX))) / 2.,
-                playerPositionY - (((entityFollowingHeight * entityFollowingScaleY) - (playerHeight * playerScaleY))) / 2.
-            ));
+            switch(entity2->getComponent<RType::EntityTypeComponent>()->getEntityType()) {
+                case RType::E_SHIELD:
+                    entity2->getComponent<RType::DirectionPatternComponent>()->setPattern(sf::Vector2f(
+                        playerPositionX - (((entityFollowingWidth * entityFollowingScaleX) - (playerWidth * playerScaleX))) / 2.,
+                        playerPositionY - (((entityFollowingHeight * entityFollowingScaleY) - (playerHeight * playerScaleY))) / 2.
+                    ));
+                    break;
+                case RType::E_FORCEPOD:
+                    entity2->getComponent<RType::DirectionPatternComponent>()->setPattern(sf::Vector2f(
+                        playerPositionX - ((((entityFollowingWidth * entityFollowingScaleX) - (playerWidth * playerScaleX))) / 2.) + 20.,
+                        playerPositionY - ((((entityFollowingHeight * entityFollowingScaleY) - (playerHeight * playerScaleY))) / 2.) - 40.
+                        ));
+                    break;
+                case RType::E_FORCEPOD_2:
+                    entity2->getComponent<RType::DirectionPatternComponent>()->setPattern(sf::Vector2f(
+                        playerPositionX - ((((entityFollowingWidth * entityFollowingScaleX) - (playerWidth * playerScaleX))) / 2.) + 20.,
+                        playerPositionY - ((((entityFollowingHeight * entityFollowingScaleY) - (playerHeight * playerScaleY))) / 2.) + 40.
+                    ));
+                    break;
+                case RType::E_FORCEPOD_3:
+                    entity2->getComponent<RType::DirectionPatternComponent>()->setPattern(sf::Vector2f(
+                        playerPositionX - ((((entityFollowingWidth * entityFollowingScaleX) - (playerWidth * playerScaleX))) / 2.) + 45.,
+                        playerPositionY - ((((entityFollowingHeight * entityFollowingScaleY) - (playerHeight * playerScaleY))) / 2.)
+                    ));
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
@@ -72,8 +95,11 @@ void RType::HandlePatternSystem::effect(std::shared_ptr<RType::Entity> entity)
         entity->GET_PATTERN->setPattern(sf::Vector2f(10, 0));
     if (entity->GET_PATTERN->getPatternType() == RType::UP_N_DOWN_LEFT && entity->getComponent<RType::PositionComponent>())
         entity->GET_PATTERN->setPattern(sf::Vector2f(-10, 10 *(cos(entity->getComponent<RType::PositionComponent>()->getPositionX() * 0.01f))));
-    if (entity->GET_PATTERN->getPatternType() == RType::UP_N_DOWN_RIGHT)
+    if (entity->GET_PATTERN->getPatternType() == RType::UP_N_DOWN_RIGHT && entity->getComponent<RType::PositionComponent>())
         entity->GET_PATTERN->setPattern(sf::Vector2f(10, 10 * (cos(entity->getComponent<RType::PositionComponent>()->getPositionX() * 0.01f))));
+    if (entity->GET_PATTERN->getPatternType() == RType::REVERSE_UP_N_DOWN_RIGHT && entity->getComponent<RType::PositionComponent>()) {
+        entity->getComponent<DirectionPatternComponent>()->setPattern(sf::Vector2f(10, 10 *(-cos(entity->getComponent<RType::PositionComponent>()->getPositionX() * 0.01f))));
+    }
     if (entity->GET_PATTERN->getPatternType() == RType::ZIGZAG_LEFT) {
         if (entity->getComponent<RType::PositionComponent>() == nullptr)
             return;

@@ -43,6 +43,18 @@ namespace RType {
         E_BULLET_2,
         E_BULLET_3,
         E_BULLET_4,
+        E_ITEM_FORCEPOD,
+        E_FORCEPOD,
+        E_FORCEPOD_BULLET,
+        E_FORCEPOD_2,
+        E_BULLET_LASER,
+        E_BULLET_LASER_2,
+        E_BULLET_LASER_3,
+        E_BULLET_LASER_4,
+        E_FORCEPOD_3,
+        E_CHARGING_EFFECT,
+        E_FORCEPOD_BULLET_2,
+        E_FORCEPOD_BULLET_3,
         E_STING,
         E_SPACE_SHIP_BULLET,
         E_SPACE_SHIP_SEMI_DIAGONAL_UP,
@@ -64,6 +76,13 @@ namespace RType {
         LVL_4,
     };
 
+    enum ForcePodType {
+        F_NO_FORCEPOD,
+        F_LVL_1,
+        F_LVL_2,
+        F_LVL_3,
+    };
+
     enum EnemyType {
         SMALL_SPACESHIP,
         OCTOPUS,
@@ -80,6 +99,8 @@ namespace RType {
             WeaponType getWeaponType() const;
             void setEnemyType(EnemyType powerUpType);
             EnemyType getEnemyType() const;
+            void setForcePodType(ForcePodType forcePodType);
+            ForcePodType getForcePodType() const;
             void setButtonType(MappingInput buttonType);
             MappingInput getButtonType() const;
             std::string getOutput() const;
@@ -93,6 +114,7 @@ namespace RType {
             EntityType _entityType;
             WeaponType _weaponType;
             EnemyType _enemyType;
+            ForcePodType _forcePodType;
             MappingInput _buttonType;
     };
 }

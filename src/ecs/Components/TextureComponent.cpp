@@ -16,7 +16,7 @@ RType::TextureComponent::TextureComponent(std::string path):
 void RType::TextureComponent::setTexture(std::string path)
 {
     if (!_texture->loadFromFile(path)) {
-        throw EcsError ("Failed Load Texture");
+        return;
     }
     _path = path;
 }

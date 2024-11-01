@@ -1,15 +1,15 @@
 {
     "health": 3,
-    "sprite":"./ressources/items/ball-1.png",
+    "sprite":"./ressources/items/power-ups25.png",
     "scale": {
-        "x": 1.5,
-        "y": 1.5
+        "x": 3,
+        "y": 3
     },
     "rect" : {
         "x": 0,
         "y": 0,
-        "width": 32,
-        "height": 32
+        "width": 16,
+        "height": 20
     },
     "pattern": 3,
     "speed": 3

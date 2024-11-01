@@ -84,7 +84,7 @@ Level.addEnnemy("octopus", 16, 1080 / 2 - 80)
 
 Level.spawnPack("space_ship_2", 19.5, 880)
 
--- Level.addEnnemy("item_heal", 20, 1080 / 2)
+Level.addEnnemy("item_heal", 20, 1080 / 2)
 
 Level.addEnnemy("octopus", 21.5, 150)
 Level.addEnnemy("octopus", 21.5, 930)
@@ -107,10 +107,9 @@ Level.addEnnemy("octopus", 33.5, 1080 / 5 * 4)
 
 Level.spawnMixedWave("octopus", "space_ship_2", 36, 880, 50, 10)
 
--- Level.addEnnemy("item_heal", 38, 1080 / 2)
--- Level.addEnnemy("item_heal", 38.5, 1080 / 4)
--- Level.addEnnemy("item_heal", 38.5, 1080 / 4 * 3)
--- Level.addEnnemy("item_heal", 39, 1080 / 2)
+Level.addEnnemy("item_heal", 38.5, 1080 / 4)
+Level.addEnnemy("item_heal", 38.5, 1080 / 4 * 3)
+
 
 Level.addEnnemy("octopus_boss", 42, 400)
 

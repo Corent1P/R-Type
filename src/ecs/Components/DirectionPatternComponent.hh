@@ -27,7 +27,8 @@ namespace RType {
         SEMI_DIAGONAL_DOWN,
         DIAGONAL_UP,
         DIAGONAL_DOWN,
-        ZIGZAG_REVERSE_LEFT
+        ZIGZAG_REVERSE_LEFT,
+        REVERSE_UP_N_DOWN_RIGHT
     };
 
     class DirectionPatternComponent: public RType::IComponent {
@@ -44,8 +45,8 @@ namespace RType {
             void setDirectionForZigZag(bool directionForZigZag);
             bool getDirectionForZigZag() const;
             std::string getOutput() const;
-            static bool isPatternLeft(PatternType patternType);
-            static bool isPatternRight(PatternType patternType);
+            static bool isPatternRight(PatternType pattern);
+            static bool isPatternLeft(PatternType pattern);
         private:
             PatternType _patternType;
             sf::Vector2f _pattern;
