@@ -1,7 +1,7 @@
 {
     "health": 100,
     "damage": 5,
-    "sprite":"./ressources/octopus-sheet.png",
+    "sprite":"./ressources/mobs/octopus-sheet.png",
     "scale": {
         "x": 4.0,
         "y": 4.0
@@ -20,5 +20,6 @@
     "attack": [
         "spawnKamikazeOctopus",
         "spawnBabyOctopus"
-    ]
+    ],
+    "score": 210
 }

@@ -27,10 +27,10 @@ int printHelp(int returnValue)
 int getPortArgument(int ac, char **av)
 {
     if (ac != 2)
-        return -1;
+        return 4242;
     int port = std::atoi(av[1]);
     if (!port)
-        return -1;
+        return 4242;
     return port;
 }
 
@@ -51,7 +51,11 @@ int main(int ac, char **av)
         });
         ioContext.run();
         server.stop();
-    } catch(std::exception &err) {
-        std::cerr << "Error in server execution " << err.what() << std::endl;
+    } catch (const RType::EcsError &e) {
+        std::cerr << "ECS Error: " << e.what() << std::endl;
+        return 84;
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
     }
 }

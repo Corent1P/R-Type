@@ -47,15 +47,13 @@ void RType::HandleMoveSpriteSystem::effects(std::vector<std::shared_ptr<RType::E
                     }
                     if(entity->getComponent<DirectionPatternComponent>() != nullptr) {
                         entity->getComponent<RType::SpriteComponent>()->getSprite()->setPosition(position);
-                        if ((entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::STRAIGHT_LEFT
-                        || entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::UP_N_DOWN_LEFT)
+                        if (DirectionPatternComponent::isPatternLeft(entity->getComponent<RType::DirectionPatternComponent>()->getPatternType())
                         && spriteBounds.left + spriteBounds.width < -300) {
                             _deleteEntity(entity);
                             continue;
                         }
 
-                        if ((entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::STRAIGHT_RIGHT
-                        || entity->getComponent<RType::DirectionPatternComponent>()->getPatternType() == RType::UP_N_DOWN_RIGHT)
+                        if (DirectionPatternComponent::isPatternRight(entity->getComponent<RType::DirectionPatternComponent>()->getPatternType())
                         && spriteBounds.left + spriteBounds.width > windowWidth + 300) {
                             _deleteEntity(entity);
                             continue;

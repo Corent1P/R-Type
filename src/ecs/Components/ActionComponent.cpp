@@ -11,6 +11,7 @@ RType::ActionComponent::ActionComponent()
 {
     _actions.push_back(true);
     _actions.push_back(false);
+    _actions.push_back(false);
 }
 
 RType::ActionComponent::~ActionComponent()

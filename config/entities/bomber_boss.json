@@ -1,0 +1,25 @@
+{
+    "health": 300,
+    "damage": 5,
+    "sprite":"./ressources/boss/bomber-boss.png",
+    "scale": {
+        "x": 5.0,
+        "y": 5.0
+    },
+    "rect" : {
+        "x": 0,
+        "y": 0,
+        "width": 37,
+        "height": 42
+    },
+    "pattern": 3,
+    "speed": 1,
+
+    "intervalShoot": 1.75,
+
+    "attack": [
+        "spawnWallStaticBomb",
+        "spawnWallZigZagBomb"
+    ],
+    "score": 4200
+}

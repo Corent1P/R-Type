@@ -21,6 +21,7 @@
 #include ".././Components/VelocityComponent.hh"
 #include ".././Components/IntRectComponent.hh"
 #include ".././Components/ParseLevelInfoComponent.hh"
+#include ".././Components/DifficultyComponent.hh"
 
 #include "../../client/Game.hh"
 
@@ -103,13 +104,15 @@ namespace RType {
             /**
              * @brief a method to handle the collision between two entities
              *
+             * @param difficultyCoefficient damage coefficient based on difficulty
              */
-            void handleEntityCollision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &entitiesColliding);
+            void handleEntityCollision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &entitiesColliding, float difficultyCoefficient);
             /**
              * @brief a method to handle the collision between all entities
              *
+             * @param difficultyCoefficient damage coefficient based on difficulty
              */
-            void handleEntityCollisions(void);
+            void handleEntityCollisions(float difficultyCoefficient);
 
             void handleShield(void);
             /**
@@ -125,10 +128,26 @@ namespace RType {
              * @return if the collision is in the past
              */
             bool isInPastCollision(const std::pair<std::shared_ptr<RType::Entity>, std::shared_ptr<RType::Entity>> &colidingPair);
-
+            /**
+             * @brief a method decreasing a entity healthComponent value by a damage value.
+             *
+             * @param entity the target entity.
+             * @param damage the damage value.
+             */
             void decreaseHealth(std::shared_ptr<RType::Entity> entity, int damage);
+            /**
+             * @brief a method decreasing a entity of EntityType E_PLAYER healthComponent value by a damage value.
+             *
+             * @param entity the target entity.
+             * @param damage the damage value.
+             */
             void decreasePlayerHealth(std::shared_ptr<RType::Entity> entity, int damage);
-
+            /**
+             * @brief a method removing a entity of EntityType E_SHIELD to a Entity of EnityType E_PLAYER
+             *
+             * @param entities a vector of all the entities.
+             * @param entity a target entity.
+             */
             void removeShieldToPlayer(std::vector<std::shared_ptr<RType::Entity>> entities, std::shared_ptr<RType::Entity> entity);
 
     };

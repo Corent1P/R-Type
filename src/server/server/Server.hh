@@ -34,7 +34,7 @@ namespace RType {
              * @brief Stop the server
              *
              */
-            void stop(void);
+            void stop(bool fromCli = false);
 
         private:
             // Communication handling
@@ -50,14 +50,6 @@ namespace RType {
              * @param bytesTransferred the number of bytes transferred
              */
             void handleReceive(const boost::system::error_code& error, std::size_t bytesTransferred);
-            /**
-             * @brief The callback method for the sending of messages
-             *
-             * @param message the message sent
-             * @param error the error code
-             * @param bytesTransferred the number of bytes transferred
-             */
-            void handleSend(std::string message, const boost::system::error_code &error, std::size_t bytesTransferred);
             /**
              * @brief Create a new client
              *
@@ -127,6 +119,51 @@ namespace RType {
              * @param client the client to send the entities to
              */
             void sendAllEntity(std::shared_ptr<RType::ClientServer> client);
+            /**
+             * @brief Run the CLI
+             *
+             */
+            void runCli(void);
+            /**
+             * @brief a get line that has a timeout
+             *
+             * @return std::string the string getted in the getline
+             * @return "" an empty string when it has timeout
+             */
+            std::string customGetLine(void);
+            /**
+             * @brief List all the players connected
+             *
+             */
+            void listPlayers(void);
+            /**
+             * @brief change the difficulty of the game
+             *
+             * @param difficulty the command
+             */
+            void changeDifficulty(std::string difficulty);
+            /**
+             * @brief Kick a player
+             *
+             * @param player the player to kick
+             */
+            void kickPlayer(std::string player);
+            /**
+             * @brief Change the level of the game
+             *
+             * @param level the level to change to
+             */
+            void changeLevel(std::string level);
+            /**
+             * @brief Print the help of the CLI
+             *
+             */
+            void printCliHelp(void);
+            /**
+             * @brief remove all the ennemies
+             *
+             */
+            void removeAllEnnemies(void);
 
             // Attributes
             /**
@@ -144,6 +181,11 @@ namespace RType {
              *
              */
             std::thread _gameLoop;
+            /**
+             * @brief The thread to run the cli
+             *
+             */
+            std::thread _cliThread;
             /**
              * @brief The boost udp socket to send and receive messages from clients
              *
@@ -174,5 +216,11 @@ namespace RType {
              *
              */
             RType::Coordinator _coord;
+
+            /**
+             * @brief The bool to represent if the game has started
+             *
+             */
+            bool _gameHasStarted;
     };
 }

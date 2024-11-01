@@ -10,7 +10,6 @@
 RType::ClientServer::ClientServer(boost::asio::ip::udp::endpoint endpoint):
 	_endpoint(endpoint), _portNumber(_endpoint.port()), _address(_endpoint.address()), _isConnected(true), _entity(nullptr)
 {
-	std::cout << "ClientServer created with adress " << _address << ":" << _portNumber << std::endl;
 }
 
 void RType::ClientServer::setIsConnected(bool isConnected)
@@ -65,22 +64,12 @@ void RType::ClientServer::sendCallback(const std::string &, const boost::system:
 {
 	(void)error;
 	(void)bytesTransferred;
-	// if (!error) {
-    //     std::cout << "Sent response to client, bytes transferred: " << bytesTransferred << std::endl;
-    // } else {
-    //     std::cout << "Error on send: " << error.message() << std::endl;
-    // }
 }
 
 void RType::ClientServer::sendCallback(const std::basic_string<unsigned char> &, const boost::system::error_code &error, std::size_t bytesTransferred)
 {
 	(void)error;
 	(void)bytesTransferred;
-	// if (!error) {
-    //     std::cout << "Sent response to client, bytes transferred: " << bytesTransferred << std::endl;
-    // } else {
-    //     std::cout << "Error on send: " << error.message() << std::endl;
-    // }
 }
 
 boost::asio::ip::udp::endpoint RType::ClientServer::getEndpoint(void) const

@@ -1,0 +1,21 @@
+{
+    "health": 10,
+    "damage": 2,
+    "sprite":"./ressources/mobs/police.png",
+    "scale": {
+        "x": 0.75,
+        "y": 0.75
+    },
+    "rect" : {
+        "x": 0,
+        "y": 0,
+        "width": 163,
+        "height": 60
+    },
+    "pattern": 10,
+    "speed": 3,
+
+    "isShooting": true,
+    "intervalShoot": 0.5,
+    "score": 20
+}

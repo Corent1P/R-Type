@@ -20,17 +20,21 @@ RType::HandleDrawTextSystem::~HandleDrawTextSystem()
 void RType::HandleDrawTextSystem::effects(std::vector<std::shared_ptr<RType::Entity>> entities)
 {
     for (const auto &w: entities) {
-        if (GET_WINDOW_FOR_DRAW != nullptr) {
-            for (const auto &entity: entities) {
-                if (verifyRequiredComponent(entity) && *entity->GET_MENU == *w->GET_MENU) {
-                    updateText(entity, w);
-                    SET_TEXT_POSITION;
-                    GET_WINDOW_FOR_DRAW->getWindow()->draw(*(entity->getComponent<RType::TextComponent>()->getText()));
-                    // drawHitBox(w, entity);
-                }
+        if (GET_WINDOW_FOR_DRAW == nullptr)
+            continue;
+        for (const auto &entity: entities) {
+            if (verifyRequiredComponent(entity) && *entity->GET_MENU == *w->GET_MENU) {
+                autoUpdateText(w, entity);
+                updateText(entity, w);
+                SET_TEXT_POSITION;
+                if (GET_HOVER_C != nullptr && GET_HOVER_C->getHoverState())
+                    entity->getComponent<TextComponent>()->setFontSize(65);
+                else if (GET_HOVER_C != nullptr && !GET_HOVER_C->getHoverState())
+                    entity->getComponent<TextComponent>()->setFontSize(60);
+                GET_WINDOW_FOR_DRAW->getWindow()->draw(*(entity->getComponent<RType::TextComponent>()->getText()));
             }
-            return;
         }
+        return;
     }
 }
 
@@ -55,6 +59,55 @@ void RType::HandleDrawTextSystem::updateText(std::shared_ptr<RType::Entity> butt
             else
                 textComponent->setText(textComponent->getTextWithoutVariable() + keyName);
         }
+    } else if (button->getComponent<EntityTypeComponent>() != nullptr && button->getComponent<EntityTypeComponent>()->getEntityType() == E_HEALTHTEXT) {
+        auto textComponent = button->getComponent<TextComponent>();
+        auto healthComponent = button->getComponent<HealthComponent>();
+        if (textComponent && healthComponent && healthComponent->getIsDead() == false) {
+            int healthPercentage = healthComponent->getMaxHealth() != 0 ? healthComponent->getHealth() * 100 / healthComponent->getMaxHealth() : 0;
+            std::string healthStringPercentage = std::to_string(healthPercentage) + "%";
+            textComponent->setText(textComponent->getTextWithoutVariable() + healthStringPercentage);
+        } else
+            textComponent->setText("You're in spectator mode");
+    } else if (button->getComponent<EntityTypeComponent>() != nullptr && button->getComponent<EntityTypeComponent>()->getEntityType() == E_SCORETEXT) {
+        auto textScoreComponent = button->getComponent<TextComponent>();
+        auto scoreComponent = button->getComponent<ScoreComponent>();
+        if (textScoreComponent && scoreComponent) {
+            textScoreComponent->setText(textScoreComponent->getTextWithoutVariable() + std::to_string(scoreComponent->getScore()));
+        } else
+            textScoreComponent->setText("You're in spectator mode");
+    }
+}
+
+void RType::HandleDrawTextSystem::drawHitBox(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &entity)
+{
+    if (entity->getComponent<EntityTypeComponent>()->getEntityType() == E_LAYER)
+        return;
+    if (entity->getComponent<IntRectComponent>() == nullptr) {
+        sf::FloatRect bounds = entity->getComponent<RType::TextComponent>()->getText()->getGlobalBounds();
+        sf::RectangleShape rect(sf::Vector2f(bounds.width, bounds.height));
+        rect.setPosition(entity->getComponent<RType::TextComponent>()->getText()->getPosition());
+        rect.setOutlineColor(sf::Color::White);
+        rect.setOutlineThickness(2);
+        GET_WINDOW_FOR_DRAW->getWindow()->draw(rect);
+    } else {
+        sf::RectangleShape rect(sf::Vector2f(entity->getComponent<IntRectComponent>()->getIntRectWidth(),
+                                             entity->getComponent<IntRectComponent>()->getIntRectHeight()));
+        rect.setPosition(entity->getComponent<RType::TextComponent>()->getText()->getPosition());
+        rect.setOutlineColor(sf::Color::White);
+        rect.setOutlineThickness(2);
+        GET_WINDOW_FOR_DRAW->getWindow()->draw(rect);
+    }
+}
+
+void RType::HandleDrawTextSystem::autoUpdateText(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &text)
+{
+    if (text->getComponent<AutoUpdateTextComponent>() == nullptr)
+        return;
+    if (GET_AUTO_UPDATE_TEXT_C->getValue() == MUSIC_VOLUME) {
+        text->getComponent<RType::TextComponent>()->setText(std::to_string(w->getComponent<RType::MusicComponent>()->getVolume()));
+    }
+    if (GET_AUTO_UPDATE_TEXT_C->getValue() == SOUND_VOLUME) {
+        text->getComponent<RType::TextComponent>()->setText(std::to_string(w->getComponent<SoundVolumeComponent>()->getVolume()));
     }
 }
 
@@ -69,16 +122,4 @@ const std::string& RType::HandleDrawTextSystem::getDotString(void)
         _dotCounter = 0;
     }
 	return _dotString;
-}
-
-void RType::HandleDrawTextSystem::drawHitBox(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &entity)
-{
-    if (entity->getComponent<EntityTypeComponent>()->getEntityType() != E_LAYER) {
-        sf::FloatRect bounds = entity->getComponent<RType::TextComponent>()->getText()->getGlobalBounds();
-        sf::RectangleShape rect(sf::Vector2f(bounds.width, bounds.height));
-        rect.setPosition(entity->getComponent<RType::TextComponent>()->getText()->getPosition());
-        rect.setOutlineColor(sf::Color::Red);
-        rect.setOutlineThickness(2);
-        GET_WINDOW_FOR_DRAW->getWindow()->draw(rect);
-    }
 }

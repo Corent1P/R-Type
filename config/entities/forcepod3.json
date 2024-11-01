@@ -1,0 +1,17 @@
+{
+    "sprite":"./ressources/items/forcepod3.png",
+    "scale": {
+        "x": 1.5,
+        "y": 1.5
+    },
+    "rect" : {
+        "x": 0,
+        "y": 0,
+        "width": 32,
+        "height": 32
+    },
+    "pattern": 9,
+    "speed": 10,
+    "isShooting": true,
+    "intervalShoot": 0.5
+}

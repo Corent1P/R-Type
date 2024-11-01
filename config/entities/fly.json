@@ -1,7 +1,7 @@
 {
     "health": 5,
     "damage": 2,
-    "sprite":"./ressources/fly-sheet.png",
+    "sprite":"./ressources/mobs/fly-sheet.png",
     "scale": {
         "x": 2.0,
         "y": 2.0
@@ -14,5 +14,6 @@
     },
     // UP_N_DOWN_LEFT
     "pattern": 5,
-    "speed": 2
+    "speed": 2,
+    "score": 7
 }

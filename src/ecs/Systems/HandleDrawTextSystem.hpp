@@ -14,9 +14,19 @@
 #include "../Components/EntityTypeComponent.hh"
 #include "../Components/LevelComponent.hh"
 #include "../Components/MenuComponent.hh"
+#include "../Components/HealthComponent.hh"
+#include "../Components/ScoreComponent.hh"
+#include "../Components/HoverEffectComponent.hh"
+#include "../Components/IntRectComponent.hh"
+#include "../Components/MusicComponent.hh"
+#include "../Components/SoundQueueComponent.hh"
+#include "../Components/AutoUpdateTextComponent.hh"
+#include "../Components/SoundVolumeComponent.hh"
 
 #define GET_WINDOW_FOR_DRAW w->getComponent<RType::SFWindowComponent>()
 #define SET_TEXT_POSITION entity->getComponent<RType::TextComponent>()->getText()->setPosition(entity->getComponent<PositionComponent>()->getPositions())
+#define GET_HOVER_C entity->getComponent<RType::HoverEffectComponent>()
+#define GET_AUTO_UPDATE_TEXT_C text->getComponent<RType::AutoUpdateTextComponent>()
 
 namespace RType {
     /**
@@ -59,10 +69,27 @@ namespace RType {
              * @param window
              */
             void updateText(std::shared_ptr<RType::Entity> button, std::shared_ptr<RType::Entity> window);
+            /**
+             * @brief a method drawing each entities having a sprite Hitbox.
+             *
+             * @param w a entity of entityType WINDOW entity.
+             * @param entity a target entity.
+             */
+            static void drawHitBox(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &entity);
         protected:
         private:
+            /**
+             * @brief a method auto updating the text
+             *
+             * @param w a entity of entityType WINDOW entity.
+             * @param text a target entity of entityType text.
+             */
+            void autoUpdateText(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &text);
             const std::string& getDotString(void);
-            void drawHitBox(const std::shared_ptr<RType::Entity> &w, const std::shared_ptr<RType::Entity> &entity);
+            /**
+             * @brief a vector of all entities.
+             *
+             */
             std::vector<std::shared_ptr<RType::Entity>> _entities;
             std::string _dotString;
             std::size_t _dotCounter;

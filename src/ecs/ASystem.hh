@@ -17,7 +17,7 @@ namespace RType {
         public:
             /**
              * @brief Construct a new ASystem object
-             * 
+             *
              * @param type type of the system in use.
              * @param addEntity method used to add a new Entity to the coordinator.
              * @param deleteEntity method used to delete a Entity from the coordinator.
@@ -27,27 +27,39 @@ namespace RType {
             void effects(std::vector<std::shared_ptr<RType::Entity>> entities);
             /**
              * @brief amethod to handle the System action on the right entity.
-             * 
+             *
              * @param entity entity required in order to process an action.
              */
             void effect(std::shared_ptr<RType::Entity> entity);
             /**
              * @brief a method to verify if a entity has the right components to process the system effect.
-             * 
+             *
              * @param entity
-             * @return true 
-             * @return false 
+             * @return true
+             * @return false
              */
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
             /**
              * @brief Get the Type of a system.
-             * 
-             * @return SystemType 
+             *
+             * @return SystemType
              */
             SystemType getType() const;
         protected:
+            /**
+             * @brief the system type.
+             *
+             */
             SystemType _type;
+            /**
+             * @brief method used to add a new Entity to the coordinator.
+             *
+             */
             std::function<std::shared_ptr<Entity>()> _addEntity;
+            /**
+             * @brief method used to delete a Entity from the coordinator.
+             *
+             */
             std::function<void(std::shared_ptr<Entity>)> _deleteEntity;
     };
 }

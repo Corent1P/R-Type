@@ -1,0 +1,17 @@
+{
+    "health": 3,
+    "sprite":"./ressources/items/power-ups22.png",
+    "scale": {
+        "x": 3,
+        "y": 3
+    },
+    "rect" : {
+        "x": 0,
+        "y": 0,
+        "width": 16,
+        "height": 20
+    },
+    // UP_N_DOWN_LEFT
+    "pattern": 3,
+    "speed": 3
+}

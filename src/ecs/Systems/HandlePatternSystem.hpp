@@ -17,6 +17,8 @@
 #include "../Components/IntRectComponent.hh"
 #include "../Components/ScaleComponent.hh"
 
+#define GET_PATTERN getComponent<RType::DirectionPatternComponent>()
+
 namespace RType {
     /**
      * @brief a system that set a entity movement direction value based on a pattern.
@@ -59,8 +61,17 @@ namespace RType {
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
         protected:
         private:
+            /**
+             * @brief  a vector that contains each entity stored in the coordinator.
+             *
+             */
             std::vector<std::shared_ptr<RType::Entity>> _entities;
-
+            /**
+             * @brief a mehtod handling the FollowEntities Pattern.
+             *
+             * @param entities a vector that contains each entity stored in the coordinator.
+             * @param entity the entity to follow.
+             */
             void handlePatternFollowEntities(std::vector<std::shared_ptr<RType::Entity>> &entities, const std::shared_ptr<RType::Entity> &entity);
     };
 }

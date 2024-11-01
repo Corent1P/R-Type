@@ -34,8 +34,14 @@ set(SRC_COMPONENTS
     ./Components/AttackComponent.cpp
     ./Components/AttackPatterns/AttackPatterns.cpp
     ./Components/SoundComponent.cpp
+    ./Components/MusicComponent.cpp
     ./Components/SoundBufferComponent.cpp
     ./Components/SoundQueueComponent.cpp
+    ./Components/DifficultyComponent.cpp
+    ./Components/ScoreComponent.cpp
+    ./Components/HoverEffectComponent.cpp
+    ./Components/AutoUpdateTextComponent.cpp
+    ./Components/SoundVolumeComponent.cpp
 )
 
 set(SRC_SYSTEMS
@@ -44,6 +50,7 @@ set(SRC_SYSTEMS
     ./Systems/HandleDrawSystem.cpp
     ./Systems/HandleDrawTextSystem.cpp
     ./Systems/HandleSoundSystem.cpp
+    ./Systems/HandleMusicSystem.cpp
     ./Systems/HandleDisplaySystem.cpp
     ./Systems/HandleMoveSystem.cpp
     ./Systems/HandleMoveSpriteSystem.cpp
@@ -61,7 +68,6 @@ add_library(ecs ${SRC_ECS} ${SRC_COMPONENTS} ${SRC_SYSTEMS} )
 if (NOT WIN32)
     target_compile_options(ecs PRIVATE
         -fPIC
-        -g
     )
 endif()
 

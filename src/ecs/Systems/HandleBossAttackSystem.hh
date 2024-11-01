@@ -51,6 +51,10 @@ namespace RType {
             bool verifyRequiredComponent(std::shared_ptr<RType::Entity> entity);
         protected:
         private:
+            /**
+             * @brief a function that send a message to all client.
+             *
+             */
             std::function<void(const std::basic_string<unsigned char> &message)> _sendMessageToAllClient;
     };
 }

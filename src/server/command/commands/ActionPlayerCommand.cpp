@@ -17,6 +17,15 @@ void RType::ActionPlayerCommand::execute(std::shared_ptr<ClientServer> client, F
     (void)sendToClient;
     std::shared_ptr<RType::Entity> bullet = coord.generateNewEntity();
 
+    if (client == nullptr || client->getEntity() == nullptr
+    || client->getEntity()->getComponent<PositionComponent>() == nullptr
+    || client->getEntity()->getComponent<ScaleComponent>() == nullptr
+    || client->getEntity()->getComponent<IntRectComponent>() == nullptr
+    || client->getEntity()->getComponent<DamageComponent>() == nullptr
+    || client->getEntity()->getComponent<EntityTypeComponent>() == nullptr) {
+        return;
+    }
+
     sf::Vector2f position = getBulletPosition(client);
 
     bullet->pushComponent(std::make_shared<RType::PositionComponent>(position.x, position.y));
@@ -26,40 +35,71 @@ void RType::ActionPlayerCommand::execute(std::shared_ptr<ClientServer> client, F
     bullet->pushComponent(std::make_shared<RType::DamageComponent>(client->getEntity()->getComponent<DamageComponent>()->getDamage()));
     bullet->pushComponent(std::make_shared<RType::MenuComponent>(GAME));
 
-    switch (client->getEntity()->getComponent<RType::EntityTypeComponent>()->getWeaponType()) {
-        case RType::LVL_1:
-            bullet->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BULLET));
-            bullet->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 19, 6));
-            bullet->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
-            sendToAll(Encoder::newEntity(E_BULLET, bullet->getId(), position.x, position.y));
+    if (_data[1] == true) {
+        switch (client->getEntity()->getComponent<RType::EntityTypeComponent>()->getWeaponType()) {
+            case RType::LVL_1:
+                bullet->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BULLET_LASER));
+                bullet->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 95, 32));
+                bullet->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
+                sendToAll(Encoder::newEntity(E_BULLET_LASER, bullet->getId(), position.x, position.y));
+                break;
+            case RType::LVL_2:
+                bullet->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BULLET_LASER_2));
+                bullet->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 32, 32));
+                bullet->pushComponent(std::make_shared<RType::ScaleComponent>(3.0, 3.0));
+                sendToAll(Encoder::newEntity(E_BULLET_LASER_2, bullet->getId(), position.x, position.y));
+                break;
+            case RType::LVL_3:
+                bullet->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BULLET_LASER_3));
+                bullet->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 63, 32));
+                bullet->pushComponent(std::make_shared<RType::ScaleComponent>(3.0, 3.0));
+                sendToAll(Encoder::newEntity(E_BULLET_LASER_3, bullet->getId(), position.x, position.y));
+                break;
+            case RType::LVL_4:
+                bullet->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BULLET_LASER_4));
+                bullet->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 63, 48));
+                bullet->pushComponent(std::make_shared<RType::ScaleComponent>(4.0, 4.0));
+                sendToAll(Encoder::newEntity(E_BULLET_LASER_4, bullet->getId(), position.x, position.y));
+                break;
+            default:
             break;
-        case RType::LVL_2:
-            bullet->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BULLET_2));
-            bullet->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 228, 192));
-            bullet->pushComponent(std::make_shared<RType::ScaleComponent>(0.5, 0.5));
-            sendToAll(Encoder::newEntity(E_BULLET_2, bullet->getId(), position.x, position.y));
-            break;
-        case RType::LVL_3:
-            bullet->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BULLET_3));
-            bullet->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 32, 32));
-            bullet->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
-            sendToAll(Encoder::newEntity(E_BULLET_3, bullet->getId(), position.x, position.y));
-            break;
-        case RType::LVL_4:
-            bullet->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BULLET_4));
-            bullet->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 63, 32));
-            bullet->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
-            sendToAll(Encoder::newEntity(E_BULLET_4, bullet->getId(), position.x, position.y));
-            break;
-        default:
-            break;
+        }
+    } else {
+        switch (client->getEntity()->getComponent<RType::EntityTypeComponent>()->getWeaponType()) {
+            case RType::LVL_1:
+                bullet->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BULLET));
+                bullet->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 19, 6));
+                bullet->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
+                sendToAll(Encoder::newEntity(E_BULLET, bullet->getId(), position.x, position.y));
+                break;
+            case RType::LVL_2:
+                bullet->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BULLET_2));
+                bullet->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 228, 192));
+                bullet->pushComponent(std::make_shared<RType::ScaleComponent>(0.5, 0.5));
+                sendToAll(Encoder::newEntity(E_BULLET_2, bullet->getId(), position.x, position.y));
+                break;
+            case RType::LVL_3:
+                bullet->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BULLET_3));
+                bullet->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 32, 32));
+                bullet->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
+                sendToAll(Encoder::newEntity(E_BULLET_3, bullet->getId(), position.x, position.y));
+                break;
+            case RType::LVL_4:
+                bullet->pushComponent(std::make_shared<RType::EntityTypeComponent>(RType::E_BULLET_4));
+                bullet->pushComponent(std::make_shared<RType::IntRectComponent>(0, 0, 63, 32));
+                bullet->pushComponent(std::make_shared<RType::ScaleComponent>(2.0, 2.0));
+                sendToAll(Encoder::newEntity(E_BULLET_4, bullet->getId(), position.x, position.y));
+                break;
+            default:
+                break;
+        }
     }
 }
 
 sf::Vector2f RType::ActionPlayerCommand::getBulletPosition(std::shared_ptr<ClientServer> client)
 {
     std::shared_ptr<RType::Entity> entity = client->getEntity();
-
+    
     sf::Vector2f position = entity->getComponent<PositionComponent>()->getPositions();
     sf::Vector2f scale = entity->getComponent<ScaleComponent>()->getScales();
     sf::Vector2f bulletPosition;
@@ -74,26 +114,48 @@ sf::Vector2f RType::ActionPlayerCommand::getBulletPosition(std::shared_ptr<Clien
 sf::Vector2f RType::ActionPlayerCommand::getBulletSize(WeaponType weaponType)
 {
     sf::Vector2f bulletSize;
-
-    switch (weaponType) {
-        case RType::LVL_1:
-            bulletSize.x = 19 * 2.;
-            bulletSize.y = 6 * 2.;
-            break;
-        case RType::LVL_2:
-            bulletSize.x = 228 * 0.5;
-            bulletSize.y = 192 * 0.5;
-            break;
-        case RType::LVL_3:
-            bulletSize.x = 32 * 2.;
-            bulletSize.y = 32 * 2.;
-            break;
-        case RType::LVL_4:
-            bulletSize.x = 63 * 2.;
-            bulletSize.y = 32 * 2.;
-            break;
-        default:
-            break;
+    if (_data[1] == true) {
+        switch (weaponType) {
+            case RType::LVL_1:
+                bulletSize.x = 95 * 2.;
+                bulletSize.y = 32 * 2.;
+                break;
+            case RType::LVL_2:
+                bulletSize.x = 32 * 3.;
+                bulletSize.y = 32 * 3.;
+                break;
+            case RType::LVL_3:
+                bulletSize.x = 63 * 3.;
+                bulletSize.y = 32 * 3.;
+                break;
+            case RType::LVL_4:
+                bulletSize.x = 63 * 4.;
+                bulletSize.y = 48 * 4.;
+                break;
+            default:
+                break;
+        }
+    } else {
+        switch (weaponType) {
+            case RType::LVL_1:
+                bulletSize.x = 19 * 2.;
+                bulletSize.y = 6 * 2.;
+                break;
+            case RType::LVL_2:
+                bulletSize.x = 32 * 2.;
+                bulletSize.y = 32 * 2.;
+                break;
+            case RType::LVL_3:
+                bulletSize.x = 63 * 2.;
+                bulletSize.y = 32 * 2.;
+                break;
+            case RType::LVL_4:
+                bulletSize.x = 288 * 0.5;
+                bulletSize.y = 192 * 0.5;
+                break;
+            default:
+                break;
+        }
     }
     return bulletSize;
 }

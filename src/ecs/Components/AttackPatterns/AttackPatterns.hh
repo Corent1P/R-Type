@@ -32,6 +32,7 @@
 #include "../DamageComponent.hh"
 #include "../PowerUpComponent.hh"
 #include "../AttackComponent.hh"
+#include "../ScoreComponent.hh"
 
 #define PUSH_POS_E(x, y) pushComponent(std::make_shared<RType::PositionComponent>(x, y))
 #define PUSH_ACTION_E() pushComponent(std::make_shared<RType::ActionComponent>())
@@ -47,18 +48,96 @@
 #define PUSH_ATTACK_E() pushComponent(std::make_shared<RType::AttackComponent>())
 
 namespace RType {
+    /**
+     * @brief AttackPatterns class for handling the attack patterns of the bosses
+     *
+     */
     class AttackPatterns {
         public:
+
+            /**
+             * @brief Spawn a vertical line of 5 baby flies
+             *
+             * @param boss The boss entity
+             * @param addEntity The function to add an entity
+             * @param sendMessageToAllClient The function to send a message to all clients
+             */
             static void spawnBabyFly(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient);
+
+            /**
+             * @brief Spawn a vertical line of 6 stings
+             *
+             * @param boss The boss entity
+             * @param addEntity The function to add an entity
+             * @param sendMessageToAllClient The function to send a message to all clients
+             */
             static void spawnSting(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient);
+
+            /**
+             * @brief Shoot a bullet
+             *
+             * @param boss The boss entity
+             * @param addEntity The function to add an entity
+             * @param sendMessageToAllClient The function to send a message to all clients
+             */
             static void spaceShipShoot(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient);
+
+            /**
+             * @brief Shoot a wave of bullets
+             *
+             * @param boss The boss entity
+             * @param addEntity The function to add an entity
+             * @param sendMessageToAllClient The function to send a message to all clients
+             */
             static void waveShoot(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient);
+
+            /**
+             * @brief Spawn a < pattern of baby octopus
+             *
+             * @param boss The boss entity
+             * @param addEntity The function to add an entity
+             * @param sendMessageToAllClient The function to send a message to all clients
+             */
             static void spawnBabyOctopus(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient);
+
+            /**
+             * @brief Spawn a > pattern of baby octopus
+             *
+             * @param boss The boss entity
+             * @param addEntity The function to add an entity
+             * @param sendMessageToAllClient The function to send a message to all clients
+             */
             static void spawnKamikazeOctopus(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient);
-            static void pattern1(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient);
-            static void pattern2(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient);
+
+            /**
+             * @brief Spawn a wall of static bombs with a random bomb missing in the wall
+             *
+             * @param boss The boss entity
+             * @param addEntity The function to add an entity
+             * @param sendMessageToAllClient The function to send a message to all clients
+             */
+            static void spawnWallStaticBomb(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient);
+
+            /**
+             * @brief Spawn a wall of zigzag bombs
+             *
+             * @param boss The boss entity
+             * @param addEntity The function to add an entity
+             * @param sendMessageToAllClient The function to send a message to all clients
+             */
+            static void spawnWallZigZagBomb(std::shared_ptr<RType::Entity> boss, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient);
 
         private:
+
+            /**
+             * @brief Create a game entity with specific parameters
+             *
+             * @param type The entity type
+             * @param posX X-coordinate position
+             * @param posY Y-coordinate position
+             * @param addEntity The function to add an entity
+             * @param sendMessageToAllClient The function to send a message to all clients
+             */
             static void createEntity(const RType::EntityType &type, const int &posX, const int &posY, std::function<std::shared_ptr<Entity>()> addEntity, std::function<void(const std::basic_string<unsigned char> &message)> sendMessageToAllClient);
     };
 };
