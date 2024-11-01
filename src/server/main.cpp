@@ -27,10 +27,10 @@ int printHelp(int returnValue)
 int getPortArgument(int ac, char **av)
 {
     if (ac != 2)
-        return -1;
+        return 4242;
     int port = std::atoi(av[1]);
     if (!port)
-        return -1;
+        return 4242;
     return port;
 }
 

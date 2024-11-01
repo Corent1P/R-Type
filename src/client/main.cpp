@@ -21,24 +21,16 @@ static int printHelp(int returnValue)
     return returnValue;
 }
 
-static bool errorHandling(int ac, char **av)
-{
-    if (ac != 3)
-        return false;
-    if (!atoi(av[2]))
-        return false;
-    return true;
-}
-
 int main(int ac, char **av)
 {
+    std::string host = (ac >= 2 ? av[1] : "localhost");
+    std::string port = (ac >= 3 ? av[2] : "4242");
+
     if (ac == 2 && (std::string(av[1]) == "--help" || std::string(av[1]) == "-h"))
         return printHelp(0);
     try {
-        if (!errorHandling(ac, av))
-            return printHelp(84);
         boost::asio::io_context ioContext;
-        RType::Game game(ioContext, av[1], av[2]);
+        RType::Game game(ioContext, host, port);
         std::cout << game;
         game.gameLoop();
     } catch (const RType::EcsError &e) {

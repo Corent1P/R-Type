@@ -51,14 +51,6 @@ namespace RType {
              */
             void handleReceive(const boost::system::error_code& error, std::size_t bytesTransferred);
             /**
-             * @brief The callback method for the sending of messages
-             *
-             * @param message the message sent
-             * @param error the error code
-             * @param bytesTransferred the number of bytes transferred
-             */
-            void handleSend(std::string message, const boost::system::error_code &error, std::size_t bytesTransferred);
-            /**
              * @brief Create a new client
              *
              * @return std::shared_ptr<RType::ClientServer> the created client

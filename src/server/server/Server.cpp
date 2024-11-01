@@ -69,15 +69,6 @@ void RType::Server::handleReceive(const boost::system::error_code& error, std::s
     startReceive();
 }
 
-void RType::Server::handleSend(std::string, const boost::system::error_code &error, std::size_t bytesTransferred)
-{
-    if (!error) {
-        std::cout << "Sent response to client, bytes transferred: " << bytesTransferred << std::endl;
-    } else {
-        std::cout << "Error on send: " << error.message() << std::endl;
-    }
-}
-
 std::shared_ptr<RType::ClientServer> RType::Server::createClient(void)
 {
     std::shared_ptr<ClientServer> newClient(new ClientServer(_remoteEndpoint));
@@ -161,7 +152,6 @@ void RType::Server::handleCommand(std::pair<RType::PacketType, std::vector<long>
     std::shared_ptr<ICommand> com = _commandFactory.createCommand(receivInfo);
     if (!com) {
         connectedClient->sendMessage(_socket, Encoder::header(0, RType::PACKET_ERROR));
-        std::cout << "unvalid command sent by client" << std::endl;
     } else {
         com->execute(connectedClient,
             [this, &connectedClient](const std::basic_string<unsigned char>& message) { connectedClient->sendMessage(_socket, message); },
