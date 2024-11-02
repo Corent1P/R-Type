@@ -21,11 +21,7 @@ void RType::HandleAnimationSystem::effect(std::shared_ptr<RType::Entity> entity)
     sf::IntRect rect = entity->getComponent<RType::SpriteComponent>()->getSprite()->getTextureRect();  //need to create a component ?
     int maxSpritWidth = entity->getComponent<RType::SpriteComponent>()->getSprite()->getTexture()->getSize().x;
     if (entity->getComponent<RType::ClockComponent>()->getClock(RType::ClockType::ANIMATION_CLOCK).getElapsedTime().asSeconds() > 0.1f) {
-        if (entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_HIT_EFFECT
-        || entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_HIT_EFFECT_2
-        || entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_HIT_EFFECT_3
-        || entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_HIT_EFFECT_4
-        || entity->getComponent<RType::EntityTypeComponent>()->getEntityType() == RType::E_EXPLOSION_EFFECT) {
+        if (entity->getComponent<RType::EntityTypeComponent>()->isEffect(entity->getComponent<RType::EntityTypeComponent>()->getEntityType())) {
             if (rect.left != (maxSpritWidth - rect.width)) {
                 rect.left += rect.width;
             }

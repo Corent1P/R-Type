@@ -301,4 +301,7 @@ void RType::HandleEntitySpawnSystem::createEntityMap(void)
     _entityTypeMap[E_HIT_EFFECT_2] = "hit_effect2";
     _entityTypeMap[E_HIT_EFFECT_3] = "hit_effect3";
     _entityTypeMap[E_HIT_EFFECT_4] = "hit_effect4";
+    _entityTypeMap[E_EXPLOSION_EFFECT_2] = "explosion_effect2";
+    _entityTypeMap[E_EXPLOSION_EFFECT_3] = "explosion_effect3";
+    _entityTypeMap[E_EXPLOSION_EFFECT_4] = "explosion_effect4";
 }

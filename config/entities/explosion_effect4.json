@@ -1,0 +1,15 @@
+{
+    "sprite":"./ressources/effects/explosion4.png",
+    "scale": {
+        "x": 1.5,
+        "y": 1.5
+    },
+    "rect" : {
+        "x": 64,
+        "y": 0,
+        "width": 64,
+        "height": 48
+    },
+    "soundVolume": 50.0,
+    "sound": "./ressources/sounds/explosion.ogg"
+}

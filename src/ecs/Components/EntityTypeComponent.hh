@@ -70,6 +70,9 @@ namespace RType {
         E_HIT_EFFECT_2,
         E_HIT_EFFECT_3,
         E_HIT_EFFECT_4,
+        E_EXPLOSION_EFFECT_2,
+        E_EXPLOSION_EFFECT_3,
+        E_EXPLOSION_EFFECT_4,
     };
 
     enum WeaponType {
@@ -247,6 +250,15 @@ namespace RType {
              * @return false Otherwise
              */
             static bool isPowerUp(EntityType);
+            /**
+             * @brief Check if the entity is a effect
+             *
+             * @param entityType The type of the entity
+             *
+             * @return true If the entity is a effect
+             * @return false Otherwise
+             */
+            static bool isEffect(EntityType);
         private:
 
             /**

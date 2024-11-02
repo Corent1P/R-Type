@@ -203,25 +203,38 @@ void RType::Game::loopReceive()
                         if (entity->GET_POSITION_X > 0) {
                             if (EntityTypeComponent::isWeapon(GET_ENTITY_TYPE(entity)) || EntityTypeComponent::isEnnemyShoot(GET_ENTITY_TYPE(entity)))
                                 switch(GET_ENTITY_TYPE(entity)) {
+                                    case RType::E_BULLET_LASER_2:
                                     case RType::E_BULLET_2:
-                                        createEntity(E_HIT_EFFECT_2, (entity->GET_POSITION_X + 32), entity->GET_POSITION_Y);
+                                        createEntity(E_HIT_EFFECT_2, (entity->GET_POSITION_X + (entity->getComponent<IntRectComponent>()->getIntRectWidth() + (entity->getComponent<IntRectComponent>()->getIntRectWidth() /2))), entity->GET_POSITION_Y + (entity->getComponent<IntRectComponent>()->getIntRectHeight() /2));
                                         break;
+                                    case RType::E_BULLET_LASER_3:
                                     case RType::E_BULLET_3:
-                                        createEntity(E_HIT_EFFECT_3, (entity->GET_POSITION_X + 32), entity->GET_POSITION_Y);
+                                        createEntity(E_HIT_EFFECT_3, (entity->GET_POSITION_X + (entity->getComponent<IntRectComponent>()->getIntRectWidth() /2)), entity->GET_POSITION_Y + (entity->getComponent<IntRectComponent>()->getIntRectHeight() /2));
                                         break;
+                                    case RType::E_BULLET_LASER_4:
                                     case RType::E_BULLET_4:
-                                        createEntity(E_HIT_EFFECT_3, (entity->GET_POSITION_X + 32), entity->GET_POSITION_Y);
+                                        createEntity(E_HIT_EFFECT_4, (entity->GET_POSITION_X + (entity->getComponent<IntRectComponent>()->getIntRectWidth() /2)), entity->GET_POSITION_Y + (entity->getComponent<IntRectComponent>()->getIntRectHeight() /2));
                                         break;
                                     default:
                                         createEntity(E_HIT_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
                                         break;
                                 }
                             if (EntityTypeComponent::isMob(GET_ENTITY_TYPE(entity)) && !EntityTypeComponent::isBoss(GET_ENTITY_TYPE(entity)))
-                                    createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
+                                switch(GET_ENTITY_TYPE(entity)) {
+                                    case RType::E_OCTOPUS:
+                                        createEntity(E_EXPLOSION_EFFECT_4, entity->GET_POSITION_X, entity->GET_POSITION_Y);
+                                        break;
+                                    // case RType::E_FLY:
+                                    //     createEntity(E_EXPLOSION_EFFECT_3, entity->GET_POSITION_X, entity->GET_POSITION_Y);
+                                    //     break;
+                                    default:
+                                        createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X, entity->GET_POSITION_Y);
+                                        break;
+                                }
                         }
                         if (EntityTypeComponent::isBoss(GET_ENTITY_TYPE(entity)))
                             for (int i = 0; i < 50; i++)
-                                createEntity(E_EXPLOSION_EFFECT, entity->GET_POSITION_X + (std::rand() % 400), entity->GET_POSITION_Y + (std::rand() % 400));
+                                createEntity(E_EXPLOSION_EFFECT_2, entity->GET_POSITION_X + (std::rand() % 400), entity->GET_POSITION_Y + (std::rand() % 400));
                         if (GET_ENTITY_TYPE(entity) == E_PLAYER)
                             if (entity->getComponent<ActionComponent>() && menuComponent) {
                                 if (entity->getComponent<HealthComponent>())
@@ -1102,4 +1115,7 @@ void RType::Game::createEntityMap(void)
     _entityTypeMap[E_HIT_EFFECT_2] = "hit_effect2";
     _entityTypeMap[E_HIT_EFFECT_3] = "hit_effect3";
     _entityTypeMap[E_HIT_EFFECT_4] = "hit_effect4";
+    _entityTypeMap[E_EXPLOSION_EFFECT_2] = "explosion_effect2";
+    _entityTypeMap[E_EXPLOSION_EFFECT_3] = "explosion_effect3";
+    _entityTypeMap[E_EXPLOSION_EFFECT_4] = "explosion_effect4";
 }

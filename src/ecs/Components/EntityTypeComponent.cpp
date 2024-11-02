@@ -106,6 +106,10 @@ bool RType::EntityTypeComponent::isPowerUp(EntityType entityType)
     return entityType == E_SHIELD || entityType == E_FORCEPOD || entityType == E_FORCEPOD_2 || entityType == E_FORCEPOD_3;
 }
 
+bool RType::EntityTypeComponent::isEffect(EntityType entityType)
+{
+    return entityType == E_HIT_EFFECT || entityType == E_HIT_EFFECT_2 || entityType == E_HIT_EFFECT_3 || entityType == E_HIT_EFFECT_4 || entityType == E_EXPLOSION_EFFECT || entityType == E_EXPLOSION_EFFECT_2 || entityType == E_EXPLOSION_EFFECT_3 || entityType == E_EXPLOSION_EFFECT_4;
+}
 
 std::string RType::EntityTypeComponent::getOutput() const
 {
