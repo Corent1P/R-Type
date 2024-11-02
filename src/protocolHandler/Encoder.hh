@@ -146,7 +146,8 @@ namespace RType {
         /**
         * @brief Encode the player action packet
         *
-        * actions are not defined yet
+        * @param action1 correspond to the shoot action
+        * @param action2 correspond to the charged shoot action
         *
         * @return U_STRING Encoded player action packet
         */

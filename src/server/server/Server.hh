@@ -15,6 +15,9 @@
 
 #define MAX_SIZE 1024
 #define FRAME_SERVER_TIME_LOGIC 1.0 / 20.0
+
+#define STDIN_FD 0
+
 namespace RType {
     class Server {
         public:
@@ -50,14 +53,6 @@ namespace RType {
              * @param bytesTransferred the number of bytes transferred
              */
             void handleReceive(const boost::system::error_code& error, std::size_t bytesTransferred);
-            /**
-             * @brief The callback method for the sending of messages
-             *
-             * @param message the message sent
-             * @param error the error code
-             * @param bytesTransferred the number of bytes transferred
-             */
-            void handleSend(std::string message, const boost::system::error_code &error, std::size_t bytesTransferred);
             /**
              * @brief Create a new client
              *
@@ -224,5 +219,11 @@ namespace RType {
              *
              */
             RType::Coordinator _coord;
+
+            /**
+             * @brief The bool to represent if the game has started
+             *
+             */
+            bool _gameHasStarted;
     };
 }

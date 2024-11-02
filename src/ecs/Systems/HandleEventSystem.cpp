@@ -118,15 +118,10 @@ void RType::HandleEventSystem::handleInputPlayer(std::shared_ptr<RType::Entity> 
             );
             player->getComponent<RType::ActionComponent>()->setActions(RType::CHARGING_SHOT, true);
         } else if (!sf::Keyboard::isKeyPressed(inputs.at(INPUT_SHOOT)) && _isShooting) {
-            //std::cout << "Charging time : " << player->getComponent<RType::ClockComponent>()->getChargingTime() << std::endl;
             player->getComponent<RType::ClockComponent>()->setChargedTime(player->getComponent<RType::ClockComponent>()->getChargingTime());
-            //std::cout << "=> Charged time : " << player->getComponent<RType::ClockComponent>()->getChargedTime() << std::endl;
             _isShooting = false;
-            //player->getComponent<RType::ActionComponent>()->setActions(RType::CHARGING_SHOT, false);
             player->getComponent<RType::ActionComponent>()->setActions(RType::SHOOTING, true);
         }
-        // std::cout << player->getComponent<RType::ActionComponent>()->getActions(RType::CHARGING_SHOT) << std::endl;
-        //std::cout << "Charged time : " << player->getComponent<RType::ClockComponent>()->getChargingTime() << std::endl;
         if (sf::Joystick::isConnected(0))
         {
             float x = sf::Joystick::getAxisPosition(0, sf::Joystick::X);

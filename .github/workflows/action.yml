@@ -90,47 +90,6 @@ jobs:
                   gcovr --exclude tests
                   gcovr --exclude tests --branches
 
-    create_release:
-        needs: [check_program_compilation]
-        runs-on: ubuntu-latest
-        if: github.ref == 'refs/heads/main'
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
-
-            - name: Set up NSIS
-              run: |
-                sudo apt-get install -y nsis
-
-            - name: Compress repository into zip
-              run: |
-                zip -r r-type.zip .
-              env:
-                ZIP_FILE: r-type.zip
-
-            - name: Create NSIS installer
-              run: |
-                echo 'Outfile "R-Type.exe"' > r-type.nsi
-                echo 'Section' >> r-type.nsi
-                echo '  nsisdl::download "https://github.com/Corent1P/R-Type/archive/refs/heads/main.zip" "$EXEDIR\\repo.zip"' >> r-type.nsi
-                echo '  SetOutPath "$EXEDIR\\repo"' >> r-type.nsi
-                echo '  File /oname=$EXEDIR\\repo\\repo.zip "$EXEDIR\\repo.zip"' >> r-type.nsi
-                echo '  ExecWait "$EXEDIR\\repo\\build.bat"' >> r-type.nsi
-                echo 'SectionEnd' >> r-type.nsi
-
-                makensis r-type.nsi
-
-            - name: Upload release assets
-              uses: softprops/action-gh-release@v1
-              with:
-                files: |
-                  r-type.zip
-                  R-Type.exe
-              env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     push_to_mirror:
         needs: [check_program_compilation]
         runs-on: ubuntu-latest

@@ -357,8 +357,8 @@ void RType::Game::createOptionMenu()
     for (auto &entity: _coord.getEntities()) {
         if (entity->getComponent<EntityTypeComponent>() != nullptr && entity->getComponent<EntityTypeComponent>()->getEntityType() != E_WINDOW)
             continue;
-        std::shared_ptr<RType::Entity> music = createText((entity->getComponent<RType::SFWindowComponent>()->getWindow()->getSize().x -
-                                                          fullField.getGlobalBounds().width) / 2, 300, "Music Volume: ");
+        int x = entity->getComponent<RType::SFWindowComponent>()->getWindow()->getSize().x;
+        std::shared_ptr<RType::Entity> music = createText((x - fullField.getGlobalBounds().width) / 2, 300, "Music Volume: ");
         music->PUSH_MENU_COMPONENT_E(OPTIONS);
         sf::FloatRect titleBound = music->getComponent<TextComponent>()->getText()->getGlobalBounds();
         std::shared_ptr<Entity> plusButton = createButton(music->getComponent<PositionComponent>()->getPositionX() + titleBound.width, 300, "- ");
@@ -370,8 +370,7 @@ void RType::Game::createOptionMenu()
             }
         ));
         titleBound = plusButton->getComponent<TextComponent>()->getText()->getGlobalBounds();
-        std::shared_ptr<Entity> volumeLevel = createText(plusButton->getComponent<PositionComponent>()->getPositionX() + titleBound.width, 300,
-                   std::to_string(entity->getComponent<MusicComponent>()->getVolume()));
+        std::shared_ptr<Entity> volumeLevel = createText(plusButton->getComponent<PositionComponent>()->getPositionX() + titleBound.width, 300,"50");
         volumeLevel->PUSH_MENU_COMPONENT_E(OPTIONS);
         volumeLevel->pushComponent(std::make_shared<AutoUpdateTextComponent>(MUSIC_VOLUME));
         titleBound = volumeLevel->getComponent<TextComponent>()->getText()->getGlobalBounds();
@@ -385,8 +384,7 @@ void RType::Game::createOptionMenu()
         ));
 
         fullField.setString("Sound Volume: - 100 +");
-        std::shared_ptr<RType::Entity> sound = createText((entity->getComponent<RType::SFWindowComponent>()->getWindow()->getSize().x -
-                                                          fullField.getGlobalBounds().width) / 2, 500, "Sound Volume: ");
+        std::shared_ptr<RType::Entity> sound = createText((x - fullField.getGlobalBounds().width) / 2, 500, "Sound Volume: ");
         sound->PUSH_MENU_COMPONENT_E(OPTIONS);
         titleBound = sound->getComponent<TextComponent>()->getText()->getGlobalBounds();
         std::shared_ptr<Entity> plusButton2 = createButton(sound->getComponent<PositionComponent>()->getPositionX() + titleBound.width, 500, "- ");
@@ -399,7 +397,7 @@ void RType::Game::createOptionMenu()
         ));
         titleBound = plusButton2->getComponent<TextComponent>()->getText()->getGlobalBounds();
         std::shared_ptr<Entity> volumeLevel2 = createText(plusButton2->getComponent<PositionComponent>()->getPositionX() + titleBound.width, 500,
-               std::to_string(entity->getComponent<SoundVolumeComponent>()->getVolume()));
+               std::to_string(50));
         volumeLevel2->PUSH_MENU_COMPONENT_E(OPTIONS);
         volumeLevel2->pushComponent(std::make_shared<AutoUpdateTextComponent>(SOUND_VOLUME));
         titleBound = volumeLevel2->getComponent<TextComponent>()->getText()->getGlobalBounds();
@@ -411,6 +409,7 @@ void RType::Game::createOptionMenu()
                 window->getComponent<SoundVolumeComponent>()->setVolume(window->getComponent<SoundVolumeComponent>()->getVolume() + 10);
             }
         ));
+        break;
     }
 }
 

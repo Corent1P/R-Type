@@ -8,7 +8,7 @@
 #include "Server.hh"
 
 RType::Server::Server(boost::asio::io_context &ioContext, int port):
-    _stopLoop(false), _socket(ioContext, udp::endpoint(udp::v4(), port))
+    _stopLoop(false), _socket(ioContext, udp::endpoint(udp::v4(), port)), _gameHasStarted(false)
 {
     std::cout << "Server listening on port " << port << std::endl;
     initSystem();
@@ -49,6 +49,15 @@ void RType::Server::handleReceive(const boost::system::error_code& error, std::s
 
     if (!connectedClient) {
         connectedClient = createClient();
+        if (_clients.size() == 1 && !_gameHasStarted) {
+            _coord.generateNewSystem(std::make_shared<HandleEntitySpawnSystem>(
+                std::bind(&RType::Coordinator::addEntity, &_coord),
+                std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
+                std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
+            ));
+            _gameHasStarted = true;
+        }
+
         if (receivInfo.first == CONNEXION) {
             std::unique_lock<std::mutex> lock(_mtx);
             handleConnection(connectedClient);
@@ -67,15 +76,6 @@ void RType::Server::handleReceive(const boost::system::error_code& error, std::s
         handleCommand(receivInfo, connectedClient);
     }
     startReceive();
-}
-
-void RType::Server::handleSend(std::string, const boost::system::error_code &error, std::size_t bytesTransferred)
-{
-    if (!error) {
-        std::cout << "Sent response to client, bytes transferred: " << bytesTransferred << std::endl;
-    } else {
-        std::cout << "Error on send: " << error.message() << std::endl;
-    }
 }
 
 std::shared_ptr<RType::ClientServer> RType::Server::createClient(void)
@@ -161,7 +161,6 @@ void RType::Server::handleCommand(std::pair<RType::PacketType, std::vector<long>
     std::shared_ptr<ICommand> com = _commandFactory.createCommand(receivInfo);
     if (!com) {
         connectedClient->sendMessage(_socket, Encoder::header(0, RType::PACKET_ERROR));
-        std::cout << "unvalid command sent by client" << std::endl;
     } else {
         com->execute(connectedClient,
             [this, &connectedClient](const std::basic_string<unsigned char>& message) { connectedClient->sendMessage(_socket, message); },
@@ -223,12 +222,6 @@ void RType::Server::initSystem(void)
     ));
 
     _coord.generateNewSystem(std::make_shared<HandleCollisionSystem>(
-        std::bind(&RType::Coordinator::addEntity, &_coord),
-        std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
-        std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
-    ));
-
-    _coord.generateNewSystem(std::make_shared<HandleEntitySpawnSystem>(
         std::bind(&RType::Coordinator::addEntity, &_coord),
         std::bind(&RType::Coordinator::deleteEntity, &_coord, std::placeholders::_1, true),
         std::bind(&RType::Server::sendToAllClient, this, std::placeholders::_1)
@@ -339,7 +332,7 @@ std::string RType::Server::customGetLine(void)
     struct timeval timeout = {0, 500000};
 
     FD_ZERO(&rfds);
-    FD_SET(STDIN_FILENO, &rfds);
+    FD_SET(STDIN_FD, &rfds);
 
     int ready = select(1, &rfds, NULL, NULL, &timeout);
 
