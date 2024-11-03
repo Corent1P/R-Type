@@ -24,6 +24,7 @@
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#versions">Versions</a></li>
+    <li><a href="#technical-documentation">Technical documentation</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
@@ -142,6 +143,12 @@ To start the client, you only have to execute the following command:
 You can find the release of the project [here](https://github.com/Corent1P/R-Type/releases).
 - For Windows, you can execute the **R-Type-Setup.exe** file to install the project.
 - For Linux, you can unzip the **r-type.zip** file to have the release repository.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Technical documentation
+
+You can find the technical documentation of the project [here](https://corent1p.github.io/R-Type-Documentation/).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
