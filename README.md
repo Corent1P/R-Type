@@ -23,10 +23,8 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <!-- <li><a href="#contributing">Contributing</a></li> Maybe later -->
-    <!-- <li><a href="#license">License</a></li> Maybe later -->
+    <li><a href="#versions">Versions</a></li>
     <li><a href="#contact">Contact</a></li>
-    <!-- <li><a href="#acknowledgments">Acknowledgments</a></li> No need -->
   </ol>
 </details>
 
@@ -77,12 +75,18 @@ To install the project, you need to execute the following commands.
    git clone https://github.com/Corent1P/R-Type.git
    ```
 
-2. If you are on windows, exec the install.exe file
+2. Install the following dependencies
+  - vcpkg - [vcpkg installation guide](https://learn.microsoft.com/en-us/vcpkg/get_started/overview)
+  - ninja - [ninja installation guide](https://ninja-build.org/)
+  - cmake - [cmake installation guide](https://cmake.org/download/)
+  - Visual Studio (if you are on windows) - [Visual Studio installation guide](https://visualstudio.microsoft.com/en/downloads/)
+
+3. If you are on windows, exec the install.exe file
    ```powershell
-   .\install.exe
+   .\build.bat
    ```
 
-3. If you are on Linux, you need to exec the build.sh file
+4. If you are on Linux, you need to exec the build.sh file
     ```sh
     ./build.sh
     ```
@@ -110,7 +114,7 @@ To start the server, you only have to execute the following command:
 ```sh
 ./r-type_server <portNumber>
 ```
-**portNumber** is the port of your machine where the server will listen for client connections.
+**portNumber** is the port of your machine where the server will listen for client connections *(by default 4242)*.
 
 ### r-type_client
 
@@ -126,15 +130,26 @@ To start the client, you only have to execute the following command:
 ```sh
 ./r-type_client <serverAdress> <serverPort>
 ```
-**serverAdress** and **serverPort** are respectively the adress and the port of the server where your client will connect.
+**serverAdress** and **serverPort** are respectively the adress *(by default localhost)* and the port *(by default 4242)* of the server where your client will connect.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 ## Versions
 
 - 1.0: Position and movement handling in server side
 - 2.0: Shoot and ennemy spawn handling in server side
+- 3.0: Implementation of levels and boss
+- 4.0: Final release - Multiplayer game with items and powerups
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Release (Windows only)
+
+You can find the release of the project [here](https://github.com/Corent1P/R-Type/releases).
+- For Windows, you can execute the **R-Type-Setup.exe** file to install the project.
+- For Linux, you can unzip the **r-type.zip** file to have the release repository.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Contact
 
