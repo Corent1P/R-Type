@@ -60,11 +60,11 @@ To start the project, you will need to install the project, build it and execute
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* Connan
-  ```sh
-  Command to install Connan
-  ```
+Install the following dependencies
+  - vcpkg - [vcpkg installation guide](https://learn.microsoft.com/en-us/vcpkg/get_started/overview)
+  - ninja - [ninja installation guide](https://ninja-build.org/)
+  - cmake - [cmake installation guide](https://cmake.org/download/)
+  - Visual Studio (if you are on windows) - [Visual Studio installation guide](https://visualstudio.microsoft.com/en/downloads/)
 
 ### Installation
 
@@ -75,18 +75,12 @@ To install the project, you need to execute the following commands.
    git clone https://github.com/Corent1P/R-Type.git
    ```
 
-2. Install the following dependencies
-  - vcpkg - [vcpkg installation guide](https://learn.microsoft.com/en-us/vcpkg/get_started/overview)
-  - ninja - [ninja installation guide](https://ninja-build.org/)
-  - cmake - [cmake installation guide](https://cmake.org/download/)
-  - Visual Studio (if you are on windows) - [Visual Studio installation guide](https://visualstudio.microsoft.com/en/downloads/)
-
-3. If you are on windows, exec the install.exe file
+2. If you are on windows, exec the install.exe file
    ```powershell
    .\build.bat
    ```
 
-4. If you are on Linux, you need to exec the build.sh file
+3. If you are on Linux, you need to exec the build.sh file
     ```sh
     ./build.sh
     ```
